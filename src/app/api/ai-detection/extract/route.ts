@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { extractTextFromFile } from "@/lib/services/document-text";
 
+export const runtime = "nodejs";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
@@ -43,4 +44,8 @@ export async function POST(req: Request) {
     const message = e instanceof Error ? e.message : "Could not read file";
     return NextResponse.json({ error: message }, { status: 400 });
   }
+}
+
+export async function GET() {
+  return NextResponse.json({ status: "ok", service: "ai-detection-extract" });
 }

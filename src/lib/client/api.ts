@@ -13,10 +13,15 @@ export class ApiError extends Error {
 
 async function parseJson<T>(res: Response): Promise<T> {
   let data: { error?: string };
+  const raw = await res.text();
   try {
-    data = await res.json();
+    data = raw ? (JSON.parse(raw) as { error?: string }) : {};
   } catch {
-    throw new ApiError("Server error — please try again", res.status || 500);
+    const hint =
+      res.status >= 500
+        ? "The server could not process this file. Try a smaller PDF/DOCX or paste your text instead."
+        : "Unexpected server response. Please try again or paste your text.";
+    throw new ApiError(hint, res.status || 500);
   }
   if (!res.ok) {
     const msg =
@@ -126,10 +131,14 @@ export type AIDetectionResult = {
 export async function extractDocumentTextApi(file: File) {
   const form = new FormData();
   form.append("file", file);
-  const res = await fetchWithTimeout("/api/ai-detection/extract", {
-    method: "POST",
-    body: form,
-  });
+  const res = await fetchWithTimeout(
+    "/api/ai-detection/extract",
+    {
+      method: "POST",
+      body: form,
+    },
+    120_000
+  );
   return parseJson<{ text: string; fileName: string; charCount: number }>(res);
 }
 

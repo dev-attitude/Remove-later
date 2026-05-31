@@ -2,6 +2,15 @@ import mammoth from "mammoth";
 
 const MAX_EXTRACT_CHARS = 80_000;
 
+type PdfParseFn = (buffer: Buffer) => Promise<{ text: string }>;
+
+async function extractPdfText(buffer: Buffer): Promise<string> {
+  const mod = await import("pdf-parse");
+  const pdfParse = (mod as { default?: PdfParseFn }).default ?? (mod as unknown as PdfParseFn);
+  const data = await pdfParse(buffer);
+  return data.text || "";
+}
+
 export async function extractTextFromFile(
   buffer: Buffer,
   fileName: string,
@@ -22,13 +31,14 @@ export async function extractTextFromFile(
   }
 
   if (mimeType === "application/pdf" || lower.endsWith(".pdf")) {
-    const { PDFParse } = await import("pdf-parse");
-    const parser = new PDFParse({ data: new Uint8Array(buffer) });
     try {
-      const textResult = await parser.getText();
-      return (textResult.text || "").slice(0, MAX_EXTRACT_CHARS);
-    } finally {
-      await parser.destroy();
+      const text = await extractPdfText(buffer);
+      return text.slice(0, MAX_EXTRACT_CHARS);
+    } catch (e) {
+      console.error("[document-text] PDF extract failed:", e);
+      throw new Error(
+        "Could not read this PDF on the server. Save as DOCX, export plain text, or paste your content instead."
+      );
     }
   }
 
