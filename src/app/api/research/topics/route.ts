@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { generateResearchTopicsWithLiterature } from "@/lib/services/research-topics";
 import { RESEARCH_METHODS } from "@/lib/research-methods";
+import { isResearchLevelId } from "@/lib/research-levels";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -13,6 +14,7 @@ const schema = z.object({
   problems: z.string().min(10).max(3000),
   researchLocation: z.string().min(2).max(300),
   researchMethod: z.string().min(2).max(120),
+  researchLevel: z.string().min(2).max(40),
   portal: z.string().optional(),
 });
 
@@ -27,7 +29,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await generateResearchTopicsWithLiterature(body);
+    if (!isResearchLevelId(body.researchLevel)) {
+      return NextResponse.json(
+        { error: "Please select a valid research level." },
+        { status: 400 }
+      );
+    }
+
+    const result = await generateResearchTopicsWithLiterature({
+      ...body,
+      researchLevel: body.researchLevel,
+    });
     const session = await auth();
 
     if (session?.user?.id) {

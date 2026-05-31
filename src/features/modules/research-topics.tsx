@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import { Select } from "@/components/ui/Select";
 import { RESEARCH_METHODS } from "@/lib/research-methods";
+import { RESEARCH_LEVELS } from "@/lib/research-levels";
 import {
   generateResearchTopicsApi,
   type TopicGenerationResult,
@@ -23,6 +24,7 @@ export default function ResearchTopicsModule() {
   const [problems, setProblems] = useState("");
   const [researchLocation, setResearchLocation] = useState("");
   const [researchMethod, setResearchMethod] = useState<string>(RESEARCH_METHODS[0]);
+  const [researchLevel, setResearchLevel] = useState<string>(RESEARCH_LEVELS[0].id);
   const [result, setResult] = useState<TopicGenerationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -42,6 +44,7 @@ export default function ResearchTopicsModule() {
         problems: problems.trim(),
         researchLocation: researchLocation.trim(),
         researchMethod,
+        researchLevel,
         portal: "student",
       });
       setResult(data);
@@ -56,18 +59,61 @@ export default function ResearchTopicsModule() {
     <>
       <ModuleHeader
         title="Research Topic Generator"
-        description="Enter your field, the problems you want to address, where you will conduct research, and your method. The system suggests three distinct topics and similar published studies for each."
+        description="Enter your research level, field, problems, location, and method. Topics and literature are calibrated for Bachelor's through PhD — complexity and originality increase with level."
         icon={Lightbulb}
       />
       <ModuleWorkspace>
         <Card>
           <CardTitle>Your research context</CardTitle>
           <p className="mb-6 mt-1 text-sm text-slate-500">
-            Complete every field before generating. Topics are tailored to your discipline,
-            location, and methodology.
+            Complete every field before generating. Topics are tailored to your research level,
+            discipline, location, and methodology.
           </p>
 
           <div className="space-y-5">
+            <div>
+              <label className={labelClass} htmlFor="level">
+                Level of research *
+              </label>
+              <Select
+                id="level"
+                className="max-w-md"
+                value={researchLevel}
+                onChange={(e) => setResearchLevel(e.target.value)}
+              >
+                {RESEARCH_LEVELS.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.label}
+                  </option>
+                ))}
+              </Select>
+              {(() => {
+                const selected = RESEARCH_LEVELS.find((l) => l.id === researchLevel);
+                if (!selected) return null;
+                return (
+                  <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 p-4 text-sm text-slate-600">
+                    <p className="font-medium text-slate-800">{selected.short}</p>
+                    <ul className="mt-2 space-y-1 text-xs">
+                      <li>
+                        <span className="font-medium">Complexity:</span> {selected.complexity}
+                      </li>
+                      <li>
+                        <span className="font-medium">Original contribution:</span>{" "}
+                        {selected.originality}
+                      </li>
+                      <li>
+                        <span className="font-medium">Literature review:</span>{" "}
+                        {selected.literatureReview}
+                      </li>
+                    </ul>
+                    <p className="mt-2 text-xs text-slate-500">
+                      Example: {selected.examples[0]}
+                    </p>
+                  </div>
+                );
+              })()}
+            </div>
+
             <div>
               <label className={labelClass} htmlFor="field">
                 Field of study *
@@ -137,6 +183,10 @@ export default function ResearchTopicsModule() {
         {result && (
           <div className="mt-8 space-y-8">
             <p className="text-sm text-slate-500">
+              <span className="font-medium text-slate-700">
+                {result.researchLevelLabel} topics
+              </span>
+              {" · "}
               Mode:{" "}
               <span className={result.mode === "live" ? "text-emerald-700" : "text-amber-700"}>
                 {result.mode === "live" ? "Live AI + literature APIs" : "Demo (add OpenAI key for live)"}

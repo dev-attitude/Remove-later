@@ -129,6 +129,8 @@ export type TopicWithArticles = {
 export type TopicGenerationResult = {
   topics: TopicWithArticles[];
   mode: ApiMode;
+  researchLevel: string;
+  researchLevelLabel: string;
 };
 
 export async function generateResearchTopicsApi(input: {
@@ -136,6 +138,7 @@ export async function generateResearchTopicsApi(input: {
   problems: string;
   researchLocation: string;
   researchMethod: string;
+  researchLevel: string;
   portal?: string;
 }) {
   const res = await fetchWithTimeout(
