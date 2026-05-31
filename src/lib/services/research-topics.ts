@@ -296,7 +296,12 @@ async function fetchArticlesForTopic(
 ): Promise<UnifiedPaper[]> {
   const query = `${topic.title} ${input.fieldOfStudy} ${input.researchLocation}`.slice(0, 400);
 
-  const result = await multiSourceSearch(query, ["openalex", "semantic-scholar"]);
+  const result = await multiSourceSearch(query, [
+    "openalex",
+    "semantic-scholar",
+    "pubmed",
+    "arxiv",
+  ]);
   let papers = result.papers;
 
   if (papers.length < minCount) {

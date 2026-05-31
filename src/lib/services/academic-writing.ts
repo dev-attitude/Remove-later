@@ -10,7 +10,7 @@ import {
 import { getWritingTargetLabel, isWritingChapter } from "@/lib/modules";
 import { generateMockResponse } from "@/lib/mock-ai";
 
-const LITERATURE_SOURCES = ["openalex", "semantic-scholar", "pubmed"] as const;
+const LITERATURE_SOURCES = ["openalex", "semantic-scholar", "pubmed", "arxiv"] as const;
 
 const CHAPTER_OUTLINES: Record<string, { sections: string[]; searchHint: string }> = {
   "chapter-1": {

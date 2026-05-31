@@ -3,7 +3,10 @@ export type SourceCategory =
   | "literature"
   | "data"
   | "institution"
-  | "citation";
+  | "citation"
+  | "books"
+  | "tools"
+  | "education";
 
 export type IntegrationSource = {
   id: string;

@@ -24,6 +24,9 @@ const API_LITERATURE = INTEGRATION_SOURCES.filter(
     s.category === "literature" ||
     s.category === "data" ||
     s.category === "citation" ||
+    s.category === "books" ||
+    s.category === "education" ||
+    s.category === "tools" ||
     s.category === "ai"
 );
 

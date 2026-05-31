@@ -96,7 +96,55 @@ export const INTEGRATION_SOURCES: IntegrationSource[] = [
     website: "https://scholar.google.com",
     searchUrl: (q) => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}`,
   },
+  // Open books & education
+  {
+    id: "open-textbook-library",
+    name: "Open Textbook Library",
+    category: "books",
+    description: "Free peer-reviewed open textbooks",
+    apiEnabled: false,
+    website: "https://open.umn.edu/opentextbooks",
+    searchUrl: (q) =>
+      `https://open.umn.edu/opentextbooks/search?query=${encodeURIComponent(q)}`,
+  },
+  {
+    id: "bccampus",
+    name: "BCcampus Open Education",
+    category: "education",
+    description: "Open textbooks and OER for higher education",
+    apiEnabled: false,
+    website: "https://open.bccampus.ca",
+    searchUrl: (q) =>
+      `https://open.bccampus.ca/browse/?search=${encodeURIComponent(q)}`,
+  },
+  {
+    id: "gutenberg",
+    name: "Project Gutenberg",
+    category: "books",
+    description: "Free ebooks — classics and public domain",
+    apiEnabled: false,
+    website: "https://www.gutenberg.org",
+    searchUrl: (q) => `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(q)}`,
+  },
+  {
+    id: "internet-archive",
+    name: "Internet Archive",
+    category: "books",
+    description: "Books, papers, and media for research",
+    apiEnabled: false,
+    website: "https://archive.org",
+    searchUrl: (q) => `https://archive.org/search?query=${encodeURIComponent(q)}`,
+  },
   // Open data
+  {
+    id: "oecd",
+    name: "OECD Data",
+    category: "data",
+    description: "Economic and social statistics from OECD countries",
+    apiEnabled: false,
+    website: "https://data.oecd.org",
+    searchUrl: (q) => `https://data.oecd.org/searchresults/?q=${encodeURIComponent(q)}`,
+  },
   {
     id: "worldbank",
     name: "World Bank Open Data",
@@ -189,7 +237,94 @@ export const INTEGRATION_SOURCES: IntegrationSource[] = [
     website: "https://www.unam.edu.na",
     searchUrl: (q) => `https://www.google.com/search?q=${encodeURIComponent(`site:unam.edu.na ${q}`)}`,
   },
+  // Research software (guides & official sites)
+  {
+    id: "spss",
+    name: "IBM SPSS",
+    category: "tools",
+    description: "Statistical analysis software",
+    apiEnabled: false,
+    website: "https://www.ibm.com/spss",
+    searchUrl: (q) =>
+      `https://www.google.com/search?q=${encodeURIComponent(`SPSS tutorial ${q}`)}`,
+  },
+  {
+    id: "r-project",
+    name: "R Project",
+    category: "tools",
+    description: "Open-source statistical computing",
+    apiEnabled: false,
+    website: "https://www.r-project.org",
+    searchUrl: (q) => `https://www.google.com/search?q=${encodeURIComponent(`R statistics ${q}`)}`,
+  },
+  {
+    id: "jasp",
+    name: "JASP",
+    category: "tools",
+    description: "Free intuitive statistical software",
+    apiEnabled: false,
+    website: "https://jasp-stats.org",
+    searchUrl: (q) => `https://jasp-stats.org/search/${encodeURIComponent(q)}`,
+  },
+  {
+    id: "jamovi",
+    name: "Jamovi",
+    category: "tools",
+    description: "Free SPSS-like statistical software",
+    apiEnabled: false,
+    website: "https://www.jamovi.org",
+    searchUrl: (q) =>
+      `https://www.google.com/search?q=${encodeURIComponent(`jamovi ${q}`)}`,
+  },
+  {
+    id: "nvivo",
+    name: "NVivo",
+    category: "tools",
+    description: "Qualitative data analysis",
+    apiEnabled: false,
+    website: "https://lumivero.com/products/nvivo",
+    searchUrl: (q) =>
+      `https://www.google.com/search?q=${encodeURIComponent(`NVivo qualitative ${q}`)}`,
+  },
+  {
+    id: "atlas-ti",
+    name: "ATLAS.ti",
+    category: "tools",
+    description: "Qualitative analysis and coding",
+    apiEnabled: false,
+    website: "https://atlasti.com",
+    searchUrl: (q) =>
+      `https://www.google.com/search?q=${encodeURIComponent(`ATLAS.ti ${q}`)}`,
+  },
+  {
+    id: "zotero",
+    name: "Zotero",
+    category: "tools",
+    description: "Free reference manager",
+    apiEnabled: false,
+    website: "https://www.zotero.org",
+    searchUrl: (q) => `https://www.zotero.org/support/?q=${encodeURIComponent(q)}`,
+  },
+  {
+    id: "mendeley",
+    name: "Mendeley",
+    category: "tools",
+    description: "Reference manager and research network",
+    apiEnabled: false,
+    website: "https://www.mendeley.com",
+    searchUrl: (q) =>
+      `https://www.google.com/search?q=${encodeURIComponent(`Mendeley ${q}`)}`,
+  },
 ];
+
+/** Sources used for broad academic search across the platform */
+export const ACADEMIC_SEARCH_SOURCE_IDS = [
+  "openalex",
+  "semantic-scholar",
+  "pubmed",
+  "arxiv",
+  "core",
+] as const;
 
 export function getSource(id: string) {
   return INTEGRATION_SOURCES.find((s) => s.id === id);

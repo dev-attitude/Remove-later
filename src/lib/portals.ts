@@ -131,6 +131,7 @@ export const PORTALS: Record<PortalId, PortalConfig> = {
     gradient: "gradient-hero",
     roles: ["Student", "Individual Research Assistant", "Postgraduate Researcher"],
     moduleIds: [
+      "research-library",
       "research-topics",
       "writing",
       "understanding",
@@ -218,6 +219,7 @@ export const PORTALS: Record<PortalId, PortalConfig> = {
       "Research Consultant",
     ],
     moduleIds: [
+      "research-library",
       "data-analysis",
       "surveys",
       "transcription",

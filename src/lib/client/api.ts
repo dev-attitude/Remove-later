@@ -171,6 +171,48 @@ export type TopicGenerationResult = {
   researchLevelLabel: string;
 };
 
+export type GeneratedCurriculum = {
+  summary: string;
+  roadmap: Array<{
+    title: string;
+    duration: string;
+    activities: string[];
+    libraryLevels: number[];
+  }>;
+  recommendedBooks: Array<{ title: string; source: string; reason: string; url?: string }>;
+  recommendedModules: Array<{ name: string; moduleId: string; reason: string }>;
+  methodologies: string[];
+  statisticsPath: string[];
+  writingExercises: string[];
+  recommendedPapers: Array<{
+    title: string;
+    authors: string;
+    year: number;
+    source: string;
+    url?: string;
+  }>;
+  sourcesQueried: string[];
+  mode: ApiMode;
+};
+
+export async function generateCurriculumApi(input: {
+  researchLevel: string;
+  discipline: string;
+  goals?: string;
+  portal?: string;
+}) {
+  const res = await fetchWithTimeout(
+    "/api/research/curriculum",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+    120_000
+  );
+  return parseJson<GeneratedCurriculum>(res);
+}
+
 export async function generateResearchTopicsApi(input: {
   fieldOfStudy: string;
   problems: string;

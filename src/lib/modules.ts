@@ -18,6 +18,7 @@ import {
   Settings,
   HelpCircle,
   Lightbulb,
+  Layers,
 } from "lucide-react";
 
 export type ModuleDef = {
@@ -37,6 +38,14 @@ export const MODULES: ModuleDef[] = [
     short: "3 topics + similar papers from your context",
     href: "/research-topics",
     icon: Lightbulb,
+    category: "core",
+  },
+  {
+    id: "research-library",
+    title: "Research Knowledge Library",
+    short: "7-level curriculum, sources & AI roadmap",
+    href: "/research-library",
+    icon: Layers,
     category: "core",
   },
   {
