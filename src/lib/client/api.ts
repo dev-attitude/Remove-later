@@ -50,6 +50,44 @@ async function fetchWithTimeout(
   }
 }
 
+export type SourceUsed = {
+  title: string;
+  authors: string;
+  year: number;
+  source: string;
+  doi?: string;
+  url?: string;
+};
+
+export type AcademicWritingResult = {
+  content: string;
+  mode: ApiMode;
+  targetLabel: string;
+  researchLevelLabel: string;
+  sourcesUsed: SourceUsed[];
+  sourcesQueried: string[];
+};
+
+export async function generateAcademicWritingApi(input: {
+  topic: string;
+  researchLevel: string;
+  target?: string;
+  portal?: string;
+  tool?: string;
+  draft?: string;
+}) {
+  const res = await fetchWithTimeout(
+    "/api/ai/writing",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+    120_000
+  );
+  return parseJson<AcademicWritingResult>(res);
+}
+
 export async function generateText(
   prompt: string,
   options?: { context?: string; portal?: string }

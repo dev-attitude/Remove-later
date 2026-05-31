@@ -11,6 +11,11 @@ export const RESEARCH_LEVELS = [
       "Factors affecting academic performance among nursing students",
       "Knowledge and attitudes towards HIV prevention",
     ],
+    writingGuidance: `Writing for BACHELOR'S level:
+- Use clear, accessible academic English (CEFR B2–C1); explain technical terms briefly
+- Shorter paragraphs; straightforward argumentation
+- Limited but accurate citations; do not over-claim originality
+- Human, student-appropriate voice — not overly dense or journal-editorial`,
     topicGuidance: `BACHELOR'S LEVEL expectations:
 - Topics must be narrow, feasible with small samples, and completable within one academic year
 - Focus on describing, comparing, or assessing (factors, knowledge, attitudes, prevalence)
@@ -31,6 +36,11 @@ export const RESEARCH_LEVELS = [
       "Evaluation of electronic patient record implementation in a hospital",
       "Assessment of staff compliance with infection control measures",
     ],
+    writingGuidance: `Writing for POSTGRADUATE DIPLOMA level:
+- Professional, applied academic tone focused on practice and policy
+- Moderate complexity; link findings to workplace improvement
+- Balanced citations supporting evaluation and recommendations
+- Natural, humanized prose suitable for practitioner audiences`,
     topicGuidance: `POSTGRADUATE DIPLOMA expectations:
 - Topics should solve workplace problems, evaluate programs, support policy, or improve professional practice
 - More critical than Bachelor's but still applied rather than theory-building
@@ -50,6 +60,11 @@ export const RESEARCH_LEVELS = [
       "Factors influencing mental health outcomes among psychiatric nurses in Namibia",
       "Predictors of treatment adherence among HIV patients",
     ],
+    writingGuidance: `Writing for MASTER'S level:
+- Formal academic English (C1–C2); strong critical analysis and synthesis
+- Extensive integration of literature; explicit gap and contribution statements
+- Sophisticated vocabulary where justified; cohesive chapter flow
+- Humanized scholarly voice — varied syntax, no generic AI filler phrases`,
     topicGuidance: `MASTER'S LEVEL expectations:
 - Topics must support extensive literature review and clear research gap identification
 - Require strong, justified methodology and advanced data analysis appropriate to the method
@@ -69,6 +84,11 @@ export const RESEARCH_LEVELS = [
       "Development of a new theoretical model for psychiatric nursing interventions in resource-limited settings",
       "Creation and validation of a new framework for mental health service delivery in Namibia",
     ],
+    writingGuidance: `Writing for PhD level:
+- Expert, publication-quality academic English; theoretical depth expected
+- Comprehensive citation of seminal and recent work; critical methodological commentary
+- Original contribution and novelty articulated clearly
+- Polished, humanized academic prose at journal standard — authoritative but not robotic`,
     topicGuidance: `PhD LEVEL expectations:
 - Topics MUST promise a clear, defensible original contribution to the discipline (new knowledge)
 - Require comprehensive literature review, advanced theoretical framework, and sophisticated methodology
@@ -93,4 +113,10 @@ export function getResearchLevelPromptBlock(levelId: ResearchLevelId): string {
   const level = getResearchLevel(levelId);
   if (!level) return "";
   return level.topicGuidance;
+}
+
+export function getWritingLevelPromptBlock(levelId: ResearchLevelId): string {
+  const level = getResearchLevel(levelId);
+  if (!level) return "";
+  return level.writingGuidance;
 }

@@ -177,6 +177,46 @@ export const MODULES: ModuleDef[] = [
   },
 ];
 
+/** Full thesis chapters — generates complete chapter drafts */
+export const WRITING_CHAPTERS = [
+  {
+    id: "chapter-1",
+    label: "Chapter 1 — Introduction (full chapter)",
+  },
+  {
+    id: "chapter-2",
+    label: "Chapter 2 — Literature review (full chapter)",
+  },
+  {
+    id: "chapter-3",
+    label: "Chapter 3 — Methodology (full chapter)",
+  },
+  {
+    id: "chapter-4",
+    label: "Chapter 4 — Results / findings (full chapter)",
+  },
+  {
+    id: "chapter-5",
+    label: "Chapter 5 — Discussion (full chapter)",
+  },
+  {
+    id: "chapter-6",
+    label: "Chapter 6 — Conclusion & recommendations (full chapter)",
+  },
+] as const;
+
+export type WritingChapterId = (typeof WRITING_CHAPTERS)[number]["id"];
+
+export function isWritingChapter(target: string): target is WritingChapterId {
+  return WRITING_CHAPTERS.some((c) => c.id === target);
+}
+
+export function getWritingTargetLabel(target: string): string {
+  const chapter = WRITING_CHAPTERS.find((c) => c.id === target);
+  if (chapter) return chapter.label;
+  return target;
+}
+
 export const WRITING_SECTIONS = [
   "Problem statements",
   "Background of study",
