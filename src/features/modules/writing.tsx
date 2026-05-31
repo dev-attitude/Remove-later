@@ -18,25 +18,40 @@ export default function WritingPage() {
   const [output, setOutput] = useState("");
   const [mode, setMode] = useState<"demo" | "live" | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function generateSection() {
     setLoading(true);
     setOutput("");
-    const result = await generateText(`Generate ${section} for my research`, {
-      portal: "student",
-    });
-    setOutput(result.content);
-    setMode(result.mode);
-    setLoading(false);
+    setError("");
+    setMode(null);
+    try {
+      const result = await generateText(`Generate ${section} for my research`, {
+        portal: "student",
+      });
+      setOutput(result.content);
+      setMode(result.mode);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function runTool() {
     setLoading(true);
     setOutput("");
-    const result = await generateText(`Apply: ${tool}`, { portal: "student" });
-    setOutput(result.content);
-    setMode(result.mode);
-    setLoading(false);
+    setError("");
+    setMode(null);
+    try {
+      const result = await generateText(`Apply: ${tool}`, { portal: "student" });
+      setOutput(result.content);
+      setMode(result.mode);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -63,6 +78,7 @@ export default function WritingPage() {
             <Button className="mt-4" onClick={generateSection} disabled={loading}>
               Generate {section}
             </Button>
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
             <div className="mt-4">
               <AIOutput loading={loading} content={output} mode={mode} />
             </div>
@@ -88,7 +104,7 @@ export default function WritingPage() {
 
         <Card className="mt-8">
           <CardTitle>Free-form writing</CardTitle>
-          <GeneratePanel placeholder="Topic: Impact of digital learning on nursing students in rural clinics…" />
+          <GeneratePanel placeholder="Topic: Impact of digital learning on nursing students in rural clinics…" portal="student" />
         </Card>
       </ModuleWorkspace>
     </>

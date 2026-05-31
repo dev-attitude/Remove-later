@@ -12,18 +12,49 @@ export class ApiError extends Error {
 }
 
 async function parseJson<T>(res: Response): Promise<T> {
-  const data = await res.json();
+  let data: { error?: string };
+  try {
+    data = await res.json();
+  } catch {
+    throw new ApiError("Server error — please try again", res.status || 500);
+  }
   if (!res.ok) {
-    throw new ApiError(data.error || "Request failed", res.status);
+    const msg =
+      data.error ||
+      (res.status === 401
+        ? "Please sign in to use AI writing"
+        : res.status === 504
+          ? "Request timed out — try again"
+          : "Request failed");
+    throw new ApiError(msg, res.status);
   }
   return data as T;
+}
+
+async function fetchWithTimeout(
+  input: RequestInfo,
+  init?: RequestInit,
+  timeoutMs = 90_000
+): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new ApiError("Request timed out. Please try again.", 408);
+    }
+    throw e;
+  } finally {
+    clearTimeout(id);
+  }
 }
 
 export async function generateText(
   prompt: string,
   options?: { context?: string; portal?: string }
 ): Promise<{ content: string; mode: ApiMode }> {
-  const res = await fetch("/api/ai/generate", {
+  const res = await fetchWithTimeout("/api/ai/generate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt, ...options }),
@@ -45,7 +76,7 @@ export type AIDetectionResult = {
 };
 
 export async function checkPlagiarismApi(text: string) {
-  const res = await fetch("/api/plagiarism/check", {
+  const res = await fetchWithTimeout("/api/plagiarism/check", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text }),
@@ -54,7 +85,7 @@ export async function checkPlagiarismApi(text: string) {
 }
 
 export async function detectAIApi(text: string) {
-  const res = await fetch("/api/ai-detection/scan", {
+  const res = await fetchWithTimeout("/api/ai-detection/scan", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text }),
@@ -73,7 +104,7 @@ export type LiteratureResult = {
 };
 
 export async function searchLiteratureApi(query: string) {
-  const res = await fetch("/api/literature/search", {
+  const res = await fetchWithTimeout("/api/literature/search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query }),
@@ -86,7 +117,7 @@ export async function uploadDocument(file: File, portal?: string) {
   form.append("file", file);
   if (portal) form.append("portal", portal);
 
-  const res = await fetch("/api/upload", { method: "POST", body: form });
+  const res = await fetchWithTimeout("/api/upload", { method: "POST", body: form });
   return parseJson<{
     id: string;
     name: string;
@@ -95,7 +126,7 @@ export async function uploadDocument(file: File, portal?: string) {
 }
 
 export async function createCheckout(portal: string, tierId: string) {
-  const res = await fetch("/api/stripe/checkout", {
+  const res = await fetchWithTimeout("/api/stripe/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ portal, tierId }),

@@ -3,7 +3,9 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { generateAcademicText } from "@/lib/services/ai";
 import { prisma } from "@/lib/db";
-import { config } from "@/lib/config";
+
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
 
 const schema = z.object({
   prompt: z.string().min(1).max(12000),
@@ -16,23 +18,23 @@ export async function POST(req: Request) {
     const body = schema.parse(await req.json());
     const session = await auth();
 
-    if (config.appMode === "production" && !session?.user) {
-      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-    }
-
     const result = await generateAcademicText(body.prompt, {
       context: body.context,
     });
 
     if (session?.user?.id) {
-      await prisma.usageLog.create({
-        data: {
-          userId: session.user.id,
-          action: "ai.generate",
-          portal: body.portal,
-          mode: result.mode,
-        },
-      });
+      try {
+        await prisma.usageLog.create({
+          data: {
+            userId: session.user.id,
+            action: "ai.generate",
+            portal: body.portal,
+            mode: result.mode,
+          },
+        });
+      } catch {
+        /* non-blocking */
+      }
     }
 
     return NextResponse.json(result);
@@ -41,6 +43,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
     console.error("[ai/generate]", e);
-    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Generation failed. Please try again in a moment." },
+      { status: 500 }
+    );
   }
 }

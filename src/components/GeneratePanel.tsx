@@ -34,8 +34,8 @@ export function GeneratePanel({
       const result = await generateText(prompt, { portal });
       setOutput(result.content);
       setMode(result.mode);
-    } catch {
-      setError("Generation failed. Please try again.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Generation failed. Please try again.");
     } finally {
       setLoading(false);
     }
