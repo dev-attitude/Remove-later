@@ -66,6 +66,7 @@ export type AcademicWritingResult = {
   researchLevelLabel: string;
   sourcesUsed: SourceUsed[];
   sourcesQueried: string[];
+  notice?: string;
 };
 
 export async function generateAcademicWritingApi(input: {

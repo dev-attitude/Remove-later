@@ -221,6 +221,11 @@ export default function WritingPage() {
 
         {(loading || toolLoading || result) && (
           <div className="mt-8">
+            {result?.notice && (
+              <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                {result.notice}
+              </p>
+            )}
             {result && (
               <div className="mb-4 flex flex-wrap gap-2 text-sm text-slate-600">
                 <span className="rounded-full bg-slate-100 px-3 py-1">

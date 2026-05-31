@@ -2,12 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import {
-  generateAcademicWriting,
-  buildSmartToolPrompt,
-} from "@/lib/services/academic-writing";
-import { generateAcademicText } from "@/lib/services/ai";
-import { getResearchLevel, isResearchLevelId } from "@/lib/research-levels";
+import { generateAcademicWriting } from "@/lib/services/academic-writing";
+import { isResearchLevelId } from "@/lib/research-levels";
 import { WRITING_CHAPTERS, WRITING_SECTIONS } from "@/lib/modules";
 
 export const maxDuration = 60;
@@ -43,21 +39,17 @@ export async function POST(req: Request) {
     }
 
     if (body.tool) {
-      const prompt = buildSmartToolPrompt(
-        body.tool,
-        body.topic,
-        body.researchLevel,
-        body.draft
-      );
-      const result = await generateAcademicText(prompt, { maxTokens: 1500 });
-      const levelMeta = getResearchLevel(body.researchLevel);
+      const topicWithDraft = body.draft
+        ? `${body.topic}\n\nText to apply tool to:\n${body.draft}`
+        : body.topic;
+      const result = await generateAcademicWriting({
+        topic: topicWithDraft,
+        target: body.tool,
+        researchLevel: body.researchLevel,
+      });
       return NextResponse.json({
-        content: result.content,
-        mode: result.mode,
+        ...result,
         targetLabel: body.tool,
-        researchLevelLabel: levelMeta?.label ?? body.researchLevel,
-        sourcesUsed: [],
-        sourcesQueried: [],
       });
     }
 
