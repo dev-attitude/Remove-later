@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { PortalId } from "@/lib/portals";
 
+import ResearchTopicsModule from "./research-topics";
 import WritingModule from "./writing";
 import UnderstandingModule from "./understanding";
 import LiteratureModule from "./literature";
@@ -22,6 +23,7 @@ import MarkingModule from "./marking";
 import DeveloperConsoleModule from "./developer-console";
 
 export const MODULE_REGISTRY: Record<string, ComponentType> = {
+  "research-topics": ResearchTopicsModule,
   writing: WritingModule,
   understanding: UnderstandingModule,
   literature: LiteratureModule,

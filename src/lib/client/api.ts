@@ -103,6 +103,53 @@ export type LiteratureResult = {
   paperId?: string;
 };
 
+export type GeneratedTopic = {
+  id: string;
+  title: string;
+  rationale: string;
+  researchQuestions: string[];
+  alignmentNote: string;
+};
+
+export type TopicWithArticles = {
+  topic: GeneratedTopic;
+  articles: Array<{
+    id: string;
+    title: string;
+    authors: string;
+    year: number;
+    source: string;
+    citations: number;
+    abstract?: string;
+    doi?: string;
+    url?: string;
+  }>;
+};
+
+export type TopicGenerationResult = {
+  topics: TopicWithArticles[];
+  mode: ApiMode;
+};
+
+export async function generateResearchTopicsApi(input: {
+  fieldOfStudy: string;
+  problems: string;
+  researchLocation: string;
+  researchMethod: string;
+  portal?: string;
+}) {
+  const res = await fetchWithTimeout(
+    "/api/research/topics",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+    120_000
+  );
+  return parseJson<TopicGenerationResult>(res);
+}
+
 export async function searchLiteratureApi(query: string) {
   const res = await fetchWithTimeout("/api/literature/search", {
     method: "POST",

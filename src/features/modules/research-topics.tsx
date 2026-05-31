@@ -1,0 +1,220 @@
+"use client";
+
+import { useState } from "react";
+import { Lightbulb, ExternalLink } from "lucide-react";
+import { ModuleHeader } from "@/components/ModuleHeader";
+import { ModuleWorkspace } from "@/components/ModuleWorkspace";
+import { Card, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/Textarea";
+import { Select } from "@/components/ui/Select";
+import { RESEARCH_METHODS } from "@/lib/research-methods";
+import {
+  generateResearchTopicsApi,
+  type TopicGenerationResult,
+} from "@/lib/client/api";
+
+const labelClass = "mb-1 block text-sm font-medium text-slate-700";
+const inputClass =
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20";
+
+export default function ResearchTopicsModule() {
+  const [fieldOfStudy, setFieldOfStudy] = useState("");
+  const [problems, setProblems] = useState("");
+  const [researchLocation, setResearchLocation] = useState("");
+  const [researchMethod, setResearchMethod] = useState<string>(RESEARCH_METHODS[0]);
+  const [result, setResult] = useState<TopicGenerationResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const canSubmit =
+    fieldOfStudy.trim().length >= 2 &&
+    problems.trim().length >= 10 &&
+    researchLocation.trim().length >= 2;
+
+  async function handleGenerate() {
+    setLoading(true);
+    setError("");
+    setResult(null);
+    try {
+      const data = await generateResearchTopicsApi({
+        fieldOfStudy: fieldOfStudy.trim(),
+        problems: problems.trim(),
+        researchLocation: researchLocation.trim(),
+        researchMethod,
+        portal: "student",
+      });
+      setResult(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <>
+      <ModuleHeader
+        title="Research Topic Generator"
+        description="Enter your field, the problems you want to address, where you will conduct research, and your method. The system suggests three distinct topics and similar published studies for each."
+        icon={Lightbulb}
+      />
+      <ModuleWorkspace>
+        <Card>
+          <CardTitle>Your research context</CardTitle>
+          <p className="mb-6 mt-1 text-sm text-slate-500">
+            Complete every field before generating. Topics are tailored to your discipline,
+            location, and methodology.
+          </p>
+
+          <div className="space-y-5">
+            <div>
+              <label className={labelClass} htmlFor="field">
+                Field of study *
+              </label>
+              <input
+                id="field"
+                className={inputClass}
+                placeholder="e.g. Public Health, Computer Science, Education"
+                value={fieldOfStudy}
+                onChange={(e) => setFieldOfStudy(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="problems">
+                Problems observed or problems you want to solve *
+              </label>
+              <Textarea
+                id="problems"
+                rows={4}
+                placeholder="Describe real issues you have seen, gaps in practice, or research problems you want to investigate…"
+                value={problems}
+                onChange={(e) => setProblems(e.target.value)}
+              />
+              <p className="mt-1 text-xs text-slate-400">Minimum 10 characters</p>
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="location">
+                Where you plan to conduct the research *
+              </label>
+              <input
+                id="location"
+                className={inputClass}
+                placeholder="e.g. Windhoek, Khomas Region, Namibia — or a specific institution/community"
+                value={researchLocation}
+                onChange={(e) => setResearchLocation(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="method">
+                Research method you want to use *
+              </label>
+              <Select
+                id="method"
+                className="max-w-md"
+                value={researchMethod}
+                onChange={(e) => setResearchMethod(e.target.value)}
+              >
+                {RESEARCH_METHODS.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
+
+          <Button className="mt-6" onClick={handleGenerate} disabled={loading || !canSubmit}>
+            {loading ? "Generating topics & literature…" : "Generate 3 research topics"}
+          </Button>
+
+          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+        </Card>
+
+        {result && (
+          <div className="mt-8 space-y-8">
+            <p className="text-sm text-slate-500">
+              Mode:{" "}
+              <span className={result.mode === "live" ? "text-emerald-700" : "text-amber-700"}>
+                {result.mode === "live" ? "Live AI + literature APIs" : "Demo (add OpenAI key for live)"}
+              </span>
+            </p>
+
+            {result.topics.map(({ topic, articles }, index) => (
+              <Card key={topic.id} className="border-brand-100">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
+                  Topic {index + 1}
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-slate-900">{topic.title}</h3>
+                <p className="mt-3 text-sm text-slate-700">{topic.rationale}</p>
+
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-slate-800">Research questions</p>
+                  <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-slate-600">
+                    {topic.researchQuestions.map((q) => (
+                      <li key={q}>{q}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
+                  <span className="font-medium text-slate-800">Method & location fit: </span>
+                  {topic.alignmentNote}
+                </p>
+
+                <div className="mt-6 border-t border-slate-100 pt-5">
+                  <p className="font-semibold text-slate-900">
+                    Similar research ({articles.length} articles)
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    From OpenAlex & Semantic Scholar — ranked by relevance and citations
+                  </p>
+                  <div className="mt-4 space-y-3">
+                    {articles.map((a) => (
+                      <div
+                        key={a.id}
+                        className="rounded-lg border border-slate-100 bg-white p-4"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="font-medium text-slate-900">{a.title}</p>
+                          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                            {a.source}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm text-slate-600">
+                          {a.authors} ({a.year}) · {a.citations} citations
+                        </p>
+                        {a.abstract && (
+                          <p className="mt-2 line-clamp-2 text-xs text-slate-500">{a.abstract}</p>
+                        )}
+                        {(a.url || a.doi) && (
+                          <a
+                            href={
+                              a.url?.startsWith("http")
+                                ? a.url
+                                : a.doi
+                                  ? `https://doi.org/${a.doi}`
+                                  : "#"
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex items-center gap-1 text-xs text-brand-600 underline"
+                          >
+                            Open paper <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </ModuleWorkspace>
+    </>
+  );
+}

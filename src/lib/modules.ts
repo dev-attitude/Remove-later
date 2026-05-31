@@ -17,6 +17,7 @@ import {
   Newspaper,
   Settings,
   HelpCircle,
+  Lightbulb,
 } from "lucide-react";
 
 export type ModuleDef = {
@@ -30,6 +31,14 @@ export type ModuleDef = {
 
 /** Module registry — hrefs are resolved per-portal via getModulesForPortal() */
 export const MODULES: ModuleDef[] = [
+  {
+    id: "research-topics",
+    title: "Research Topic Generator",
+    short: "3 topics + similar papers from your context",
+    href: "/research-topics",
+    icon: Lightbulb,
+    category: "core",
+  },
   {
     id: "writing",
     title: "AI Research Writing",
@@ -169,7 +178,6 @@ export const MODULES: ModuleDef[] = [
 ];
 
 export const WRITING_SECTIONS = [
-  "Research topics",
   "Problem statements",
   "Background of study",
   "Research objectives",
