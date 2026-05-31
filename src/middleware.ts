@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
+
+/** Lightweight middleware — avoids importing auth/Prisma (Edge 1MB limit on Vercel) */
 
 const PUBLIC_PREFIXES = [
   "/login",
@@ -11,7 +12,14 @@ const PUBLIC_PREFIXES = [
   "/api/literature",
 ];
 
-export default auth((req) => {
+function hasSessionCookie(req: NextRequest): boolean {
+  return Boolean(
+    req.cookies.get("authjs.session-token")?.value ||
+      req.cookies.get("__Secure-authjs.session-token")?.value
+  );
+}
+
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isProduction = process.env.GM_APP_MODE === "production";
 
@@ -21,7 +29,7 @@ export default auth((req) => {
   if (!isProduction || isPublic) return NextResponse.next();
 
   if (
-    !req.auth &&
+    !hasSessionCookie(req) &&
     /^\/(institution|student|analysis|developer)(\/|$)/.test(pathname)
   ) {
     const login = new URL("/login", req.nextUrl.origin);
@@ -30,7 +38,7 @@ export default auth((req) => {
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.json).*)"],
