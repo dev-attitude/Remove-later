@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --muted: #64748b;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .glass-card {
+    @apply rounded-xl border border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-sm;
+  }
+  .gradient-hero {
+    background: linear-gradient(135deg, #111a57 0%, #1a44f5 50%, #0d9488 100%);
+  }
+}
