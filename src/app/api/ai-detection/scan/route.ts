@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { auth } from "@/auth";
-import { detectAIContent } from "@/lib/services/integrity";
-import { config } from "@/lib/config";
+import { scanTextForAI } from "@/lib/services/ai-detection";
+
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
 
 const schema = z.object({
   text: z.string().min(10).max(100000),
@@ -11,18 +12,13 @@ const schema = z.object({
 export async function POST(req: Request) {
   try {
     const { text } = schema.parse(await req.json());
-    const session = await auth();
-
-    if (config.appMode === "production" && !session?.user) {
-      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-    }
-
-    const result = await detectAIContent(text);
+    const result = await scanTextForAI(text);
     return NextResponse.json(result);
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Scan failed" }, { status: 500 });
+    const message = e instanceof Error ? e.message : "Scan failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

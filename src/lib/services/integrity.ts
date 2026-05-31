@@ -1,6 +1,5 @@
-import { config, getRuntimeMode } from "@/lib/config";
-import { mockAIDetection, mockPlagiarismScore } from "@/lib/mock-ai";
-import { generateAcademicText } from "./ai";
+import { getRuntimeMode } from "@/lib/config";
+import { mockPlagiarismScore } from "@/lib/mock-ai";
 
 export async function checkPlagiarism(text: string) {
   const mode = getRuntimeMode();
@@ -15,32 +14,17 @@ export async function checkPlagiarism(text: string) {
   return { ...base, mode: "demo" as const, note: "Connect plagiarism API in production" };
 }
 
+/** @deprecated Use scanTextForAI from ./ai-detection */
 export async function detectAIContent(text: string) {
-  const mode = getRuntimeMode();
-
-  if (mode === "demo" || !config.openai.enabled()) {
-    return { ...mockAIDetection(text), mode: "demo" as const };
-  }
-
-  try {
-    const { content } = await generateAcademicText(
-      `Analyze the following text for AI-generated patterns. Return ONLY valid JSON with this shape:
-{"overallAI": number 0-100, "integrityScore": number 0-100, "sentences": [{"text": string, "aiProbability": number}]}
-Analyze up to 8 sentences from the input.
-
-Text:
-${text.slice(0, 4000)}`,
-      { maxTokens: 1500 }
-    );
-
-    const parsed = JSON.parse(content.replace(/```json\n?|\n?```/g, "")) as {
-      overallAI: number;
-      integrityScore: number;
-      sentences: { text: string; aiProbability: number }[];
-    };
-
-    return { ...parsed, mode: "live" as const };
-  } catch {
-    return { ...mockAIDetection(text), mode: "demo" as const };
-  }
+  const { scanTextForAI } = await import("./ai-detection");
+  const result = await scanTextForAI(text);
+  return {
+    overallAI: result.overallAI,
+    integrityScore: result.integrityScore,
+    sentences: result.sentences.map((s) => ({
+      text: s.text,
+      aiProbability: s.aiProbability,
+    })),
+    mode: result.mode,
+  };
 }

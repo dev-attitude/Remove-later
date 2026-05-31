@@ -107,12 +107,31 @@ export type PlagiarismResult = {
   mode?: ApiMode;
 };
 
+export type AIRiskLevel = "high" | "moderate" | "low";
+
 export type AIDetectionResult = {
   overallAI: number;
-  sentences: { text: string; aiProbability: number }[];
+  sentences: {
+    text: string;
+    aiProbability: number;
+    risk: AIRiskLevel;
+    index: number;
+  }[];
   integrityScore: number;
+  fullText: string;
   mode?: ApiMode;
+  counts: { high: number; moderate: number; low: number };
 };
+
+export async function extractDocumentTextApi(file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetchWithTimeout("/api/ai-detection/extract", {
+    method: "POST",
+    body: form,
+  });
+  return parseJson<{ text: string; fileName: string; charCount: number }>(res);
+}
 
 export async function checkPlagiarismApi(text: string) {
   const res = await fetchWithTimeout("/api/plagiarism/check", {
@@ -124,12 +143,32 @@ export async function checkPlagiarismApi(text: string) {
 }
 
 export async function detectAIApi(text: string) {
-  const res = await fetchWithTimeout("/api/ai-detection/scan", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
-  });
+  const res = await fetchWithTimeout(
+    "/api/ai-detection/scan",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    },
+    120_000
+  );
   return parseJson<AIDetectionResult>(res);
+}
+
+export async function humanizeFlaggedAIApi(
+  fullText: string,
+  flagged: AIDetectionResult["sentences"]
+) {
+  const res = await fetchWithTimeout(
+    "/api/ai-detection/humanize",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fullText, flagged }),
+    },
+    120_000
+  );
+  return parseJson<{ text: string; mode: ApiMode }>(res);
 }
 
 export type LiteratureResult = {
