@@ -6,8 +6,11 @@ import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { WorkspaceHistory } from "@/components/WorkspaceHistory";
 import { generateText } from "@/lib/client/api";
 import { AIOutput } from "@/components/AIOutput";
+import { usePortalId } from "@/hooks/usePortalId";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { INTEGRATION_SOURCES } from "@/lib/integrations/registry";
 import type { UnifiedPaper } from "@/lib/integrations/types";
 
@@ -30,30 +33,48 @@ const API_LITERATURE = INTEGRATION_SOURCES.filter(
     s.category === "ai"
 );
 
+type LiteratureForm = { query: string; selected: string[] };
+type LiteratureResult = {
+  papers: UnifiedPaper[];
+  datasets: Array<{ id: string; name: string; source: string; value?: string }>;
+  sourcesQueried: string[];
+  errors: string[];
+  framework: string;
+};
+
+const DEFAULT_LIT_FORM: LiteratureForm = {
+  query: "digital health Namibia",
+  selected: DEFAULT_SOURCES,
+};
+
 export default function LiteratureModule() {
-  const [query, setQuery] = useState("digital health Namibia");
-  const [selected, setSelected] = useState<string[]>(DEFAULT_SOURCES);
-  const [papers, setPapers] = useState<UnifiedPaper[]>([]);
-  const [datasets, setDatasets] = useState<
-    Array<{ id: string; name: string; source: string; value?: string }>
-  >([]);
-  const [sourcesQueried, setSourcesQueried] = useState<string[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
-  const [framework, setFramework] = useState("");
+  const portalId = usePortalId();
   const [loading, setLoading] = useState(false);
   const [fwLoading, setFwLoading] = useState(false);
 
+  const ws = useWorkspace<LiteratureForm, LiteratureResult>({
+    portalId,
+    moduleId: "literature",
+    defaultForm: DEFAULT_LIT_FORM,
+    makeTitle: (f, r) => f.query.trim() || (r?.papers?.length ? `${r.papers.length} papers` : "Literature search"),
+  });
+
+  const { query, selected } = ws.form;
+  const papers = ws.result?.papers ?? [];
+  const datasets = ws.result?.datasets ?? [];
+  const sourcesQueried = ws.result?.sourcesQueried ?? [];
+  const errors = ws.result?.errors ?? [];
+  const framework = ws.result?.framework ?? "";
+
   function toggleSource(id: string) {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
+    const next = selected.includes(id)
+      ? selected.filter((s) => s !== id)
+      : [...selected, id];
+    ws.setForm({ selected: next });
   }
 
   async function search() {
     setLoading(true);
-    setPapers([]);
-    setDatasets([]);
-    setErrors([]);
     try {
       const res = await fetch("/api/research/search", {
         method: "POST",
@@ -67,12 +88,21 @@ export default function LiteratureModule() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Search failed");
-      setPapers(data.papers ?? []);
-      setDatasets(data.datasets ?? []);
-      setSourcesQueried(data.sourcesQueried ?? []);
-      setErrors(data.errors ?? []);
+      ws.setResult({
+        papers: data.papers ?? [],
+        datasets: data.datasets ?? [],
+        sourcesQueried: data.sourcesQueried ?? [],
+        errors: data.errors ?? [],
+        framework,
+      });
     } catch (e) {
-      setErrors([e instanceof Error ? e.message : "Search failed"]);
+      ws.setResult({
+        papers: [],
+        datasets: [],
+        sourcesQueried: [],
+        errors: [e instanceof Error ? e.message : "Search failed"],
+        framework,
+      });
     } finally {
       setLoading(false);
     }
@@ -80,18 +110,37 @@ export default function LiteratureModule() {
 
   async function generateFramework() {
     setFwLoading(true);
-    setFramework("");
     try {
       const { content } = await generateText(
         `Literature review themes and conceptual framework for: ${query}. Use sources: ${sourcesQueried.join(", ")}`,
-        { portal: "analysis" }
+        { portal: portalId }
       );
-      setFramework(content);
+      ws.setResult({
+        papers,
+        datasets,
+        sourcesQueried,
+        errors,
+        framework: content,
+      });
     } catch (e) {
-      setFramework(e instanceof Error ? e.message : "Failed");
+      ws.setResult({
+        papers,
+        datasets,
+        sourcesQueried,
+        errors,
+        framework: e instanceof Error ? e.message : "Failed",
+      });
     } finally {
       setFwLoading(false);
     }
+  }
+
+  if (!ws.hydrated) {
+    return (
+      <ModuleWorkspace>
+        <p className="text-sm text-slate-500">Loading your saved work…</p>
+      </ModuleWorkspace>
+    );
   }
 
   return (
@@ -102,6 +151,13 @@ export default function LiteratureModule() {
         icon={Library}
       />
       <ModuleWorkspace>
+        <WorkspaceHistory
+          items={ws.items}
+          activeId={ws.activeId}
+          onSelect={ws.loadItem}
+          onDelete={ws.removeItem}
+          onNew={ws.startNew}
+        />
         <Card>
           <CardTitle>Connected sources</CardTitle>
           <p className="mb-3 text-sm text-slate-500">
@@ -128,7 +184,7 @@ export default function LiteratureModule() {
             <input
               className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => ws.setForm({ query: e.target.value })}
             />
             <Button onClick={search} disabled={loading || selected.length === 0}>
               <Search className="h-4 w-4" />

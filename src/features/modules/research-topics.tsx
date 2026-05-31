@@ -8,26 +8,55 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import { Select } from "@/components/ui/Select";
+import { WorkspaceHistory } from "@/components/WorkspaceHistory";
 import { RESEARCH_METHODS } from "@/lib/research-methods";
 import { RESEARCH_LEVELS } from "@/lib/research-levels";
-import {
-  generateResearchTopicsApi,
-  type TopicGenerationResult,
-} from "@/lib/client/api";
+import { usePortalId } from "@/hooks/usePortalId";
+import { useWorkspace } from "@/hooks/useWorkspace";
+import { generateResearchTopicsApi, type TopicGenerationResult } from "@/lib/client/api";
 
 const labelClass = "mb-1 block text-sm font-medium text-slate-700";
 const inputClass =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20";
 
+type TopicsForm = {
+  fieldOfStudy: string;
+  problems: string;
+  researchLocation: string;
+  researchMethod: string;
+  researchLevel: string;
+};
+
+const DEFAULT_FORM: TopicsForm = {
+  fieldOfStudy: "",
+  problems: "",
+  researchLocation: "",
+  researchMethod: RESEARCH_METHODS[0],
+  researchLevel: RESEARCH_LEVELS[0].id,
+};
+
+function makeTopicsTitle(form: TopicsForm, result: TopicGenerationResult | null) {
+  if (result?.topics?.[0]?.topic?.title) {
+    return result.topics[0].topic.title.slice(0, 100);
+  }
+  if (form.fieldOfStudy.trim()) return form.fieldOfStudy.trim();
+  return "Topic search";
+}
+
 export default function ResearchTopicsModule() {
-  const [fieldOfStudy, setFieldOfStudy] = useState("");
-  const [problems, setProblems] = useState("");
-  const [researchLocation, setResearchLocation] = useState("");
-  const [researchMethod, setResearchMethod] = useState<string>(RESEARCH_METHODS[0]);
-  const [researchLevel, setResearchLevel] = useState<string>(RESEARCH_LEVELS[0].id);
-  const [result, setResult] = useState<TopicGenerationResult | null>(null);
+  const portalId = usePortalId();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const ws = useWorkspace<TopicsForm, TopicGenerationResult>({
+    portalId,
+    moduleId: "research-topics",
+    defaultForm: DEFAULT_FORM,
+    makeTitle: makeTopicsTitle,
+  });
+
+  const { fieldOfStudy, problems, researchLocation, researchMethod, researchLevel } = ws.form;
+  const result = ws.result;
 
   const canSubmit =
     fieldOfStudy.trim().length >= 2 &&
@@ -37,7 +66,6 @@ export default function ResearchTopicsModule() {
   async function handleGenerate() {
     setLoading(true);
     setError("");
-    setResult(null);
     try {
       const data = await generateResearchTopicsApi({
         fieldOfStudy: fieldOfStudy.trim(),
@@ -45,14 +73,22 @@ export default function ResearchTopicsModule() {
         researchLocation: researchLocation.trim(),
         researchMethod,
         researchLevel,
-        portal: "student",
+        portal: portalId,
       });
-      setResult(data);
+      ws.setResult(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed");
     } finally {
       setLoading(false);
     }
+  }
+
+  if (!ws.hydrated) {
+    return (
+      <ModuleWorkspace>
+        <p className="text-sm text-slate-500">Loading your saved work…</p>
+      </ModuleWorkspace>
+    );
   }
 
   return (
@@ -63,6 +99,14 @@ export default function ResearchTopicsModule() {
         icon={Lightbulb}
       />
       <ModuleWorkspace>
+        <WorkspaceHistory
+          items={ws.items}
+          activeId={ws.activeId}
+          onSelect={ws.loadItem}
+          onDelete={ws.removeItem}
+          onNew={ws.startNew}
+        />
+
         <Card>
           <CardTitle>Your research context</CardTitle>
           <p className="mb-6 mt-1 text-sm text-slate-500">
@@ -79,7 +123,7 @@ export default function ResearchTopicsModule() {
                 id="level"
                 className="max-w-md"
                 value={researchLevel}
-                onChange={(e) => setResearchLevel(e.target.value)}
+                onChange={(e) => ws.setForm({ researchLevel: e.target.value })}
               >
                 {RESEARCH_LEVELS.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -106,9 +150,6 @@ export default function ResearchTopicsModule() {
                         {selected.literatureReview}
                       </li>
                     </ul>
-                    <p className="mt-2 text-xs text-slate-500">
-                      Example: {selected.examples[0]}
-                    </p>
                   </div>
                 );
               })()}
@@ -123,7 +164,7 @@ export default function ResearchTopicsModule() {
                 className={inputClass}
                 placeholder="e.g. Public Health, Computer Science, Education"
                 value={fieldOfStudy}
-                onChange={(e) => setFieldOfStudy(e.target.value)}
+                onChange={(e) => ws.setForm({ fieldOfStudy: e.target.value })}
               />
             </div>
 
@@ -136,7 +177,7 @@ export default function ResearchTopicsModule() {
                 rows={4}
                 placeholder="Describe real issues you have seen, gaps in practice, or research problems you want to investigate…"
                 value={problems}
-                onChange={(e) => setProblems(e.target.value)}
+                onChange={(e) => ws.setForm({ problems: e.target.value })}
               />
               <p className="mt-1 text-xs text-slate-400">Minimum 10 characters</p>
             </div>
@@ -148,9 +189,9 @@ export default function ResearchTopicsModule() {
               <input
                 id="location"
                 className={inputClass}
-                placeholder="e.g. Windhoek, Khomas Region, Namibia — or a specific institution/community"
+                placeholder="e.g. Windhoek, Khomas Region, Namibia"
                 value={researchLocation}
-                onChange={(e) => setResearchLocation(e.target.value)}
+                onChange={(e) => ws.setForm({ researchLocation: e.target.value })}
               />
             </div>
 
@@ -162,7 +203,7 @@ export default function ResearchTopicsModule() {
                 id="method"
                 className="max-w-md"
                 value={researchMethod}
-                onChange={(e) => setResearchMethod(e.target.value)}
+                onChange={(e) => ws.setForm({ researchMethod: e.target.value })}
               >
                 {RESEARCH_METHODS.map((m) => (
                   <option key={m} value={m}>
@@ -183,13 +224,11 @@ export default function ResearchTopicsModule() {
         {result && (
           <div className="mt-8 space-y-8">
             <p className="text-sm text-slate-500">
-              <span className="font-medium text-slate-700">
-                {result.researchLevelLabel} topics
-              </span>
+              <span className="font-medium text-slate-700">{result.researchLevelLabel} topics</span>
               {" · "}
               Mode:{" "}
               <span className={result.mode === "live" ? "text-emerald-700" : "text-amber-700"}>
-                {result.mode === "live" ? "Live AI + literature APIs" : "Demo (add OpenAI key for live)"}
+                {result.mode === "live" ? "Live AI + literature APIs" : "Demo"}
               </span>
             </p>
 
@@ -219,27 +258,16 @@ export default function ResearchTopicsModule() {
                   <p className="font-semibold text-slate-900">
                     Similar research ({articles.length} articles)
                   </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    From OpenAlex & Semantic Scholar — ranked by relevance and citations
-                  </p>
                   <div className="mt-4 space-y-3">
                     {articles.map((a) => (
                       <div
                         key={a.id}
                         className="rounded-lg border border-slate-100 bg-white p-4"
                       >
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="font-medium text-slate-900">{a.title}</p>
-                          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
-                            {a.source}
-                          </span>
-                        </div>
+                        <p className="font-medium text-slate-900">{a.title}</p>
                         <p className="mt-1 text-sm text-slate-600">
-                          {a.authors} ({a.year}) · {a.citations} citations
+                          {a.authors} ({a.year}) · {a.citations} citations · {a.source}
                         </p>
-                        {a.abstract && (
-                          <p className="mt-2 line-clamp-2 text-xs text-slate-500">{a.abstract}</p>
-                        )}
                         {(a.url || a.doi) && (
                           <a
                             href={

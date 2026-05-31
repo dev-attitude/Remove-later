@@ -4,36 +4,57 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import { AIOutput } from "@/components/AIOutput";
+import { WorkspaceHistory } from "@/components/WorkspaceHistory";
 import { generateText } from "@/lib/client/api";
+import { usePortalId } from "@/hooks/usePortalId";
+import { isPortalId } from "@/lib/portals";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Sparkles } from "lucide-react";
+
+type FreeformForm = { prompt: string };
+type FreeformResult = { content: string; mode: "demo" | "live" };
 
 export function GeneratePanel({
   label = "Your prompt or draft",
   placeholder = "Describe your research topic, paste a draft, or ask a question…",
   defaultPrompt = "",
   portal,
+  workspaceModuleId = "freeform",
 }: {
   label?: string;
   placeholder?: string;
   defaultPrompt?: string;
   portal?: string;
+  workspaceModuleId?: string;
 }) {
-  const [prompt, setPrompt] = useState(defaultPrompt);
-  const [output, setOutput] = useState("");
-  const [mode, setMode] = useState<"demo" | "live" | null>(null);
+  const portalFromRoute = usePortalId();
+  const portalId = portal && isPortalId(portal) ? portal : portalFromRoute;
+  const moduleId = workspaceModuleId;
+
+  const ws = useWorkspace<FreeformForm, FreeformResult>({
+    portalId,
+    moduleId,
+    defaultForm: { prompt: defaultPrompt },
+    makeTitle: (f, r) =>
+      r?.content?.slice(0, 50)?.trim() ||
+      f.prompt.trim().slice(0, 50) ||
+      "Free-form prompt",
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const prompt = ws.form.prompt;
+  const output = ws.result?.content ?? "";
+  const mode = ws.result?.mode ?? null;
 
   async function handleGenerate() {
     if (!prompt.trim()) return;
     setLoading(true);
-    setOutput("");
     setError("");
-    setMode(null);
     try {
-      const result = await generateText(prompt, { portal });
-      setOutput(result.content);
-      setMode(result.mode);
+      const result = await generateText(prompt, { portal: portalId });
+      ws.setResult({ content: result.content, mode: result.mode });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed. Please try again.");
     } finally {
@@ -41,16 +62,24 @@ export function GeneratePanel({
     }
   }
 
+  if (!ws.hydrated) return null;
+
   return (
     <div className="space-y-4">
+      <WorkspaceHistory
+        items={ws.items}
+        activeId={ws.activeId}
+        onSelect={ws.loadItem}
+        onDelete={ws.removeItem}
+        onNew={ws.startNew}
+        label="Saved prompts"
+      />
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">
-          {label}
-        </label>
+        <label className="mb-1 block text-sm font-medium text-slate-700">{label}</label>
         <Textarea
           rows={5}
           value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
+          onChange={(e) => ws.setForm({ prompt: e.target.value })}
           placeholder={placeholder}
         />
       </div>

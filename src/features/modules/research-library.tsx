@@ -18,32 +18,55 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
-import { RESEARCH_LEVELS } from "@/lib/research-levels";
 import { RESEARCH_DISCIPLINES } from "@/lib/knowledge-library/disciplines";
 import { KNOWLEDGE_LIBRARY } from "@/lib/knowledge-library/structure";
 import { OPEN_KNOWLEDGE_ECOSYSTEMS, FOUNDATION_OPEN_RESOURCES } from "@/lib/knowledge-library/open-resources";
 import { INTEGRATION_SOURCES } from "@/lib/integrations/registry";
 import { portalPath, isPortalId } from "@/lib/portals";
-import {
-  generateCurriculumApi,
-  type GeneratedCurriculum,
-} from "@/lib/client/api";
+import { generateCurriculumApi, type GeneratedCurriculum } from "@/lib/client/api";
+import { usePortalId } from "@/hooks/usePortalId";
+import { useWorkspace } from "@/hooks/useWorkspace";
+import { WorkspaceHistory } from "@/components/WorkspaceHistory";
+import { getDisciplineLabel } from "@/lib/knowledge-library/disciplines";
+import { RESEARCH_LEVELS } from "@/lib/research-levels";
 
 type Tab = "curriculum" | "library" | "sources";
 
 const labelClass = "mb-1 block text-sm font-medium text-slate-700";
 
+type CurriculumForm = {
+  researchLevel: string;
+  discipline: string;
+  goals: string;
+};
+
+const DEFAULT_CURRICULUM_FORM: CurriculumForm = {
+  researchLevel: RESEARCH_LEVELS[0].id,
+  discipline: RESEARCH_DISCIPLINES[0].id,
+  goals: "",
+};
+
 export default function ResearchLibraryModule() {
   const params = useParams();
-  const portalId = typeof params?.portal === "string" && isPortalId(params.portal) ? params.portal : "student";
+  const portalId = usePortalId();
+  const portalFromParams =
+    typeof params?.portal === "string" && isPortalId(params.portal) ? params.portal : portalId;
 
   const [tab, setTab] = useState<Tab>("curriculum");
-  const [researchLevel, setResearchLevel] = useState<string>(RESEARCH_LEVELS[0].id);
-  const [discipline, setDiscipline] = useState<string>(RESEARCH_DISCIPLINES[0].id);
-  const [goals, setGoals] = useState("");
-  const [curriculum, setCurriculum] = useState<GeneratedCurriculum | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const curriculumWs = useWorkspace<CurriculumForm, GeneratedCurriculum>({
+    portalId: portalFromParams,
+    moduleId: "research-library-curriculum",
+    defaultForm: DEFAULT_CURRICULUM_FORM,
+    makeTitle: (f, r) =>
+      r?.summary?.slice(0, 60) ||
+      `${RESEARCH_LEVELS.find((l) => l.id === f.researchLevel)?.label ?? "Level"} · ${getDisciplineLabel(f.discipline)}`,
+  });
+
+  const { researchLevel, discipline, goals } = curriculumWs.form;
+  const curriculum = curriculumWs.result;
   const [expandedLevels, setExpandedLevels] = useState<Set<string>>(
     new Set(["foundations", "methodology"])
   );
@@ -61,15 +84,14 @@ export default function ResearchLibraryModule() {
   async function generateCurriculum() {
     setLoading(true);
     setError("");
-    setCurriculum(null);
     try {
       const data = await generateCurriculumApi({
         researchLevel,
         discipline,
         goals: goals.trim() || undefined,
-        portal: portalId,
+        portal: portalFromParams,
       });
-      setCurriculum(data);
+      curriculumWs.setResult(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to generate curriculum");
     } finally {
@@ -78,7 +100,7 @@ export default function ResearchLibraryModule() {
   }
 
   function moduleHref(moduleId: string) {
-    return portalPath(portalId, moduleId);
+    return portalPath(portalFromParams, moduleId);
   }
 
   function openSourceSearch(sourceId: string, query: string) {
@@ -120,6 +142,15 @@ export default function ResearchLibraryModule() {
 
         {tab === "curriculum" && (
           <Card>
+            {curriculumWs.hydrated && (
+              <WorkspaceHistory
+                items={curriculumWs.items}
+                activeId={curriculumWs.activeId}
+                onSelect={curriculumWs.loadItem}
+                onDelete={curriculumWs.removeItem}
+                onNew={curriculumWs.startNew}
+              />
+            )}
             <CardTitle>AI Research Curriculum Generator</CardTitle>
             <p className="mb-4 mt-1 text-sm text-slate-500">
               Example: &quot;I&apos;m a Master&apos;s student in Education&quot; — get a learning
@@ -130,7 +161,7 @@ export default function ResearchLibraryModule() {
                 <label className={labelClass}>Research level</label>
                 <Select
                   value={researchLevel}
-                  onChange={(e) => setResearchLevel(e.target.value)}
+                  onChange={(e) => curriculumWs.setForm({ researchLevel: e.target.value })}
                 >
                   {RESEARCH_LEVELS.map((l) => (
                     <option key={l.id} value={l.id}>
@@ -141,7 +172,10 @@ export default function ResearchLibraryModule() {
               </div>
               <div>
                 <label className={labelClass}>Discipline / field</label>
-                <Select value={discipline} onChange={(e) => setDiscipline(e.target.value)}>
+                <Select
+                  value={discipline}
+                  onChange={(e) => curriculumWs.setForm({ discipline: e.target.value })}
+                >
                   {RESEARCH_DISCIPLINES.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.label}
@@ -155,7 +189,7 @@ export default function ResearchLibraryModule() {
               rows={2}
               placeholder="e.g. Complete thesis in 12 months, focus on qualitative classroom research…"
               value={goals}
-              onChange={(e) => setGoals(e.target.value)}
+              onChange={(e) => curriculumWs.setForm({ goals: e.target.value })}
             />
             <Button className="mt-4" onClick={generateCurriculum} disabled={loading}>
               <Sparkles className="h-4 w-4" />
