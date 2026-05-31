@@ -13,8 +13,13 @@ export const config = {
   },
   auth: {
     secret: env("AUTH_SECRET") || env("NEXTAUTH_SECRET"),
-    url: env("NEXTAUTH_URL") || "http://localhost:3000",
+    url:
+      env("NEXTAUTH_URL") ||
+      env("AUTH_URL") ||
+      env("NEXT_PUBLIC_APP_URL") ||
+      "http://localhost:3000",
   },
+  appUrl: env("NEXT_PUBLIC_APP_URL") || env("NEXTAUTH_URL") || "http://localhost:3000",
   openai: {
     apiKey: env("OPENAI_API_KEY"),
     model: env("OPENAI_MODEL") || "gpt-4o-mini",

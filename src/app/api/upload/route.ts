@@ -15,6 +15,34 @@ const ALLOWED = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
 
+async function storeFile(
+  storageKey: string,
+  buffer: Buffer
+): Promise<{ storageKey: string; persistent: boolean }> {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const { put } = await import("@vercel/blob");
+      const blob = await put(storageKey, buffer, {
+        access: "public",
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
+      return { storageKey: blob.url, persistent: true };
+    } catch (e) {
+      console.error("[upload] Vercel Blob failed, falling back:", e);
+    }
+  }
+
+  const isVercel = Boolean(process.env.VERCEL);
+  const uploadDir = isVercel
+    ? path.join("/tmp", "gm-uploads")
+    : path.resolve(process.cwd(), config.upload.dir);
+
+  await mkdir(uploadDir, { recursive: true });
+  await writeFile(path.join(uploadDir, storageKey), buffer);
+
+  return { storageKey, persistent: !isVercel };
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -34,12 +62,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unsupported file type" }, { status: 400 });
     }
 
-    const uploadDir = path.resolve(process.cwd(), config.upload.dir);
-    await mkdir(uploadDir, { recursive: true });
-
-    const storageKey = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+    const fileKey = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadDir, storageKey), buffer);
+    const stored = await storeFile(fileKey, buffer);
 
     const doc = await prisma.document.create({
       data: {
@@ -47,7 +72,7 @@ export async function POST(req: Request) {
         name: file.name,
         mimeType: file.type || "application/octet-stream",
         size: file.size,
-        storageKey,
+        storageKey: stored.storageKey,
         portal: portal ?? undefined,
       },
     });
@@ -57,6 +82,10 @@ export async function POST(req: Request) {
       name: doc.name,
       size: doc.size,
       mode: getRuntimeMode(),
+      persistent: stored.persistent,
+      note: stored.persistent
+        ? undefined
+        : "Add Vercel Blob (BLOB_READ_WRITE_TOKEN) for permanent file storage on live hosting.",
     });
   } catch (e) {
     console.error("[upload]", e);

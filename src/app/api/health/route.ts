@@ -13,6 +13,7 @@ export async function GET() {
 
   return NextResponse.json({
     status: "ok",
+    appUrl: config.appUrl,
     appMode: config.appMode,
     runtimeMode: getRuntimeMode(),
     demoBanner: config.isDemoMode() || getRuntimeMode() === "demo",
@@ -21,6 +22,7 @@ export async function GET() {
       openai: config.openai.enabled(),
       stripe: config.stripe.enabled(),
       auth: Boolean(config.auth.secret),
+      blobStorage: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
     },
   });
 }
