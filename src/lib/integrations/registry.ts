@@ -30,6 +30,15 @@ export const INTEGRATION_SOURCES: IntegrationSource[] = [
     requiresKey: "XAI_API_KEY",
     website: "https://x.ai",
   },
+  {
+    id: "gptzero",
+    name: "GPTZero",
+    category: "ai",
+    description: "Dedicated AI content detector (AI Detection module)",
+    apiEnabled: true,
+    requiresKey: "GPTZERO_API_KEY",
+    website: "https://gptzero.me/developers",
+  },
   // Literature & citations
   {
     id: "semantic-scholar",

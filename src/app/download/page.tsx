@@ -24,7 +24,7 @@ export default function DownloadPage() {
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-12">
         <Link
-          href="/"
+          href="/research"
           className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
         >
           <ArrowLeft className="h-4 w-4" /> Back to portals
@@ -64,7 +64,7 @@ export default function DownloadPage() {
                     </div>
                   </div>
                   {platform.id === "web" ? (
-                    <Link href="/">
+                    <Link href="/research">
                       <Button>{platform.action}</Button>
                     </Link>
                   ) : (

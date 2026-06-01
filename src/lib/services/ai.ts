@@ -45,9 +45,7 @@ export async function generateAcademicText(
   prompt: string,
   options?: { context?: string; maxTokens?: number }
 ): Promise<{ content: string; mode: "demo" | "live" }> {
-  const mode = getRuntimeMode();
-
-  if (mode === "demo" || !config.openai.enabled()) {
+  if (!config.openai.enabled()) {
     await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
     return { content: generateMockResponse(prompt), mode: "demo" };
   }

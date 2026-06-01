@@ -29,7 +29,7 @@ export function PortalSidebar({ portalId }: { portalId: PortalId }) {
   return (
     <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
       <div className="border-b border-slate-100 p-4">
-        <Link href="/" className="mb-3 flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700">
+        <Link href="/research" className="mb-3 flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700">
           <ArrowLeft className="h-3 w-3" /> All portals
         </Link>
         <Link href={portalPath(portalId)} className="flex items-center gap-2">

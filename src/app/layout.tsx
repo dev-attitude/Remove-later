@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
-import { DemoBanner } from "@/components/DemoBanner";
+import { ConditionalDemoBanner } from "@/components/marketing/ConditionalDemoBanner";
 import "./globals.css";
 
 const inter = Inter({
@@ -15,9 +15,12 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "GM Research Suite",
+  title: {
+    default: "GM Consultations | Expert Solutions for Success",
+    template: "%s | GM Consultations",
+  },
   description:
-    "Multi-portal AI research platform — institution, student, analysis, and developer consoles",
+    "IT consulting, business consulting, gadgets, system development, web & app development, and the GM Research Suite.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -34,7 +37,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${sourceSerif.variable}`}>
       <body className="font-sans antialiased">
         <SessionProvider>
-          <DemoBanner />
+          <ConditionalDemoBanner />
           {children}
         </SessionProvider>
       </body>

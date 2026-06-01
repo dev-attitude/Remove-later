@@ -52,7 +52,7 @@ export default function HowItWorksPage() {
             <li>
               Install: <code className="rounded bg-white px-1">cd gm-research-suite && npm install && npm run dev</code>
             </li>
-            <li>Open the <Link href="/" className="text-brand-600 underline">portal hub</Link> — choose Institution, Student, Analysis, or Developer.</li>
+            <li>Open the <Link href="/research" className="text-brand-600 underline">portal hub</Link> — choose Institution, Student, Analysis, or Developer.</li>
             <li>
               Demo mode uses <strong>mock AI</strong> in <code className="rounded bg-white px-1">src/lib/mock-ai.ts</code>.
               Replace with OpenAI, Anthropic, or your backend API.
@@ -140,7 +140,7 @@ Service   Vector    Search      Engine     Services   + Repo
             Try writing (Student portal) <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            href="/"
+            href="/research"
             className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-50"
           >
             Back to portals

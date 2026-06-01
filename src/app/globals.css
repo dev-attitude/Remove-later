@@ -23,4 +23,39 @@ body {
   .gradient-hero {
     background: linear-gradient(135deg, #111a57 0%, #1a44f5 50%, #0d9488 100%);
   }
+
+  .marketing-hero-glow {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(26, 68, 245, 0.35), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 50%, rgba(13, 148, 136, 0.15), transparent);
+  }
+
+  .marketing-grid-pattern {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .marketing-card-glow {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 20px 50px -20px rgba(26, 68, 245, 0.35);
+  }
+
+  .marketing-service-card {
+    @apply block rounded-2xl border border-white/10 bg-slate-900/40 p-6 transition hover:border-brand-500/40 hover:bg-slate-900/70;
+  }
+
+  .marketing-btn-primary {
+    @apply inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/25 transition hover:brightness-110;
+  }
+
+  .marketing-btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10;
+  }
+
+  .marketing-input {
+    @apply w-full rounded-lg border border-white/15 bg-slate-950/50 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+  }
 }

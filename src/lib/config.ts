@@ -25,6 +25,30 @@ export const config = {
     model: env("OPENAI_MODEL") || "gpt-4o-mini",
     enabled: () => Boolean(env("OPENAI_API_KEY")),
   },
+  gemini: {
+    apiKey: env("GEMINI_API_KEY"),
+    model: env("GEMINI_MODEL") || "gemini-1.5-flash",
+    enabled: () => Boolean(env("GEMINI_API_KEY")),
+  },
+  xai: {
+    apiKey: env("XAI_API_KEY"),
+    model: env("XAI_MODEL") || "grok-2-latest",
+    enabled: () => Boolean(env("XAI_API_KEY")),
+  },
+  aiDetection: {
+    /** Default detector for scans: auto | gptzero | openai | gemini | grok | heuristic */
+    defaultProvider: (env("AI_DETECTOR_PROVIDER") || "auto") as
+      | "auto"
+      | "gptzero"
+      | "openai"
+      | "gemini"
+      | "grok"
+      | "heuristic",
+    gptzero: {
+      apiKey: env("GPTZERO_API_KEY"),
+      enabled: () => Boolean(env("GPTZERO_API_KEY")),
+    },
+  },
   stripe: {
     secretKey: env("STRIPE_SECRET_KEY"),
     webhookSecret: env("STRIPE_WEBHOOK_SECRET"),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Shield,
   Upload,
@@ -18,8 +18,11 @@ import { Textarea } from "@/components/ui/Textarea";
 import {
   detectAIApi,
   extractDocumentTextApi,
+  fetchAIDetectorProviders,
   humanizeFlaggedAIApi,
   type AIDetectionResult,
+  type AIDetectorId,
+  type AIDetectorProviderInfo,
 } from "@/lib/client/api";
 import {
   buildHighlightSegments,
@@ -39,7 +42,35 @@ export default function AIDetectionModule() {
   const [humanizing, setHumanizing] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [detector, setDetector] = useState<AIDetectorId>("auto");
+  const [detectorOptions, setDetectorOptions] = useState<AIDetectorProviderInfo[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetchAIDetectorProviders()
+      .then(({ providers, defaultProvider }) => {
+        setDetectorOptions(providers);
+        setDetector(defaultProvider);
+      })
+      .catch(() => {
+        setDetectorOptions([
+          {
+            id: "auto",
+            label: "Auto (best available)",
+            description: "",
+            available: true,
+            category: "local",
+          },
+          {
+            id: "heuristic",
+            label: "Heuristic only",
+            description: "",
+            available: true,
+            category: "local",
+          },
+        ]);
+      });
+  }, []);
 
   const flagged = result?.sentences.filter((s) => s.risk === "high" || s.risk === "moderate") ?? [];
   const segments =
@@ -50,7 +81,7 @@ export default function AIDetectionModule() {
     setError("");
     setResult(null);
     try {
-      const data = await detectAIApi(content);
+      const data = await detectAIApi(content, detector);
       setResult(data);
       setDisplayText(data.fullText);
     } catch (e) {
@@ -201,15 +232,43 @@ export default function AIDetectionModule() {
             </>
           )}
 
-          {inputMode === "paste" && (
-            <Button
-              className="mt-4"
-              onClick={() => runScan(text)}
-              disabled={loading || extracting || text.trim().length < 10}
-            >
-              {loading ? "Scanning for AI content…" : "Detect AI content"}
-            </Button>
-          )}
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div className="flex-1">
+              <label
+                htmlFor="ai-detector"
+                className="block text-sm font-medium text-slate-700"
+              >
+                Detection engine
+              </label>
+              <select
+                id="ai-detector"
+                value={detector}
+                onChange={(e) => setDetector(e.target.value as AIDetectorId)}
+                className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800"
+              >
+                {detectorOptions.map((p) => (
+                  <option key={p.id} value={p.id} disabled={!p.available && p.id !== "auto"}>
+                    {p.label}
+                    {!p.available && p.id !== "auto" ? " (not configured)" : ""}
+                  </option>
+                ))}
+              </select>
+              {detectorOptions.find((p) => p.id === detector)?.description && (
+                <p className="mt-1 text-xs text-slate-500">
+                  {detectorOptions.find((p) => p.id === detector)?.description}
+                </p>
+              )}
+            </div>
+            {inputMode === "paste" && (
+              <Button
+                className="shrink-0"
+                onClick={() => runScan(text)}
+                disabled={loading || extracting || text.trim().length < 10}
+              >
+                {loading ? "Scanning…" : "Detect AI content"}
+              </Button>
+            )}
+          </div>
 
           {(extracting || loading) && inputMode === "upload" && (
             <p className="mt-4 text-sm text-brand-700">
@@ -252,8 +311,25 @@ export default function AIDetectionModule() {
                   {" · "}
                   <span className="text-orange-600">{result.counts.moderate} moderate</span>
                 </p>
-                {result.mode && (
-                  <p className="mt-2 text-xs uppercase text-slate-500">{result.mode} engine</p>
+                {(result.detectorLabel || result.mode) && (
+                  <p className="mt-2 text-xs text-slate-500">
+                    Engine:{" "}
+                    <span
+                      className={
+                        result.mode === "live" && !result.analysisNote
+                          ? "font-semibold text-emerald-700"
+                          : result.mode === "live"
+                            ? "font-semibold text-amber-700"
+                            : "font-semibold text-amber-800"
+                      }
+                    >
+                      {result.detectorLabel ??
+                        (result.mode === "live" ? "Live" : "Demo / heuristic")}
+                    </span>
+                  </p>
+                )}
+                {result.analysisNote && (
+                  <p className="mt-2 text-xs text-amber-800">{result.analysisNote}</p>
                 )}
               </Card>
             </div>

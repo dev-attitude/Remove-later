@@ -2,7 +2,7 @@
   "name": "GM Research Suite",
   "short_name": "GM Research",
   "description": "AI research platform — writing, analysis, and integrity",
-  "start_url": "/",
+  "start_url": "/research",
   "display": "standalone",
   "background_color": "#111a57",
   "theme_color": "#1a44f5",

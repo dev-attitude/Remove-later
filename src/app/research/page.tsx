@@ -2,26 +2,46 @@ import Link from "next/link";
 import { PORTALS, DOWNLOAD_PLATFORMS } from "@/lib/portals";
 import { Card, CardTitle } from "@/components/ui/Card";
 import {
-  Sparkles,
   Download,
   Globe,
   ArrowRight,
   Shield,
+  ArrowLeft,
 } from "lucide-react";
+import Image from "next/image";
+import { COMPANY } from "@/lib/site-content";
 
-export default function PortalHubPage() {
+export const metadata = {
+  title: "GM Research Suite | Portals",
+  description: "Multi-portal AI research platform for institutions, students, and analysts.",
+};
+
+export default function ResearchHubPage() {
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="gradient-hero px-6 py-16 text-white md:px-12">
-        <div className="mx-auto flex max-w-6xl items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20">
-            <Sparkles className="h-7 w-7" />
-          </div>
-          <div>
-            <h1 className="font-display text-3xl font-bold md:text-4xl">
-              GM Research Suite
-            </h1>
-            <p className="text-white/90">Choose your portal to sign in</p>
+      <header className="gradient-hero px-6 py-12 text-white md:px-12">
+        <div className="mx-auto max-w-6xl">
+          <Link
+            href="/"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-white/80 hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {COMPANY.name} home
+          </Link>
+          <div className="flex items-center gap-4">
+            <Image
+              src="/logo.png"
+              alt="GM"
+              width={56}
+              height={56}
+              className="h-14 w-14 rounded-xl bg-white/10 object-contain p-1"
+            />
+            <div>
+              <h1 className="font-display text-3xl font-bold md:text-4xl">
+                GM Research Suite
+              </h1>
+              <p className="text-white/90">Choose your portal to sign in</p>
+            </div>
           </div>
         </div>
         <p className="mx-auto mt-6 max-w-3xl text-lg text-white/85">
@@ -52,7 +72,9 @@ export default function PortalHubPage() {
             return (
               <Link key={portal.id} href={`/${portal.id}`}>
                 <Card className="h-full transition hover:border-brand-300 hover:shadow-lg">
-                  <div className={`mb-4 inline-flex rounded-lg bg-gradient-to-br ${portal.accent} p-3 text-white`}>
+                  <div
+                    className={`mb-4 inline-flex rounded-lg bg-gradient-to-br ${portal.accent} p-3 text-white`}
+                  >
                     <Icon className="h-8 w-8" />
                   </div>
                   <CardTitle className="!text-xl">{portal.name}</CardTitle>
@@ -112,8 +134,8 @@ export default function PortalHubPage() {
             <Link href="/register" className="text-brand-600 hover:underline">
               Register
             </Link>
-            <Link href="/developer" className="text-slate-400 hover:text-slate-600">
-              Developer console →
+            <Link href="/" className="text-slate-400 hover:text-slate-600">
+              Company website →
             </Link>
           </div>
         </footer>

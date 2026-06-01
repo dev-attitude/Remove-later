@@ -77,7 +77,7 @@ export default function LoginPage() {
             Register
           </Link>
         </p>
-        <Link href="/" className="mt-4 block text-center text-sm text-slate-500 underline">
+        <Link href="/research" className="mt-4 block text-center text-sm text-slate-500 underline">
           Back to portals
         </Link>
       </Card>

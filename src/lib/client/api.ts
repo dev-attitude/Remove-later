@@ -114,6 +114,22 @@ export type PlagiarismResult = {
 
 export type AIRiskLevel = "high" | "moderate" | "low";
 
+export type AIDetectorId =
+  | "auto"
+  | "openai"
+  | "gemini"
+  | "grok"
+  | "gptzero"
+  | "heuristic";
+
+export type AIDetectorProviderInfo = {
+  id: AIDetectorId;
+  label: string;
+  description: string;
+  available: boolean;
+  category: "dedicated" | "llm" | "local";
+};
+
 export type AIDetectionResult = {
   overallAI: number;
   sentences: {
@@ -126,7 +142,18 @@ export type AIDetectionResult = {
   fullText: string;
   mode?: ApiMode;
   counts: { high: number; moderate: number; low: number };
+  analysisNote?: string;
+  detectorId?: AIDetectorId;
+  detectorLabel?: string;
 };
+
+export async function fetchAIDetectorProviders() {
+  const res = await fetchWithTimeout("/api/ai-detection/providers", {}, 15_000);
+  return parseJson<{
+    providers: AIDetectorProviderInfo[];
+    defaultProvider: AIDetectorId;
+  }>(res);
+}
 
 export async function extractDocumentTextApi(file: File) {
   const form = new FormData();
@@ -151,13 +178,13 @@ export async function checkPlagiarismApi(text: string) {
   return parseJson<PlagiarismResult>(res);
 }
 
-export async function detectAIApi(text: string) {
+export async function detectAIApi(text: string, detector?: AIDetectorId) {
   const res = await fetchWithTimeout(
     "/api/ai-detection/scan",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, detector }),
     },
     120_000
   );

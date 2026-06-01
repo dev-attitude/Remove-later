@@ -7,9 +7,15 @@ const PUBLIC_PREFIXES = [
   "/login",
   "/register",
   "/download",
+  "/research",
+  "/services",
+  "/shop",
+  "/about",
+  "/contact",
   "/api/health",
   "/api/auth",
   "/api/literature",
+  "/api/contact",
 ];
 
 function hasSessionCookie(req: NextRequest): boolean {
@@ -23,7 +29,13 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isProduction = process.env.GM_APP_MODE === "production";
 
-  if (pathname === "/") return NextResponse.next();
+  if (
+    pathname === "/" ||
+    pathname.startsWith("/services/") ||
+    pathname.startsWith("/_next")
+  ) {
+    return NextResponse.next();
+  }
 
   const isPublic = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
   if (!isProduction || isPublic) return NextResponse.next();

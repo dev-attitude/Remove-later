@@ -24,5 +24,12 @@ export async function GET() {
       auth: Boolean(config.auth.secret),
       blobStorage: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
     },
+    aiDetectors: {
+      gptzero: config.aiDetection.gptzero.enabled(),
+      openai: config.openai.enabled(),
+      gemini: config.gemini.enabled(),
+      grok: config.xai.enabled(),
+      defaultProvider: config.aiDetection.defaultProvider,
+    },
   });
 }
