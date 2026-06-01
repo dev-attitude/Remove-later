@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import {
+  isContactNotifyConfigured,
+  notifyContactInquiry,
+} from "@/lib/services/contact-notifications";
 
 const contactSchema = z.object({
   type: z.enum(["contact", "purchase"]),
@@ -31,11 +35,48 @@ export async function POST(req: Request) {
       at: new Date().toISOString(),
     });
 
+    const isProduction = process.env.GM_APP_MODE === "production";
+
+    if (isProduction && !isContactNotifyConfigured()) {
+      console.error("[gm-contact-inquiry] notifications not configured in production");
+      return NextResponse.json(
+        {
+          error:
+            "Our contact system is being set up. Please email or call us directly in the meantime.",
+        },
+        { status: 503 }
+      );
+    }
+
+    const result = await notifyContactInquiry(body);
+
+    const emailRequired = result.emailConfigured;
+    const smsRequired = result.smsConfigured;
+
+    if (emailRequired && !result.email) {
+      return NextResponse.json(
+        { error: "We could not send your message. Please call us directly." },
+        { status: 500 }
+      );
+    }
+
+    if (smsRequired && !result.sms) {
+      return NextResponse.json(
+        { error: "We could not send your message. Please call us directly." },
+        { status: 500 }
+      );
+    }
+
+    if (!emailRequired && !smsRequired) {
+      console.info("[gm-contact-inquiry] dev mode — stored in logs only");
+    }
+
     return NextResponse.json({ ok: true });
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json({ error: "Please check your form fields." }, { status: 400 });
     }
+    console.error("[gm-contact-inquiry]", e);
     return NextResponse.json({ error: "Could not send message." }, { status: 500 });
   }
 }

@@ -100,6 +100,30 @@ Create **Products / Prices** matching tiers in `src/lib/portals.ts` and map Pric
 
 ---
 
+## Step 5b — Contact form email + SMS
+
+When someone submits **Contact** or a **Shop quote**, the app can email **97transformative@gmail.com** and text **both** office numbers.
+
+In Vercel → **Settings → Environment Variables**, add:
+
+| Variable | Purpose |
+|----------|---------|
+| `RESEND_API_KEY` | Email via [Resend](https://resend.com) (recommended), **or** use SMTP rows below |
+| `CONTACT_FROM_EMAIL` | Verified sender, e.g. `Skyrapay <hello@yourdomain.com>` |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Gmail App Password alternative |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_SMS_FROM` | SMS to both +264 numbers |
+
+Optional overrides (defaults are already your site contact details):
+
+- `CONTACT_NOTIFY_EMAIL`
+- `CONTACT_NOTIFY_PHONES` — comma-separated, e.g. `+264812986481,+264818774482`
+
+Redeploy after saving. Test from `/contact` and `/shop`.
+
+**Note:** With `GM_APP_MODE=production` and no email/SMS keys, the form returns an error asking the client to call you instead.
+
+---
+
 ## Step 6 — Custom domain (optional)
 
 Vercel → Project → **Settings → Domains** → add e.g. `research.youruniversity.edu`.
