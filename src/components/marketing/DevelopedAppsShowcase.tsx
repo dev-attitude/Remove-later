@@ -111,11 +111,11 @@ export function DevelopedAppsShowcase() {
 
       <p className="mt-8 text-center text-sm text-slate-500">
         Want a custom app or website like these?{" "}
-        <Link href="/shop?package=business-website" className="font-medium text-brand-600 underline">
+        <Link href="/shop?package=business-website" className="font-medium text-royal underline">
           Request a quote below
         </Link>{" "}
         or{" "}
-        <Link href="/contact" className="font-medium text-brand-600 underline">
+        <Link href="/contact" className="font-medium text-royal underline">
           contact us
         </Link>
         .

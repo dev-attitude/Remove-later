@@ -328,6 +328,45 @@ export const DEVELOPED_APPLICATIONS: DevelopedApp[] = [
     ],
   },
   {
+    id: "meyfield-college-website",
+    name: "Meyfield College — Public Website",
+    description:
+      "Official college website for Meyfield College, Ondangwa—programmes, admissions, news, gallery, vacancies, and online application. Built for prospective students and the public.",
+    type: "website",
+    href: "https://www.meyfieldcollege.org/",
+    external: true,
+    highlights: [
+      "Courses & admissions",
+      "Online application (June intake)",
+      "News, gallery & contact",
+    ],
+    accessLinks: [
+      { label: "Visit website", href: "https://www.meyfieldcollege.org/", external: true },
+      { label: "Apply online", href: "https://www.meyfieldcollege.org/", external: true },
+    ],
+  },
+  {
+    id: "meyfield-college-ums",
+    name: "Meyfield College — University Management System",
+    description:
+      "Secure online portal for Meyfield College staff and students—role-based login for Admin, Lecturer, Student, Registrar, Finance, HR, and IT.",
+    type: "web-app",
+    href: "https://onlinem.meyfieldcollege.org/login.php",
+    external: true,
+    highlights: [
+      "Multi-role authentication",
+      "Student & lecturer workflows",
+      "Registrar, finance & HR modules",
+    ],
+    accessLinks: [
+      {
+        label: "Staff & student login",
+        href: "https://onlinem.meyfieldcollege.org/login.php",
+        external: true,
+      },
+    ],
+  },
+  {
     id: "skyrapay-research-suite",
     name: "Skyrapay Research Suite",
     description:
