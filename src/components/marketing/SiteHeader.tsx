@@ -10,10 +10,10 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-navy shadow-lg shadow-navy/20">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 md:px-8 md:py-3">
-        <Link href="/" className="flex shrink-0 items-center bg-white">
-          <BrandLogo className="h-14 w-auto md:h-16" priority />
+        <Link href="/" className="flex shrink-0 items-center rounded-lg bg-white px-2 py-1">
+          <BrandLogo className="h-14 w-auto md:h-16" priority onDark />
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">
@@ -21,21 +21,21 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-brand-700"
+              className="rounded-md px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
             >
               {link.label}
             </Link>
           ))}
           <Link
             href={COMPANY.researchAppPath}
-            className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-brand-100 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-800 transition hover:bg-brand-100"
+            className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-sky/40 bg-white/10 px-3 py-2 text-sm font-medium text-sky-100 transition hover:bg-white/15 hover:text-white"
           >
             <FlaskConical className="h-4 w-4" />
             Skyrapay Research
           </Link>
           <Link
             href="/shop"
-            className="ml-2 inline-flex items-center gap-1 rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600"
+            className="ml-2 inline-flex items-center gap-1 rounded-md bg-royal px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky"
           >
             Get a quote
             <ArrowRight className="h-4 w-4" />
@@ -44,7 +44,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="rounded-md p-2 text-slate-700 lg:hidden"
+          className="rounded-md p-2 text-white lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -53,12 +53,12 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="border-t border-slate-100 bg-white px-4 py-4 lg:hidden">
+        <nav className="border-t border-white/10 bg-navy px-4 py-4 lg:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block rounded-md px-3 py-3 text-sm font-medium text-slate-700"
+              className="block rounded-md px-3 py-3 text-sm font-medium text-slate-100 hover:bg-white/10"
               onClick={() => setOpen(false)}
             >
               {link.label}
@@ -66,7 +66,7 @@ export function SiteHeader() {
           ))}
           <Link
             href={COMPANY.researchAppPath}
-            className="mt-2 flex items-center gap-2 rounded-md bg-brand-50 px-3 py-3 text-sm font-medium text-brand-800"
+            className="mt-2 flex items-center gap-2 rounded-md border border-sky/30 bg-white/10 px-3 py-3 text-sm font-medium text-sky-100"
             onClick={() => setOpen(false)}
           >
             <FlaskConical className="h-4 w-4" />
@@ -74,7 +74,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/shop"
-            className="mt-3 block rounded-md bg-brand-700 px-4 py-3 text-center text-sm font-semibold text-white"
+            className="mt-3 block rounded-md bg-royal px-4 py-3 text-center text-sm font-semibold text-white hover:bg-sky"
             onClick={() => setOpen(false)}
           >
             Get a quote
