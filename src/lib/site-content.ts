@@ -10,9 +10,13 @@ import {
   Headphones,
 } from "lucide-react";
 
+import { BRAND } from "./brand";
+
 export const COMPANY = {
-  name: "GM Consultations",
-  tagline: "Expert Solutions for Success",
+  name: BRAND.companyLegal,
+  shortName: BRAND.companyName,
+  tagline: BRAND.tagline,
+  productName: BRAND.productName,
   email: "97transformative@gmail.com",
   phones: ["+264 81 298 6481", "+264 81 877 4482"] as const,
   /** Primary phone for tel: links */
@@ -73,7 +77,7 @@ export const SERVICES: ServiceItem[] = [
     short:
       "Registration, business plans, branding, websites, and growth strategy for Namibian SMEs.",
     description:
-      "GM Consultations supports entrepreneurs and established businesses across Namibia—from CC and (Pty) Ltd registration with BIPA, NamRA, and Social Security, to business plans, proposals, logo and flyer design, and professional websites. We handle the paperwork so you can focus on running your business.",
+      "Skyrapay Consultations CC supports entrepreneurs and established businesses across Namibia—from CC and (Pty) Ltd registration with BIPA, NamRA, and Social Security, to business plans, proposals, logo and flyer design, and professional websites. We handle the paperwork so you can focus on running your business.",
     icon: Briefcase,
     features: [
       "CC & (Pty) Ltd business registration (BIPA, NamRA, Social Security, SME)",
@@ -287,7 +291,7 @@ export const BUSINESS_BRANDING_SERVICES = [
   "Business website design & development",
 ] as const;
 
-/** Live products built by GM Consultations — linked for customers to try */
+/** Live products built by Skyrapay Consultations CC */
 export type DevelopedAppType = "website" | "web-app" | "platform";
 
 export type DevelopedAppLink = {
@@ -311,8 +315,8 @@ export type DevelopedApp = {
 
 export const DEVELOPED_APPLICATIONS: DevelopedApp[] = [
   {
-    id: "gm-corporate-website",
-    name: "GM Consultations Website",
+    id: "skyrapay-corporate-website",
+    name: "Skyrapay Consultations Website",
     description:
       "Our corporate site—services, business registration packages, shop, and contact. Built with a modern responsive design and integrated with our product portfolio.",
     type: "website",
@@ -324,8 +328,8 @@ export const DEVELOPED_APPLICATIONS: DevelopedApp[] = [
     ],
   },
   {
-    id: "gm-research-suite",
-    name: "GM Research Suite",
+    id: "skyrapay-research-suite",
+    name: "Skyrapay Research Suite",
     description:
       "Multi-portal AI research platform for students, institutions, analysts, and developers. Writing, literature, AI detection, topics, and curriculum tools.",
     type: "platform",
@@ -407,7 +411,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     priceLabel: "From",
     priceFrom: 4999,
     currency: "USD",
-    description: "Portals, dashboards, and bespoke tools—like our Research Suite platform.",
+    description: "Portals, dashboards, and bespoke tools—like our Skyrapay Research Suite platform.",
     icon: Server,
     timeline: "Scoped per project",
     features: [

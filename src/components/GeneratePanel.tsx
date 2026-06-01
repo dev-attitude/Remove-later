@@ -85,7 +85,7 @@ export function GeneratePanel({
       </div>
       <Button onClick={handleGenerate} disabled={loading || !prompt.trim()}>
         <Sparkles className="h-4 w-4" />
-        Generate with GM AI
+        Generate with Skyrapay AI
       </Button>
       {error && <p className="text-sm text-red-600">{error}</p>}
       <AIOutput loading={loading} content={output} mode={mode} />

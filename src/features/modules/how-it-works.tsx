@@ -41,7 +41,7 @@ export default function HowItWorksPage() {
   return (
     <>
       <ModuleHeader
-        title="How GM Research Suite Works"
+        title="How Skyrapay Research Suite Works"
         description="End-to-end architecture: from upload to publication-ready output with integrity and collaboration."
         icon={HelpCircle}
       />
@@ -79,7 +79,7 @@ export default function HowItWorksPage() {
         <Card>
           <pre className="overflow-x-auto text-xs leading-relaxed text-slate-700">{`
 ┌─────────────────────────────────────────────────────────────────┐
-│                     GM Research Suite (Web)                      │
+│                  Skyrapay Research Suite (Web)                   │
 │  Next.js UI · Dashboard · 18 modules · Role-based views          │
 └────────────────────────────┬────────────────────────────────────┘
                              │ REST / GraphQL

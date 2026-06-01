@@ -254,7 +254,7 @@ export default function ResearchLibraryModule() {
                     </ul>
                   </div>
                   <div>
-                    <h3 className="font-semibold">GM Suite modules</h3>
+                    <h3 className="font-semibold">Skyrapay Suite modules</h3>
                     <ul className="mt-2 space-y-2 text-sm">
                       {curriculum.recommendedModules.map((m, i) => (
                         <li key={i} className="rounded-lg bg-brand-50 p-3">

@@ -26,7 +26,7 @@ export default function HomePage() {
               </p>
               <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-slate-900 md:text-5xl lg:text-6xl">
                 Technology & business solutions that{" "}
-                <span className="bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-royal to-sky bg-clip-text text-transparent">
                   drive real results
                 </span>
               </h1>
@@ -99,7 +99,7 @@ export default function HomePage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-white">
                 <FlaskConical className="h-6 w-6" />
               </div>
-              <h3 className="mt-5 text-lg font-semibold text-slate-900">GM Research Suite</h3>
+              <h3 className="mt-5 text-lg font-semibold text-navy">{COMPANY.productName}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 Our AI-powered academic research platform—available to students and
                 institutions.
@@ -129,7 +129,7 @@ export default function HomePage() {
                 </div>
                 <p className="mt-3 text-sm italic text-slate-700">
                   &ldquo;Professional delivery from brief to go-live. Our business site and
-                  research tools both run on GM Consultations infrastructure.&rdquo;
+                  research tools both run on Skyrapay Consultations infrastructure.&rdquo;
                 </p>
                 <p className="mt-2 text-xs text-slate-500">— Satisfied client</p>
               </div>

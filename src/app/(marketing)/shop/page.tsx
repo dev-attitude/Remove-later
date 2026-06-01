@@ -3,12 +3,13 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
 import { DevelopedAppsShowcase } from "@/components/marketing/DevelopedAppsShowcase";
+import { BRAND } from "@/lib/brand";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 import { ShopCheckout } from "@/components/marketing/ShopCheckout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop — Web & App Services | GM Consultations",
+  title: `Shop — Web & App Services | ${BRAND.companyName}`,
   description: "Purchase website packages, e-commerce, custom apps, and care plans.",
 };
 

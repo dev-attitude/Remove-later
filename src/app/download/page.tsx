@@ -30,7 +30,7 @@ export default function DownloadPage() {
           <ArrowLeft className="h-4 w-4" /> Back to portals
         </Link>
         <h1 className="font-display mt-4 text-3xl font-bold text-slate-900">
-          Download GM Research Suite
+          Download Skyrapay Research Suite
         </h1>
         <p className="mt-2 max-w-2xl text-slate-600">
           Use the web app in any browser, or install native apps on your phone or computer.
@@ -86,7 +86,7 @@ export default function DownloadPage() {
         <Card className="mt-12 bg-brand-50/50">
           <CardTitle>Install web app on mobile or laptop</CardTitle>
           <p className="mt-2 text-sm text-slate-600">
-            On Chrome, Safari, or Edge: open GM Research in the browser → menu →{" "}
+            On Chrome, Safari, or Edge: open Skyrapay Research in the browser → menu →{" "}
             <strong>Install app</strong> or <strong>Add to Home Screen</strong>. Works offline for
             saved PDFs (Student Pro and above).
           </p>

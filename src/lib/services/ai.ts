@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { config, getRuntimeMode } from "@/lib/config";
 import { generateMockResponse } from "@/lib/mock-ai";
 
-const SYSTEM_PROMPT = `You are GM Research Suite, an expert academic research assistant.
+const SYSTEM_PROMPT = `You are Skyrapay Research Suite, an expert academic research assistant.
 Write in formal academic English suitable for theses and journal articles.
 Use clear structure with headings where appropriate. Be precise and evidence-oriented.
 Never fabricate specific citations or DOIs — use placeholders like (Author, Year) when needed.`;

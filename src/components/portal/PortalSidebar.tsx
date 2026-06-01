@@ -38,7 +38,7 @@ export function PortalSidebar({ portalId }: { portalId: PortalId }) {
           </div>
           <div>
             <p className="font-display text-sm font-bold leading-tight text-slate-900">
-              GM Research
+              Skyrapay Research
             </p>
             <p className="text-[10px] font-medium uppercase tracking-wider text-brand-600">
               {portal.id === "student" ? "Student" : portal.id}

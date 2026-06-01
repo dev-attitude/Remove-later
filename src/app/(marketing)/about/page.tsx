@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Target, Users, Zap } from "lucide-react";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
+import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/site-content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About | GM Consultations",
-  description: "Learn about GM Consultations — expert solutions for success.",
+  title: `About | ${BRAND.companyName}`,
+  description: `Learn about ${BRAND.companyLegal} — ${BRAND.tagline}.`,
 };
 
 const VALUES = [
@@ -39,7 +40,7 @@ export default function AboutPage() {
             With offices in {COMPANY.offices.join(", ")}, and postal services via{" "}
             {COMPANY.poBox}, we serve businesses, institutions, and individuals who need
             reliable technology partners. Our team spans IT consulting, business strategy,
-            hardware supply, and full-stack development—including the GM Research Suite academic
+            hardware supply, and full-stack development—including the {COMPANY.productName} academic
             platform used by students and supervisors.
           </p>
           <p className="mt-4 leading-relaxed text-slate-600">

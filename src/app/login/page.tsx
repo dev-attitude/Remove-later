@@ -40,7 +40,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
       <Card className="w-full max-w-md">
-        <CardTitle>Sign in to GM Research Suite</CardTitle>
+        <CardTitle>Sign in to Skyrapay Research Suite</CardTitle>
         <p className="mt-2 text-sm text-slate-600">
           Demo: <code className="rounded bg-slate-100 px-1">demo@gmresearch.com</code> /{" "}
           <code className="rounded bg-slate-100 px-1">Demo1234!</code>

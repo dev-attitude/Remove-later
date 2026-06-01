@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { BRAND } from "@/lib/brand";
 import { SERVICES } from "@/lib/site-content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services | GM Consultations",
+  title: `Services | ${BRAND.companyName}`,
   description: "IT consulting, business consulting, gadgets, system development, and web apps.",
 };
 

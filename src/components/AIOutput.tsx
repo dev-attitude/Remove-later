@@ -15,7 +15,7 @@ export function AIOutput({
     return (
       <div className="flex items-center gap-3 rounded-lg border border-dashed border-brand-200 bg-brand-50/50 p-8 text-brand-700">
         <Loader2 className="h-5 w-5 animate-spin" />
-        <span className="text-sm">GM AI is generating…</span>
+        <span className="text-sm">Skyrapay AI is generating…</span>
       </div>
     );
   }

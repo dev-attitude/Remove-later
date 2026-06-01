@@ -9,10 +9,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
+import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/site-content";
 
 export const metadata = {
-  title: "GM Research Suite | Portals",
+  title: `${BRAND.productName} | Portals`,
   description: "Multi-portal AI research platform for institutions, students, and analysts.",
 };
 
@@ -32,7 +33,7 @@ export default function ResearchHubPage() {
             <BrandLogo className="h-12 w-auto" width={160} height={56} />
             <div>
               <h1 className="font-display text-3xl font-bold md:text-4xl">
-                GM Research Suite
+                {BRAND.productName}
               </h1>
               <p className="text-white/90">Choose your portal to sign in</p>
             </div>

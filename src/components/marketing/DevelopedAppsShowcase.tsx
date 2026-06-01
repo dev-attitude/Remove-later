@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, ArrowRight, Globe, Layers, Sparkles } from "lucide-react";
+import { BRAND } from "@/lib/brand";
 import { DEVELOPED_APPLICATIONS, type DevelopedApp, type DevelopedAppType } from "@/lib/site-content";
 
 const TYPE_LABELS: Record<DevelopedAppType, string> = {
@@ -98,7 +99,7 @@ export function DevelopedAppsShowcase() {
       <p className="marketing-eyebrow">Our work</p>
       <h2 className="marketing-section-title">Apps & websites we&apos;ve built</h2>
       <p className="mt-3 max-w-2xl marketing-body">
-        Explore live products developed by GM Consultations. Use them directly or ask us to build
+        Explore live products developed by {BRAND.companyLegal}. Use them directly or ask us to build
         something similar for your business.
       </p>
 

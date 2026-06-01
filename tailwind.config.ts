@@ -10,25 +10,34 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: "#eef4ff",
-          100: "#d9e6ff",
-          200: "#bcd4ff",
-          300: "#8eb8ff",
-          400: "#5990ff",
-          500: "#3366ff",
-          600: "#1a44f5",
-          700: "#1534e1",
-          800: "#182cb6",
-          900: "#192a8f",
-          950: "#111a57",
+          50: "#f0f9ff",
+          100: "#e0f2fe",
+          200: "#bae6fd",
+          300: "#38bdf8",
+          400: "#38bdf8",
+          500: "#2563eb",
+          600: "#2563eb",
+          700: "#1d4ed8",
+          800: "#1e3a5f",
+          900: "#0f172a",
+          950: "#0f172a",
         },
-        accent: {
-          gold: "#c9a227",
-          teal: "#0d9488",
+        navy: {
+          DEFAULT: "#0F172A",
+          50: "#f8fafc",
+        },
+        royal: {
+          DEFAULT: "#2563EB",
+        },
+        sky: {
+          DEFAULT: "#38BDF8",
+        },
+        ink: {
+          DEFAULT: "#1F2937",
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
     },

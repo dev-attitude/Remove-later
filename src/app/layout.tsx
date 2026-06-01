@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ConditionalDemoBanner } from "@/components/marketing/ConditionalDemoBanner";
+import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,15 +18,15 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "GM Consultations | Expert Solutions for Success",
-    template: "%s | GM Consultations",
+    default: `${BRAND.companyName} | ${BRAND.tagline}`,
+    template: `%s | ${BRAND.companyName}`,
   },
   description:
-    "IT consulting, business consulting, gadgets, system development, web & app development, and the GM Research Suite.",
+    `IT consulting, business consulting, gadgets, system development, web & app development, and ${BRAND.productName}.`,
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    title: "GM Research",
+    title: "Skyrapay Research",
   },
 };
 

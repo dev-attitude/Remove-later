@@ -31,7 +31,7 @@ export function SiteHeader() {
             className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-brand-100 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-800 transition hover:bg-brand-100"
           >
             <FlaskConical className="h-4 w-4" />
-            Research Suite
+            Skyrapay Research
           </Link>
           <Link
             href="/shop"
@@ -70,7 +70,7 @@ export function SiteHeader() {
             onClick={() => setOpen(false)}
           >
             <FlaskConical className="h-4 w-4" />
-            Research Suite
+            Skyrapay Research
           </Link>
           <Link
             href="/shop"

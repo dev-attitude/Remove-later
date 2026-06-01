@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { ContactForm } from "@/components/marketing/ContactForm";
+import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/site-content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact | GM Consultations",
-  description: "Get in touch with GM Consultations for IT, business, and development services.",
+  title: `Contact | ${BRAND.companyName}`,
+  description: `Get in touch with ${BRAND.companyLegal} for IT, business, and development services.`,
 };
 
 export default function ContactPage() {

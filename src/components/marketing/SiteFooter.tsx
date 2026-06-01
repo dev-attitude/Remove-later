@@ -34,7 +34,7 @@ export function SiteFooter() {
             ))}
             <li>
               <Link href={COMPANY.researchAppPath} className="transition hover:text-brand-700">
-                Research Suite
+                Skyrapay Research
               </Link>
             </li>
           </ul>

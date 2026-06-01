@@ -4,14 +4,13 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #1e293b;
+  --foreground: #1f2937;
   --card: #ffffff;
   --border: #e2e8f0;
   --muted: #64748b;
-  --gm-blue: #1534e1;
-  --gm-blue-light: #1a44f5;
-  --gm-silver: #94a3b8;
-  --gm-charcoal: #334155;
+  --color-navy: #0f172a;
+  --color-royal: #2563eb;
+  --color-sky: #38bdf8;
 }
 
 body {
@@ -25,32 +24,32 @@ body {
     @apply rounded-xl border border-slate-200/80 bg-white shadow-sm;
   }
   .gradient-hero {
-    background: linear-gradient(135deg, #111a57 0%, #1534e1 50%, #1a44f5 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #2563eb 55%, #38bdf8 100%);
   }
 
-  /* ─── GM Consultations — white professional theme (logo-aligned) ─── */
+  /* ─── Skyrapay Consultations CC — marketing theme ─── */
   .marketing-site {
-    @apply min-h-screen bg-white text-slate-700;
+    @apply min-h-screen bg-white text-ink;
   }
 
   .marketing-eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.2em] text-brand-700;
+    @apply text-xs font-bold uppercase tracking-[0.2em] text-royal;
   }
 
   .marketing-page-title {
-    @apply mt-2 font-display text-4xl font-bold tracking-tight text-slate-900 md:text-5xl;
+    @apply mt-2 font-display text-4xl font-bold tracking-tight text-navy md:text-5xl;
   }
 
   .marketing-section-title {
-    @apply font-display text-3xl font-bold tracking-tight text-slate-900 md:text-4xl;
+    @apply font-display text-3xl font-bold tracking-tight text-navy md:text-4xl;
   }
 
   .marketing-lead {
-    @apply text-lg leading-relaxed text-slate-600;
+    @apply text-lg leading-relaxed text-ink/80;
   }
 
   .marketing-body {
-    @apply leading-relaxed text-slate-600;
+    @apply leading-relaxed text-ink/80;
   }
 
   .marketing-hero {
@@ -59,44 +58,40 @@ body {
 
   .marketing-hero-glow {
     background:
-      radial-gradient(ellipse 70% 50% at 0% 0%, rgba(21, 52, 225, 0.06), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(148, 163, 184, 0.08), transparent 50%),
+      radial-gradient(ellipse 70% 50% at 0% 0%, rgba(37, 99, 235, 0.08), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(56, 189, 248, 0.1), transparent 50%),
       #ffffff;
   }
 
   .marketing-grid-pattern {
     background-image:
-      linear-gradient(rgba(21, 52, 225, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(21, 52, 225, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
   .marketing-card-glow {
-    @apply rounded-2xl bg-white shadow-lg shadow-slate-200/60 ring-1 ring-slate-100;
+    @apply rounded-2xl bg-white shadow-lg shadow-royal/10 ring-1 ring-slate-100;
   }
 
   .marketing-section-panel {
     @apply border-y border-slate-100 bg-white py-20;
   }
 
-  .marketing-section-muted {
-    @apply rounded-2xl border border-slate-100 bg-slate-50;
-  }
-
   .marketing-service-card {
-    @apply block rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition duration-200 hover:border-brand-200 hover:shadow-md;
+    @apply block rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition duration-200 hover:border-sky/60 hover:shadow-md;
   }
 
   .marketing-btn-primary {
-    @apply inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-600;
+    @apply inline-flex items-center gap-2 rounded-lg bg-royal px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700;
   }
 
   .marketing-btn-secondary {
-    @apply inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-800;
+    @apply inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-ink shadow-sm transition hover:border-sky hover:bg-brand-50 hover:text-navy;
   }
 
   .marketing-input {
-    @apply w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/15;
+    @apply w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-navy shadow-sm placeholder:text-slate-400 focus:border-royal focus:outline-none focus:ring-2 focus:ring-royal/15;
   }
 
   .marketing-form-panel {
@@ -104,15 +99,15 @@ body {
   }
 
   .marketing-info-banner {
-    @apply rounded-lg border border-brand-100 bg-brand-50/80 px-4 py-3 text-sm text-brand-900;
+    @apply rounded-lg border border-sky/40 bg-brand-50 px-4 py-3 text-sm text-navy;
   }
 
   .marketing-cta-band {
-    @apply border-t border-slate-100 bg-white py-16;
+    @apply border-t border-slate-100 bg-brand-50/50 py-16;
   }
 
   .marketing-tagline-rule {
-    @apply mx-auto mt-3 flex max-w-md items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500;
+    @apply mx-auto mt-3 flex max-w-md items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-ink/60;
   }
 
   .marketing-tagline-rule::before,

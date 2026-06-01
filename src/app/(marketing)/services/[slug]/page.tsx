@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
+import { BRAND } from "@/lib/brand";
 import { getServiceBySlug, SERVICES } from "@/lib/site-content";
 import type { Metadata } from "next";
 
@@ -14,9 +15,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
-  if (!service) return { title: "Service | GM Consultations" };
+  if (!service) return { title: `Service | ${BRAND.companyName}` };
   return {
-    title: `${service.title} | GM Consultations`,
+    title: `${service.title} | ${BRAND.companyName}`,
     description: service.short,
   };
 }

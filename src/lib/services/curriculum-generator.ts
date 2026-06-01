@@ -102,7 +102,7 @@ Rules:
 - libraryLevels must reference platform levels 1-7
 - methodologies must match discipline (${discipline}) and level (${level?.label})
 - statisticsPath empty or minimal for purely qualitative paths at Bachelor's
-- Include moduleIds that exist on GM Research Suite`;
+- Include moduleIds that exist on Skyrapay Research Suite`;
 }
 
 function parseCurriculumJson(raw: string): Omit<GeneratedCurriculum, "recommendedPapers" | "sourcesQueried" | "mode"> {
@@ -265,7 +265,7 @@ export async function generateResearchCurriculum(
         {
           role: "system",
           content:
-            "You are GM Research Suite curriculum designer. Output valid JSON only. Personalize to discipline and research level.",
+            "You are Skyrapay Research Suite curriculum designer. Output valid JSON only. Personalize to discipline and research level.",
         },
         { role: "user", content: buildCurriculumPrompt(input, papers) },
       ],
