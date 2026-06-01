@@ -51,12 +51,12 @@ export function ShopCheckout() {
 
   if (success) {
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-950/30 p-10 text-center">
-        <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400" />
-        <h2 className="mt-4 text-xl font-bold text-white">Request received</h2>
-        <p className="mt-2 text-slate-400">
-          We&apos;ll contact you at <strong className="text-white">{email}</strong> within one
-          business day with a formal quote for <strong className="text-white">{selected.name}</strong>.
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-10 text-center">
+        <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-600" />
+        <h2 className="mt-4 text-xl font-bold text-slate-900">Request received</h2>
+        <p className="mt-2 text-slate-600">
+          We&apos;ll contact you at <strong className="text-slate-900">{email}</strong> within one
+          business day with a formal quote for <strong className="text-slate-900">{selected.name}</strong>.
         </p>
       </div>
     );
@@ -65,7 +65,7 @@ export function ShopCheckout() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <label className="block text-sm font-medium text-slate-300">Select package</label>
+        <label className="block text-sm font-medium text-slate-700">Select package</label>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {SHOP_PACKAGES.map((pkg) => (
             <button
@@ -74,12 +74,12 @@ export function ShopCheckout() {
               onClick={() => setSelectedId(pkg.id)}
               className={`rounded-xl border p-4 text-left transition ${
                 selectedId === pkg.id
-                  ? "border-brand-500 bg-brand-600/20 ring-1 ring-brand-500"
-                  : "border-white/10 bg-slate-900/40 hover:border-white/20"
+                  ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200"
+                  : "border-slate-200 bg-white hover:border-brand-200"
               }`}
             >
-              <p className="font-semibold text-white">{pkg.name}</p>
-              <p className="mt-1 text-sm text-brand-300">
+              <p className="font-semibold text-slate-900">{pkg.name}</p>
+              <p className="mt-1 text-sm text-brand-600">
                 From ${pkg.priceFrom.toLocaleString()} {pkg.currency}
               </p>
             </button>
@@ -89,7 +89,7 @@ export function ShopCheckout() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-300">
+          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
             Full name *
           </label>
           <input
@@ -101,7 +101,7 @@ export function ShopCheckout() {
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-300">
+          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
             Email *
           </label>
           <input
@@ -116,7 +116,7 @@ export function ShopCheckout() {
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-slate-300">
+        <label htmlFor="phone" className="block text-sm font-medium text-slate-700">
           Phone / WhatsApp
         </label>
         <input
@@ -128,7 +128,7 @@ export function ShopCheckout() {
       </div>
 
       <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-slate-300">
+        <label htmlFor="notes" className="block text-sm font-medium text-slate-700">
           Project details
         </label>
         <textarea
@@ -141,9 +141,9 @@ export function ShopCheckout() {
         />
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-slate-900/50 p-4 text-sm text-slate-400">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
         <p>
-          Selected: <span className="font-semibold text-white">{selected.name}</span> —{" "}
+          Selected: <span className="font-semibold text-slate-900">{selected.name}</span> —{" "}
           {selected.priceLabel} ${selected.priceFrom.toLocaleString()} {selected.currency} ·{" "}
           {selected.timeline}
         </p>
@@ -153,7 +153,7 @@ export function ShopCheckout() {
         </p>
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       <button type="submit" disabled={loading} className="marketing-btn-primary w-full justify-center">
         {loading ? (

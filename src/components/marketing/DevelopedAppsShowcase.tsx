@@ -22,20 +22,20 @@ function AppCard({ app }: { app: DevelopedApp }) {
   return (
     <article
       className={`marketing-service-card flex flex-col ${
-        app.featured ? "border-brand-500/40 ring-1 ring-brand-500/25 lg:col-span-2" : ""
+        app.featured ? "border-brand-300 ring-2 ring-brand-100 lg:col-span-2" : ""
       }`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600/25 text-brand-300">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-700">
             <Icon className="h-6 w-6" />
           </div>
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand-400">
+            <span className="text-xs font-semibold uppercase tracking-wider text-brand-600">
               {TYPE_LABELS[app.type]}
               {app.featured && " · Flagship"}
             </span>
-            <h3 className="text-xl font-bold text-white">{app.name}</h3>
+            <h3 className="text-xl font-bold text-slate-900">{app.name}</h3>
           </div>
         </div>
         {app.featured && (
@@ -44,18 +44,18 @@ function AppCard({ app }: { app: DevelopedApp }) {
             alt=""
             width={48}
             height={48}
-            className="h-12 w-12 rounded-lg object-contain opacity-90"
+            className="h-12 w-12 rounded-lg object-contain"
           />
         )}
       </div>
 
-      <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-400">{app.description}</p>
+      <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">{app.description}</p>
 
       <ul className="mt-4 flex flex-wrap gap-2">
         {app.highlights.map((h) => (
           <li
             key={h}
-            className="rounded-full border border-white/10 bg-slate-950/50 px-3 py-1 text-xs text-slate-300"
+            className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-700"
           >
             {h}
           </li>
@@ -79,7 +79,7 @@ function AppCard({ app }: { app: DevelopedApp }) {
       </div>
 
       {app.accessLinks && app.accessLinks.length > 0 && (
-        <div className="mt-6 border-t border-white/10 pt-5">
+        <div className="mt-6 border-t border-slate-200 pt-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             Quick access
           </p>
@@ -90,7 +90,7 @@ function AppCard({ app }: { app: DevelopedApp }) {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                className="rounded-lg border border-white/15 bg-slate-950/40 px-3 py-1.5 text-xs font-medium text-brand-200 transition hover:border-brand-500/40 hover:bg-brand-600/10"
+                className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-brand-700 transition hover:border-brand-300 hover:bg-brand-50"
               >
                 {link.label}
               </Link>
@@ -105,13 +105,9 @@ function AppCard({ app }: { app: DevelopedApp }) {
 export function DevelopedAppsShowcase() {
   return (
     <section id="our-apps" className="scroll-mt-24">
-      <p className="text-sm font-semibold uppercase tracking-wider text-brand-400">
-        Our work
-      </p>
-      <h2 className="mt-2 font-display text-3xl font-bold text-white md:text-4xl">
-        Apps & websites we&apos;ve built
-      </h2>
-      <p className="mt-3 max-w-2xl text-slate-400">
+      <p className="marketing-eyebrow">Our work</p>
+      <h2 className="marketing-section-title">Apps & websites we&apos;ve built</h2>
+      <p className="mt-3 max-w-2xl marketing-body">
         Explore live products developed by GM Consultations. Use them directly or ask us to build
         something similar for your business.
       </p>
@@ -124,11 +120,11 @@ export function DevelopedAppsShowcase() {
 
       <p className="mt-8 text-center text-sm text-slate-500">
         Want a custom app or website like these?{" "}
-        <Link href="/shop?package=business-website" className="font-medium text-brand-400 underline">
+        <Link href="/shop?package=business-website" className="font-medium text-brand-600 underline">
           Request a quote below
         </Link>{" "}
         or{" "}
-        <Link href="/contact" className="font-medium text-brand-400 underline">
+        <Link href="/contact" className="font-medium text-brand-600 underline">
           contact us
         </Link>
         .

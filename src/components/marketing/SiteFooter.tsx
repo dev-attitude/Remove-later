@@ -5,7 +5,7 @@ import { COMPANY, NAV_LINKS, SERVICES } from "@/lib/site-content";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#040810] text-slate-400">
+    <footer className="border-t border-slate-200 bg-slate-900 text-slate-300">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4 md:px-8">
         <div className="lg:col-span-1">
           <Link href="/" className="inline-flex items-center gap-3">
@@ -14,10 +14,10 @@ export function SiteFooter() {
               alt={COMPANY.name}
               width={56}
               height={56}
-              className="h-14 w-14 rounded-lg object-contain"
+              className="h-14 w-14 rounded-lg bg-white/10 object-contain p-1"
             />
           </Link>
-          <p className="mt-4 text-sm leading-relaxed">
+          <p className="mt-4 text-sm leading-relaxed text-slate-400">
             {COMPANY.name} delivers IT, business consulting, quality gadgets, and
             custom software—helping organisations across Namibia and beyond succeed
             digitally.
@@ -31,13 +31,13 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2 text-sm">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="hover:text-brand-300">
+                <Link href={l.href} className="hover:text-white">
                   {l.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href={COMPANY.researchAppPath} className="hover:text-brand-300">
+              <Link href={COMPANY.researchAppPath} className="hover:text-white">
                 Research Suite App
               </Link>
             </li>
@@ -51,7 +51,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2 text-sm">
             {SERVICES.map((s) => (
               <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="hover:text-brand-300">
+                <Link href={`/services/${s.slug}`} className="hover:text-white">
                   {s.title}
                 </Link>
               </li>
@@ -93,7 +93,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-white/5 py-6 text-center text-xs text-slate-500">
+      <div className="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
         © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
       </div>
     </footer>

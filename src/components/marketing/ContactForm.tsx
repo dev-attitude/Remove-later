@@ -58,10 +58,10 @@ export function ContactForm() {
 
   if (success) {
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-950/30 p-8 text-center">
-        <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400" />
-        <p className="mt-4 font-semibold text-white">Message sent</p>
-        <p className="mt-2 text-sm text-slate-400">We&apos;ll reply to {email} soon.</p>
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-8 text-center">
+        <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600" />
+        <p className="mt-4 font-semibold text-slate-900">Message sent</p>
+        <p className="mt-2 text-sm text-slate-600">We&apos;ll reply to {email} soon.</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="c-name" className="block text-sm font-medium text-slate-300">
+          <label htmlFor="c-name" className="block text-sm font-medium text-slate-700">
             Name *
           </label>
           <input
@@ -82,7 +82,7 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="c-email" className="block text-sm font-medium text-slate-300">
+          <label htmlFor="c-email" className="block text-sm font-medium text-slate-700">
             Email *
           </label>
           <input
@@ -96,7 +96,7 @@ export function ContactForm() {
         </div>
       </div>
       <div>
-        <label htmlFor="c-phone" className="block text-sm font-medium text-slate-300">
+        <label htmlFor="c-phone" className="block text-sm font-medium text-slate-700">
           Phone
         </label>
         <input
@@ -107,7 +107,7 @@ export function ContactForm() {
         />
       </div>
       <div>
-        <label htmlFor="c-subject" className="block text-sm font-medium text-slate-300">
+        <label htmlFor="c-subject" className="block text-sm font-medium text-slate-700">
           Topic
         </label>
         <select
@@ -125,7 +125,7 @@ export function ContactForm() {
         </select>
       </div>
       <div>
-        <label htmlFor="c-message" className="block text-sm font-medium text-slate-300">
+        <label htmlFor="c-message" className="block text-sm font-medium text-slate-700">
           Message *
         </label>
         <textarea
@@ -137,7 +137,7 @@ export function ContactForm() {
           className="marketing-input mt-1 resize-y"
         />
       </div>
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <button type="submit" disabled={loading} className="marketing-btn-primary w-full justify-center">
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send message"}
       </button>
