@@ -27,6 +27,15 @@ body {
     background: linear-gradient(135deg, #0f172a 0%, #2563eb 55%, #38bdf8 100%);
   }
 
+  /** Header, footer, and promo banners — navy → royal (matches June promo) */
+  .marketing-chrome {
+    @apply bg-gradient-to-r from-navy to-royal text-white;
+  }
+
+  .marketing-chrome-footer {
+    @apply bg-gradient-to-r from-royal to-navy text-white;
+  }
+
   /* ─── Skyrapay Consultations CC — marketing theme ─── */
   .marketing-site {
     @apply min-h-screen bg-white text-ink;

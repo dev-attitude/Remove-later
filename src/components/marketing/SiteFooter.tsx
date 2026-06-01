@@ -5,7 +5,7 @@ import { COMPANY, NAV_LINKS, SERVICES } from "@/lib/site-content";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-navy text-slate-300">
+    <footer className="marketing-chrome-footer border-t border-white/10 text-slate-200">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4 md:px-8">
         <div className="lg:col-span-1">
           <Link href="/" className="inline-block rounded-lg bg-white px-2 py-1">
@@ -91,7 +91,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-white/10 py-5 text-center text-xs text-slate-500">
+      <div className="border-t border-white/10 bg-black/10 py-5 text-center text-xs text-slate-300">
         © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
       </div>
     </footer>

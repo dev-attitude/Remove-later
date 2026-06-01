@@ -5,7 +5,7 @@ export function PromoBanner({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`rounded-xl border border-royal/30 bg-gradient-to-r from-navy to-royal px-5 py-4 text-white shadow-md ${className}`}
+      className={`marketing-chrome rounded-xl border border-white/20 px-5 py-4 shadow-md ${className}`}
     >
       <p className="text-xs font-bold uppercase tracking-widest text-sky">
         {JUNE_PROMO.badge} · {JUNE_PROMO.title}

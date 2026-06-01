@@ -10,7 +10,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-navy shadow-lg shadow-navy/20">
+    <header className="marketing-chrome sticky top-0 z-50 border-b border-white/10 shadow-lg shadow-royal/25">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 md:px-8 md:py-3">
         <Link href="/" className="flex shrink-0 items-center rounded-lg bg-white px-2 py-1">
           <BrandLogo className="h-14 w-auto md:h-16" priority onDark />
@@ -35,7 +35,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/shop"
-            className="ml-2 inline-flex items-center gap-1 rounded-md bg-royal px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky"
+            className="ml-2 inline-flex items-center gap-1 rounded-md bg-sky px-4 py-2 text-sm font-semibold text-navy transition hover:bg-white"
           >
             Get a quote
             <ArrowRight className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="border-t border-white/10 bg-navy px-4 py-4 lg:hidden">
+        <nav className="border-t border-white/10 bg-black/10 px-4 py-4 lg:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -74,7 +74,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/shop"
-            className="mt-3 block rounded-md bg-royal px-4 py-3 text-center text-sm font-semibold text-white hover:bg-sky"
+            className="mt-3 block rounded-md bg-sky px-4 py-3 text-center text-sm font-semibold text-navy hover:bg-white"
             onClick={() => setOpen(false)}
           >
             Get a quote
