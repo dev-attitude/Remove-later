@@ -7,6 +7,8 @@ import {
   Star,
 } from "lucide-react";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
+import { PriceDisplay } from "@/components/marketing/PriceDisplay";
+import { PromoBanner } from "@/components/marketing/PromoBanner";
 import { COMPANY, SERVICES, SHOP_PACKAGES } from "@/lib/site-content";
 
 export default function HomePage() {
@@ -34,6 +36,8 @@ export default function HomePage() {
                 {COMPANY.name} combines IT consulting, business advisory, premium gadgets,
                 and custom software development—so your organisation can grow with confidence.
               </p>
+              <PromoBanner className="mt-8" />
+
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link href="/shop" className="marketing-btn-primary">
                   Purchase web services
@@ -138,15 +142,16 @@ export default function HomePage() {
               <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
                 Popular package
               </p>
-              <h3 className="mt-2 text-2xl font-bold text-slate-900">{featured.name}</h3>
+              <h3 className="mt-2 text-2xl font-bold text-navy">{featured.name}</h3>
               <p className="mt-2 text-slate-600">{featured.description}</p>
-              <p className="mt-6 text-3xl font-bold text-slate-900">
-                {featured.priceLabel}{" "}
-                <span className="text-brand-600">
-                  ${featured.priceFrom.toLocaleString()}
-                </span>
-                <span className="text-lg font-normal text-slate-500"> {featured.currency}</span>
-              </p>
+              <div className="mt-6">
+                <PriceDisplay
+                  original={featured.priceFrom}
+                  currency="USD"
+                  priceLabel={featured.priceLabel}
+                  size="lg"
+                />
+              </div>
               <ul className="mt-6 space-y-2 text-sm text-slate-700">
                 {featured.features.slice(0, 4).map((f) => (
                   <li key={f} className="flex gap-2">

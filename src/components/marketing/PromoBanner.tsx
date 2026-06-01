@@ -1,0 +1,16 @@
+import { JUNE_PROMO } from "@/lib/pricing";
+
+export function PromoBanner({ className = "" }: { className?: string }) {
+  if (!JUNE_PROMO.active) return null;
+
+  return (
+    <div
+      className={`rounded-xl border border-royal/30 bg-gradient-to-r from-navy to-royal px-5 py-4 text-white shadow-md ${className}`}
+    >
+      <p className="text-xs font-bold uppercase tracking-widest text-sky">
+        {JUNE_PROMO.badge} · {JUNE_PROMO.title}
+      </p>
+      <p className="mt-1 text-sm font-medium text-white/95">{JUNE_PROMO.subtitle}</p>
+    </div>
+  );
+}
