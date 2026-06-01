@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
 import { PromoBanner } from "@/components/marketing/PromoBanner";
@@ -13,12 +13,22 @@ import {
 } from "@/lib/pricing";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 
-export function ShopCheckout() {
+type ShopCheckoutProps = {
+  /** Hide promo on dedicated /quote page if parent already shows it */
+  showPromo?: boolean;
+};
+
+export function ShopCheckout({ showPromo = true }: ShopCheckoutProps) {
   const searchParams = useSearchParams();
-  const initialPackage = searchParams.get("package") ?? "";
-  const [selectedId, setSelectedId] = useState(
-    SHOP_PACKAGES.some((p) => p.id === initialPackage) ? initialPackage : SHOP_PACKAGES[1].id
-  );
+  const pathname = usePathname();
+  const formRef = useRef<HTMLFormElement>(null);
+  const packageParam = searchParams.get("package") ?? "";
+
+  const defaultId = SHOP_PACKAGES.some((p) => p.id === packageParam)
+    ? packageParam
+    : SHOP_PACKAGES.find((p) => p.popular)?.id ?? SHOP_PACKAGES[1].id;
+
+  const [selectedId, setSelectedId] = useState(defaultId);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -30,13 +40,36 @@ export function ShopCheckout() {
   const selected = SHOP_PACKAGES.find((p) => p.id === selectedId)!;
   const salePrice = discountedPrice(selected.priceFrom);
 
+  useEffect(() => {
+    if (packageParam && SHOP_PACKAGES.some((p) => p.id === packageParam)) {
+      setSelectedId(packageParam);
+    }
+  }, [packageParam]);
+
+  useEffect(() => {
+    if (!packageParam) return;
+    const t = window.setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
+    return () => window.clearTimeout(t);
+  }, [packageParam, pathname]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
+
     const priceNote = hasPromoPrice(selected.priceFrom)
       ? `June special: ${formatUsd(salePrice)} (was ${formatUsd(selected.priceFrom)}, ${JUNE_PROMO.percentOff}% off)`
       : `${selected.priceLabel} ${formatUsd(selected.priceFrom)}`;
+
+    const message = [
+      `Package: ${selected.name} (${selectedId})`,
+      `Pricing: ${priceNote}`,
+      `Timeline: ${selected.timeline}`,
+      "",
+      notes.trim() || "(No additional details provided)",
+    ].join("\n");
 
     try {
       const res = await fetch("/api/contact", {
@@ -44,12 +77,13 @@ export function ShopCheckout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "purchase",
+          subject: "website",
           packageId: selectedId,
           packageName: selected.name,
           name,
           email,
           phone,
-          message: `${priceNote}\n\n${notes}`.trim(),
+          message,
         }),
       });
       const data = (await res.json()) as { error?: string };
@@ -66,21 +100,31 @@ export function ShopCheckout() {
     return (
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-10 text-center">
         <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-600" />
-        <h2 className="mt-4 text-xl font-bold text-navy">Request received</h2>
+        <h2 className="mt-4 text-xl font-bold text-navy">Quote request received</h2>
         <p className="mt-2 text-slate-600">
-          We&apos;ll contact you at <strong className="text-navy">{email}</strong> within one
-          business day with a formal quote for <strong className="text-navy">{selected.name}</strong>.
+          We&apos;ll contact you at <strong className="text-navy">{email}</strong>
+          {phone ? (
+            <>
+              {" "}
+              and <strong className="text-navy">{phone}</strong>
+            </>
+          ) : null}{" "}
+          within one business day with a formal quote for{" "}
+          <strong className="text-navy">{selected.name}</strong>.
+        </p>
+        <p className="mt-4 text-sm text-slate-500">
+          Need a faster reply? Use the chat button — WhatsApp is available during business hours.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <PromoBanner />
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
+      {showPromo && <PromoBanner />}
 
       <div>
-        <label className="block text-sm font-medium text-navy">Select package</label>
+        <label className="block text-sm font-medium text-navy">Select package *</label>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {SHOP_PACKAGES.map((pkg) => {
             const isSelected = selectedId === pkg.id;
@@ -131,25 +175,27 @@ export function ShopCheckout() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-navy">
+          <label htmlFor="quote-name" className="block text-sm font-medium text-navy">
             Full name *
           </label>
           <input
-            id="name"
+            id="quote-name"
             required
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="marketing-input mt-1"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-navy">
+          <label htmlFor="quote-email" className="block text-sm font-medium text-navy">
             Email *
           </label>
           <input
-            id="email"
+            id="quote-email"
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="marketing-input mt-1"
@@ -158,11 +204,15 @@ export function ShopCheckout() {
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-navy">
-          Phone / WhatsApp
+        <label htmlFor="quote-phone" className="block text-sm font-medium text-navy">
+          Phone / WhatsApp *
         </label>
         <input
-          id="phone"
+          id="quote-phone"
+          type="tel"
+          required
+          autoComplete="tel"
+          placeholder="+264 81 123 4567"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           className="marketing-input mt-1"
@@ -170,15 +220,15 @@ export function ShopCheckout() {
       </div>
 
       <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-navy">
+        <label htmlFor="quote-notes" className="block text-sm font-medium text-navy">
           Project details
         </label>
         <textarea
-          id="notes"
+          id="quote-notes"
           rows={4}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Tell us about your business, pages needed, timeline…"
+          placeholder="Tell us about your business, pages needed, timeline, branding…"
           className="marketing-input mt-1 resize-y"
         />
       </div>
@@ -196,10 +246,11 @@ export function ShopCheckout() {
           />
         </div>
         <p className="mt-2 text-xs text-slate-500">{selected.timeline}</p>
-        <p className="mt-2">
-          This is a quote request. Final pricing depends on scope. Online card payment can be
-          arranged after approval.
-        </p>
+        <ul className="mt-3 space-y-1 text-xs text-slate-500">
+          <li>• Quote sent to your email within one business day</li>
+          <li>• Final price depends on scope; June promo applied where shown</li>
+          <li>• Payment arranged after you approve the quote</li>
+        </ul>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
@@ -208,10 +259,10 @@ export function ShopCheckout() {
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Sending…
+            Sending quote request…
           </>
         ) : (
-          "Request quote & purchase details"
+          "Submit quote request"
         )}
       </button>
     </form>

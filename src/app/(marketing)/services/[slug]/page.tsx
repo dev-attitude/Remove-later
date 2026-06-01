@@ -100,8 +100,8 @@ export default async function ServiceDetailPage({ params }: Props) {
           Request consultation
         </Link>
         {isWeb && (
-          <Link href="/shop" className="marketing-btn-secondary">
-            Purchase web package
+          <Link href="/quote" className="marketing-btn-secondary">
+            Get a web package quote
           </Link>
         )}
         {isBusiness && (
@@ -110,8 +110,8 @@ export default async function ServiceDetailPage({ params }: Props) {
           </Link>
         )}
         {isIt && (
-          <Link href="/shop" className="marketing-btn-secondary">
-            Website & app packages
+          <Link href="/quote" className="marketing-btn-secondary">
+            Get a project quote
           </Link>
         )}
       </div>

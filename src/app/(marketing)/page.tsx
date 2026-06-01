@@ -39,9 +39,12 @@ export default function HomePage() {
               <PromoBanner className="mt-8" />
 
               <div className="mt-10 flex flex-wrap gap-4">
-                <Link href="/shop" className="marketing-btn-primary">
-                  Purchase web services
+                <Link href="/quote" className="marketing-btn-primary">
+                  Get a quote
                   <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/shop" className="marketing-btn-secondary">
+                  Browse packages
                 </Link>
                 <Link href="/shop#our-apps" className="marketing-btn-secondary">
                   View our live apps
@@ -161,7 +164,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <Link
-                href={`/shop?package=${featured.id}`}
+                href={`/quote?package=${featured.id}`}
                 className="marketing-btn-primary mt-8 w-full justify-center"
               >
                 View all packages

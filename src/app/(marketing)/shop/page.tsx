@@ -76,10 +76,10 @@ export default function ShopPage() {
                 ))}
               </ul>
               <Link
-                href={`/shop?package=${pkg.id}`}
+                href={`/quote?package=${pkg.id}`}
                 className="mt-6 block rounded-lg border border-royal/30 bg-brand-50 py-2.5 text-center text-sm font-semibold text-navy transition hover:bg-sky/20"
               >
-                Select package
+                Get a quote
               </Link>
             </article>
           );
@@ -100,14 +100,18 @@ export default function ShopPage() {
         <BusinessPackagesSection />
       </section>
 
-      <section className="marketing-form-panel mt-20">
+      <section id="get-quote" className="marketing-form-panel mt-20 scroll-mt-24">
         <h2 className="text-2xl font-bold text-navy">Request a website package</h2>
         <p className="mt-2 text-slate-600">
-          Fill in your details—we&apos;ll confirm scope, timeline, and payment method.
+          Fill in your details—we&apos;ll confirm scope, timeline, and payment method. Or use the{" "}
+          <Link href="/quote" className="font-medium text-royal underline">
+            dedicated quote page
+          </Link>
+          .
         </p>
         <div className="mt-8 max-w-2xl">
           <Suspense fallback={<p className="text-slate-500">Loading form…</p>}>
-            <ShopCheckout />
+            <ShopCheckout showPromo={false} />
           </Suspense>
         </div>
       </section>

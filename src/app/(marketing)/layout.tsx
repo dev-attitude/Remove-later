@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/marketing/SiteHeader";
 import { SiteFooter } from "@/components/marketing/SiteFooter";
+import { LiveChat } from "@/components/marketing/LiveChat";
 
 export default function MarketingLayout({
   children,
@@ -11,6 +12,7 @@ export default function MarketingLayout({
       <SiteHeader />
       <main>{children}</main>
       <SiteFooter />
+      <LiveChat />
     </div>
   );
 }

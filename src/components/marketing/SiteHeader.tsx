@@ -32,7 +32,7 @@ function isNavLinkActive(pathname: string, hash: string, href: string): boolean 
   }
 
   if (href === "/shop") {
-    return pathname === "/shop" && hash !== "#our-apps";
+    return (pathname === "/shop" || pathname === "/quote") && hash !== "#our-apps";
   }
 
   if (href === "/services") {
@@ -95,8 +95,12 @@ export function SiteHeader() {
             Skyrapay Research
           </Link>
           <Link
-            href="/shop"
-            className="ml-2 inline-flex items-center gap-1 rounded-md bg-sky px-4 py-2 text-sm font-semibold text-navy transition hover:bg-white"
+            href="/quote"
+            className={`ml-2 inline-flex items-center gap-1 rounded-md px-4 py-2 text-sm font-semibold transition ${
+              pathname === "/quote"
+                ? "bg-white text-navy shadow-sm ring-1 ring-white/50"
+                : "bg-sky text-navy hover:bg-white"
+            }`}
           >
             Get a quote
             <ArrowRight className="h-4 w-4" />
@@ -138,7 +142,7 @@ export function SiteHeader() {
             Skyrapay Research
           </Link>
           <Link
-            href="/shop"
+            href="/quote"
             className="mt-3 block rounded-md bg-sky px-4 py-3 text-center text-sm font-semibold text-navy hover:bg-white"
             onClick={() => setOpen(false)}
           >
