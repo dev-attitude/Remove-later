@@ -1,14 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Loader2, CheckCircle2 } from "lucide-react";
+import {
+  BUSINESS_DOCUMENT_PACKAGES,
+  BUSINESS_REGISTRATION_PACKAGES,
+} from "@/lib/site-content";
 
 export function ContactForm() {
+  const searchParams = useSearchParams();
+  const packageId = searchParams.get("package") ?? "";
+  const serviceParam = searchParams.get("service") ?? "";
+
+  const allBizPackages = [...BUSINESS_REGISTRATION_PACKAGES, ...BUSINESS_DOCUMENT_PACKAGES];
+  const matchedPkg = allBizPackages.find((p) => p.id === packageId);
+
+  const defaultSubject =
+    serviceParam === "registration"
+      ? "business"
+      : serviceParam === "documents"
+        ? "business"
+        : "general";
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [subject, setSubject] = useState("general");
-  const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState(defaultSubject);
+  const [message, setMessage] = useState(
+    matchedPkg
+      ? `I am interested in: ${matchedPkg.name} (${matchedPkg.price > 0 ? `N$ ${matchedPkg.price.toLocaleString()}` : "quote on request"}).\n\n`
+      : ""
+  );
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");

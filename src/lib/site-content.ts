@@ -70,22 +70,26 @@ export const SERVICES: ServiceItem[] = [
   {
     slug: "business-consulting",
     title: "Business Consultation Services",
-    short: "Operational excellence, growth strategy, and process optimisation.",
+    short:
+      "Registration, business plans, branding, websites, and growth strategy for Namibian SMEs.",
     description:
-      "GM Consultations partners with SMEs and institutions to clarify goals, streamline operations, and build sustainable growth through data-informed business planning.",
+      "GM Consultations supports entrepreneurs and established businesses across Namibia—from CC and (Pty) Ltd registration with BIPA, NamRA, and Social Security, to business plans, proposals, logo and flyer design, and professional websites. We handle the paperwork so you can focus on running your business.",
     icon: Briefcase,
     features: [
-      "Business planning & feasibility studies",
-      "Process mapping & optimisation",
-      "Market research & positioning",
-      "Financial modelling support",
-      "Compliance & policy frameworks",
+      "CC & (Pty) Ltd business registration (BIPA, NamRA, Social Security, SME)",
+      "Fixed-price registration packages (CC, cash loan, NGO)",
+      "Business plans & business proposals",
+      "Logo design & marketing flyers for your brand",
+      "Business websites development",
+      "Operational consulting, feasibility & growth strategy",
+      "Process mapping, compliance & policy frameworks",
     ],
     deliverables: [
-      "Business plan or strategy document",
-      "KPI dashboards & reporting templates",
-      "Workshop facilitation",
-      "Quarterly review sessions",
+      "Completed registration filings & certificates (per package)",
+      "Business plan or proposal document",
+      "Logo files & print-ready flyer artwork",
+      "Live business website (scoped separately or bundled)",
+      "Consultation sessions within Mon–Fri 08:00–18:00",
     ],
   },
   {
@@ -165,6 +169,123 @@ export type ShopPackage = {
   timeline: string;
   popular?: boolean;
 };
+
+/** Namibia business registration & document packages (NAD) */
+export type BusinessPackage = {
+  id: string;
+  name: string;
+  price: number;
+  priceLabel?: string;
+  currency: "NAD";
+  description: string;
+  includes: string[];
+  popular?: boolean;
+};
+
+export const BUSINESS_REGISTRATION_PACKAGES: BusinessPackage[] = [
+  {
+    id: "cc-full-registration",
+    name: "CC — Full Registration Package",
+    price: 1800,
+    currency: "NAD",
+    description:
+      "Complete close corporation (CC) registration for SMEs—everything you need to trade legally in Namibia.",
+    popular: true,
+    includes: [
+      "Name reservation",
+      "BIPA registration",
+      "SME registration (for SME businesses)",
+      "NamRA registration",
+      "Social Security registration",
+    ],
+  },
+  {
+    id: "cc-cashloan-registration",
+    name: "CC — Full Package (Cash Loan)",
+    price: 2500,
+    currency: "NAD",
+    description:
+      "Full CC registration package plus NAMFISA requirements—ideal for cash loan and micro-lending businesses.",
+    includes: [
+      "Name reservation",
+      "BIPA registration",
+      "SME registration (for SME businesses)",
+      "NamRA registration",
+      "Social Security registration",
+      "NAMFISA registration",
+    ],
+  },
+  {
+    id: "ngo-registration",
+    name: "NGO Registration",
+    price: 2500,
+    currency: "NAD",
+    description:
+      "End-to-end support to register your non-governmental organisation with the relevant Namibian authorities.",
+    includes: [
+      "Name reservation & entity setup guidance",
+      "BIPA / relevant filings",
+      "NamRA & compliance registrations",
+      "Social Security (where applicable)",
+      "Documentation handover & filing support",
+    ],
+  },
+  {
+    id: "pty-registration",
+    name: "(Pty) Ltd Registration",
+    price: 0,
+    priceLabel: "Quote on request",
+    currency: "NAD",
+    description:
+      "Private company (Pty) Ltd registration tailored to your shareholding structure and industry requirements.",
+    includes: [
+      "Name reservation",
+      "BIPA company registration",
+      "NamRA & Social Security",
+      "Memorandum & founding documents support",
+      "Custom quote based on scope",
+    ],
+  },
+];
+
+export const BUSINESS_DOCUMENT_PACKAGES: BusinessPackage[] = [
+  {
+    id: "business-plan",
+    name: "Business Plan",
+    price: 3500,
+    currency: "NAD",
+    description:
+      "Professional business plan for funding, tenders, or internal strategy—including financial projections guidance.",
+    includes: [
+      "Executive summary & company overview",
+      "Market & competitor analysis",
+      "Operations & management plan",
+      "Financial forecasts section",
+      "Editable document delivery",
+    ],
+  },
+  {
+    id: "business-proposal",
+    name: "Business Proposal",
+    price: 1200,
+    priceLabel: "From",
+    currency: "NAD",
+    description:
+      "Persuasive proposals for clients, partners, or grant applications—scoped to your project size.",
+    includes: [
+      "Cover letter & project scope",
+      "Timeline & deliverables",
+      "Pricing / budget section",
+      "Professional formatting & branding alignment",
+    ],
+  },
+];
+
+export const BUSINESS_BRANDING_SERVICES = [
+  "Logo design for your business identity",
+  "Flyer & poster design (print-ready artwork)",
+  "Business website design & development",
+] as const;
 
 export const SHOP_PACKAGES: ShopPackage[] = [
   {

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
+import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 import { ShopCheckout } from "@/components/marketing/ShopCheckout";
 import type { Metadata } from "next";
@@ -65,8 +66,26 @@ export default function ShopPage() {
         })}
       </div>
 
+      <section className="mt-24 border-t border-white/10 pt-20">
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-400">
+          Business services (NAD)
+        </p>
+        <h2 className="mt-2 font-display text-3xl font-bold text-white">
+          Registration, plans & branding
+        </h2>
+        <p className="mt-2 max-w-2xl text-slate-400">
+          Fixed packages for CC registration, cash loan entities, NGOs, business plans, and
+          proposals—or{" "}
+          <Link href="/services/business-consulting" className="text-brand-400 underline">
+            view full business consultation services
+          </Link>
+          .
+        </p>
+        <BusinessPackagesSection />
+      </section>
+
       <section className="mt-20 rounded-2xl border border-white/10 bg-slate-900/30 p-8 md:p-12">
-        <h2 className="text-2xl font-bold text-white">Request your package</h2>
+        <h2 className="text-2xl font-bold text-white">Request a website package</h2>
         <p className="mt-2 text-slate-400">
           Fill in your details—we&apos;ll confirm scope, timeline, and payment method.
         </p>

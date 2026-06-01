@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Suspense } from "react";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { COMPANY } from "@/lib/site-content";
 import type { Metadata } from "next";
@@ -96,7 +97,9 @@ export default function ContactPage() {
             {businessHours.time} on weekdays.
           </p>
           <div className="mt-6">
-            <ContactForm />
+            <Suspense fallback={<p className="text-slate-500">Loading form…</p>}>
+              <ContactForm />
+            </Suspense>
           </div>
         </div>
       </div>

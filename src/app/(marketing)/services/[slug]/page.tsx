@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
 import { getServiceBySlug, SERVICES } from "@/lib/site-content";
 import type { Metadata } from "next";
 
@@ -27,6 +28,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
   const Icon = service.icon;
   const isWeb = slug === "web-app-development";
+  const isBusiness = slug === "business-consulting";
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 md:px-8 md:py-24">
@@ -77,6 +79,8 @@ export default async function ServiceDetailPage({ params }: Props) {
         </div>
       </div>
 
+      {isBusiness && <BusinessPackagesSection />}
+
       <div className="mt-12 flex flex-wrap gap-4">
         <Link href="/contact" className="marketing-btn-primary">
           Request consultation
@@ -84,6 +88,11 @@ export default async function ServiceDetailPage({ params }: Props) {
         {isWeb && (
           <Link href="/shop" className="marketing-btn-secondary">
             Purchase web package
+          </Link>
+        )}
+        {isBusiness && (
+          <Link href="/contact?service=registration" className="marketing-btn-secondary">
+            Register my business
           </Link>
         )}
       </div>
