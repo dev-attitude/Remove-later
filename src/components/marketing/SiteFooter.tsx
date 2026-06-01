@@ -66,17 +66,28 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex items-start gap-2">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
-              <a href={`mailto:${COMPANY.email}`} className="hover:text-white">
+              <a href={`mailto:${COMPANY.email}`} className="break-all hover:text-white">
                 {COMPANY.email}
               </a>
             </li>
-            <li className="flex items-start gap-2">
-              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
-              <span>{COMPANY.phone}</span>
-            </li>
+            {COMPANY.phones.map((num) => (
+              <li key={num} className="flex items-start gap-2">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
+                <a href={`tel:${num.replace(/\s/g, "")}`} className="hover:text-white">
+                  {num}
+                </a>
+              </li>
+            ))}
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
-              <span>{COMPANY.location}</span>
+              <span>
+                {COMPANY.location}
+                <br />
+                {COMPANY.poBox}
+              </span>
+            </li>
+            <li className="text-xs text-slate-500">
+              {COMPANY.businessHours.days}, {COMPANY.businessHours.time}
             </li>
           </ul>
         </div>

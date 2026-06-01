@@ -38,10 +38,15 @@ export default function AboutPage() {
           </h1>
           <p className="mt-2 text-lg text-brand-300">{COMPANY.tagline}</p>
           <p className="mt-6 leading-relaxed text-slate-400">
-            Based in {COMPANY.location}, we serve businesses, institutions, and individuals who
-            need reliable technology partners. Our team spans IT consulting, business strategy,
+            With offices in {COMPANY.offices.join(", ")}, and postal services via{" "}
+            {COMPANY.poBox}, we serve businesses, institutions, and individuals who need
+            reliable technology partners. Our team spans IT consulting, business strategy,
             hardware supply, and full-stack development—including the GM Research Suite academic
             platform used by students and supervisors.
+          </p>
+          <p className="mt-4 text-sm text-slate-500">
+            {COMPANY.businessHours.days}, {COMPANY.businessHours.time}.{" "}
+            {COMPANY.businessHours.note}
           </p>
           <p className="mt-4 leading-relaxed text-slate-400">
             Whether you need a laptop for coursework, a turnaround plan for your SME, or a

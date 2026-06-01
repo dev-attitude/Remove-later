@@ -13,9 +13,18 @@ import {
 export const COMPANY = {
   name: "GM Consultations",
   tagline: "Expert Solutions for Success",
-  email: "info@gmconsultations.com",
-  phone: "+264 81 000 0000",
-  location: "Windhoek, Namibia",
+  email: "97transformative@gmail.com",
+  phones: ["+264 81 298 6481", "+264 81 877 4482"] as const,
+  /** Primary phone for tel: links */
+  phone: "+264812986481",
+  offices: ["Osona", "Okahandja", "Windhoek"] as const,
+  location: "Osona · Okahandja · Windhoek, Namibia",
+  poBox: "P.O. Box 5141, Divundu, Namibia",
+  businessHours: {
+    days: "Monday – Friday",
+    time: "08:00 – 18:00",
+    note: "All business consultations are scheduled within these hours.",
+  },
   researchAppPath: "/research",
 } as const;
 
