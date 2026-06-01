@@ -52,23 +52,28 @@ export type ServiceItem = {
 export const SERVICES: ServiceItem[] = [
   {
     slug: "it-consulting",
-    title: "IT Consultations",
-    short: "Strategy, infrastructure, and digital transformation for modern organisations.",
+    title: "IT Services",
+    short:
+      "Full-service IT and digital transformation—software, support, networks, security, cloud, AI, and training.",
     description:
-      "We assess your technology landscape, recommend secure and scalable solutions, and guide implementation—from cloud migration to cybersecurity and IT governance.",
+      "As an IT consulting company, Skyrapay Consultations CC offers a wide range of services to businesses, schools, hospitals, government institutions, NGOs, and individuals. With experience in web development, system development, hardware repair, and IT support, we help you plan, build, secure, and maintain technology that fits how your organisation actually works.",
     icon: Monitor,
     features: [
-      "IT audits & technology roadmaps",
-      "Cloud & infrastructure planning",
-      "Cybersecurity assessments",
-      "Vendor selection & procurement support",
-      "Staff training & change management",
+      "Custom software—school, hospital, POS, HR, CRM & more",
+      "IT support, repairs & annual maintenance contracts",
+      "Network design, Wi-Fi, VPN & connectivity",
+      "Cybersecurity audits, backup & endpoint protection",
+      "Cloud migration, Microsoft 365 & Google Workspace",
+      "Digital transformation—digitize records & automate workflows",
+      "Dashboards, BI, data analysis & research platforms",
+      "AI chatbots, document analysis & workflow automation",
+      "Training—Office, cybersecurity, digital literacy & AI tools",
     ],
     deliverables: [
-      "Written assessment report",
-      "Prioritised action plan",
-      "Implementation timeline",
-      "Ongoing advisory (optional retainer)",
+      "Discovery session & scoped proposal",
+      "Implemented systems, sites, or infrastructure",
+      "Documentation & user training",
+      "Ongoing support or maintenance contract (optional)",
     ],
   },
   {

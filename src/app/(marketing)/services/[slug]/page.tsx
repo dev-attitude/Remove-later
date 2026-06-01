@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
+import { ItServicesCatalog } from "@/components/marketing/ItServicesCatalog";
 import { BRAND } from "@/lib/brand";
+import { IT_SERVICES_POSITIONING } from "@/lib/it-services";
 import { getServiceBySlug, SERVICES } from "@/lib/site-content";
 import type { Metadata } from "next";
 
@@ -30,9 +32,12 @@ export default async function ServiceDetailPage({ params }: Props) {
   const Icon = service.icon;
   const isWeb = slug === "web-app-development";
   const isBusiness = slug === "business-consulting";
+  const isIt = slug === "it-consulting";
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 md:px-8 md:py-24">
+    <div
+      className={`mx-auto px-4 py-16 md:px-8 md:py-24 ${isIt ? "max-w-7xl" : "max-w-4xl"}`}
+    >
       <Link
         href="/services"
         className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600"
@@ -55,9 +60,15 @@ export default async function ServiceDetailPage({ params }: Props) {
 
       <p className="mt-8 text-lg leading-relaxed text-slate-700">{service.description}</p>
 
+      {isIt && (
+        <p className="mt-4 max-w-3xl text-slate-600">{IT_SERVICES_POSITIONING}</p>
+      )}
+
       <div className="mt-12 grid gap-8 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">What we offer</h2>
+          <h2 className="text-lg font-semibold text-slate-900">
+            {isIt ? "Core capabilities" : "What we offer"}
+          </h2>
           <ul className="mt-4 space-y-3">
             {service.features.map((f) => (
               <li key={f} className="flex gap-2 text-sm text-slate-700">
@@ -80,6 +91,8 @@ export default async function ServiceDetailPage({ params }: Props) {
         </div>
       </div>
 
+      {isIt && <ItServicesCatalog />}
+
       {isBusiness && <BusinessPackagesSection />}
 
       <div className="mt-12 flex flex-wrap gap-4">
@@ -94,6 +107,11 @@ export default async function ServiceDetailPage({ params }: Props) {
         {isBusiness && (
           <Link href="/contact?service=registration" className="marketing-btn-secondary">
             Register my business
+          </Link>
+        )}
+        {isIt && (
+          <Link href="/shop" className="marketing-btn-secondary">
+            Website & app packages
           </Link>
         )}
       </div>

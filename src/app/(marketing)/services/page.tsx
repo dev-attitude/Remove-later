@@ -6,7 +6,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `Services | ${BRAND.companyName}`,
-  description: "IT consulting, business consulting, gadgets, system development, and web apps.",
+  description:
+    "IT services, business consulting, gadgets, system development, and web apps for Namibia.",
 };
 
 export default function ServicesPage() {
@@ -15,7 +16,8 @@ export default function ServicesPage() {
       <p className="marketing-eyebrow">Services</p>
       <h1 className="marketing-page-title">End-to-end solutions for your organisation</h1>
       <p className="mt-4 max-w-2xl marketing-lead">
-        From strategy and devices to custom software—we help you plan, build, and grow.
+        Full-service IT and digital transformation—software, support, networks, security, cloud,
+        AI, business registration, devices, and custom apps.
       </p>
 
       <div className="mt-14 grid gap-8 md:grid-cols-2">
