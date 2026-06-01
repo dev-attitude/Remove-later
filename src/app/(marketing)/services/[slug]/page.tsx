@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
 import { ItServicesCatalog } from "@/components/marketing/ItServicesCatalog";
+import { StudentAssistanceSection } from "@/components/marketing/StudentAssistanceSection";
 import { BRAND } from "@/lib/brand";
 import { IT_SERVICES_POSITIONING } from "@/lib/it-services";
 import { getServiceBySlug, SERVICES } from "@/lib/site-content";
@@ -33,6 +34,7 @@ export default async function ServiceDetailPage({ params }: Props) {
   const isWeb = slug === "web-app-development";
   const isBusiness = slug === "business-consulting";
   const isIt = slug === "it-consulting";
+  const isStudent = slug === "student-assistance";
 
   return (
     <div
@@ -95,6 +97,8 @@ export default async function ServiceDetailPage({ params }: Props) {
 
       {isBusiness && <BusinessPackagesSection />}
 
+      {isStudent && <StudentAssistanceSection />}
+
       <div className="mt-12 flex flex-wrap gap-4">
         <Link href="/contact" className="marketing-btn-primary">
           Request consultation
@@ -113,6 +117,19 @@ export default async function ServiceDetailPage({ params }: Props) {
           <Link href="/quote" className="marketing-btn-secondary">
             Get a project quote
           </Link>
+        )}
+        {isStudent && (
+          <>
+            <Link
+              href="/contact?service=student-assistance"
+              className="marketing-btn-secondary"
+            >
+              Request student assistance
+            </Link>
+            <Link href="/research" className="marketing-btn-secondary">
+              Skyrapay Research Suite
+            </Link>
+          </>
         )}
       </div>
     </div>

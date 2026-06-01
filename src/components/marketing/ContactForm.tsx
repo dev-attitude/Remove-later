@@ -17,11 +17,13 @@ export function ContactForm() {
   const matchedPkg = allBizPackages.find((p) => p.id === packageId);
 
   const defaultSubject =
-    serviceParam === "registration"
-      ? "business"
-      : serviceParam === "documents"
+    serviceParam === "student-assistance"
+      ? "student-assistance"
+      : serviceParam === "registration"
         ? "business"
-        : "general";
+        : serviceParam === "documents"
+          ? "business"
+          : "general";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,7 +32,9 @@ export function ContactForm() {
   const [message, setMessage] = useState(
     matchedPkg
       ? `I am interested in: ${matchedPkg.name} (${matchedPkg.price > 0 ? `N$ ${matchedPkg.price.toLocaleString()}` : "quote on request"}).\n\n`
-      : ""
+      : serviceParam === "student-assistance"
+        ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
+        : ""
   );
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -117,6 +121,7 @@ export function ContactForm() {
           className="marketing-input mt-1"
         >
           <option value="general">General inquiry</option>
+          <option value="student-assistance">Student assistance</option>
           <option value="it">IT consulting</option>
           <option value="business">Business consulting</option>
           <option value="gadgets">Gadgets & hardware</option>

@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Monitor,
   Briefcase,
+  GraduationCap,
   Smartphone,
   Server,
   Globe,
@@ -34,6 +35,7 @@ export const COMPANY = {
 
 export type ServiceSlug =
   | "it-consulting"
+  | "student-assistance"
   | "business-consulting"
   | "gadgets"
   | "system-development"
@@ -74,6 +76,34 @@ export const SERVICES: ServiceItem[] = [
       "Implemented systems, sites, or infrastructure",
       "Documentation & user training",
       "Ongoing support or maintenance contract (optional)",
+    ],
+  },
+  {
+    slug: "student-assistance",
+    title: "Student Assistance",
+    short:
+      "Assignment writing, research support, data collection, and data analysis for school, college, and university students.",
+    description:
+      "Skyrapay Consultations CC helps students succeed academically with structured support for assignments, research projects, dissertations, and theses. We guide you through writing, methodology, data collection, and analysis—while upholding academic integrity. Many students also use our Skyrapay Research Suite platform for AI-assisted writing, literature search, citations, and research planning.",
+    icon: GraduationCap,
+    features: [
+      "Assignment & essay writing support (all levels)",
+      "Research proposals, dissertations & thesis chapters",
+      "Literature review & reference management",
+      "Questionnaire & interview guide design",
+      "Field & online data collection support",
+      "Quantitative analysis (SPSS, Excel, R where needed)",
+      "Qualitative analysis & thematic coding",
+      "Results, discussion & conclusion drafting",
+      "Formatting to institutional guidelines (APA, Harvard, etc.)",
+    ],
+    deliverables: [
+      "Clear, rubric-aligned drafts and revisions",
+      "Research documents with proper citations",
+      "Data collection instruments & cleaned datasets",
+      "Tables, charts & analysis write-ups",
+      "One-on-one consultation (Mon–Fri 08:00–18:00)",
+      "Optional access guidance for Skyrapay Research Suite",
     ],
   },
   {
