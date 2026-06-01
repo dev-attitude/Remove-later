@@ -47,6 +47,12 @@ export function SiteHeader() {
             Research Suite
           </Link>
           <Link
+            href="/shop#our-apps"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
+          >
+            Our apps
+          </Link>
+          <Link
             href="/shop"
             className="ml-2 inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition hover:brightness-110"
           >
@@ -84,6 +90,13 @@ export function SiteHeader() {
           >
             <FlaskConical className="h-4 w-4" />
             Research Suite
+          </Link>
+          <Link
+            href="/shop#our-apps"
+            className="mt-2 block rounded-lg px-3 py-3 text-sm text-slate-200"
+            onClick={() => setOpen(false)}
+          >
+            Our apps
           </Link>
           <Link
             href="/shop"

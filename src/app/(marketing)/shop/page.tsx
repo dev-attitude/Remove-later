@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
+import { DevelopedAppsShowcase } from "@/components/marketing/DevelopedAppsShowcase";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 import { ShopCheckout } from "@/components/marketing/ShopCheckout";
 import type { Metadata } from "next";
@@ -19,11 +20,25 @@ export default function ShopPage() {
         Website & app services
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-slate-400">
-        Transparent starting prices. Select a package below and we&apos;ll send a tailored quote
-        and payment options.
+        Browse our live apps, then choose a package—we&apos;ll send a tailored quote and payment
+        options for your own website or application.
       </p>
 
-      <div className="mt-14 grid gap-6 lg:grid-cols-3">
+      <div className="mt-16">
+        <DevelopedAppsShowcase />
+      </div>
+
+      <div className="mt-24 border-t border-white/10 pt-20">
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-400">
+          Order a new build
+        </p>
+        <h2 className="mt-2 font-display text-3xl font-bold text-white">Website packages</h2>
+        <p className="mt-2 text-slate-400">
+          Transparent starting prices for your next project.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-3">
         {SHOP_PACKAGES.map((pkg) => {
           const Icon = pkg.icon;
           return (

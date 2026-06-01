@@ -287,6 +287,67 @@ export const BUSINESS_BRANDING_SERVICES = [
   "Business website design & development",
 ] as const;
 
+/** Live products built by GM Consultations — linked for customers to try */
+export type DevelopedAppType = "website" | "web-app" | "platform";
+
+export type DevelopedAppLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+export type DevelopedApp = {
+  id: string;
+  name: string;
+  description: string;
+  type: DevelopedAppType;
+  href: string;
+  external?: boolean;
+  highlights: string[];
+  featured?: boolean;
+  /** Additional entry points (e.g. individual portals) */
+  accessLinks?: DevelopedAppLink[];
+};
+
+export const DEVELOPED_APPLICATIONS: DevelopedApp[] = [
+  {
+    id: "gm-corporate-website",
+    name: "GM Consultations Website",
+    description:
+      "Our corporate site—services, business registration packages, shop, and contact. Built with a modern responsive design and integrated with our product portfolio.",
+    type: "website",
+    href: "/",
+    highlights: [
+      "Services & NAD pricing",
+      "Contact & business hours",
+      "Shop & quote requests",
+    ],
+  },
+  {
+    id: "gm-research-suite",
+    name: "GM Research Suite",
+    description:
+      "Multi-portal AI research platform for students, institutions, analysts, and developers. Writing, literature, AI detection, topics, and curriculum tools.",
+    type: "platform",
+    href: "/research",
+    featured: true,
+    highlights: [
+      "AI academic writing & citations",
+      "AI detection & plagiarism tools",
+      "Research topics & knowledge library",
+    ],
+    accessLinks: [
+      { label: "Portal hub", href: "/research" },
+      { label: "Student portal", href: "/student" },
+      { label: "Institution portal", href: "/institution" },
+      { label: "Analysis portal", href: "/analysis" },
+      { label: "Developer console", href: "/developer" },
+      { label: "Sign in", href: "/login" },
+      { label: "Download apps", href: "/download" },
+    ],
+  },
+];
+
 export const SHOP_PACKAGES: ShopPackage[] = [
   {
     id: "starter-website",
@@ -397,6 +458,7 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/shop", label: "Shop" },
+  { href: "/shop#our-apps", label: "Our apps" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;

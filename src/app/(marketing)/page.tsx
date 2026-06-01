@@ -39,8 +39,8 @@ export default function HomePage() {
                   Purchase web services
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/services" className="marketing-btn-secondary">
-                  Explore services
+                <Link href="/shop#our-apps" className="marketing-btn-secondary">
+                  View our live apps
                 </Link>
               </div>
               <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
