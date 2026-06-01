@@ -1,21 +1,15 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { COMPANY, NAV_LINKS, SERVICES } from "@/lib/site-content";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-slate-100 bg-slate-50">
+    <footer className="border-t border-slate-100 bg-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4 md:px-8">
         <div className="lg:col-span-1">
-          <Link href="/" className="inline-block">
-            <Image
-              src="/logo.png"
-              alt={COMPANY.name}
-              width={180}
-              height={64}
-              className="h-12 w-auto object-contain"
-            />
+          <Link href="/" className="inline-block bg-white">
+            <BrandLogo className="h-12 w-auto" width={180} height={64} />
           </Link>
           <p className="marketing-tagline-rule mt-4 !max-w-none !text-[10px]">
             {COMPANY.tagline}
@@ -95,7 +89,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-500">
+      <div className="border-t border-slate-100 py-5 text-center text-xs text-slate-500">
         © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
       </div>
     </footer>

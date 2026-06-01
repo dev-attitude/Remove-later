@@ -76,7 +76,7 @@ body {
   }
 
   .marketing-section-panel {
-    @apply border-y border-slate-100 bg-slate-50/50 py-20;
+    @apply border-y border-slate-100 bg-white py-20;
   }
 
   .marketing-section-muted {
@@ -108,7 +108,7 @@ body {
   }
 
   .marketing-cta-band {
-    @apply border-t border-slate-100 bg-slate-50 py-16;
+    @apply border-t border-slate-100 bg-white py-16;
   }
 
   .marketing-tagline-rule {

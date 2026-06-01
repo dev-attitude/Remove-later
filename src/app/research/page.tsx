@@ -8,7 +8,7 @@ import {
   Shield,
   ArrowLeft,
 } from "lucide-react";
-import Image from "next/image";
+import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { COMPANY } from "@/lib/site-content";
 
 export const metadata = {
@@ -29,13 +29,7 @@ export default function ResearchHubPage() {
             {COMPANY.name} home
           </Link>
           <div className="flex items-center gap-4">
-            <Image
-              src="/logo.png"
-              alt="GM"
-              width={56}
-              height={56}
-              className="h-14 w-14 rounded-xl bg-white/10 object-contain p-1"
-            />
+            <BrandLogo className="h-12 w-auto" width={160} height={56} />
             <div>
               <h1 className="font-display text-3xl font-bold md:text-4xl">
                 GM Research Suite

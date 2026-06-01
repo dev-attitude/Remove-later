@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Target, Users, Zap } from "lucide-react";
+import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { COMPANY } from "@/lib/site-content";
 import type { Metadata } from "next";
 
@@ -54,13 +54,11 @@ export default function AboutPage() {
             Work with us
           </Link>
         </div>
-        <div className="flex justify-center">
-          <Image
-            src="/logo.png"
-            alt={COMPANY.name}
+        <div className="flex justify-center bg-white">
+          <BrandLogo
+            className="h-auto w-full max-w-sm"
             width={400}
             height={160}
-            className="h-auto w-full max-w-sm object-contain"
           />
         </div>
       </div>

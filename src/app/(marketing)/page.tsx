@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   CheckCircle2,
@@ -7,6 +6,7 @@ import {
   Sparkles,
   Star,
 } from "lucide-react";
+import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { COMPANY, SERVICES, SHOP_PACKAGES } from "@/lib/site-content";
 
 export default function HomePage() {
@@ -52,13 +52,11 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-            <div className="relative flex justify-center lg:justify-end">
-              <Image
-                src="/logo.png"
-                alt={COMPANY.name}
+            <div className="relative flex justify-center bg-white lg:justify-end">
+              <BrandLogo
+                className="h-auto w-full max-w-md"
                 width={480}
                 height={200}
-                className="h-auto w-full max-w-md object-contain"
                 priority
               />
             </div>
