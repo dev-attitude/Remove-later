@@ -100,6 +100,15 @@ Create **Products / Prices** matching tiers in `src/lib/portals.ts` and map Pric
 
 ---
 
+## Step 5a — SEO (sitemap & Search Console)
+
+1. In Vercel, set `NEXT_PUBLIC_APP_URL` to your live URL (e.g. `https://www.gmconsultations.com`) and redeploy.
+2. After deploy, open `https://YOUR-DOMAIN/sitemap.xml` and `https://YOUR-DOMAIN/robots.txt` to confirm they load.
+3. [Google Search Console](https://search.google.com/search-console) → add property → verify → **Sitemaps** → submit `sitemap.xml`.
+4. Set up [Google Business Profile](https://business.google.com) for local Namibia visibility.
+
+---
+
 ## Step 5b — Contact form email + SMS
 
 When someone submits **Contact** or a **Shop quote**, the app can email **97transformative@gmail.com** and text **both** office numbers.
