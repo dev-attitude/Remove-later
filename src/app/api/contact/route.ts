@@ -50,24 +50,25 @@ export async function POST(req: Request) {
 
     const result = await notifyContactInquiry(body);
 
-    const emailRequired = result.emailConfigured;
-    const smsRequired = result.smsConfigured;
-
-    if (emailRequired && !result.email) {
+    if (result.emailConfigured && !result.email) {
       return NextResponse.json(
         { error: "We could not send your message. Please call us directly." },
         { status: 500 }
       );
     }
 
-    if (smsRequired && !result.sms) {
-      return NextResponse.json(
-        { error: "We could not send your message. Please call us directly." },
-        { status: 500 }
-      );
+    if (result.smsConfigured && !result.sms) {
+      console.error("[gm-contact-inquiry] SMS delivery failed:", result.smsError);
+      // Client still gets success if email went out — you are notified in the email body
+      if (!result.email) {
+        return NextResponse.json(
+          { error: "We could not send your message. Please call us directly." },
+          { status: 500 }
+        );
+      }
     }
 
-    if (!emailRequired && !smsRequired) {
+    if (!result.emailConfigured && !result.smsConfigured) {
       console.info("[gm-contact-inquiry] dev mode — stored in logs only");
     }
 

@@ -111,7 +111,10 @@ In Vercel → **Settings → Environment Variables**, add:
 | `RESEND_API_KEY` | Email via [Resend](https://resend.com) (recommended), **or** use SMTP rows below |
 | `CONTACT_FROM_EMAIL` | Verified sender, e.g. `Skyrapay <hello@yourdomain.com>` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Gmail App Password alternative |
-| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_SMS_FROM` | SMS to both +264 numbers |
+| `AFRICASTALKING_USERNAME`, `AFRICASTALKING_API_KEY` | SMS via Africa's Talking (best for Namibia) |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_SMS_FROM` | SMS via Twilio (enable **Namibia** under Messaging → Geo permissions) |
+
+If email works but SMS does not, you likely only added email keys. The notification email will show a yellow/red **SMS status** box at the bottom.
 
 Optional overrides (defaults are already your site contact details):
 
