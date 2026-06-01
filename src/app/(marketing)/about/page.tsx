@@ -55,15 +55,13 @@ export default function AboutPage() {
           </Link>
         </div>
         <div className="flex justify-center">
-          <div className="marketing-card-glow rounded-2xl bg-white p-4">
-            <Image
-              src="/logo.png"
-              alt={COMPANY.name}
-              width={360}
-              height={360}
-              className="rounded-xl"
-            />
-          </div>
+          <Image
+            src="/logo.png"
+            alt={COMPANY.name}
+            width={400}
+            height={160}
+            className="h-auto w-full max-w-sm object-contain"
+          />
         </div>
       </div>
 

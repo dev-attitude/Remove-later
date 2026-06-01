@@ -4,8 +4,8 @@
   "description": "AI research platform — writing, analysis, and integrity",
   "start_url": "/research",
   "display": "standalone",
-  "background_color": "#111a57",
-  "theme_color": "#1a44f5",
+  "background_color": "#ffffff",
+  "theme_color": "#1534e1",
   "orientation": "any",
   "icons": []
 }

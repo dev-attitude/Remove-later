@@ -14,15 +14,15 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="relative overflow-hidden">
+      <section className="marketing-hero">
         <div className="marketing-hero-glow absolute inset-0" />
-        <div className="marketing-grid-pattern absolute inset-0" />
-        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 md:px-8 md:pb-28 md:pt-24">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="marketing-grid-pattern absolute inset-0 opacity-60" />
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-12 md:px-8 md:pb-20 md:pt-16">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand-700">
-                <Sparkles className="h-3.5 w-3.5" />
-                {COMPANY.tagline}
+              <p className="marketing-eyebrow flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-brand-600" />
+                {COMPANY.name}
               </p>
               <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-slate-900 md:text-5xl lg:text-6xl">
                 Technology & business solutions that{" "}
@@ -53,16 +53,14 @@ export default function HomePage() {
               </ul>
             </div>
             <div className="relative flex justify-center lg:justify-end">
-              <div className="marketing-card-glow relative rounded-2xl bg-white p-4">
-                <Image
-                  src="/logo.png"
-                  alt={COMPANY.name}
-                  width={420}
-                  height={420}
-                  className="rounded-xl"
-                  priority
-                />
-              </div>
+              <Image
+                src="/logo.png"
+                alt={COMPANY.name}
+                width={480}
+                height={200}
+                className="h-auto w-full max-w-md object-contain"
+                priority
+              />
             </div>
           </div>
         </div>
@@ -125,7 +123,7 @@ export default function HomePage() {
                 Choose a package or request a custom quote. We handle design, development,
                 hosting guidance, and launch support.
               </p>
-              <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+              <div className="mt-8 rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -138,7 +136,7 @@ export default function HomePage() {
                 <p className="mt-2 text-xs text-slate-500">— Satisfied client</p>
               </div>
             </div>
-            <div className="rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 to-white p-8 shadow-sm">
+            <div className="rounded-xl border border-brand-100 bg-white p-8 shadow-sm ring-1 ring-brand-50">
               <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
                 Popular package
               </p>

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ExternalLink, ArrowRight, Globe, Layers, Sparkles } from "lucide-react";
 import { DEVELOPED_APPLICATIONS, type DevelopedApp, type DevelopedAppType } from "@/lib/site-content";
 
@@ -38,15 +37,6 @@ function AppCard({ app }: { app: DevelopedApp }) {
             <h3 className="text-xl font-bold text-slate-900">{app.name}</h3>
           </div>
         </div>
-        {app.featured && (
-          <Image
-            src="/logo.png"
-            alt=""
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-lg object-contain"
-          />
-        )}
       </div>
 
       <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">{app.description}</p>

@@ -10,45 +10,39 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 shadow-[0_1px_3px_rgba(15,23,42,0.04)] backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 md:px-8 md:py-3">
+        <Link href="/" className="flex shrink-0 items-center">
           <Image
             src="/logo.png"
             alt={COMPANY.name}
-            width={48}
-            height={48}
-            className="h-11 w-11 rounded-lg object-contain"
+            width={200}
+            height={72}
+            className="h-14 w-auto object-contain md:h-16"
             priority
           />
-          <div className="hidden sm:block">
-            <p className="text-sm font-bold tracking-wide text-slate-900">{COMPANY.name}</p>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500">
-              {COMPANY.tagline}
-            </p>
-          </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-brand-700"
+              className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-brand-700"
             >
               {link.label}
             </Link>
           ))}
           <Link
             href={COMPANY.researchAppPath}
-            className="ml-2 inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-800 transition hover:bg-brand-100"
+            className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-brand-100 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-800 transition hover:bg-brand-100"
           >
             <FlaskConical className="h-4 w-4" />
             Research Suite
           </Link>
           <Link
             href="/shop"
-            className="ml-2 inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-brand-700 to-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-brand-600/20 transition hover:brightness-105"
+            className="ml-2 inline-flex items-center gap-1 rounded-md bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600"
           >
             Get a quote
             <ArrowRight className="h-4 w-4" />
@@ -57,7 +51,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="rounded-lg p-2 text-slate-700 lg:hidden"
+          className="rounded-md p-2 text-slate-700 lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -66,12 +60,12 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="border-t border-slate-200 bg-white px-4 py-4 lg:hidden">
+        <nav className="border-t border-slate-100 bg-white px-4 py-4 lg:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block rounded-lg px-3 py-3 text-sm font-medium text-slate-700"
+              className="block rounded-md px-3 py-3 text-sm font-medium text-slate-700"
               onClick={() => setOpen(false)}
             >
               {link.label}
@@ -79,7 +73,7 @@ export function SiteHeader() {
           ))}
           <Link
             href={COMPANY.researchAppPath}
-            className="mt-2 flex items-center gap-2 rounded-lg bg-brand-50 px-3 py-3 text-sm font-medium text-brand-800"
+            className="mt-2 flex items-center gap-2 rounded-md bg-brand-50 px-3 py-3 text-sm font-medium text-brand-800"
             onClick={() => setOpen(false)}
           >
             <FlaskConical className="h-4 w-4" />
@@ -87,7 +81,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/shop"
-            className="mt-3 block rounded-lg bg-brand-600 px-4 py-3 text-center text-sm font-semibold text-white"
+            className="mt-3 block rounded-md bg-brand-700 px-4 py-3 text-center text-sm font-semibold text-white"
             onClick={() => setOpen(false)}
           >
             Get a quote
