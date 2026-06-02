@@ -75,7 +75,7 @@ function actionInstructions(action: UnderstandingActionId, mode: "topic" | "docu
 }
 
 function buildTopicPrompt(input: UnderstandingInput): string {
-  const topic = input.topic?.trim() || "general academic research skills";
+  const topic = input.topic?.trim() || "Research methods fundamentals (overview)";
   const field = input.field?.trim() ? `Field/discipline: ${input.field.trim()}\n` : "";
   return `${field}Research level: ${levelLabel(input.researchLevel)}
 Topic or subject: ${topic}
@@ -119,8 +119,6 @@ export async function runResearchUnderstanding(input: UnderstandingInput) {
     if (input.documentText.trim().length < 80) {
       throw new Error("Document text is too short. Add more content or upload a fuller article.");
     }
-  } else if (!input.topic?.trim()) {
-    throw new Error("Enter a topic or subject to study.");
   }
 
   const prompt =

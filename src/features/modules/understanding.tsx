@@ -33,7 +33,7 @@ export default function UnderstandingPage() {
   const portalId = usePortalId();
   const [researchLevel, setResearchLevel] = useState<string>(RESEARCH_LEVELS[0].id);
   const [field, setField] = useState("");
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState(TOPIC_SUGGESTIONS[0]);
   const [action, setAction] = useState<UnderstandingActionId>("study-guide");
   const [fileName, setFileName] = useState<string | null>(null);
   const [documentText, setDocumentText] = useState("");
@@ -73,11 +73,6 @@ export default function UnderstandingPage() {
   async function run() {
     setError(null);
     setResult(null);
-
-    if (!hasDocument && !topic.trim()) {
-      setError("Enter a topic to study, or upload / paste an article to analyze.");
-      return;
-    }
 
     setLoading(true);
     try {
@@ -139,8 +134,7 @@ export default function UnderstandingPage() {
 
           <label className="mt-4 block text-sm">
             <span className="font-medium text-slate-700">
-              Topic or subject{" "}
-              {!hasDocument && <span className="text-red-600">*</span>}
+              Research learning topic
             </span>
             <input
               type="text"
@@ -148,14 +142,14 @@ export default function UnderstandingPage() {
               placeholder={
                 hasDocument
                   ? "Optional — e.g. how this article fits your thesis"
-                  : "e.g. Factors affecting student retention in higher education"
+                  : "Optional — pick a topic below or type your own"
               }
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
             />
           </label>
 
-          <p className="mt-3 text-xs text-slate-500">Quick topics:</p>
+          <p className="mt-3 text-xs text-slate-500">Research learning topics:</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {TOPIC_SUGGESTIONS.map((t) => (
               <button
@@ -182,7 +176,7 @@ export default function UnderstandingPage() {
           <p className="mt-1 text-sm text-slate-500">
             {hasDocument
               ? "Report will be based on your uploaded or pasted article."
-              : "Without an article, we generate academic study material for your topic."}
+              : "Without an article, we generate academic study material from the selected research learning topic."}
           </p>
 
           {!pasteMode ? (
