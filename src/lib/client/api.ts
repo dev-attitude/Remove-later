@@ -29,7 +29,7 @@ async function parseJson<T>(res: Response): Promise<T> {
       (res.status === 401
         ? "Please sign in to use AI writing"
         : res.status === 402
-          ? "Free trial used up. Please subscribe to continue."
+          ? "Your 3-day free trial has ended. Please subscribe to continue."
         : res.status === 504
           ? "Request timed out — try again"
           : "Request failed");

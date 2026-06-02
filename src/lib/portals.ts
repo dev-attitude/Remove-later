@@ -153,7 +153,7 @@ export const PORTALS: Record<PortalId, PortalConfig> = {
         currency: "USD",
         description: "Get started with essentials",
         features: [
-          "5 free full-service AI actions (trial)",
+          "3-day free trial (full AI tools)",
           "Core tools: topics, writing, curriculum",
           "Upgrade anytime to continue",
           "Web access",

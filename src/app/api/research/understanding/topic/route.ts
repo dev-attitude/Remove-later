@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { enforceTrialOrSubscription } from "@/lib/billing/trial";
+import { enforceTrialOrSubscription, trialDays } from "@/lib/billing/trial";
 import { loadUnderstandingTopicContent } from "@/lib/services/understanding-topic-content";
 
 export const maxDuration = 60;
@@ -31,8 +31,7 @@ export async function POST(req: Request) {
       const code = (e as { code?: string } | null)?.code;
       if (code === "TRIAL_EXHAUSTED") {
         useAi = false;
-        trialNotice =
-          "Free AI trial used up — showing real papers and a literature-based guide. Subscribe for full AI-written guides.";
+        trialNotice = `Your ${trialDays()}-day free trial has ended — showing real papers and a literature-based guide. Subscribe for full AI-written guides.`;
       } else {
         throw e;
       }

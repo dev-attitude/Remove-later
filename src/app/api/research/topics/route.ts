@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 import { generateResearchTopicsWithLiterature } from "@/lib/services/research-topics";
 import { RESEARCH_METHODS } from "@/lib/research-methods";
 import { isResearchLevelId } from "@/lib/research-levels";
-import { enforceTrialOrSubscription } from "@/lib/billing/trial";
+import { enforceTrialOrSubscription, trialExpiredMessage } from "@/lib/billing/trial";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       if (code === "TRIAL_EXHAUSTED") {
         return NextResponse.json(
           {
-            error: "Free trial used up. Please subscribe to continue.",
+            error: trialExpiredMessage(),
             code: "TRIAL_EXHAUSTED",
             subscribePath: `/${body.portal ?? "student"}/subscription`,
           },

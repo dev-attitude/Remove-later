@@ -106,7 +106,7 @@ export default function ResearchHubPage() {
         <div className="mt-16 space-y-16">
           <ResearchSuiteToolGrid
             title="Core research & assignment tools"
-            description="Each tool is wired to live APIs — OpenAI, Grok-2-latest, OpenAlex, Crossref, CORE, Zotero workflows, Turnitin-ready checks, and more. Start with 5 free full-service AI actions, then subscribe for unlimited access."
+            description="Each tool is wired to live APIs — OpenAI, Grok-2-latest, OpenAlex, Crossref, CORE, Zotero workflows, Turnitin-ready checks, and more. Start with a 3-day free trial, then subscribe for unlimited access."
             tools={RESEARCH_SUITE_PRIMARY_TOOLS}
           />
           <ResearchSuiteToolGrid

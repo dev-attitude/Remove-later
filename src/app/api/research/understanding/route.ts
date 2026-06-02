@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { enforceTrialOrSubscription } from "@/lib/billing/trial";
+import { enforceTrialOrSubscription, trialExpiredMessage } from "@/lib/billing/trial";
 import {
   runResearchUnderstanding,
   UNDERSTANDING_ACTIONS,
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       if (code === "TRIAL_EXHAUSTED") {
         return NextResponse.json(
           {
-            error: "Free trial used up. Please subscribe to continue.",
+            error: trialExpiredMessage(),
             code: "TRIAL_EXHAUSTED",
             subscribePath: `/${body.portal ?? "student"}/subscription`,
           },

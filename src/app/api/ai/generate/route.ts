@@ -3,7 +3,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { generateAcademicText } from "@/lib/services/ai";
 import { prisma } from "@/lib/db";
-import { enforceTrialOrSubscription } from "@/lib/billing/trial";
+import { enforceTrialOrSubscription, trialExpiredMessage } from "@/lib/billing/trial";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       if (code === "TRIAL_EXHAUSTED") {
         return NextResponse.json(
           {
-            error: "Free trial used up. Please subscribe to continue.",
+            error: trialExpiredMessage(),
             code: "TRIAL_EXHAUSTED",
             subscribePath: `/${body.portal ?? "student"}/subscription`,
           },
