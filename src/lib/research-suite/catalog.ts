@@ -41,7 +41,7 @@ export const RESEARCH_SUITE_PRIMARY_TOOLS: ResearchToolDef[] = [
   {
     moduleId: "understanding",
     title: "Research Understanding",
-    short: "25-module curriculum with papers & database links",
+    short: "25-module guides & papers shown in-app",
     integrationIds: ["openai", "core", "semantic-scholar"],
     capabilities: ["Document Q&A", "Simplify text", "Key concept extraction"],
   },

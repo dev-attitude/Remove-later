@@ -1,23 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { BookOpen, ChevronDown, ChevronRight, ExternalLink, Search } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { BookOpen, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
 import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { AIOutput } from "@/components/AIOutput";
 import { UNDERSTANDING_RESEARCH_TOPICS } from "@/lib/research-suite/understanding-topics";
 import {
-  UNDERSTANDING_API_SOURCE_IDS,
-  buildUnderstandingSearchQuery,
-  getUnderstandingExternalSources,
-  openUnderstandingSourceSearch,
-} from "@/lib/research-suite/understanding-sources";
-import type { UnifiedPaper } from "@/lib/integrations/types";
+  fetchUnderstandingTopicApi,
+  type UnderstandingTopicContentResult,
+} from "@/lib/client/api";
+import { usePortalId } from "@/hooks/usePortalId";
 
 type SelectedTopic = { module: string; label: string };
 
 export default function UnderstandingPage() {
+  const portalId = usePortalId();
   const [expandedModule, setExpandedModule] = useState<string | null>(
     UNDERSTANDING_RESEARCH_TOPICS[0]?.module ?? null
   );
@@ -26,43 +26,34 @@ export default function UnderstandingPage() {
     if (!m) return null;
     return { module: m.module, label: m.items[0] };
   });
-  const [papers, setPapers] = useState<UnifiedPaper[]>([]);
-  const [sourcesQueried, setSourcesQueried] = useState<string[]>([]);
-  const [searchErrors, setSearchErrors] = useState<string[]>([]);
+  const [content, setContent] = useState<UnderstandingTopicContentResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const externalSources = useMemo(() => getUnderstandingExternalSources(), []);
-  const searchQuery = selected ? buildUnderstandingSearchQuery(selected.label) : "";
-
-  const fetchPapers = useCallback(async (topic: SelectedTopic) => {
-    const query = buildUnderstandingSearchQuery(topic.label);
-    setLoading(true);
-    setPapers([]);
-    setSearchErrors([]);
-    try {
-      const res = await fetch("/api/research/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query,
-          sources: [...UNDERSTANDING_API_SOURCE_IDS],
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Search failed");
-      setPapers(data.papers ?? []);
-      setSourcesQueried(data.sourcesQueried ?? []);
-      setSearchErrors(data.errors ?? []);
-    } catch (e) {
-      setSearchErrors([e instanceof Error ? e.message : "Could not load articles"]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const loadTopic = useCallback(
+    async (topic: SelectedTopic) => {
+      setLoading(true);
+      setError(null);
+      setContent(null);
+      try {
+        const data = await fetchUnderstandingTopicApi({
+          module: topic.module,
+          topic: topic.label,
+          portal: portalId,
+        });
+        setContent(data);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Could not load topic");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [portalId]
+  );
 
   useEffect(() => {
-    if (selected) fetchPapers(selected);
-  }, [selected, fetchPapers]);
+    if (selected) loadTopic(selected);
+  }, [selected, loadTopic]);
 
   function selectTopic(module: string, label: string) {
     setSelected({ module, label });
@@ -73,15 +64,15 @@ export default function UnderstandingPage() {
     <>
       <ModuleHeader
         title="Research Understanding"
-        description="25 modules to learn research step by step. Select a topic to open trusted databases and find papers, books, and tools."
+        description="25 modules to learn research step by step. Select a topic to read the guide and related academic sources — all inside this platform."
         icon={BookOpen}
         moduleId="understanding"
       />
       <ModuleWorkspace>
         <p className="mb-6 max-w-3xl text-sm text-slate-600">
-          For students, research assistants, and supervisors — master research from introduction
-          through publication. Pick any topic below; we link you to OpenAlex, Semantic Scholar,
-          CORE, PubMed, arXiv, textbooks, and reference tools.
+          For students, research assistants, and supervisors. Each topic includes a structured
+          learning guide and papers from OpenAlex, Semantic Scholar, PubMed, arXiv, and CORE —
+          displayed here without leaving the Research Suite.
         </p>
 
         <div className="grid gap-6 lg:grid-cols-5">
@@ -144,87 +135,64 @@ export default function UnderstandingPage() {
                   <h2 className="mt-1 font-display text-xl font-bold text-slate-900">
                     {selected.label}
                   </h2>
-                  <p className="mt-2 text-sm text-slate-500">
-                    Search query: <span className="font-mono text-slate-700">{searchQuery}</span>
-                  </p>
+                  {content?.sourcesQueried && content.sourcesQueried.length > 0 && (
+                    <p className="mt-2 text-xs text-slate-500">
+                      Sources: {content.sourcesQueried.join(" · ")}
+                    </p>
+                  )}
                 </Card>
 
+                {error && (
+                  <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>
+                )}
+
                 <Card>
-                  <CardTitle>Find information on other platforms</CardTitle>
+                  <CardTitle>Learning guide</CardTitle>
                   <p className="mt-1 text-sm text-slate-500">
-                    Opens the official search page for this topic in each source.
+                    Overview, key concepts, and study questions for this topic.
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {externalSources.map((src) => (
-                      <Button
-                        key={src.id}
-                        type="button"
-                        variant="outline"
-                        className="!text-xs"
-                        onClick={() => openUnderstandingSourceSearch(src.id, searchQuery)}
-                      >
-                        <ExternalLink className="mr-1 h-3.5 w-3.5" />
-                        {src.name}
-                      </Button>
-                    ))}
+                  <div className="mt-4">
+                    <AIOutput
+                      loading={loading}
+                      content={content?.overview ?? ""}
+                      mode={content?.mode}
+                      label="Learning content"
+                    />
                   </div>
-                </Card>
-
-                <Card>
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <CardTitle>Articles from connected databases</CardTitle>
+                  {selected && !loading && (
                     <Button
                       type="button"
                       variant="outline"
-                      className="!text-xs"
-                      disabled={loading}
-                      onClick={() => selected && fetchPapers(selected)}
+                      className="mt-4 !text-xs"
+                      onClick={() => loadTopic(selected)}
                     >
-                      <Search className="mr-1 h-3.5 w-3.5" />
-                      {loading ? "Searching…" : "Refresh"}
+                      Refresh topic
                     </Button>
-                  </div>
-                  {sourcesQueried.length > 0 && (
-                    <p className="mt-2 text-xs text-slate-500">
-                      Queried: {sourcesQueried.join(" · ")}
-                    </p>
                   )}
-                  {searchErrors.length > 0 && (
-                    <p className="mt-2 text-xs text-amber-800">{searchErrors.join(" · ")}</p>
-                  )}
+                </Card>
+
+                <Card>
+                  <CardTitle>Academic references</CardTitle>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Papers and abstracts from connected research databases (shown in full below).
+                  </p>
                   {loading && (
-                    <p className="mt-6 text-sm text-slate-500">Loading papers…</p>
+                    <div className="mt-6 flex items-center gap-2 text-sm text-slate-500">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading references…
+                    </div>
                   )}
-                  {!loading && papers.length === 0 && (
+                  {content?.errors && content.errors.length > 0 && (
+                    <p className="mt-2 text-xs text-amber-800">{content.errors.join(" · ")}</p>
+                  )}
+                  {!loading && content && content.papers.length === 0 && (
                     <p className="mt-6 text-sm text-slate-500">
-                      No papers returned. Use the platform buttons above or try Refresh.
+                      No papers found for this topic yet. Try Refresh topic.
                     </p>
                   )}
-                  <ul className="mt-4 space-y-3">
-                    {papers.map((p) => (
-                      <li
-                        key={p.id}
-                        className="rounded-lg border border-slate-100 bg-slate-50 p-4"
-                      >
-                        <p className="font-medium text-slate-900">{p.title}</p>
-                        <p className="mt-1 text-xs text-slate-600">
-                          {p.authors} · {p.year} · {p.source}
-                          {p.citations > 0 && ` · ${p.citations} citations`}
-                        </p>
-                        {p.abstract && (
-                          <p className="mt-2 line-clamp-3 text-sm text-slate-600">{p.abstract}</p>
-                        )}
-                        {(p.url || p.doi) && (
-                          <a
-                            href={p.url || `https://doi.org/${p.doi}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:underline"
-                          >
-                            Open <ExternalLink className="h-3 w-3" />
-                          </a>
-                        )}
-                      </li>
+                  <ul className="mt-4 space-y-4">
+                    {(content?.papers ?? []).map((p) => (
+                      <PaperCard key={p.id} paper={p} />
                     ))}
                   </ul>
                 </Card>
@@ -238,5 +206,29 @@ export default function UnderstandingPage() {
         </div>
       </ModuleWorkspace>
     </>
+  );
+}
+
+function PaperCard({
+  paper,
+}: {
+  paper: UnderstandingTopicContentResult["papers"][number];
+}) {
+  return (
+    <li className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <p className="font-semibold text-slate-900">{paper.title}</p>
+      <p className="mt-1 text-xs text-slate-600">
+        {paper.authors} · {paper.year} · <span className="font-medium">{paper.source}</span>
+        {paper.citations > 0 && ` · ${paper.citations} citations`}
+      </p>
+      {paper.doi && (
+        <p className="mt-1 font-mono text-xs text-slate-500">DOI: {paper.doi}</p>
+      )}
+      {paper.abstract ? (
+        <p className="mt-3 text-sm leading-relaxed text-slate-700">{paper.abstract}</p>
+      ) : (
+        <p className="mt-3 text-sm italic text-slate-500">No abstract available in this source.</p>
+      )}
+    </li>
   );
 }

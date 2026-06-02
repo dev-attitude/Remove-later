@@ -6,10 +6,12 @@ export function AIOutput({
   loading,
   content,
   mode,
+  label = "AI output",
 }: {
   loading: boolean;
   content: string;
   mode?: "demo" | "live" | null;
+  label?: string;
 }) {
   if (loading) {
     return (
@@ -26,7 +28,7 @@ export function AIOutput({
     <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
       <div className="mb-2 flex items-center justify-between">
         <p className="text-xs font-medium uppercase tracking-wide text-brand-600">
-          AI output
+          {label}
         </p>
         {mode && (
           <span

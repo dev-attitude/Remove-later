@@ -281,6 +281,44 @@ export type UnderstandingResult = {
   sourceLabel: string;
 };
 
+export type UnderstandingTopicContentResult = {
+  module: string;
+  topic: string;
+  overview: string;
+  mode: ApiMode;
+  papers: Array<{
+    id: string;
+    title: string;
+    authors: string;
+    year: number;
+    source: string;
+    sourceId?: string;
+    abstract?: string;
+    doi?: string;
+    url?: string;
+    citations: number;
+  }>;
+  sourcesQueried: string[];
+  errors: string[];
+};
+
+export async function fetchUnderstandingTopicApi(input: {
+  module: string;
+  topic: string;
+  portal?: string;
+}) {
+  const res = await fetchWithTimeout(
+    "/api/research/understanding/topic",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+    120_000
+  );
+  return parseJson<UnderstandingTopicContentResult>(res);
+}
+
 export async function analyzeUnderstandingApi(input: {
   mode: "topic" | "document";
   action: string;

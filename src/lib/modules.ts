@@ -59,7 +59,7 @@ export const MODULES: ModuleDef[] = [
   {
     id: "understanding",
     title: "Research Understanding",
-    short: "25 research modules with linked learning sources",
+    short: "25 research modules with in-app guides & papers",
     href: "/understanding",
     icon: BookOpen,
     category: "core",
