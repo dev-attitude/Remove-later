@@ -5,7 +5,6 @@ export const FULL_SERVICE_ACTIONS = [
   "ai.writing",
   "research.topics",
   "research.curriculum",
-  "research.understanding",
 ] as const;
 
 export type FullServiceAction = (typeof FULL_SERVICE_ACTIONS)[number];

@@ -1,279 +1,240 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { BookOpen, Upload, FileText, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { BookOpen, ChevronDown, ChevronRight, ExternalLink, Search } from "lucide-react";
 import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Textarea } from "@/components/ui/Textarea";
-import { AIOutput } from "@/components/AIOutput";
+import { UNDERSTANDING_RESEARCH_TOPICS } from "@/lib/research-suite/understanding-topics";
 import {
-  analyzeUnderstandingApi,
-  extractDocumentTextApi,
-  type UnderstandingResult,
-} from "@/lib/client/api";
-import { RESEARCH_LEVELS } from "@/lib/research-levels";
-import {
-  UNDERSTANDING_ACTIONS,
-  getUnderstandingTopicOptions,
-  type UnderstandingActionId,
-} from "@/lib/services/research-understanding";
-import { usePortalId } from "@/hooks/usePortalId";
+  UNDERSTANDING_API_SOURCE_IDS,
+  buildUnderstandingSearchQuery,
+  getUnderstandingExternalSources,
+  openUnderstandingSourceSearch,
+} from "@/lib/research-suite/understanding-sources";
+import type { UnifiedPaper } from "@/lib/integrations/types";
 
-const TOPIC_OPTIONS = getUnderstandingTopicOptions();
+type SelectedTopic = { module: string; label: string };
 
 export default function UnderstandingPage() {
-  const portalId = usePortalId();
-  const [researchLevel, setResearchLevel] = useState<string>(RESEARCH_LEVELS[0].id);
-  const [field, setField] = useState("");
-  const [topic, setTopic] = useState(TOPIC_OPTIONS[0]?.label ?? "What is Research?");
-  const [action, setAction] = useState<UnderstandingActionId>("study-guide");
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [documentText, setDocumentText] = useState("");
-  const [pasteMode, setPasteMode] = useState(false);
-  const [extracting, setExtracting] = useState(false);
+  const [expandedModule, setExpandedModule] = useState<string | null>(
+    UNDERSTANDING_RESEARCH_TOPICS[0]?.module ?? null
+  );
+  const [selected, setSelected] = useState<SelectedTopic | null>(() => {
+    const m = UNDERSTANDING_RESEARCH_TOPICS[0];
+    if (!m) return null;
+    return { module: m.module, label: m.items[0] };
+  });
+  const [papers, setPapers] = useState<UnifiedPaper[]>([]);
+  const [sourcesQueried, setSourcesQueried] = useState<string[]>([]);
+  const [searchErrors, setSearchErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UnderstandingResult | null>(null);
 
-  const hasDocument = documentText.trim().length >= 80;
-  const topicsByModule = useMemo(() => {
-    return TOPIC_OPTIONS.reduce<Record<string, string[]>>((acc, o) => {
-      (acc[o.module] ||= []).push(o.label);
-      return acc;
-    }, {});
-  }, []);
+  const externalSources = useMemo(() => getUnderstandingExternalSources(), []);
+  const searchQuery = selected ? buildUnderstandingSearchQuery(selected.label) : "";
 
-  async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    setError(null);
-    setExtracting(true);
-    setFileName(f.name);
-    try {
-      const { text } = await extractDocumentTextApi(f);
-      setDocumentText(text);
-      setPasteMode(false);
-    } catch (err) {
-      setFileName(null);
-      setDocumentText("");
-      setError(err instanceof Error ? err.message : "Could not read file");
-    } finally {
-      setExtracting(false);
-    }
-  }
-
-  function clearDocument() {
-    setFileName(null);
-    setDocumentText("");
-    setPasteMode(false);
-  }
-
-  async function run() {
-    setError(null);
-    setResult(null);
-
+  const fetchPapers = useCallback(async (topic: SelectedTopic) => {
+    const query = buildUnderstandingSearchQuery(topic.label);
     setLoading(true);
+    setPapers([]);
+    setSearchErrors([]);
     try {
-      const res = await analyzeUnderstandingApi({
-        mode: hasDocument ? "document" : "topic",
-        action,
-        researchLevel,
-        field: field.trim() || undefined,
-        topic: topic.trim() || undefined,
-        documentText: hasDocument ? documentText : undefined,
-        fileName: fileName ?? (hasDocument ? "Pasted article" : undefined),
-        portal: portalId,
+      const res = await fetch("/api/research/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query,
+          sources: [...UNDERSTANDING_API_SOURCE_IDS],
+        }),
       });
-      setResult(res);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Request failed");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Search failed");
+      setPapers(data.papers ?? []);
+      setSourcesQueried(data.sourcesQueried ?? []);
+      setSearchErrors(data.errors ?? []);
+    } catch (e) {
+      setSearchErrors([e instanceof Error ? e.message : "Could not load articles"]);
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    if (selected) fetchPapers(selected);
+  }, [selected, fetchPapers]);
+
+  function selectTopic(module: string, label: string) {
+    setSelected({ module, label });
+    setExpandedModule(module);
   }
 
   return (
     <>
       <ModuleHeader
-        title="Research Understanding Assistant"
-        description="Study any topic with academic guides and exam prep — or upload an article for a full analysis report. Upload is optional."
+        title="Research Understanding"
+        description="25 modules to learn research step by step. Select a topic to open trusted databases and find papers, books, and tools."
         icon={BookOpen}
         moduleId="understanding"
       />
       <ModuleWorkspace>
-        <Card className="mb-6">
-          <CardTitle>Your study context</CardTitle>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <label className="block text-sm">
-              <span className="font-medium text-slate-700">Research level</span>
-              <select
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                value={researchLevel}
-                onChange={(e) => setResearchLevel(e.target.value)}
-              >
-                {RESEARCH_LEVELS.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium text-slate-700">Field / discipline (optional)</span>
-              <input
-                type="text"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                placeholder="e.g. Nursing, Education, Economics"
-                value={field}
-                onChange={(e) => setField(e.target.value)}
-              />
-            </label>
-          </div>
+        <p className="mb-6 max-w-3xl text-sm text-slate-600">
+          For students, research assistants, and supervisors — master research from introduction
+          through publication. Pick any topic below; we link you to OpenAlex, Semantic Scholar,
+          CORE, PubMed, arXiv, textbooks, and reference tools.
+        </p>
 
-          <label className="mt-4 block text-sm">
-            <span className="font-medium text-slate-700">
-              Research learning topic
-            </span>
-            <select
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              disabled={hasDocument}
-            >
-              {Object.entries(topicsByModule).map(([module, labels]) => (
-                <optgroup key={module} label={module}>
-                  {labels.map((label) => (
-                    <option key={`${module}:${label}`} value={label}>
-                      {label}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-            <p className="mt-2 text-xs text-slate-500">
-              {hasDocument
-                ? "Topic selection is disabled because you uploaded/pasted an article."
-                : "Pick from the research-learning curriculum (25 modules)."}
-            </p>
-          </label>
-        </Card>
+        <div className="grid gap-6 lg:grid-cols-5">
+          <Card className="lg:col-span-2 lg:max-h-[70vh] lg:overflow-y-auto">
+            <CardTitle>Research learning topics</CardTitle>
+            <p className="mt-1 text-xs text-slate-500">25 modules · select a topic</p>
+            <div className="mt-4 space-y-2">
+              {UNDERSTANDING_RESEARCH_TOPICS.map((mod) => {
+                const open = expandedModule === mod.module;
+                return (
+                  <div key={mod.module} className="rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                      onClick={() => setExpandedModule(open ? null : mod.module)}
+                    >
+                      <span className="min-w-0 flex-1 leading-snug">{mod.module}</span>
+                      {open ? (
+                        <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                      )}
+                    </button>
+                    {open && (
+                      <ul className="border-t border-slate-100 pb-2">
+                        {mod.items.map((item) => {
+                          const active =
+                            selected?.module === mod.module && selected?.label === item;
+                          return (
+                            <li key={item}>
+                              <button
+                                type="button"
+                                onClick={() => selectTopic(mod.module, item)}
+                                className={`w-full px-4 py-2 text-left text-sm transition ${
+                                  active
+                                    ? "bg-brand-50 font-medium text-brand-800"
+                                    : "text-slate-700 hover:bg-slate-50"
+                                }`}
+                              >
+                                {item}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
 
-        <Card className="mb-6">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <CardTitle>Article upload (optional)</CardTitle>
-            {hasDocument && (
-              <Button type="button" variant="outline" className="!py-1 !text-xs" onClick={clearDocument}>
-                Clear article
-              </Button>
+          <div className="space-y-6 lg:col-span-3">
+            {selected ? (
+              <>
+                <Card>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">
+                    {selected.module}
+                  </p>
+                  <h2 className="mt-1 font-display text-xl font-bold text-slate-900">
+                    {selected.label}
+                  </h2>
+                  <p className="mt-2 text-sm text-slate-500">
+                    Search query: <span className="font-mono text-slate-700">{searchQuery}</span>
+                  </p>
+                </Card>
+
+                <Card>
+                  <CardTitle>Find information on other platforms</CardTitle>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Opens the official search page for this topic in each source.
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {externalSources.map((src) => (
+                      <Button
+                        key={src.id}
+                        type="button"
+                        variant="outline"
+                        className="!text-xs"
+                        onClick={() => openUnderstandingSourceSearch(src.id, searchQuery)}
+                      >
+                        <ExternalLink className="mr-1 h-3.5 w-3.5" />
+                        {src.name}
+                      </Button>
+                    ))}
+                  </div>
+                </Card>
+
+                <Card>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <CardTitle>Articles from connected databases</CardTitle>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="!text-xs"
+                      disabled={loading}
+                      onClick={() => selected && fetchPapers(selected)}
+                    >
+                      <Search className="mr-1 h-3.5 w-3.5" />
+                      {loading ? "Searching…" : "Refresh"}
+                    </Button>
+                  </div>
+                  {sourcesQueried.length > 0 && (
+                    <p className="mt-2 text-xs text-slate-500">
+                      Queried: {sourcesQueried.join(" · ")}
+                    </p>
+                  )}
+                  {searchErrors.length > 0 && (
+                    <p className="mt-2 text-xs text-amber-800">{searchErrors.join(" · ")}</p>
+                  )}
+                  {loading && (
+                    <p className="mt-6 text-sm text-slate-500">Loading papers…</p>
+                  )}
+                  {!loading && papers.length === 0 && (
+                    <p className="mt-6 text-sm text-slate-500">
+                      No papers returned. Use the platform buttons above or try Refresh.
+                    </p>
+                  )}
+                  <ul className="mt-4 space-y-3">
+                    {papers.map((p) => (
+                      <li
+                        key={p.id}
+                        className="rounded-lg border border-slate-100 bg-slate-50 p-4"
+                      >
+                        <p className="font-medium text-slate-900">{p.title}</p>
+                        <p className="mt-1 text-xs text-slate-600">
+                          {p.authors} · {p.year} · {p.source}
+                          {p.citations > 0 && ` · ${p.citations} citations`}
+                        </p>
+                        {p.abstract && (
+                          <p className="mt-2 line-clamp-3 text-sm text-slate-600">{p.abstract}</p>
+                        )}
+                        {(p.url || p.doi) && (
+                          <a
+                            href={p.url || `https://doi.org/${p.doi}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:underline"
+                          >
+                            Open <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              </>
+            ) : (
+              <Card>
+                <p className="text-sm text-slate-500">Select a topic from the list.</p>
+              </Card>
             )}
           </div>
-          <p className="mt-1 text-sm text-slate-500">
-            {hasDocument
-              ? "Report will be based on your uploaded or pasted article."
-              : "Without an article, we generate academic study material from the selected research learning topic."}
-          </p>
-
-          {!pasteMode ? (
-            <label className="mt-4 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 py-10 hover:border-brand-400">
-              <Upload className="mb-2 h-8 w-8 text-slate-400" />
-              <span className="text-sm font-medium text-slate-700">
-                {extracting
-                  ? "Reading document…"
-                  : fileName ?? "PDF, DOCX, or TXT — optional"}
-              </span>
-              {hasDocument && (
-                <span className="mt-1 text-xs text-emerald-700">
-                  {documentText.length.toLocaleString()} characters ready
-                </span>
-              )}
-              <input
-                type="file"
-                className="hidden"
-                accept=".pdf,.doc,.docx,.txt"
-                disabled={extracting}
-                onChange={onFile}
-              />
-            </label>
-          ) : (
-            <Textarea
-              rows={8}
-              className="mt-4 font-mono text-sm"
-              placeholder="Paste article or chapter text here…"
-              value={documentText}
-              onChange={(e) => {
-                setDocumentText(e.target.value);
-                if (!fileName) setFileName("Pasted text");
-              }}
-            />
-          )}
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="!text-xs"
-              onClick={() => {
-                setPasteMode(!pasteMode);
-                if (!pasteMode) setFileName(null);
-              }}
-            >
-              <FileText className="mr-1 h-3.5 w-3.5" />
-              {pasteMode ? "Use file upload" : "Paste text instead"}
-            </Button>
-          </div>
-        </Card>
-
-        <div>
-          <p className="text-sm font-medium text-slate-700">What do you need?</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {UNDERSTANDING_ACTIONS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                onClick={() => setAction(a.id)}
-                className={`rounded-lg border p-3 text-left text-sm transition ${
-                  action === a.id
-                    ? "border-brand-500 bg-brand-50 text-brand-800"
-                    : "border-slate-200 bg-white hover:border-slate-300"
-                }`}
-              >
-                {a.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <Button className="mt-6" onClick={run} disabled={loading || extracting}>
-          <Sparkles className="mr-2 h-4 w-4" />
-          {loading
-            ? hasDocument
-              ? "Analyzing article…"
-              : "Generating study material…"
-            : hasDocument
-              ? `Generate report: ${UNDERSTANDING_ACTIONS.find((x) => x.id === action)?.label}`
-              : `Generate: ${UNDERSTANDING_ACTIONS.find((x) => x.id === action)?.label}`}
-        </Button>
-
-        {error && (
-          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>
-        )}
-
-        {result && (
-          <div className="mt-4 rounded-lg border border-brand-100 bg-brand-50/50 px-4 py-3 text-sm text-slate-700">
-            <p>
-              <span className="font-semibold">{result.modeLabel}</span>
-              {" · "}
-              {result.actionLabel}
-              {" · "}
-              <span className="text-slate-500">{result.sourceLabel}</span>
-            </p>
-          </div>
-        )}
-
-        <div className="mt-4">
-          <AIOutput loading={loading} content={result?.content ?? ""} />
         </div>
       </ModuleWorkspace>
     </>
