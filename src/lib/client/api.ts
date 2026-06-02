@@ -286,6 +286,7 @@ export type UnderstandingTopicContentResult = {
   topic: string;
   overview: string;
   mode: ApiMode;
+  contentSource?: "ai" | "literature";
   papers: Array<{
     id: string;
     title: string;

@@ -157,6 +157,13 @@ export default function UnderstandingPage() {
                       content={content?.overview ?? ""}
                       mode={content?.mode}
                       label="Learning content"
+                      statusLabel={
+                        content?.contentSource === "ai"
+                          ? "Live AI guide"
+                          : content?.mode === "live"
+                            ? "From academic databases"
+                            : undefined
+                      }
                     />
                   </div>
                   {selected && !loading && (

@@ -7,11 +7,14 @@ export function AIOutput({
   content,
   mode,
   label = "AI output",
+  statusLabel,
 }: {
   loading: boolean;
   content: string;
   mode?: "demo" | "live" | null;
   label?: string;
+  /** Overrides default Live AI / Demo badge text */
+  statusLabel?: string;
 }) {
   if (loading) {
     return (
@@ -38,7 +41,7 @@ export function AIOutput({
                 : "bg-amber-100 text-amber-800"
             }`}
           >
-            {mode === "live" ? "Live AI" : "Demo"}
+            {statusLabel ?? (mode === "live" ? "Live AI" : "Demo")}
           </span>
         )}
       </div>
