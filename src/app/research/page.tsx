@@ -11,7 +11,13 @@ import {
 import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/site-content";
-import { getModulesForPortal, portalPath } from "@/lib/portals";
+import { portalPath } from "@/lib/portals";
+import {
+  RESEARCH_SUITE_PRIMARY_TOOLS,
+  RESEARCH_SUITE_EXTENDED_TOOLS,
+} from "@/lib/research-suite/catalog";
+import { ResearchSuiteToolGrid } from "@/components/research/ResearchSuiteToolGrid";
+import { ResearchSystemsPanel } from "@/components/research/ResearchSystemsPanel";
 
 export const metadata = {
   title: `${BRAND.productName} | Portals`,
@@ -19,7 +25,6 @@ export const metadata = {
 };
 
 export default function ResearchHubPage() {
-  const studentModules = getModulesForPortal("student").slice(0, 6);
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="gradient-hero px-6 py-12 text-white md:px-12">
@@ -98,36 +103,22 @@ export default function ResearchHubPage() {
           })}
         </div>
 
-        <section className="mt-16">
-          <h2 className="font-display text-2xl font-bold text-slate-900">
-            Research & assignment tools
-          </h2>
-          <p className="mt-2 max-w-3xl text-slate-600">
-            Students can start with <strong>5 free full-service AI actions</strong>. After that,
-            you can subscribe for unlimited access. The tools below are available inside the Student
-            portal.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {studentModules.map((m) => {
-              const ModIcon = m.icon;
-              return (
-                <Link key={m.id} href={portalPath("student", m.id)}>
-                  <Card className="h-full transition hover:border-brand-200 hover:shadow-md">
-                    <div className="flex items-start gap-3">
-                      <div className="rounded-lg bg-slate-100 p-2 text-brand-600">
-                        <ModIcon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <CardTitle className="!text-base">{m.title}</CardTitle>
-                        <p className="mt-1 text-sm text-slate-500">{m.short}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-          <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-16 space-y-16">
+          <ResearchSuiteToolGrid
+            title="Core research & assignment tools"
+            description="Each tool is wired to live APIs — OpenAI, Grok-2-latest, OpenAlex, Crossref, CORE, Zotero workflows, Turnitin-ready checks, and more. Start with 5 free full-service AI actions, then subscribe for unlimited access."
+            tools={RESEARCH_SUITE_PRIMARY_TOOLS}
+          />
+          <ResearchSuiteToolGrid
+            title="Extended research toolkit"
+            description="Statistical analysis, journal matching, supervisor chat, surveys, and presentations — same integrated stack."
+            tools={RESEARCH_SUITE_EXTENDED_TOOLS}
+          />
+          <ResearchSystemsPanel />
+        </div>
+
+        <section className="mt-10">
+          <div className="flex flex-wrap gap-3">
             <Link
               href={portalPath("student")}
               className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"

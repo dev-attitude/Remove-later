@@ -21,6 +21,7 @@ export default function TutorPage() {
         title="AI Research Tutor"
         description="Ask research questions, get statistics help, chapter guidance, and viva preparation."
         icon={GraduationCap}
+        moduleId="tutor"
       />
       <ModuleWorkspace>
         <div className="mb-6 flex flex-wrap gap-2">

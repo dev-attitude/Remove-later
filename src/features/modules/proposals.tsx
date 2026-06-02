@@ -66,6 +66,7 @@ export default function ProposalsPage() {
         title="Research Proposal Generator"
         description="Full proposals with discipline-specific templates. Your work is saved on this device."
         icon={FileText}
+        moduleId="proposals"
       />
       <ModuleWorkspace>
         <WorkspaceHistory

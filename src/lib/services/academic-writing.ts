@@ -11,7 +11,13 @@ import { getWritingTargetLabel, isWritingChapter, SMART_TOOLS } from "@/lib/modu
 
 const SMART_TOOLS_SET = new Set<string>(SMART_TOOLS);
 
-const LITERATURE_SOURCES = ["openalex", "semantic-scholar", "pubmed", "arxiv"] as const;
+const LITERATURE_SOURCES = [
+  "openalex",
+  "semantic-scholar",
+  "pubmed",
+  "arxiv",
+  "core",
+] as const;
 
 const SECTION_SEARCH_HINTS: Record<string, string> = {
   "Problem statements": "problem statement research gap barriers predictors",

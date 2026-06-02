@@ -34,6 +34,7 @@ export default function PresentationsPage() {
         title="Research Presentation Generator"
         description="Turn thesis into slides, posters, conference abstracts, and oral presentation notes."
         icon={Presentation}
+        moduleId="presentations"
       />
       <ModuleWorkspace>
         <Card>

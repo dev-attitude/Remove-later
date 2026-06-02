@@ -4,6 +4,7 @@ import { searchOpenAlex } from "./openalex";
 import { searchPubMed } from "./pubmed";
 import { searchArxiv } from "./arxiv";
 import { searchWorldBank } from "./worldbank";
+import { searchCore } from "./core";
 import type { UnifiedPaper } from "./types";
 import type { WorldBankIndicator } from "./worldbank";
 
@@ -76,6 +77,20 @@ export async function multiSourceSearch(
           sourcesQueried.push("arXiv");
         } catch {
           errors.push("arXiv unavailable");
+        }
+      })()
+    );
+  }
+
+  if (sourceIds.includes("core")) {
+    tasks.push(
+      (async () => {
+        try {
+          const r = await searchCore(query, 5);
+          papers.push(...r);
+          sourcesQueried.push("CORE");
+        } catch {
+          errors.push("CORE unavailable");
         }
       })()
     );

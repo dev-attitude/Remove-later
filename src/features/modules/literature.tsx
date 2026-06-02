@@ -19,6 +19,7 @@ const DEFAULT_SOURCES = [
   "openalex",
   "pubmed",
   "arxiv",
+  "core",
   "worldbank",
 ];
 
@@ -147,8 +148,9 @@ export default function LiteratureModule() {
     <>
       <ModuleHeader
         title="Literature Review & Research Sources"
-        description="Search Semantic Scholar, OpenAlex, PubMed, arXiv, World Bank, and open institutional databases. Google Scholar opens in browser (no public API)."
+        description="Search OpenAlex, Semantic Scholar, PubMed, arXiv, CORE, Crossref, and World Bank. Google Scholar opens in browser (no public API)."
         icon={Library}
+        moduleId="literature"
       />
       <ModuleWorkspace>
         <WorkspaceHistory

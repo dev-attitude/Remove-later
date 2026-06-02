@@ -148,6 +148,7 @@ export default function AIDetectionModule() {
         title="AI Detection Module"
         description="Upload PDF, DOCX, or TXT — or paste your assignment. Sentences likely written by AI are highlighted in red (high) and orange (moderate). Humanize, copy, or download to edit yourself."
         icon={Shield}
+        moduleId="ai-detection"
       />
       <ModuleWorkspace>
         <div className="mb-4 flex flex-wrap gap-2">

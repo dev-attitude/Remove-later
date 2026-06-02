@@ -20,6 +20,7 @@ export default function SurveysPage() {
         title="Survey & Data Collection"
         description="Build questionnaires, online/mobile/offline surveys. AI suggests questions and detects bias."
         icon={ClipboardList}
+        moduleId="surveys"
       />
       <ModuleWorkspace>
         <div className="grid gap-6 lg:grid-cols-2">

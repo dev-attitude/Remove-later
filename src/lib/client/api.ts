@@ -273,6 +273,36 @@ export type GeneratedCurriculum = {
   mode: ApiMode;
 };
 
+export type UnderstandingResult = {
+  content: string;
+  mode: ApiMode;
+  modeLabel: string;
+  actionLabel: string;
+  sourceLabel: string;
+};
+
+export async function analyzeUnderstandingApi(input: {
+  mode: "topic" | "document";
+  action: string;
+  researchLevel: string;
+  field?: string;
+  topic?: string;
+  documentText?: string;
+  fileName?: string;
+  portal?: string;
+}) {
+  const res = await fetchWithTimeout(
+    "/api/research/understanding",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+    120_000
+  );
+  return parseJson<UnderstandingResult>(res);
+}
+
 export async function generateCurriculumApi(input: {
   researchLevel: string;
   discipline: string;

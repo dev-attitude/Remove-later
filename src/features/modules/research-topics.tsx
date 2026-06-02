@@ -97,6 +97,7 @@ export default function ResearchTopicsModule() {
         title="Research Topic Generator"
         description="Enter your research level, field, problems, location, and method. Topics and literature are calibrated for Bachelor's through PhD — complexity and originality increase with level."
         icon={Lightbulb}
+        moduleId="research-topics"
       />
       <ModuleWorkspace>
         <WorkspaceHistory

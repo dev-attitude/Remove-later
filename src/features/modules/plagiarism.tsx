@@ -30,8 +30,9 @@ export default function PlagiarismModule() {
     <>
       <ModuleHeader
         title="Plagiarism Checker"
-        description="Internet, journal, and thesis repository comparison. Citation mismatch detection and downloadable reports."
+        description="Similarity scan with citation mismatch detection. Export reports for Turnitin or institutional submission."
         icon={FileSearch}
+        moduleId="plagiarism"
       />
       <ModuleWorkspace>
         <Card>

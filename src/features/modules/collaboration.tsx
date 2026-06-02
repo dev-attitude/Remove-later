@@ -21,6 +21,7 @@ export default function CollaborationPage() {
         title="Supervisor & Collaboration"
         description="Student-supervisor chat, live comments, version history, shared editing, and approval workflows."
         icon={Users}
+        moduleId="collaboration"
       />
       <ModuleWorkspace>
         <div className="grid gap-6 lg:grid-cols-2">

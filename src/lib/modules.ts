@@ -59,7 +59,7 @@ export const MODULES: ModuleDef[] = [
   {
     id: "understanding",
     title: "Research Understanding",
-    short: "Upload PDFs, summarize, quiz",
+    short: "Study topics or analyze articles — upload optional",
     href: "/understanding",
     icon: BookOpen,
     category: "core",

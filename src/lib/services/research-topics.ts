@@ -301,6 +301,7 @@ async function fetchArticlesForTopic(
     "semantic-scholar",
     "pubmed",
     "arxiv",
+    "core",
   ]);
   let papers = result.papers;
 

@@ -56,6 +56,7 @@ export default function CitationsPage() {
         title="Citation & Referencing"
         description="Crossref DOI lookup, citation verification, and reference generation. APA, Harvard, MLA, Chicago, Vancouver."
         icon={Quote}
+        moduleId="citations"
       />
       <ModuleWorkspace>
         <div className="grid gap-6 lg:grid-cols-2">

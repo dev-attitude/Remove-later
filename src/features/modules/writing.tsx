@@ -122,6 +122,7 @@ export default function WritingPage() {
         title="AI Research Writing Assistant"
         description="Your work is saved automatically. Enter your research topic and level, then generate chapters or sections with citations."
         icon={PenTool}
+        moduleId="writing"
       />
       <ModuleWorkspace>
         <WorkspaceHistory

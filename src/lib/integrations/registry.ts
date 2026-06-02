@@ -23,9 +23,9 @@ export const INTEGRATION_SOURCES: IntegrationSource[] = [
   },
   {
     id: "grok",
-    name: "Grok (xAI)",
+    name: "Grok-2-latest (xAI)",
     category: "ai",
-    description: "xAI model for research Q&A",
+    description: "xAI Grok-2-latest for writing, analysis & tutoring",
     apiEnabled: true,
     requiresKey: "XAI_API_KEY",
     website: "https://x.ai",
@@ -70,12 +70,23 @@ export const INTEGRATION_SOURCES: IntegrationSource[] = [
   },
   {
     id: "core",
-    name: "CORE",
+    name: "CORE API",
     category: "literature",
-    description: "Millions of open-access papers",
-    apiEnabled: false,
+    description: "Open-access papers (CORE v3 API; optional CORE_API_KEY)",
+    apiEnabled: true,
+    requiresKey: "CORE_API_KEY",
     website: "https://core.ac.uk",
     searchUrl: (q) => `https://core.ac.uk/search?q=${encodeURIComponent(q)}`,
+  },
+  {
+    id: "turnitin",
+    name: "Turnitin",
+    category: "tools",
+    description: "Institutional plagiarism checking — export from this suite and submit via your Turnitin account",
+    apiEnabled: false,
+    website: "https://www.turnitin.com",
+    searchUrl: (q) =>
+      `https://www.google.com/search?q=${encodeURIComponent(`Turnitin plagiarism ${q}`)}`,
   },
   {
     id: "pubmed",

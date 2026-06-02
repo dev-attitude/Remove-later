@@ -115,6 +115,7 @@ export default function ResearchLibraryModule() {
         title="Research Knowledge Library"
         description="Seven-level research education curriculum, open knowledge ecosystems, and an AI curriculum generator — from foundations to PhD."
         icon={GraduationCap}
+        moduleId="research-library"
       />
       <ModuleWorkspace>
         <div className="mb-6 flex flex-wrap gap-2 border-b border-slate-200 pb-4">

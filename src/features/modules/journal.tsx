@@ -23,6 +23,7 @@ export default function JournalPage() {
         title="AI Journal Assistant"
         description="Journal recommendations, publication readiness, formatting, and reviewer response drafts."
         icon={Newspaper}
+        moduleId="journal"
       />
       <ModuleWorkspace>
         <Card className="mb-6">

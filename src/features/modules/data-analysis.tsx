@@ -56,6 +56,7 @@ export default function DataAnalysisPage() {
         title="Data Analysis Module"
         description="Upload Excel, CSV, or SPSS. Clean data, run statistics, auto-chart, and generate findings."
         icon={BarChart3}
+        moduleId="data-analysis"
       />
       <ModuleWorkspace>
         <div className="mb-6 flex gap-2">
