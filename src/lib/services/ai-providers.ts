@@ -8,13 +8,28 @@ export async function generateWithProvider(
   provider: AIProvider = "auto"
 ): Promise<{ content: string; provider: string }> {
   const tryOpenAI = provider === "openai" || provider === "auto";
-  const tryGemini = provider === "gemini" || (provider === "auto" && !config.openai.enabled());
-  const tryGrok = provider === "grok";
+  const tryGemini = provider === "gemini";
+  const tryGrok = provider === "grok" || provider === "auto";
 
   if (tryOpenAI && config.openai.enabled()) {
-    const { generateAcademicText } = await import("./ai");
-    const r = await generateAcademicText(prompt);
-    return { content: r.content, provider: "openai" };
+    try {
+      const { generateAcademicText } = await import("./ai");
+      const r = await generateAcademicText(prompt);
+      return { content: r.content, provider: "openai" };
+    } catch (e) {
+      console.error("[openai]", e);
+      if (provider !== "auto") throw e;
+    }
+  }
+
+  if (tryGrok && config.xai.enabled()) {
+    try {
+      const content = await callGrok(prompt);
+      return { content, provider: "grok" };
+    } catch (e) {
+      console.error("[grok]", e);
+      if (provider === "grok") throw e;
+    }
   }
 
   if (tryGemini && process.env.GEMINI_API_KEY) {
@@ -23,15 +38,6 @@ export async function generateWithProvider(
       return { content, provider: "gemini" };
     } catch (e) {
       console.error("[gemini]", e);
-    }
-  }
-
-  if (tryGrok && process.env.XAI_API_KEY) {
-    try {
-      const content = await callGrok(prompt);
-      return { content, provider: "grok" };
-    } catch (e) {
-      console.error("[grok]", e);
     }
   }
 

@@ -34,11 +34,11 @@ function GuideBlock({ block }: { block: string }) {
 
   if (first.startsWith("## ")) {
     return (
-      <section className="scroll-mt-6 border-b border-slate-200 pb-8 last:border-0">
-        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-[1.65rem]">
+      <section className="scroll-mt-6 border-b border-slate-200 pb-10 last:border-0 lg:pb-12">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl lg:text-[2rem]">
           {renderInline(first.replace(/^##\s+/, ""))}
         </h2>
-        {rest && <GuideBody text={rest} className="mt-6" />}
+        {rest && <GuideBody text={rest} className="mt-8" />}
       </section>
     );
   }
@@ -128,7 +128,7 @@ export function LearningGuidePanel({
 }) {
   if (loading) {
     return (
-      <div className="flex min-h-[min(50vh,480px)] flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-brand-200 bg-brand-50/30 px-8 py-16">
+      <div className="flex min-h-[min(55vh,560px)] w-full flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-brand-200 bg-brand-50/30 px-8 py-20">
         <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         <div className="text-center">
           <p className="font-medium text-brand-900">Preparing your learning guide</p>
@@ -160,7 +160,7 @@ export function LearningGuidePanel({
         </div>
       )}
 
-      <div className="space-y-10 md:space-y-12">
+      <div className="w-full space-y-12 md:space-y-14 lg:max-w-[72rem]">
         {sections.length > 0 ? (
           sections.map((block, i) => <GuideBlock key={i} block={block} />)
         ) : (

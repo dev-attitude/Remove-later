@@ -15,6 +15,7 @@ export type UnderstandingTopicContent = {
   mode: "live" | "demo";
   /** How the learning guide was produced */
   contentSource: "ai" | "literature";
+  aiProvider?: "openai" | "grok";
   papers: UnifiedPaper[];
   sourcesQueried: string[];
   errors: string[];
@@ -96,13 +97,9 @@ function buildLiteratureOverview(
   return lines.join("\n");
 }
 
-async function generateAiOverview(
-  module: string,
-  topic: string,
-  papers: UnifiedPaper[]
-): Promise<string> {
+function buildTopicPrompt(module: string, topic: string, papers: UnifiedPaper[]): string {
   const literature = paperContextBlock(papers);
-  const prompt = `Teach this research curriculum topic.
+  return `Teach this research curriculum topic.
 
 Module: ${module}
 Topic: ${topic}
@@ -119,16 +116,24 @@ Use the literature excerpts below where relevant. If excerpts are empty, use est
 
 Literature excerpts:
 ${literature || "(No papers retrieved.)"}`;
+}
 
+async function chatCompletion(
+  apiKey: string,
+  baseURL: string | undefined,
+  model: string,
+  prompt: string
+): Promise<string> {
   const timeoutMs = process.env.VERCEL ? 55_000 : 45_000;
-  const openai = new OpenAI({
-    apiKey: config.openai.apiKey,
+  const client = new OpenAI({
+    apiKey,
+    baseURL,
     timeout: timeoutMs,
     maxRetries: 2,
   });
 
-  const completion = await openai.chat.completions.create({
-    model: config.openai.model,
+  const completion = await client.chat.completions.create({
+    model,
     max_tokens: process.env.VERCEL ? 1800 : 2400,
     temperature: 0.6,
     messages: [
@@ -142,17 +147,54 @@ ${literature || "(No papers retrieved.)"}`;
   return text;
 }
 
+/** OpenAI first, then Grok (xAI API) — same key family as the Grok CLI uses headless */
+async function generateAiOverview(
+  module: string,
+  topic: string,
+  papers: UnifiedPaper[]
+): Promise<{ content: string; provider: "openai" | "grok" }> {
+  const prompt = buildTopicPrompt(module, topic, papers);
+
+  if (config.openai.enabled()) {
+    try {
+      const content = await chatCompletion(
+        config.openai.apiKey!,
+        undefined,
+        config.openai.model,
+        prompt
+      );
+      return { content, provider: "openai" };
+    } catch (e) {
+      console.error("[understanding] OpenAI failed:", e);
+    }
+  }
+
+  if (config.xai.enabled()) {
+    const content = await chatCompletion(
+      config.xai.apiKey!,
+      "https://api.x.ai/v1",
+      config.xai.model,
+      prompt
+    );
+    return { content, provider: "grok" };
+  }
+
+  throw new Error("No AI provider configured (OPENAI_API_KEY or XAI_API_KEY).");
+}
+
 export async function loadUnderstandingTopicContent(
   module: string,
-  topic: string
+  topic: string,
+  options?: { useAi?: boolean }
 ): Promise<UnderstandingTopicContent> {
   const query = buildUnderstandingSearchQuery(topic);
   const search = await multiSourceSearch(query, [...UNDERSTANDING_API_SOURCE_IDS]);
 
   const hasRealPapers = search.papers.length > 0;
   const runtimeLive = getRuntimeMode() === "live";
+  const useAi = options?.useAi !== false;
 
-  if (!config.openai.enabled()) {
+  if (!useAi || (!config.openai.enabled() && !config.xai.enabled())) {
     return {
       module,
       topic,
@@ -166,13 +208,14 @@ export async function loadUnderstandingTopicContent(
   }
 
   try {
-    const overview = await generateAiOverview(module, topic, search.papers);
+    const ai = await generateAiOverview(module, topic, search.papers);
     return {
       module,
       topic,
-      overview,
+      overview: ai.content,
       mode: "live",
       contentSource: "ai",
+      aiProvider: ai.provider,
       papers: search.papers,
       sourcesQueried: search.sourcesQueried,
       errors: search.errors,

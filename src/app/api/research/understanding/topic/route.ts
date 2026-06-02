@@ -19,30 +19,28 @@ export async function POST(req: Request) {
     const body = schema.parse(await req.json());
     const session = await auth();
 
-    if (session?.user?.id) {
-      try {
-        await enforceTrialOrSubscription(session.user.id);
-      } catch (e) {
-        const code = (e as { code?: string } | null)?.code;
-        if (code === "TRIAL_EXHAUSTED") {
-          return NextResponse.json(
-            {
-              error: "Free trial used up. Please subscribe to continue.",
-              code: "TRIAL_EXHAUSTED",
-              subscribePath: `/${body.portal ?? "student"}/subscription`,
-            },
-            { status: 402 }
-          );
-        }
-        throw e;
-      }
-    } else {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Sign in to view topic content." }, { status: 401 });
     }
 
-    const result = await loadUnderstandingTopicContent(body.module, body.topic);
+    let useAi = true;
+    let trialNotice: string | undefined;
+    try {
+      await enforceTrialOrSubscription(session.user.id);
+    } catch (e) {
+      const code = (e as { code?: string } | null)?.code;
+      if (code === "TRIAL_EXHAUSTED") {
+        useAi = false;
+        trialNotice =
+          "Free AI trial used up — showing real papers and a literature-based guide. Subscribe for full AI-written guides.";
+      } else {
+        throw e;
+      }
+    }
 
-    if (session?.user?.id) {
+    const result = await loadUnderstandingTopicContent(body.module, body.topic, { useAi });
+
+    if (useAi) {
       try {
         await prisma.usageLog.create({
           data: {
@@ -57,7 +55,7 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json(result);
+    return NextResponse.json({ ...result, trialNotice });
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });

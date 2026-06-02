@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { BookOpen, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { BookOpen, ChevronDown, ChevronRight, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
 import { Card, CardTitle } from "@/components/ui/Card";
@@ -18,6 +19,7 @@ type SelectedTopic = { module: string; label: string };
 
 export default function UnderstandingPage() {
   const portalId = usePortalId();
+  const [topicsOpen, setTopicsOpen] = useState(true);
   const [expandedModule, setExpandedModule] = useState<string | null>(
     UNDERSTANDING_RESEARCH_TOPICS[0]?.module ?? null
   );
@@ -73,96 +75,143 @@ export default function UnderstandingPage() {
     <>
       <ModuleHeader
         title="Research Understanding"
-        description="25 modules to learn research step by step. Select a topic to read the guide and related academic sources — all inside this platform."
+        description="25 modules to learn research step by step. Select a topic to read the full guide and academic references in this workspace."
         icon={BookOpen}
         moduleId="understanding"
       />
-      <ModuleWorkspace>
-        <p className="mb-6 max-w-3xl text-sm text-slate-600">
-          For students, research assistants, and supervisors. Each topic includes a structured
-          learning guide and papers from OpenAlex, Semantic Scholar, PubMed, arXiv, and CORE —
-          displayed here without leaving the Research Suite.
-        </p>
+      <ModuleWorkspace wide>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="max-w-3xl text-sm leading-relaxed text-slate-600">
+            Master research from introduction through publication. The learning guide uses the
+            full width of your screen for easier reading.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="!text-xs lg:hidden"
+            onClick={() => setTopicsOpen((o) => !o)}
+          >
+            {topicsOpen ? (
+              <>
+                <PanelLeftClose className="mr-1 h-4 w-4" /> Hide topics
+              </>
+            ) : (
+              <>
+                <PanelLeftOpen className="mr-1 h-4 w-4" /> Show topics
+              </>
+            )}
+          </Button>
+        </div>
 
-        <div className="grid gap-6 xl:grid-cols-12">
-          <Card className="xl:col-span-4 xl:max-h-[calc(100vh-12rem)] xl:overflow-y-auto">
-            <CardTitle>Research learning topics</CardTitle>
-            <p className="mt-1 text-xs text-slate-500">25 modules · select a topic</p>
-            <div className="mt-4 space-y-2">
-              {UNDERSTANDING_RESEARCH_TOPICS.map((mod) => {
-                const open = expandedModule === mod.module;
-                return (
-                  <div key={mod.module} className="rounded-lg border border-slate-200">
-                    <button
-                      type="button"
-                      className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
-                      onClick={() => setExpandedModule(open ? null : mod.module)}
-                    >
-                      <span className="min-w-0 flex-1 leading-snug">{mod.module}</span>
-                      {open ? (
-                        <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+          {/* Topic list — fixed width so the guide gets the rest */}
+          <aside
+            className={`w-full shrink-0 lg:w-72 xl:w-80 ${
+              topicsOpen ? "block" : "hidden lg:block"
+            }`}
+          >
+            <Card className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto">
+              <CardTitle className="!text-base">Topics</CardTitle>
+              <p className="mt-1 text-xs text-slate-500">25 modules</p>
+              <div className="mt-4 space-y-2">
+                {UNDERSTANDING_RESEARCH_TOPICS.map((mod) => {
+                  const open = expandedModule === mod.module;
+                  return (
+                    <div key={mod.module} className="rounded-lg border border-slate-200">
+                      <button
+                        type="button"
+                        className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-xs font-semibold leading-snug text-slate-800 hover:bg-slate-50"
+                        onClick={() => setExpandedModule(open ? null : mod.module)}
+                      >
+                        <span className="min-w-0 flex-1">{mod.module.replace(/^MODULE \d+: /, "M")}</span>
+                        {open ? (
+                          <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                        )}
+                      </button>
+                      {open && (
+                        <ul className="border-t border-slate-100 pb-2">
+                          {mod.items.map((item) => {
+                            const active =
+                              selected?.module === mod.module && selected?.label === item;
+                            return (
+                              <li key={item}>
+                                <button
+                                  type="button"
+                                  onClick={() => selectTopic(mod.module, item)}
+                                  className={`w-full px-3 py-2.5 text-left text-sm transition ${
+                                    active
+                                      ? "bg-brand-50 font-medium text-brand-800"
+                                      : "text-slate-700 hover:bg-slate-50"
+                                  }`}
+                                >
+                                  {item}
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
                       )}
-                    </button>
-                    {open && (
-                      <ul className="border-t border-slate-100 pb-2">
-                        {mod.items.map((item) => {
-                          const active =
-                            selected?.module === mod.module && selected?.label === item;
-                          return (
-                            <li key={item}>
-                              <button
-                                type="button"
-                                onClick={() => selectTopic(mod.module, item)}
-                                className={`w-full px-4 py-2.5 text-left text-sm transition ${
-                                  active
-                                    ? "bg-brand-50 font-medium text-brand-800"
-                                    : "text-slate-700 hover:bg-slate-50"
-                                }`}
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          </aside>
 
-          <div className="space-y-6 xl:col-span-8">
+          {/* Learning guide — takes all remaining horizontal space */}
+          <div className="min-w-0 flex-1 space-y-6">
             {selected ? (
               <>
                 {error && (
-                  <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>
+                  <div className="rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800">
+                    <p>{error}</p>
+                    {error.includes("trial") && (
+                      <Link
+                        href={`/${portalId}/subscription`}
+                        className="mt-2 inline-block font-semibold text-brand-700 underline"
+                      >
+                        View subscription plans
+                      </Link>
+                    )}
+                  </div>
                 )}
 
-                <Card className="overflow-hidden !p-0 shadow-md">
-                  <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-brand-50/40 px-6 py-6 md:px-10 md:py-8">
+                {content?.trialNotice && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
+                    {content.trialNotice}{" "}
+                    <Link
+                      href={`/${portalId}/subscription`}
+                      className="font-semibold text-brand-800 underline"
+                    >
+                      Subscribe
+                    </Link>
+                  </div>
+                )}
+
+                <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
+                  <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-brand-50/50 px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-12">
                     <p className="text-xs font-semibold uppercase tracking-widest text-brand-700">
                       {selected.module}
                     </p>
-                    <h2 className="mt-2 font-display text-2xl font-bold leading-tight text-slate-900 md:text-3xl">
+                    <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-slate-900 lg:text-4xl">
                       {selected.label}
                     </h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
-                      Structured learning guide with overview, key concepts, practical steps, and
-                      study questions — written for academic use.
+                    <p className="mt-4 max-w-4xl text-base leading-relaxed text-slate-600">
+                      Read the full learning guide below — overview, key concepts, practical steps,
+                      and exam-style questions.
                     </p>
                     {content?.sourcesQueried && content.sourcesQueried.length > 0 && (
-                      <p className="mt-4 text-xs text-slate-500">
-                        Data sources: {content.sourcesQueried.join(" · ")}
+                      <p className="mt-4 text-sm text-slate-500">
+                        Sources: {content.sourcesQueried.join(" · ")}
                       </p>
                     )}
                     {selected && !loading && (
                       <Button
                         type="button"
                         variant="outline"
-                        className="mt-5"
+                        className="mt-6"
                         onClick={() => loadTopic(selected)}
                       >
                         Refresh topic
@@ -170,42 +219,49 @@ export default function UnderstandingPage() {
                     )}
                   </div>
 
-                  <div className="bg-white px-6 py-8 md:px-10 md:py-12 lg:px-12 lg:py-14">
-                    <div className="mb-6 flex items-center gap-2 border-b border-slate-100 pb-4">
-                      <BookOpen className="h-5 w-5 text-brand-600" />
-                      <h3 className="font-display text-lg font-semibold text-slate-900">
-                        Learning guide
-                      </h3>
+                  <div className="px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-16 xl:px-16 xl:py-20">
+                    <div className="mb-8 flex items-center gap-3 border-b border-slate-100 pb-5">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100 text-brand-700">
+                        <BookOpen className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-display text-xl font-semibold text-slate-900 lg:text-2xl">
+                          Learning guide
+                        </h3>
+                        <p className="text-sm text-slate-500">Scroll to read all sections</p>
+                      </div>
                     </div>
-                    <LearningGuidePanel
-                      loading={loading}
-                      content={content?.overview ?? ""}
-                      mode={content?.mode}
-                      statusLabel={statusLabel}
-                    />
+                    <div className="max-w-none">
+                      <LearningGuidePanel
+                        loading={loading}
+                        content={content?.overview ?? ""}
+                        mode={content?.mode}
+                        statusLabel={statusLabel}
+                      />
+                    </div>
                   </div>
-                </Card>
+                </div>
 
-                <Card>
-                  <CardTitle>Academic references</CardTitle>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Supporting papers and abstracts from connected research databases.
+                <Card className="w-full !p-6 lg:!p-8">
+                  <CardTitle className="!text-xl">Academic references</CardTitle>
+                  <p className="mt-2 text-sm text-slate-500">
+                    Supporting papers and full abstracts from connected databases.
                   </p>
                   {loading && (
-                    <div className="mt-6 flex items-center gap-2 text-sm text-slate-500">
+                    <div className="mt-8 flex items-center gap-2 text-sm text-slate-500">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       Loading references…
                     </div>
                   )}
                   {content?.errors && content.errors.length > 0 && (
-                    <p className="mt-2 text-xs text-amber-800">{content.errors.join(" · ")}</p>
+                    <p className="mt-3 text-sm text-amber-800">{content.errors.join(" · ")}</p>
                   )}
                   {!loading && content && content.papers.length === 0 && (
-                    <p className="mt-6 text-sm text-slate-500">
+                    <p className="mt-8 text-sm text-slate-500">
                       No papers found for this topic yet. Try Refresh topic.
                     </p>
                   )}
-                  <ul className="mt-6 space-y-5">
+                  <ul className="mt-8 grid gap-6 lg:grid-cols-1">
                     {(content?.papers ?? []).map((p) => (
                       <PaperCard key={p.id} paper={p} />
                     ))}
@@ -213,8 +269,8 @@ export default function UnderstandingPage() {
                 </Card>
               </>
             ) : (
-              <Card>
-                <p className="text-sm text-slate-500">Select a topic from the list.</p>
+              <Card className="w-full p-12 text-center">
+                <p className="text-slate-500">Select a topic from the list.</p>
               </Card>
             )}
           </div>
@@ -230,9 +286,9 @@ function PaperCard({
   paper: UnderstandingTopicContentResult["papers"][number];
 }) {
   return (
-    <li className="rounded-xl border border-slate-200 bg-slate-50/50 p-5 md:p-6">
-      <p className="text-lg font-semibold leading-snug text-slate-900">{paper.title}</p>
-      <p className="mt-2 text-sm text-slate-600">
+    <li className="rounded-xl border border-slate-200 bg-slate-50/80 p-6 lg:p-8">
+      <p className="text-xl font-semibold leading-snug text-slate-900">{paper.title}</p>
+      <p className="mt-3 text-sm text-slate-600">
         {paper.authors} · {paper.year} · <span className="font-medium">{paper.source}</span>
         {paper.citations > 0 && ` · ${paper.citations} citations`}
       </p>
@@ -240,9 +296,11 @@ function PaperCard({
         <p className="mt-2 font-mono text-xs text-slate-500">DOI: {paper.doi}</p>
       )}
       {paper.abstract ? (
-        <p className="mt-4 text-base leading-[1.75] text-slate-700">{paper.abstract}</p>
+        <p className="mt-5 text-base leading-[1.8] text-slate-700 lg:text-[1.0625rem]">
+          {paper.abstract}
+        </p>
       ) : (
-        <p className="mt-4 text-sm italic text-slate-500">No abstract available in this source.</p>
+        <p className="mt-5 text-sm italic text-slate-500">No abstract available in this source.</p>
       )}
     </li>
   );

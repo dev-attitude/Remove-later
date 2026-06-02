@@ -287,6 +287,7 @@ export type UnderstandingTopicContentResult = {
   overview: string;
   mode: ApiMode;
   contentSource?: "ai" | "literature";
+  aiProvider?: "openai" | "grok";
   papers: Array<{
     id: string;
     title: string;
@@ -301,6 +302,7 @@ export type UnderstandingTopicContentResult = {
   }>;
   sourcesQueried: string[];
   errors: string[];
+  trialNotice?: string;
 };
 
 export async function fetchUnderstandingTopicApi(input: {
