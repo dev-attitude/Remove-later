@@ -35,6 +35,9 @@ export async function generateWithProvider(
     }
   }
 
+  if (config.appMode === "production") {
+    throw new Error("No AI provider configured. Set OPENAI_API_KEY or GEMINI_API_KEY.");
+  }
   return { content: generateMockResponse(prompt), provider: "demo" };
 }
 

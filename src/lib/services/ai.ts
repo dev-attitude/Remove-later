@@ -46,6 +46,9 @@ export async function generateAcademicText(
   options?: { context?: string; maxTokens?: number }
 ): Promise<{ content: string; mode: "demo" | "live" }> {
   if (!config.openai.enabled()) {
+    if (config.appMode === "production") {
+      throw new Error("OpenAI is not configured. Set OPENAI_API_KEY in production.");
+    }
     await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
     return { content: generateMockResponse(prompt), mode: "demo" };
   }
@@ -54,13 +57,13 @@ export async function generateAcademicText(
     const content = await callOpenAI(prompt, options);
     return { content, mode: "live" };
   } catch (error) {
-    console.error("[ai] OpenAI failed, using fallback:", error);
+    console.error("[ai] OpenAI failed:", error);
+    if (config.appMode === "production") {
+      throw new Error("AI generation failed. Please try again.");
+    }
     const fallback = generateMockResponse(prompt);
     const note =
-      "\n\n---\n*Note: Live AI timed out or failed. Showing backup content. Sign in, retry, or check OpenAI billing on Vercel.*";
-    return {
-      content: fallback + note,
-      mode: "demo",
-    };
+      "\n\n---\n*Note: Live AI timed out or failed. Showing backup content. Configure OpenAI on Vercel for full generation.*";
+    return { content: fallback + note, mode: "demo" };
   }
 }

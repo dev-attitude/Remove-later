@@ -369,12 +369,18 @@ export async function generateAcademicWriting(
       content = await callOpenAIWriting(prompt, isChapter);
     } catch (e) {
       console.error("[academic-writing] AI failed:", e);
+      if (config.appMode === "production") {
+        throw new Error("Writing generation failed. Please try again.");
+      }
       content = buildStructuredFallback(input, papers);
       resultMode = "demo";
       notice =
         "Live AI timed out or was unavailable. Showing a structured draft using your topic and retrieved literature. Please try again in a moment, or check OpenAI billing on Vercel.";
     }
   } else {
+    if (config.appMode === "production") {
+      throw new Error("OpenAI is not configured. Set OPENAI_API_KEY in production.");
+    }
     await new Promise((r) => setTimeout(r, 400));
     content = buildStructuredFallback(input, papers);
     resultMode = "demo";
