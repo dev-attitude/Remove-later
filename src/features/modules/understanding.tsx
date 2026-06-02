@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { BookOpen, Upload, FileText, Sparkles } from "lucide-react";
 import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
@@ -16,24 +16,18 @@ import {
 import { RESEARCH_LEVELS } from "@/lib/research-levels";
 import {
   UNDERSTANDING_ACTIONS,
+  getUnderstandingTopicOptions,
   type UnderstandingActionId,
 } from "@/lib/services/research-understanding";
 import { usePortalId } from "@/hooks/usePortalId";
 
-const TOPIC_SUGGESTIONS = [
-  "Qualitative research methods",
-  "Literature review structure",
-  "Ethics in human subjects research",
-  "ANOVA and hypothesis testing",
-  "Mixed methods design",
-  "APA 7 referencing",
-];
+const TOPIC_OPTIONS = getUnderstandingTopicOptions();
 
 export default function UnderstandingPage() {
   const portalId = usePortalId();
   const [researchLevel, setResearchLevel] = useState<string>(RESEARCH_LEVELS[0].id);
   const [field, setField] = useState("");
-  const [topic, setTopic] = useState(TOPIC_SUGGESTIONS[0]);
+  const [topic, setTopic] = useState(TOPIC_OPTIONS[0]?.label ?? "What is Research?");
   const [action, setAction] = useState<UnderstandingActionId>("study-guide");
   const [fileName, setFileName] = useState<string | null>(null);
   const [documentText, setDocumentText] = useState("");
@@ -44,6 +38,12 @@ export default function UnderstandingPage() {
   const [result, setResult] = useState<UnderstandingResult | null>(null);
 
   const hasDocument = documentText.trim().length >= 80;
+  const topicsByModule = useMemo(() => {
+    return TOPIC_OPTIONS.reduce<Record<string, string[]>>((acc, o) => {
+      (acc[o.module] ||= []).push(o.label);
+      return acc;
+    }, {});
+  }, []);
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -136,32 +136,28 @@ export default function UnderstandingPage() {
             <span className="font-medium text-slate-700">
               Research learning topic
             </span>
-            <input
-              type="text"
+            <select
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              placeholder={
-                hasDocument
-                  ? "Optional — e.g. how this article fits your thesis"
-                  : "Optional — pick a topic below or type your own"
-              }
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-            />
+              disabled={hasDocument}
+            >
+              {Object.entries(topicsByModule).map(([module, labels]) => (
+                <optgroup key={module} label={module}>
+                  {labels.map((label) => (
+                    <option key={`${module}:${label}`} value={label}>
+                      {label}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <p className="mt-2 text-xs text-slate-500">
+              {hasDocument
+                ? "Topic selection is disabled because you uploaded/pasted an article."
+                : "Pick from the research-learning curriculum (25 modules)."}
+            </p>
           </label>
-
-          <p className="mt-3 text-xs text-slate-500">Research learning topics:</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {TOPIC_SUGGESTIONS.map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setTopic(t)}
-                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700 hover:border-brand-300 hover:text-brand-800"
-              >
-                {t}
-              </button>
-            ))}
-          </div>
         </Card>
 
         <Card className="mb-6">
