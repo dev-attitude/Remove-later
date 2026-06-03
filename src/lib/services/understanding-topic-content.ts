@@ -13,28 +13,44 @@ import {
 } from "@/lib/services/understanding-books";
 import { formatExtractedBookText, normalizeGuideMarkdown } from "@/lib/services/format-book-text";
 
+export type TopicReference = {
+  id: string;
+  type: "textbook" | "paper" | "ai";
+  title: string;
+  authors?: string;
+  year?: number;
+  source: string;
+  excerpt?: string;
+  doi?: string;
+  citations?: number;
+};
+
 export type UnderstandingTopicContent = {
   module: string;
   topic: string;
   overview: string;
-  /** live = real papers and/or live AI; demo = placeholder only */
   mode: "live" | "demo";
-  /** How the learning guide was produced */
   contentSource: "ai" | "literature";
   aiProvider?: "openai" | "grok";
+  /** Unified references: textbooks, AI synthesis, and library papers */
+  references: TopicReference[];
   papers: UnifiedPaper[];
   sourcesQueried: string[];
   errors: string[];
-  /** Uploaded textbooks used for this topic */
   booksUsed?: { id: string; title: string }[];
 };
 
 const SYSTEM_PROMPT = `You are an expert research methods educator for Skyrapay Research Suite.
-Write clear, accurate study material for university students. Use markdown headings (##).
-Do not tell users to leave the platform or visit external websites.
-Never invent paper titles, authors, or DOIs not present in the provided excerpts.
-When textbook excerpts are provided, treat them as the primary source for definitions, descriptions, and explanations. Paraphrase faithfully and attribute ideas to the textbook title in parentheses.
-Always use clear markdown structure: ## for main sections, ### for subsections, short paragraphs, and bullet lists. Never output one long unbroken block of text.`;
+Write a unified academic study guide for university students.
+
+Rules:
+- Use clear markdown: ## for main sections only (Overview, Key concepts and definitions, Why this matters in research, Practical steps for students, Common mistakes to avoid, Exam-style questions).
+- Write in flowing paragraphs under each section. Use bullet lists only where they improve clarity.
+- Synthesise ALL provided textbook and literature material into ONE coherent guide. Do NOT split content by source.
+- Do NOT use headings like "From course textbooks", "From OpenAlex", or name individual books as section titles.
+- Do NOT include a references or bibliography section — the application lists sources separately.
+- Do not tell users to leave the platform or visit external websites.
+- Never invent paper titles, authors, or DOIs not present in the provided source material.`;
 
 function paperContextBlock(papers: UnifiedPaper[]): string {
   return papers
@@ -46,31 +62,87 @@ function paperContextBlock(papers: UnifiedPaper[]): string {
     .join("\n\n");
 }
 
-function bookSectionLines(excerpts: BookExcerpt[], topic: string): string[] {
-  if (excerpts.length === 0) return [];
-  const lines = [
-    "## From course textbooks",
-    "",
-    "The following sections are taken from your institution’s research methods books and arranged for this topic.",
-    "",
-  ];
-  for (const b of excerpts) {
-    const formatted = formatExtractedBookText(b.excerpt, topic);
-    lines.push(`### ${b.title}`, "", formatted, "", "---", "");
+function buildTopicReferences(
+  bookExcerpts: BookExcerpt[],
+  papers: UnifiedPaper[],
+  ai?: { provider: "openai" | "grok" }
+): TopicReference[] {
+  const refs: TopicReference[] = [];
+
+  for (const b of bookExcerpts) {
+    refs.push({
+      id: `book-${b.bookId}`,
+      type: "textbook",
+      title: b.title,
+      source: "Course textbook",
+      excerpt: b.excerpt.slice(0, 500).trim() + (b.excerpt.length > 500 ? "…" : ""),
+    });
   }
-  return lines;
+
+  if (ai) {
+    refs.push({
+      id: "ai-synthesis",
+      type: "ai",
+      title: "Learning guide synthesis",
+      source: ai.provider === "grok" ? "Grok (xAI)" : "OpenAI",
+      excerpt:
+        "Study guide text synthesised from course textbooks and academic literature for this topic.",
+    });
+  }
+
+  for (const p of papers) {
+    refs.push({
+      id: p.id,
+      type: "paper",
+      title: p.title,
+      authors: p.authors,
+      year: p.year,
+      source: p.source,
+      excerpt: p.abstract,
+      doi: p.doi,
+      citations: p.citations,
+    });
+  }
+
+  return refs;
 }
 
-function buildLiteratureOverview(
+/** Non-AI guide: unified paragraphs only — sources appear in references, not in the body */
+function buildSynthesizedGuide(
   module: string,
   topic: string,
-  papers: UnifiedPaper[],
-  bookExcerpts: BookExcerpt[] = []
+  bookExcerpts: BookExcerpt[]
 ): string {
-  const intro =
-    bookExcerpts.length > 0
-      ? `**${topic}** — study material from **your uploaded textbooks** and academic references below.`
-      : `**${topic}** is a core part of research training. Below is a study guide built from **real academic sources** retrieved for this topic. Read the summaries, then review the full abstracts in the references section.`;
+  const proseBlocks: string[] = [];
+
+  for (const b of bookExcerpts) {
+    const formatted = formatExtractedBookText(b.excerpt, topic);
+    const paragraphs = formatted
+      .split(/\n\n+/)
+      .map((p) => p.trim())
+      .filter(
+        (p) =>
+          p.length > 80 &&
+          !p.startsWith("###") &&
+          !p.startsWith("**Chapter outline") &&
+          !p.startsWith("---") &&
+          !p.startsWith("**Focus:")
+      );
+    proseBlocks.push(...paragraphs);
+  }
+
+  const unique = [...new Set(proseBlocks)].slice(0, 8);
+  const overview =
+    unique.slice(0, 2).join("\n\n") ||
+    `${topic} is a fundamental part of research training within ${module.replace(/^MODULE \d+:\s*/i, "")}. Understanding this topic helps you design, conduct, and report research with academic rigour.`;
+
+  const concepts =
+    unique.slice(2, 5).join("\n\n") ||
+    `Researchers approach ${topic} systematically: defining terms clearly, linking theory to practice, and applying ethical and methodological standards throughout the research process.`;
+
+  const practice =
+    unique.slice(5, 7).join("\n\n") ||
+    `Apply this topic by reviewing how it appears in published studies in your field, noting definitions used by authors, and practising with short exercises or past exam questions.`;
 
   const lines = [
     `## ${topic}`,
@@ -79,52 +151,35 @@ function buildLiteratureOverview(
     "",
     "## Overview",
     "",
-    intro,
+    overview,
     "",
-    ...bookSectionLines(bookExcerpts, topic),
-    "## What you should understand",
+    "## Key concepts and definitions",
     "",
-    `- Define **${topic}** and explain it in your own words.`,
-    `- Describe how it fits into the wider research process (problem → design → data → analysis → writing).`,
-    `- Identify when researchers use it and what quality standards apply.`,
-    `- Connect it to your field, thesis chapter, or exam questions.`,
+    concepts,
+    "",
+    "## Why this matters in research",
+    "",
+    `A clear grasp of **${topic}** strengthens every stage of a research project — from framing a problem and choosing methods to analysing data and writing defensible conclusions.`,
+    "",
+    "## Practical steps for students",
+    "",
+    practice,
+    "",
+    "## Common mistakes to avoid",
+    "",
+    `- Treating ${topic} as optional rather than foundational to your design and write-up.`,
+    "- Using vague definitions without tying them to your research question.",
+    "- Ignoring how supervisors and examiners expect this concept to appear in your proposal or thesis.",
+    "",
+    "## Exam-style questions",
+    "",
+    `1. Define **${topic}** and explain its role in the research process.`,
+    "",
+    `2. Give one example of how ${topic} applies in your discipline.`,
+    "",
+    `3. What are two common errors students make regarding ${topic}, and how would you avoid them?`,
     "",
   ];
-
-  if (papers.length > 0) {
-    lines.push("## Insights from academic literature", "");
-    for (const p of papers.slice(0, 8)) {
-      lines.push(
-        `### ${p.title}`,
-        "",
-        `*${p.authors} (${p.year}) · ${p.source}${p.citations > 0 ? ` · ${p.citations} citations` : ""}*`,
-        ""
-      );
-      if (p.abstract?.trim()) {
-        lines.push(p.abstract.trim(), "");
-      } else {
-        lines.push("_Abstract not available from this database._", "");
-      }
-      lines.push("---", "");
-    }
-  } else {
-    lines.push(
-      "## Literature",
-      "",
-      "_No papers were returned from OpenAlex, Semantic Scholar, PubMed, arXiv, or CORE for this query. Use **Refresh topic** or try another related topic in the same module._",
-      ""
-    );
-  }
-
-  lines.push(
-    "## Study checklist",
-    "",
-    "- [ ] I can define this topic in 2–3 sentences.",
-    "- [ ] I can give one example from real research.",
-    "- [ ] I know common mistakes students make here.",
-    "- [ ] I reviewed at least two papers in the references list.",
-    ""
-  );
 
   return normalizeGuideMarkdown(lines.join("\n"));
 }
@@ -145,27 +200,17 @@ function buildTopicPrompt(
     excerpt: formatExtractedBookText(b.excerpt, topic),
   }));
   const textbooks = formatBookExcerptsForPrompt(formattedExcerpts);
-  const bookBlock = textbooks
-    ? `Textbook excerpts (PRIMARY source for definitions and explanations):\n${textbooks}\n\n`
-    : "";
 
-  return `Teach this research curriculum topic.
+  return `Write a unified study guide for this curriculum topic. Synthesise the source material below into clear paragraphs — do not organise the guide by source.
 
 Module: ${module}
 Topic: ${topic}
 
-Required sections:
-## Overview
-## Key concepts and definitions
-## Why this matters in research
-## Practical steps for students
-## Common mistakes to avoid
-## Exam-style questions (3) with brief model answers
+Source material (for synthesis only — do not list these separately in your output):
 
-${bookExcerpts.length > 0 ? "Base definitions and explanations primarily on the textbook excerpts. Supplement with literature where helpful.\n\n" : ""}Use the literature excerpts below where relevant. If excerpts are empty, use established research-methods knowledge only.
+${textbooks ? `TEXTBOOK EXCERPTS:\n${textbooks}\n\n` : ""}${literature ? `ACADEMIC LITERATURE:\n${literature}` : "(No literature retrieved.)"}
 
-${bookBlock}Literature excerpts:
-${literature || "(No papers retrieved.)"}`;
+Write sections: ## Overview, ## Key concepts and definitions, ## Why this matters in research, ## Practical steps for students, ## Common mistakes to avoid, ## Exam-style questions (3 questions with brief model answers).`;
 }
 
 async function chatCompletion(
@@ -197,7 +242,6 @@ async function chatCompletion(
   return text;
 }
 
-/** OpenAI first, then Grok (xAI API) — same key family as the Grok CLI uses headless */
 async function generateAiOverview(
   module: string,
   topic: string,
@@ -294,51 +338,49 @@ export async function loadUnderstandingTopicContent(
     ...(booksUsed.length > 0 ? [`Course textbooks (${booksUsed.length})`] : []),
   ];
 
+  const base = {
+    module,
+    topic,
+    papers: search.papers,
+    sourcesQueried,
+    errors: search.errors,
+    booksUsed: booksUsed.length > 0 ? booksUsed : undefined,
+  };
+
   if (!useAi || (!config.openai.enabled() && !config.xai.enabled())) {
     return {
-      module,
-      topic,
-      overview: buildLiteratureOverview(module, topic, search.papers, bookExcerpts),
+      ...base,
+      overview: buildSynthesizedGuide(module, topic, bookExcerpts),
       mode: hasRealPapers || runtimeLive || bookExcerpts.length > 0 ? "live" : "demo",
       contentSource: "literature",
-      papers: search.papers,
-      sourcesQueried,
-      errors: search.errors,
-      booksUsed: booksUsed.length > 0 ? booksUsed : undefined,
+      references: buildTopicReferences(bookExcerpts, search.papers),
     };
   }
 
   try {
     const ai = await generateAiOverview(module, topic, search.papers, bookExcerpts);
     return {
-      module,
-      topic,
+      ...base,
       overview: finalizeGuideMarkdown(ai.content),
       mode: "live",
       contentSource: "ai",
       aiProvider: ai.provider,
-      papers: search.papers,
-      sourcesQueried,
-      errors: search.errors,
-      booksUsed: booksUsed.length > 0 ? booksUsed : undefined,
+      references: buildTopicReferences(bookExcerpts, search.papers, { provider: ai.provider }),
     };
   } catch (e) {
-    console.error("[understanding-topic-content] OpenAI failed, using literature guide:", e);
+    console.error("[understanding-topic-content] AI failed, using synthesized guide:", e);
     return {
-      module,
-      topic,
-      overview: buildLiteratureOverview(module, topic, search.papers, bookExcerpts),
+      ...base,
+      overview: buildSynthesizedGuide(module, topic, bookExcerpts),
       mode: hasRealPapers || bookExcerpts.length > 0 ? "live" : "demo",
       contentSource: "literature",
-      papers: search.papers,
-      sourcesQueried,
+      references: buildTopicReferences(bookExcerpts, search.papers),
       errors: [
         ...search.errors,
         ...(hasRealPapers || bookExcerpts.length > 0
           ? []
           : ["AI guide unavailable — configure OPENAI_API_KEY on the server for full guides."]),
       ],
-      booksUsed: booksUsed.length > 0 ? booksUsed : undefined,
     };
   }
 }

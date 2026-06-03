@@ -11,6 +11,7 @@ import { UnderstandingBooksPanel } from "@/components/research/UnderstandingBook
 import { UNDERSTANDING_RESEARCH_TOPICS } from "@/lib/research-suite/understanding-topics";
 import {
   fetchUnderstandingTopicApi,
+  type TopicReferenceResult,
   type UnderstandingTopicContentResult,
 } from "@/lib/client/api";
 import { usePortalId } from "@/hooks/usePortalId";
@@ -78,30 +79,26 @@ export default function UnderstandingPage() {
   }
 
   const statusLabel =
-    content?.booksUsed && content.booksUsed.length > 0
-      ? content.contentSource === "ai"
-        ? `Guide from course textbooks + AI`
-        : "Guide from course textbooks"
-      : content?.contentSource === "ai"
-        ? content.aiProvider === "grok"
-          ? "Live guide (Grok)"
-          : "Live AI guide"
-        : content?.mode === "live"
-          ? "From academic databases"
-          : undefined;
+    content?.contentSource === "ai"
+      ? content.aiProvider === "grok"
+        ? "Synthesised guide (Grok)"
+        : "Synthesised guide (AI)"
+      : content?.mode === "live"
+        ? "Live content"
+        : undefined;
 
   return (
     <>
       <ModuleHeader
         title="Research Understanding"
-        description="25 modules with learning guides from your course textbooks and academic references for each topic."
+        description="Select a topic for a paragraph-style study guide. References from textbooks, AI, and academic libraries appear below each guide."
         icon={BookOpen}
         moduleId="understanding"
       />
       <ModuleWorkspace wide>
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-slate-600">
-          When you open a topic, the guide uses passages from the course textbooks above (uploaded
-          by your admin), then lists academic references directly below.
+          Open a topic for a unified guide in paragraphs. All sources — textbooks, AI, and
+          library databases — are listed together in References below each topic.
         </p>
 
         <UnderstandingBooksPanel onBooksChange={() => setBooksVersion((v) => v + 1)} />
@@ -228,13 +225,6 @@ function TopicContent({
                   </div>
                 )}
 
-                {content?.booksUsed && content.booksUsed.length > 0 && (
-                  <div className="rounded-lg border border-brand-200 bg-brand-50/80 px-5 py-3 text-sm text-brand-950">
-                    <span className="font-semibold">Course textbooks used for this topic:</span>{" "}
-                    {content.booksUsed.map((b) => b.title).join(" · ")}
-                  </div>
-                )}
-
                 <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
         <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-brand-50/50 px-5 py-6 sm:px-8 sm:py-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-brand-700">
@@ -265,7 +255,9 @@ function TopicContent({
               <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">
                 Learning guide
               </h3>
-              <p className="text-sm text-slate-500">Overview, concepts, and study questions</p>
+              <p className="text-sm text-slate-500">
+                Unified study guide written in paragraphs — sources listed below
+              </p>
             </div>
           </div>
           <LearningGuidePanel
@@ -276,81 +268,127 @@ function TopicContent({
           />
         </section>
 
-        {/* References — always directly below the guide for this topic */}
+        {/* References — textbooks, AI, and library sources */}
         <section className="border-t border-slate-200 bg-slate-50/40 px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 pb-4">
-            <div>
-              <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">
-                References
-                {!loading && content && content.papers.length > 0 && (
-                  <span className="ml-2 text-base font-normal text-slate-500">
-                    ({content.papers.length})
-                  </span>
-                )}
-              </h3>
-              <p className="mt-1 text-sm text-slate-500">
-                Academic papers for this topic — read after the guide above
-              </p>
-            </div>
-          </div>
-
-          {loading && (
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Loading references for this topic…
-            </div>
-          )}
-
-          {!loading && content?.errors && content.errors.length > 0 && (
-            <p className="mb-4 text-sm text-amber-800">{content.errors.join(" · ")}</p>
-          )}
-
-          {!loading && content && content.papers.length === 0 && (
-            <p className="text-sm text-slate-500">
-              No papers found for this topic yet. Try <strong>Refresh topic</strong> to search
-              OpenAlex, Semantic Scholar, PubMed, arXiv, and CORE again.
-            </p>
-          )}
-
-          {!loading && (content?.papers ?? []).length > 0 && (
-            <ol className="mt-2 list-none space-y-5">
-              {(content?.papers ?? []).map((p, index) => (
-                <PaperCard key={p.id} paper={p} index={index + 1} />
-              ))}
-            </ol>
-          )}
+          <ReferencesSection loading={loading} content={content} />
         </section>
       </div>
     </div>
   );
 }
 
-function PaperCard({
-  paper,
+function ReferencesSection({
+  loading,
+  content,
+}: {
+  loading: boolean;
+  content: UnderstandingTopicContentResult | null;
+}) {
+  const references: TopicReferenceResult[] =
+    content?.references ??
+    (content?.papers ?? []).map((p) => ({
+      id: p.id,
+      type: "paper" as const,
+      title: p.title,
+      authors: p.authors,
+      year: p.year,
+      source: p.source,
+      excerpt: p.abstract,
+      doi: p.doi,
+      citations: p.citations,
+    }));
+
+  return (
+    <>
+      <div className="mb-6 border-b border-slate-200 pb-4">
+        <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">
+          References
+          {!loading && references.length > 0 && (
+            <span className="ml-2 text-base font-normal text-slate-500">
+              ({references.length})
+            </span>
+          )}
+        </h3>
+        <p className="mt-1 text-sm text-slate-500">
+          Course textbooks, AI synthesis, and academic library sources for this topic
+        </p>
+      </div>
+
+      {loading && (
+        <div className="flex items-center gap-2 text-sm text-slate-500">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Loading references…
+        </div>
+      )}
+
+      {!loading && content?.errors && content.errors.length > 0 && (
+        <p className="mb-4 text-sm text-amber-800">{content.errors.join(" · ")}</p>
+      )}
+
+      {!loading && references.length === 0 && (
+        <p className="text-sm text-slate-500">
+          No references found yet. Try <strong>Refresh topic</strong>.
+        </p>
+      )}
+
+      {!loading && references.length > 0 && (
+        <ol className="mt-2 list-none space-y-5">
+          {references.map((ref, index) => (
+            <ReferenceCard key={ref.id} refItem={ref} index={index + 1} />
+          ))}
+        </ol>
+      )}
+    </>
+  );
+}
+
+const REF_TYPE_LABELS: Record<TopicReferenceResult["type"], string> = {
+  textbook: "Textbook",
+  paper: "Library",
+  ai: "AI",
+};
+
+const REF_TYPE_STYLES: Record<TopicReferenceResult["type"], string> = {
+  textbook: "bg-brand-100 text-brand-800",
+  paper: "bg-emerald-100 text-emerald-800",
+  ai: "bg-violet-100 text-violet-800",
+};
+
+function ReferenceCard({
+  refItem,
   index,
 }: {
-  paper: UnderstandingTopicContentResult["papers"][number];
+  refItem: TopicReferenceResult;
   index: number;
 }) {
   return (
     <li className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">
-        Reference {index}
-      </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          [{index}]
+        </p>
+        <span
+          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${REF_TYPE_STYLES[refItem.type]}`}
+        >
+          {REF_TYPE_LABELS[refItem.type]}
+        </span>
+      </div>
       <p className="mt-2 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-        {paper.title}
+        {refItem.title}
       </p>
       <p className="mt-2 text-sm text-slate-600">
-        {paper.authors} · {paper.year} · <span className="font-medium">{paper.source}</span>
-        {paper.citations > 0 && ` · ${paper.citations} citations`}
+        {refItem.authors && <>{refItem.authors} · </>}
+        {refItem.year && <>{refItem.year} · </>}
+        <span className="font-medium">{refItem.source}</span>
+        {refItem.citations != null && refItem.citations > 0 && ` · ${refItem.citations} citations`}
       </p>
-      {paper.doi && (
-        <p className="mt-2 font-mono text-xs text-slate-500">DOI: {paper.doi}</p>
+      {refItem.doi && (
+        <p className="mt-2 font-mono text-xs text-slate-500">DOI: {refItem.doi}</p>
       )}
-      {paper.abstract ? (
-        <p className="mt-4 text-base leading-[1.75] text-slate-700">{paper.abstract}</p>
+      {refItem.excerpt ? (
+        <p className="mt-4 text-base leading-[1.75] text-slate-700">{refItem.excerpt}</p>
       ) : (
-        <p className="mt-4 text-sm italic text-slate-500">No abstract available in this source.</p>
+        <p className="mt-4 text-sm italic text-slate-500">No excerpt available.</p>
       )}
     </li>
   );

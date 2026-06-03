@@ -281,6 +281,18 @@ export type UnderstandingResult = {
   sourceLabel: string;
 };
 
+export type TopicReferenceResult = {
+  id: string;
+  type: "textbook" | "paper" | "ai";
+  title: string;
+  authors?: string;
+  year?: number;
+  source: string;
+  excerpt?: string;
+  doi?: string;
+  citations?: number;
+};
+
 export type UnderstandingTopicContentResult = {
   module: string;
   topic: string;
@@ -288,6 +300,7 @@ export type UnderstandingTopicContentResult = {
   mode: ApiMode;
   contentSource?: "ai" | "literature";
   aiProvider?: "openai" | "grok";
+  references: TopicReferenceResult[];
   papers: Array<{
     id: string;
     title: string;
