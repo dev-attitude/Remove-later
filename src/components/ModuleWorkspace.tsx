@@ -11,7 +11,10 @@ export function ModuleWorkspace({
   return (
     <div
       className={cn(
-        wide ? "w-full max-w-none p-6 md:p-10 lg:px-12 lg:py-10" : "p-8"
+        "min-w-0",
+        wide
+          ? "w-full max-w-none p-4 sm:p-6 md:p-10 lg:px-12 lg:py-10"
+          : "p-4 sm:p-6 lg:p-8"
       )}
     >
       {children}

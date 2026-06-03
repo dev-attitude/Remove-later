@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ConditionalDemoBanner } from "@/components/marketing/ConditionalDemoBanner";
@@ -66,6 +66,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -73,7 +79,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
-      <body className="font-sans antialiased">
+      <body className="overflow-x-hidden font-sans antialiased">
         <SessionProvider>
           <ConditionalDemoBanner />
           {children}

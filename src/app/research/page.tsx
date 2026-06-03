@@ -36,10 +36,10 @@ export default function ResearchHubPage() {
             <ArrowLeft className="h-4 w-4" />
             {COMPANY.name} home
           </Link>
-          <div className="flex items-center gap-4">
-            <BrandLogo className="h-12 w-auto" width={160} height={56} />
-            <div>
-              <h1 className="font-display text-3xl font-bold md:text-4xl">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <BrandLogo className="h-10 w-auto sm:h-12" width={160} height={56} />
+            <div className="min-w-0">
+              <h1 className="font-display text-2xl font-bold sm:text-3xl md:text-4xl">
                 {BRAND.productName}
               </h1>
               <p className="text-white/90">Choose your portal to sign in</p>
