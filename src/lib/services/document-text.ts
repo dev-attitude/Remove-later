@@ -6,8 +6,9 @@ export const MAX_BOOK_EXTRACT_CHARS = 250_000;
 type PdfParseFn = (buffer: Buffer) => Promise<{ text: string }>;
 
 async function extractPdfText(buffer: Buffer): Promise<string> {
-  const mod = await import("pdf-parse");
-  const pdfParse = (mod as { default?: PdfParseFn }).default ?? (mod as unknown as PdfParseFn);
+  const { createRequire } = await import("node:module");
+  const require = createRequire(`${process.cwd()}/package.json`);
+  const pdfParse = require("pdf-parse/lib/pdf-parse.js") as PdfParseFn;
   const data = await pdfParse(buffer);
   return data.text || "";
 }
