@@ -272,17 +272,16 @@ export const BUSINESS_REGISTRATION_PACKAGES: BusinessPackage[] = [
   {
     id: "pty-registration",
     name: "(Pty) Ltd Registration",
-    price: 0,
-    priceLabel: "Quote on request",
+    price: 3500,
     currency: "NAD",
     description:
       "Private company (Pty) Ltd registration tailored to your shareholding structure and industry requirements.",
     includes: [
       "Name reservation",
       "BIPA company registration",
-      "NamRA & Social Security",
+      "NamRA registration",
+      "Social Security registration",
       "Memorandum & founding documents support",
-      "Custom quote based on scope",
     ],
   },
 ];
