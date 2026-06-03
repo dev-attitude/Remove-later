@@ -5,7 +5,6 @@ import Link from "next/link";
 import { BookOpen, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
 import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
-import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { LearningGuidePanel } from "@/components/research/LearningGuidePanel";
 import { UNDERSTANDING_RESEARCH_TOPICS } from "@/lib/research-suite/understanding-topics";
@@ -89,14 +88,14 @@ export default function UnderstandingPage() {
     <>
       <ModuleHeader
         title="Research Understanding"
-        description="25 modules to learn research step by step. Select a topic to expand the guide and references directly below it."
+        description="25 modules to learn research step by step. Each topic includes a learning guide and academic references directly below it."
         icon={BookOpen}
         moduleId="understanding"
       />
       <ModuleWorkspace wide>
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-slate-600">
-          Expand a module, then click a topic — the learning guide and academic references open
-          right underneath that topic.
+          Expand a module, then click a topic — read the guide, then the references listed
+          immediately below it on the same topic.
         </p>
 
         <div className="space-y-3">
@@ -231,7 +230,7 @@ function TopicContent({
           </h2>
           {content?.sourcesQueried && content.sourcesQueried.length > 0 && (
             <p className="mt-3 text-sm text-slate-500">
-              Sources: {content.sourcesQueried.join(" · ")}
+              Databases: {content.sourcesQueried.join(" · ")}
             </p>
           )}
           {!loading && (
@@ -241,7 +240,8 @@ function TopicContent({
           )}
         </div>
 
-        <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+        {/* Learning guide */}
+        <section className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
           <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-100 text-brand-700">
               <BookOpen className="h-4 w-4" />
@@ -259,46 +259,70 @@ function TopicContent({
             mode={content?.mode}
             statusLabel={statusLabel}
           />
-        </div>
-      </div>
+        </section>
 
-      <Card className="!p-5 sm:!p-6 lg:!p-8">
-        <CardTitle className="!text-lg sm:!text-xl">Academic references</CardTitle>
-        <p className="mt-1 text-sm text-slate-500">
-          Supporting papers and abstracts from connected databases.
-        </p>
-        {loading && (
-          <div className="mt-6 flex items-center gap-2 text-sm text-slate-500">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Loading references…
+        {/* References — always directly below the guide for this topic */}
+        <section className="border-t border-slate-200 bg-slate-50/40 px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 pb-4">
+            <div>
+              <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">
+                References
+                {!loading && content && content.papers.length > 0 && (
+                  <span className="ml-2 text-base font-normal text-slate-500">
+                    ({content.papers.length})
+                  </span>
+                )}
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Academic papers for this topic — read after the guide above
+              </p>
+            </div>
           </div>
-        )}
-        {content?.errors && content.errors.length > 0 && (
-          <p className="mt-3 text-sm text-amber-800">{content.errors.join(" · ")}</p>
-        )}
-        {!loading && content && content.papers.length === 0 && (
-          <p className="mt-6 text-sm text-slate-500">
-            No papers found for this topic yet. Try Refresh topic.
-          </p>
-        )}
-        <ul className="mt-6 space-y-4">
-          {(content?.papers ?? []).map((p) => (
-            <PaperCard key={p.id} paper={p} />
-          ))}
-        </ul>
-      </Card>
+
+          {loading && (
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading references for this topic…
+            </div>
+          )}
+
+          {!loading && content?.errors && content.errors.length > 0 && (
+            <p className="mb-4 text-sm text-amber-800">{content.errors.join(" · ")}</p>
+          )}
+
+          {!loading && content && content.papers.length === 0 && (
+            <p className="text-sm text-slate-500">
+              No papers found for this topic yet. Try <strong>Refresh topic</strong> to search
+              OpenAlex, Semantic Scholar, PubMed, arXiv, and CORE again.
+            </p>
+          )}
+
+          {!loading && (content?.papers ?? []).length > 0 && (
+            <ol className="mt-2 list-none space-y-5">
+              {(content?.papers ?? []).map((p, index) => (
+                <PaperCard key={p.id} paper={p} index={index + 1} />
+              ))}
+            </ol>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
 
 function PaperCard({
   paper,
+  index,
 }: {
   paper: UnderstandingTopicContentResult["papers"][number];
+  index: number;
 }) {
   return (
-    <li className="rounded-xl border border-slate-200 bg-slate-50/80 p-5 sm:p-6">
-      <p className="text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
+    <li className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">
+        Reference {index}
+      </p>
+      <p className="mt-2 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
         {paper.title}
       </p>
       <p className="mt-2 text-sm text-slate-600">

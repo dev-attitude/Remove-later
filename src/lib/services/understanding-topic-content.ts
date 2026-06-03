@@ -182,13 +182,56 @@ async function generateAiOverview(
   throw new Error("No AI provider configured (OPENAI_API_KEY or XAI_API_KEY).");
 }
 
+const MIN_REFERENCES = 4;
+const MAX_REFERENCES = 12;
+
+function mergePaperResults(
+  primary: Awaited<ReturnType<typeof multiSourceSearch>>,
+  extra: Awaited<ReturnType<typeof multiSourceSearch>>
+) {
+  const seen = new Set<string>();
+  const papers: UnifiedPaper[] = [];
+  for (const p of [...primary.papers, ...extra.papers]) {
+    const key = `${p.title.toLowerCase().slice(0, 60)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    papers.push(p);
+  }
+  papers.sort((a, b) => b.citations - a.citations);
+  return {
+    papers: papers.slice(0, MAX_REFERENCES),
+    sourcesQueried: [...new Set([...primary.sourcesQueried, ...extra.sourcesQueried])],
+    errors: [...new Set([...primary.errors, ...extra.errors])],
+  };
+}
+
+async function fetchTopicReferences(module: string, topic: string) {
+  const primary = await multiSourceSearch(
+    buildUnderstandingSearchQuery(topic),
+    [...UNDERSTANDING_API_SOURCE_IDS]
+  );
+  if (primary.papers.length >= MIN_REFERENCES) {
+    return { ...primary, papers: primary.papers.slice(0, MAX_REFERENCES) };
+  }
+
+  const moduleHint = module.replace(/^MODULE \d+:\s*/i, "").trim();
+  const fallback = await multiSourceSearch(
+    `${topic} ${moduleHint} research`,
+    [...UNDERSTANDING_API_SOURCE_IDS]
+  );
+  const merged = mergePaperResults(primary, fallback);
+  if (merged.papers.length > 0) return merged;
+
+  const broad = await multiSourceSearch(topic, [...UNDERSTANDING_API_SOURCE_IDS]);
+  return mergePaperResults(primary, broad);
+}
+
 export async function loadUnderstandingTopicContent(
   module: string,
   topic: string,
   options?: { useAi?: boolean }
 ): Promise<UnderstandingTopicContent> {
-  const query = buildUnderstandingSearchQuery(topic);
-  const search = await multiSourceSearch(query, [...UNDERSTANDING_API_SOURCE_IDS]);
+  const search = await fetchTopicReferences(module, topic);
 
   const hasRealPapers = search.papers.length > 0;
   const runtimeLive = getRuntimeMode() === "live";
