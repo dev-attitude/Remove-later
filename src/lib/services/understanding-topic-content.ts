@@ -11,6 +11,7 @@ import {
   formatBookExcerptsForPrompt,
   getBookExcerptsForTopic,
 } from "@/lib/services/understanding-books";
+import { buildTopicSearchPhrases, phraseMatchScore } from "@/lib/services/book-topic-match";
 import { formatExtractedBookText, normalizeGuideMarkdown } from "@/lib/services/format-book-text";
 
 export type TopicReference = {
@@ -50,7 +51,8 @@ Rules:
 - Do NOT use headings like "From course textbooks", "From OpenAlex", or name individual books as section titles.
 - Do NOT include a references or bibliography section — the application lists sources separately.
 - Do not tell users to leave the platform or visit external websites.
-- Never invent paper titles, authors, or DOIs not present in the provided source material.`;
+- Never invent paper titles, authors, or DOIs not present in the provided source material.
+- Focus the guide on the exact topic requested. Use only source material that relates to that topic; do not paste generic introductions about research in general unless they define this topic.`;
 
 function paperContextBlock(papers: UnifiedPaper[]): string {
   return papers
@@ -113,25 +115,30 @@ function buildSynthesizedGuide(
   topic: string,
   bookExcerpts: BookExcerpt[]
 ): string {
+  const phrases = buildTopicSearchPhrases(module, topic);
   const proseBlocks: string[] = [];
 
-  for (const b of bookExcerpts) {
+  const sorted = [...bookExcerpts].sort((a, b) => b.relevance - a.relevance);
+
+  for (const b of sorted) {
     const formatted = formatExtractedBookText(b.excerpt, topic);
     const paragraphs = formatted
       .split(/\n\n+/)
       .map((p) => p.trim())
-      .filter(
-        (p) =>
-          p.length > 80 &&
-          !p.startsWith("###") &&
-          !p.startsWith("**Chapter outline") &&
-          !p.startsWith("---") &&
-          !p.startsWith("**Focus:")
-      );
+      .filter((p) => {
+        if (p.length < 60) return false;
+        if (p.startsWith("**Chapter outline")) return false;
+        if (p.startsWith("---") || p.startsWith("**Focus:")) return false;
+        if (p.startsWith("###")) {
+          proseBlocks.push(p);
+          return false;
+        }
+        return phraseMatchScore(p, phrases) >= 6 || proseBlocks.length < 2;
+      });
     proseBlocks.push(...paragraphs);
   }
 
-  const unique = [...new Set(proseBlocks)].slice(0, 8);
+  const unique = [...new Set(proseBlocks)].slice(0, 10);
   const overview =
     unique.slice(0, 2).join("\n\n") ||
     `${topic} is a fundamental part of research training within ${module.replace(/^MODULE \d+:\s*/i, "")}. Understanding this topic helps you design, conduct, and report research with academic rigour.`;
@@ -204,7 +211,7 @@ function buildTopicPrompt(
   return `Write a unified study guide for this curriculum topic. Synthesise the source material below into clear paragraphs — do not organise the guide by source.
 
 Module: ${module}
-Topic: ${topic}
+Topic (stay focused on this — not a generic introduction to research): ${topic}
 
 Source material (for synthesis only — do not list these separately in your output):
 
@@ -324,7 +331,7 @@ async function fetchTopicReferences(module: string, topic: string) {
 export async function loadUnderstandingTopicContent(
   module: string,
   topic: string,
-  options?: { useAi?: boolean }
+  options?: { useAi?: boolean; /** When trial ended, still synthesise textbook excerpts with AI */ allowBookAi?: boolean }
 ): Promise<UnderstandingTopicContent> {
   const search = await fetchTopicReferences(module, topic);
   const bookExcerpts = await getBookExcerptsForTopic(module, topic);
@@ -332,7 +339,11 @@ export async function loadUnderstandingTopicContent(
 
   const hasRealPapers = search.papers.length > 0;
   const runtimeLive = getRuntimeMode() === "live";
-  const useAi = options?.useAi !== false;
+  const trialAi = options?.useAi !== false;
+  const hasBooks = bookExcerpts.length > 0;
+  const aiConfigured = config.openai.enabled() || config.xai.enabled();
+  const runAi = aiConfigured && (trialAi || (options?.allowBookAi && hasBooks));
+
   const sourcesQueried = [
     ...search.sourcesQueried,
     ...(booksUsed.length > 0 ? [`Course textbooks (${booksUsed.length})`] : []),
@@ -347,7 +358,7 @@ export async function loadUnderstandingTopicContent(
     booksUsed: booksUsed.length > 0 ? booksUsed : undefined,
   };
 
-  if (!useAi || (!config.openai.enabled() && !config.xai.enabled())) {
+  if (!runAi) {
     return {
       ...base,
       overview: buildSynthesizedGuide(module, topic, bookExcerpts),

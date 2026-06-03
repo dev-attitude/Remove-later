@@ -1,10 +1,12 @@
+import { cleanPdfArtifacts } from "@/lib/services/book-topic-match";
+
 /**
  * Turn messy PDF-extracted textbook text into readable markdown for LearningGuidePanel.
  */
 export function formatExtractedBookText(raw: string, topicLabel?: string): string {
   if (!raw?.trim()) return "";
 
-  let text = raw
+  let text = cleanPdfArtifacts(raw)
     .replace(/\r\n/g, "\n")
     .replace(/\u00ad/g, "")
     .replace(/-\s*\n\s*/g, "")

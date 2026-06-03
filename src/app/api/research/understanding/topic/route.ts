@@ -31,13 +31,16 @@ export async function POST(req: Request) {
       const code = (e as { code?: string } | null)?.code;
       if (code === "TRIAL_EXHAUSTED") {
         useAi = false;
-        trialNotice = `Your ${trialDays()}-day free trial has ended — showing real papers and a literature-based guide. Subscribe for full AI-written guides.`;
+        trialNotice = `Your ${trialDays()}-day free trial has ended. Topic guides still use your course textbooks (Kumar, Kothari, etc.) with AI synthesis when available.`;
       } else {
         throw e;
       }
     }
 
-    const result = await loadUnderstandingTopicContent(body.module, body.topic, { useAi });
+    const result = await loadUnderstandingTopicContent(body.module, body.topic, {
+      useAi,
+      allowBookAi: true,
+    });
 
     if (useAi) {
       try {
