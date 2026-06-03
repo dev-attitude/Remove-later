@@ -277,6 +277,8 @@ function TopicContent({
   );
 }
 
+const INITIAL_REFERENCES_VISIBLE = 2;
+
 function ReferencesSection({
   loading,
   content,
@@ -284,6 +286,12 @@ function ReferencesSection({
   loading: boolean;
   content: UnderstandingTopicContentResult | null;
 }) {
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [content?.topic, content?.module]);
+
   const references: TopicReferenceResult[] =
     content?.references ??
     (content?.papers ?? []).map((p) => ({
@@ -297,6 +305,10 @@ function ReferencesSection({
       doi: p.doi,
       citations: p.citations,
     }));
+
+  const hasMore = references.length > INITIAL_REFERENCES_VISIBLE;
+  const visible = expanded ? references : references.slice(0, INITIAL_REFERENCES_VISIBLE);
+  const hiddenCount = references.length - INITIAL_REFERENCES_VISIBLE;
 
   return (
     <>
@@ -332,11 +344,33 @@ function ReferencesSection({
       )}
 
       {!loading && references.length > 0 && (
-        <ol className="mt-2 list-none space-y-5">
-          {references.map((ref, index) => (
-            <ReferenceCard key={ref.id} refItem={ref} index={index + 1} />
-          ))}
-        </ol>
+        <>
+          <ol className="mt-2 list-none space-y-5">
+            {visible.map((ref, index) => (
+              <ReferenceCard key={ref.id} refItem={ref} index={index + 1} />
+            ))}
+          </ol>
+          {hasMore && (
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-6 w-full sm:w-auto"
+              onClick={() => setExpanded((e) => !e)}
+            >
+              {expanded ? (
+                <>
+                  <ChevronDown className="mr-2 h-4 w-4 rotate-180" />
+                  View less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="mr-2 h-4 w-4" />
+                  View more ({hiddenCount} more)
+                </>
+              )}
+            </Button>
+          )}
+        </>
       )}
     </>
   );
