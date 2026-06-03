@@ -11,6 +11,7 @@ import {
   formatBookExcerptsForPrompt,
   getBookExcerptsForTopic,
 } from "@/lib/services/understanding-books";
+import { formatExtractedBookText, normalizeGuideMarkdown } from "@/lib/services/format-book-text";
 
 export type UnderstandingTopicContent = {
   module: string;
@@ -32,7 +33,8 @@ const SYSTEM_PROMPT = `You are an expert research methods educator for Skyrapay 
 Write clear, accurate study material for university students. Use markdown headings (##).
 Do not tell users to leave the platform or visit external websites.
 Never invent paper titles, authors, or DOIs not present in the provided excerpts.
-When textbook excerpts are provided, treat them as the primary source for definitions, descriptions, and explanations. Paraphrase faithfully and attribute ideas to the textbook title in parentheses.`;
+When textbook excerpts are provided, treat them as the primary source for definitions, descriptions, and explanations. Paraphrase faithfully and attribute ideas to the textbook title in parentheses.
+Always use clear markdown structure: ## for main sections, ### for subsections, short paragraphs, and bullet lists. Never output one long unbroken block of text.`;
 
 function paperContextBlock(papers: UnifiedPaper[]): string {
   return papers
@@ -44,16 +46,17 @@ function paperContextBlock(papers: UnifiedPaper[]): string {
     .join("\n\n");
 }
 
-function bookSectionLines(excerpts: BookExcerpt[]): string[] {
+function bookSectionLines(excerpts: BookExcerpt[], topic: string): string[] {
   if (excerpts.length === 0) return [];
   const lines = [
-    "## From your uploaded textbooks",
+    "## From course textbooks",
     "",
-    "Definitions and explanations below are taken from the passages in your books that match this topic.",
+    "The following sections are taken from your institution’s research methods books and arranged for this topic.",
     "",
   ];
   for (const b of excerpts) {
-    lines.push(`### ${b.title}`, "", b.excerpt, "", "---", "");
+    const formatted = formatExtractedBookText(b.excerpt, topic);
+    lines.push(`### ${b.title}`, "", formatted, "", "---", "");
   }
   return lines;
 }
@@ -78,7 +81,7 @@ function buildLiteratureOverview(
     "",
     intro,
     "",
-    ...bookSectionLines(bookExcerpts),
+    ...bookSectionLines(bookExcerpts, topic),
     "## What you should understand",
     "",
     `- Define **${topic}** and explain it in your own words.`,
@@ -123,7 +126,11 @@ function buildLiteratureOverview(
     ""
   );
 
-  return lines.join("\n");
+  return normalizeGuideMarkdown(lines.join("\n"));
+}
+
+function finalizeGuideMarkdown(text: string): string {
+  return normalizeGuideMarkdown(text);
 }
 
 function buildTopicPrompt(
@@ -133,7 +140,11 @@ function buildTopicPrompt(
   bookExcerpts: BookExcerpt[]
 ): string {
   const literature = paperContextBlock(papers);
-  const textbooks = formatBookExcerptsForPrompt(bookExcerpts);
+  const formattedExcerpts = bookExcerpts.map((b) => ({
+    ...b,
+    excerpt: formatExtractedBookText(b.excerpt, topic),
+  }));
+  const textbooks = formatBookExcerptsForPrompt(formattedExcerpts);
   const bookBlock = textbooks
     ? `Textbook excerpts (PRIMARY source for definitions and explanations):\n${textbooks}\n\n`
     : "";
@@ -302,7 +313,7 @@ export async function loadUnderstandingTopicContent(
     return {
       module,
       topic,
-      overview: ai.content,
+      overview: finalizeGuideMarkdown(ai.content),
       mode: "live",
       contentSource: "ai",
       aiProvider: ai.provider,

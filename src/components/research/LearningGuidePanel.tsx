@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Loader2 } from "lucide-react";
+import { normalizeGuideMarkdown } from "@/lib/services/format-book-text";
 
 function renderInline(text: string): ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -17,57 +18,50 @@ function renderInline(text: string): ReactNode {
   });
 }
 
-function GuideBlock({ block }: { block: string }) {
-  const lines = block.trim().split("\n");
-  if (lines.length === 0) return null;
-
-  const first = lines[0].trim();
-  const rest = lines.slice(1).join("\n").trim();
-
-  if (first.startsWith("### ")) {
-    return (
-      <h3 className="mt-10 font-display text-lg font-semibold tracking-tight text-slate-900 first:mt-0">
-        {renderInline(first.replace(/^###\s+/, ""))}
-      </h3>
-    );
-  }
-
-  if (first.startsWith("## ")) {
-    return (
-      <section className="scroll-mt-6 border-b border-slate-200 pb-10 last:border-0 lg:pb-12">
-        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl lg:text-[2rem]">
-          {renderInline(first.replace(/^##\s+/, ""))}
-        </h2>
-        {rest && <GuideBody text={rest} className="mt-8" />}
-      </section>
-    );
-  }
-
-  return <GuideBody text={block.trim()} />;
+function GuideSubheading({ text }: { text: string }) {
+  return (
+    <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-slate-900 first:mt-0 md:text-xl">
+      {renderInline(text)}
+    </h3>
+  );
 }
 
 function GuideBody({ text, className = "" }: { text: string; className?: string }) {
-  const chunks = text.split(/\n\n+/);
+  const blocks = text.split(/\n\n+/).filter((b) => b.trim());
+
   return (
     <div className={`space-y-5 ${className}`}>
-      {chunks.map((chunk, i) => {
-        const trimmed = chunk.trim();
+      {blocks.map((block, i) => {
+        const trimmed = block.trim();
         if (!trimmed) return null;
 
         if (trimmed === "---") {
           return <hr key={i} className="my-8 border-slate-200" />;
         }
 
+        if (trimmed.startsWith("### ")) {
+          const lines = trimmed.split("\n");
+          const title = lines[0].replace(/^###\s+/, "");
+          const rest = lines.slice(1).join("\n").trim();
+          return (
+            <div key={i} className="rounded-xl border border-slate-100 bg-slate-50/50 px-5 py-5 md:px-6 md:py-6">
+              <GuideSubheading text={title} />
+              {rest && <GuideBody text={rest} className="mt-4" />}
+            </div>
+          );
+        }
+
         const lines = trimmed.split("\n");
+
         if (lines.every((l) => /^[-*]\s/.test(l.trim()) || l.trim() === "")) {
           return (
-            <ul key={i} className="space-y-3 pl-1">
+            <ul key={i} className="space-y-2.5 pl-1">
               {lines
                 .filter((l) => l.trim())
                 .map((line, j) => (
                   <li
                     key={j}
-                    className="flex gap-3 text-base leading-[1.8] text-slate-700"
+                    className="flex gap-3 text-base leading-[1.75] text-slate-700"
                   >
                     <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
                     <span>{renderInline(line.replace(/^[-*]\s+/, ""))}</span>
@@ -97,9 +91,29 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
           );
         }
 
+        // Single newlines within a block → separate short paragraphs (not one wall of text)
+        if (lines.length > 1 && trimmed.length > 200) {
+          return (
+            <div key={i} className="space-y-4">
+              {lines.map((line, j) => {
+                const t = line.trim();
+                if (!t) return null;
+                if (t.startsWith("### ")) {
+                  return <GuideSubheading key={j} text={t.replace(/^###\s+/, "")} />;
+                }
+                return (
+                  <p key={j} className="text-base leading-[1.85] text-slate-700 md:text-[1.05rem]">
+                    {renderInline(t)}
+                  </p>
+                );
+              })}
+            </div>
+          );
+        }
+
         return (
           <p key={i} className="text-base leading-[1.85] text-slate-700 md:text-[1.05rem]">
-            {renderInline(trimmed.replace(/\n/g, " "))}
+            {renderInline(trimmed)}
           </p>
         );
       })}
@@ -107,12 +121,40 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
   );
 }
 
+function GuideBlock({ block }: { block: string }) {
+  const lines = block.trim().split("\n");
+  if (lines.length === 0) return null;
+
+  const first = lines[0].trim();
+  const rest = lines.slice(1).join("\n").trim();
+
+  if (first.startsWith("### ")) {
+    return (
+      <div className="rounded-xl border border-slate-100 bg-slate-50/40 px-5 py-6 md:px-7 md:py-7">
+        <GuideSubheading text={first.replace(/^###\s+/, "")} />
+        {rest && <GuideBody text={rest} className="mt-5" />}
+      </div>
+    );
+  }
+
+  if (first.startsWith("## ")) {
+    return (
+      <section className="scroll-mt-6 border-b border-slate-200 pb-10 last:border-0 lg:pb-12">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl lg:text-[2rem]">
+          {renderInline(first.replace(/^##\s+/, ""))}
+        </h2>
+        {rest && <GuideBody text={rest} className="mt-8" />}
+      </section>
+    );
+  }
+
+  return <GuideBody text={block.trim()} />;
+}
+
 function parseGuideSections(markdown: string): string[] {
   const normalized = markdown.replace(/\r\n/g, "\n").trim();
   if (!normalized) return [];
-
-  const parts = normalized.split(/(?=^## )/m).filter((p) => p.trim());
-  return parts;
+  return normalized.split(/(?=^## )/m).filter((p) => p.trim());
 }
 
 export function LearningGuidePanel({
@@ -142,7 +184,8 @@ export function LearningGuidePanel({
 
   if (!content) return null;
 
-  const sections = parseGuideSections(content);
+  const prepared = normalizeGuideMarkdown(content);
+  const sections = parseGuideSections(prepared);
 
   return (
     <article className="learning-guide">
@@ -160,11 +203,11 @@ export function LearningGuidePanel({
         </div>
       )}
 
-      <div className="w-full space-y-12 md:space-y-14 lg:max-w-[72rem]">
+      <div className="prose-guide w-full space-y-10 md:space-y-12 lg:max-w-[72rem]">
         {sections.length > 0 ? (
           sections.map((block, i) => <GuideBlock key={i} block={block} />)
         ) : (
-          <GuideBody text={content} />
+          <GuideBody text={prepared} />
         )}
       </div>
     </article>
