@@ -1,6 +1,7 @@
 import mammoth from "mammoth";
 
-const MAX_EXTRACT_CHARS = 80_000;
+const DEFAULT_MAX_EXTRACT_CHARS = 80_000;
+export const MAX_BOOK_EXTRACT_CHARS = 250_000;
 
 type PdfParseFn = (buffer: Buffer) => Promise<{ text: string }>;
 
@@ -14,12 +15,13 @@ async function extractPdfText(buffer: Buffer): Promise<string> {
 export async function extractTextFromFile(
   buffer: Buffer,
   fileName: string,
-  mimeType: string
+  mimeType: string,
+  maxChars = DEFAULT_MAX_EXTRACT_CHARS
 ): Promise<string> {
   const lower = fileName.toLowerCase();
 
   if (mimeType === "text/plain" || lower.endsWith(".txt")) {
-    return buffer.toString("utf-8").slice(0, MAX_EXTRACT_CHARS);
+    return buffer.toString("utf-8").slice(0, maxChars);
   }
 
   if (
@@ -27,13 +29,13 @@ export async function extractTextFromFile(
     lower.endsWith(".docx")
   ) {
     const result = await mammoth.extractRawText({ buffer });
-    return (result.value || "").slice(0, MAX_EXTRACT_CHARS);
+    return (result.value || "").slice(0, maxChars);
   }
 
   if (mimeType === "application/pdf" || lower.endsWith(".pdf")) {
     try {
       const text = await extractPdfText(buffer);
-      return text.slice(0, MAX_EXTRACT_CHARS);
+      return text.slice(0, maxChars);
     } catch (e) {
       console.error("[document-text] PDF extract failed:", e);
       throw new Error(

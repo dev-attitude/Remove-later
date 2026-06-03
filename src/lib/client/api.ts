@@ -303,7 +303,47 @@ export type UnderstandingTopicContentResult = {
   sourcesQueried: string[];
   errors: string[];
   trialNotice?: string;
+  booksUsed?: { id: string; title: string }[];
 };
+
+export type UnderstandingBookSummary = {
+  id: string;
+  title: string;
+  fileName: string;
+  moduleScope: string | null;
+  charCount: number;
+  createdAt: string;
+};
+
+export async function fetchUnderstandingBooksApi() {
+  const res = await fetchWithTimeout("/api/research/understanding/books", {
+    method: "GET",
+  });
+  return parseJson<{ books: UnderstandingBookSummary[]; canManage: boolean }>(res);
+}
+
+export async function uploadUnderstandingBookApi(
+  file: File,
+  options?: { title?: string; moduleScope?: string }
+) {
+  const form = new FormData();
+  form.append("file", file);
+  if (options?.title) form.append("title", options.title);
+  if (options?.moduleScope) form.append("moduleScope", options.moduleScope);
+  const res = await fetchWithTimeout(
+    "/api/research/understanding/books",
+    { method: "POST", body: form },
+    120_000
+  );
+  return parseJson<{ book: UnderstandingBookSummary }>(res);
+}
+
+export async function deleteUnderstandingBookApi(id: string) {
+  const res = await fetchWithTimeout(`/api/research/understanding/books/${id}`, {
+    method: "DELETE",
+  });
+  return parseJson<{ ok: boolean }>(res);
+}
 
 export async function fetchUnderstandingTopicApi(input: {
   module: string;

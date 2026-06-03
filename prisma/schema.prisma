@@ -24,6 +24,7 @@ model User {
   subscription  Subscription?
   documents     Document[]
   usageLogs     UsageLog[]
+  understandingBooks UnderstandingBook[]
 }
 
 model Account {
@@ -95,4 +96,22 @@ model UsageLog {
   mode      String
   metadata  String?
   createdAt DateTime @default(now())
+}
+
+/** Shared course textbooks (userId null) — all students get topic content from these */
+model UnderstandingBook {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  uploadedBy  String?
+  title       String
+  fileName    String
+  mimeType    String
+  size        Int
+  textContent String   @db.Text
+  moduleScope String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

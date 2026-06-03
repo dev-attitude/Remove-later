@@ -7,6 +7,7 @@ import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
 import { Button } from "@/components/ui/Button";
 import { LearningGuidePanel } from "@/components/research/LearningGuidePanel";
+import { UnderstandingBooksPanel } from "@/components/research/UnderstandingBooksPanel";
 import { UNDERSTANDING_RESEARCH_TOPICS } from "@/lib/research-suite/understanding-topics";
 import {
   fetchUnderstandingTopicApi,
@@ -30,6 +31,7 @@ export default function UnderstandingPage() {
   const [content, setContent] = useState<UnderstandingTopicContentResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [booksVersion, setBooksVersion] = useState(0);
 
   const loadTopic = useCallback(
     async (topic: SelectedTopic) => {
@@ -54,7 +56,7 @@ export default function UnderstandingPage() {
 
   useEffect(() => {
     if (selected) loadTopic(selected);
-  }, [selected, loadTopic]);
+  }, [selected, loadTopic, booksVersion]);
 
   useEffect(() => {
     if (selected && contentRef.current) {
@@ -76,27 +78,33 @@ export default function UnderstandingPage() {
   }
 
   const statusLabel =
-    content?.contentSource === "ai"
-      ? content.aiProvider === "grok"
-        ? "Live guide (Grok)"
-        : "Live AI guide"
-      : content?.mode === "live"
-        ? "From academic databases"
-        : undefined;
+    content?.booksUsed && content.booksUsed.length > 0
+      ? content.contentSource === "ai"
+        ? `Guide from course textbooks + AI`
+        : "Guide from course textbooks"
+      : content?.contentSource === "ai"
+        ? content.aiProvider === "grok"
+          ? "Live guide (Grok)"
+          : "Live AI guide"
+        : content?.mode === "live"
+          ? "From academic databases"
+          : undefined;
 
   return (
     <>
       <ModuleHeader
         title="Research Understanding"
-        description="25 modules to learn research step by step. Each topic includes a learning guide and academic references directly below it."
+        description="25 modules with learning guides from your course textbooks and academic references for each topic."
         icon={BookOpen}
         moduleId="understanding"
       />
       <ModuleWorkspace wide>
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-slate-600">
-          Expand a module, then click a topic — read the guide, then the references listed
-          immediately below it on the same topic.
+          When you open a topic, the guide uses passages from the course textbooks above (uploaded
+          by your admin), then lists academic references directly below.
         </p>
+
+        <UnderstandingBooksPanel onBooksChange={() => setBooksVersion((v) => v + 1)} />
 
         <div className="space-y-3">
           {UNDERSTANDING_RESEARCH_TOPICS.map((mod) => {
@@ -208,19 +216,26 @@ function TopicContent({
         </div>
       )}
 
-      {content?.trialNotice && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
-          {content.trialNotice}{" "}
-          <Link
-            href={`/${portalId}/subscription`}
-            className="font-semibold text-brand-800 underline"
-          >
-            Subscribe
-          </Link>
-        </div>
-      )}
+                {content?.trialNotice && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
+                    {content.trialNotice}{" "}
+                    <Link
+                      href={`/${portalId}/subscription`}
+                      className="font-semibold text-brand-800 underline"
+                    >
+                      Subscribe
+                    </Link>
+                  </div>
+                )}
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
+                {content?.booksUsed && content.booksUsed.length > 0 && (
+                  <div className="rounded-lg border border-brand-200 bg-brand-50/80 px-5 py-3 text-sm text-brand-950">
+                    <span className="font-semibold">Course textbooks used for this topic:</span>{" "}
+                    {content.booksUsed.map((b) => b.title).join(" · ")}
+                  </div>
+                )}
+
+                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
         <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-brand-50/50 px-5 py-6 sm:px-8 sm:py-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-brand-700">
             {selected.module}
