@@ -1,5 +1,7 @@
 /** Browser-local persistence so work survives navigation and refresh */
 
+import { notifyDashboardStatsChanged } from "@/lib/client/dashboard-stats-events";
+
 const STORAGE_KEY = "gm-research-workspace-v1";
 const MAX_PER_MODULE = 40;
 const MAX_TOTAL = 200;
@@ -45,6 +47,7 @@ function writeStore(store: WorkspaceStore) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    notifyDashboardStatsChanged();
   } catch (e) {
     console.warn("[workspace] save failed", e);
   }

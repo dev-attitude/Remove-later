@@ -8,6 +8,7 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { CITATION_STYLES } from "@/lib/modules";
+import { recordCitationLookup } from "@/lib/client/citation-lookups";
 
 function formatApa(work: {
   title: string;
@@ -42,6 +43,7 @@ export default function CitationsPage() {
       if (!res.ok) throw new Error(data.error || "DOI not found");
       setReference(formatApa(data));
       setVerified(data.verified === true);
+      recordCitationLookup();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Lookup failed");
       setReference("");

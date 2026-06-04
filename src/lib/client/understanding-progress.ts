@@ -1,3 +1,5 @@
+import { notifyDashboardStatsChanged } from "@/lib/client/dashboard-stats-events";
+
 const STORAGE_KEY = "gm-understanding-viewed-v1";
 
 export type ViewedUnderstandingTopic = {
@@ -49,6 +51,7 @@ export function markUnderstandingTopicViewed(
   if (idx >= 0) items[idx] = entry;
   else items.unshift(entry);
   writeViewed(items);
+  notifyDashboardStatsChanged();
 }
 
 export function getViewedUnderstandingTopics(): ViewedUnderstandingTopic[] {

@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { DASHBOARD_STATS_EVENT } from "@/lib/client/dashboard-stats-events";
 import {
   computeStudentDashboardStats,
   formatDashboardNumber,
+  STUDENT_STAT_HINTS,
 } from "@/lib/client/portal-dashboard-stats";
 import type { PortalId } from "@/lib/portals";
 
@@ -52,7 +54,7 @@ function buildStudentWidgets(
   const feedback =
     server && server.supervisorFeedbackNew > 0
       ? `${server.supervisorFeedbackNew} new`
-      : "None yet";
+      : "0";
 
   return [
     { label: "Research progress", value: `${progress}%` },
@@ -110,11 +112,18 @@ export function PortalDashboardWidgets({ portalId }: { portalId: PortalId }) {
         refresh();
       }
     };
+    const onStats = () => refresh();
     window.addEventListener("storage", onStorage);
-    const interval = window.setInterval(refresh, 8000);
+    window.addEventListener(DASHBOARD_STATS_EVENT, onStats);
+    window.addEventListener("focus", onStats);
+    document.addEventListener("visibilitychange", onStats);
+    const interval = window.setInterval(refresh, 4000);
 
     return () => {
       window.removeEventListener("storage", onStorage);
+      window.removeEventListener(DASHBOARD_STATS_EVENT, onStats);
+      window.removeEventListener("focus", onStats);
+      document.removeEventListener("visibilitychange", onStats);
       window.clearInterval(interval);
     };
   }, [portalId]);
@@ -125,10 +134,8 @@ export function PortalDashboardWidgets({ portalId }: { portalId: PortalId }) {
         <Card key={w.label} className="!p-4">
           <p className="text-xs text-slate-500">{w.label}</p>
           <p className="mt-2 text-2xl font-bold text-slate-900">{w.value}</p>
-          {portalId === "student" && w.label === "Research progress" && (
-            <p className="mt-1 text-xs text-slate-500">
-              Based on topics you open and tools you use
-            </p>
+          {portalId === "student" && STUDENT_STAT_HINTS[w.label] && (
+            <p className="mt-1 text-xs text-slate-500">{STUDENT_STAT_HINTS[w.label]}</p>
           )}
         </Card>
       ))}
