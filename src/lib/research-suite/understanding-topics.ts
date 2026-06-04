@@ -358,3 +358,7 @@ export function getUnderstandingTopicOptions(): Array<{ module: string; label: s
   }
   return options;
 }
+
+export function getUnderstandingTopicCount(): number {
+  return getUnderstandingTopicOptions().length;
+}

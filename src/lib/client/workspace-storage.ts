@@ -60,6 +60,12 @@ export function listWorkspaceItems(portalId: string, moduleId: string): Workspac
     .sort((a, b) => b.updatedAt - a.updatedAt);
 }
 
+export function listWorkspaceItemsForPortal(portalId: string): WorkspaceItem[] {
+  return readStore()
+    .items.filter((i) => i.portalId === portalId)
+    .sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
 export function getWorkspaceItem(id: string): WorkspaceItem | undefined {
   return readStore().items.find((i) => i.id === id);
 }

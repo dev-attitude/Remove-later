@@ -15,6 +15,7 @@ import {
   type UnderstandingTopicContentResult,
 } from "@/lib/client/api";
 import { usePortalId } from "@/hooks/usePortalId";
+import { markUnderstandingTopicViewed } from "@/lib/client/understanding-progress";
 
 type SelectedTopic = { module: string; label: string };
 
@@ -46,6 +47,11 @@ export default function UnderstandingPage() {
           portal: portalId,
         });
         setContent(data);
+        markUnderstandingTopicViewed(
+          topic.module,
+          topic.label,
+          data.references?.length ?? 0
+        );
       } catch (e) {
         setError(e instanceof Error ? e.message : "Could not load topic");
       } finally {

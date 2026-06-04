@@ -8,38 +8,11 @@ import {
 } from "@/lib/portals";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Download, CreditCard, ArrowRight } from "lucide-react";
-
-const PORTAL_WIDGETS: Record<PortalId, { label: string; value: string }[]> = {
-  institution: [
-    { label: "Students supervised", value: "24" },
-    { label: "Pending reviews", value: "8" },
-    { label: "To mark", value: "5" },
-    { label: "Approvals waiting", value: "3" },
-  ],
-  student: [
-    { label: "Research progress", value: "68%" },
-    { label: "Word count", value: "12,450" },
-    { label: "Citations", value: "47" },
-    { label: "Supervisor feedback", value: "2 new" },
-  ],
-  analysis: [
-    { label: "Active datasets", value: "6" },
-    { label: "Tests run", value: "34" },
-    { label: "Transcription hrs", value: "4.2" },
-    { label: "Reports exported", value: "12" },
-  ],
-  developer: [
-    { label: "MRR", value: "$52.4k" },
-    { label: "Active users", value: "2,538" },
-    { label: "Institutions", value: "38" },
-    { label: "API errors (24h)", value: "0.02%" },
-  ],
-};
+import { PortalDashboardWidgets } from "./PortalDashboardWidgets";
 
 export function PortalDashboard({ portalId }: { portalId: PortalId }) {
   const portal = getPortal(portalId)!;
   const modules = getModulesForPortal(portalId);
-  const widgets = PORTAL_WIDGETS[portalId];
   const Icon = portal.icon;
   const featured = portal.subscriptions.find((s) => s.highlighted) ?? portal.subscriptions[0];
 
@@ -81,15 +54,8 @@ export function PortalDashboard({ portalId }: { portalId: PortalId }) {
         </div>
       </section>
 
-      <div className="p-8">
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {widgets.map((w) => (
-            <Card key={w.label} className="!p-4">
-              <p className="text-xs text-slate-500">{w.label}</p>
-              <p className="mt-2 text-2xl font-bold text-slate-900">{w.value}</p>
-            </Card>
-          ))}
-        </div>
+      <div className="p-4 sm:p-6 lg:p-8">
+        <PortalDashboardWidgets portalId={portalId} />
 
         <h2 className="mb-4 font-display text-xl font-bold text-slate-900">
           Your tools

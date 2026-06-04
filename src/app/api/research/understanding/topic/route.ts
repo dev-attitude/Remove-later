@@ -50,6 +50,10 @@ export async function POST(req: Request) {
             action: "research.understanding",
             portal: body.portal,
             mode: result.mode,
+            metadata: JSON.stringify({
+              module: body.module,
+              topic: body.topic,
+            }),
           },
         });
       } catch {
