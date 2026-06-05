@@ -275,13 +275,16 @@ export const BUSINESS_REGISTRATION_PACKAGES: BusinessPackage[] = [
     price: 3500,
     currency: "NAD",
     description:
-      "Private company (Pty) Ltd registration tailored to your shareholding structure and industry requirements.",
+      "Private company (Pty) Ltd registration — our NAD 3,500 fee covers filing and paperwork only (see inclusions below). Does not include lawyer, accountant, or auditor fees; those are billed separately by your chosen professionals.",
     includes: [
       "Name reservation",
-      "BIPA company registration",
+      "BIPA registration",
       "NamRA registration",
       "Social Security registration",
-      "Memorandum & founding documents support",
+      "Memorandum & founding documents — preparation",
+      "Document binding",
+      "Completion of all registration paperwork",
+      "Excludes: lawyer, accountant & auditor charges (client arranges & pays directly)",
     ],
   },
 ];
