@@ -17,6 +17,7 @@ import {
   getServiceOptions,
   serviceLabel,
 } from "@/lib/business-manage";
+import { getRegistrationWorkflow } from "@/lib/registration-workflows";
 
 export default function ManageClientDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -87,6 +88,7 @@ export default function ManageClientDetailPage() {
 
   const packages = getPackageOptions();
   const services = getServiceOptions();
+  const selectedWorkflow = getRegistrationWorkflow(engForm.packageId || null);
 
   return (
     <div>
@@ -185,12 +187,23 @@ export default function ManageClientDetailPage() {
               onChange={(e) => setEngForm({ ...engForm, quotedAmount: e.target.value })}
             />
             <textarea
-              placeholder="Progress checklist (one task per line)"
-              className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              placeholder={
+                selectedWorkflow
+                  ? "Registration steps are added automatically from the selected package."
+                  : "Progress checklist (one task per line)"
+              }
+              className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm disabled:bg-slate-50"
               rows={3}
               value={engForm.tasks}
+              disabled={Boolean(selectedWorkflow)}
               onChange={(e) => setEngForm({ ...engForm, tasks: e.target.value })}
             />
+            {selectedWorkflow && (
+              <p className="sm:col-span-2 text-xs text-slate-600">
+                {selectedWorkflow.steps.length} BIPA registration steps will be created. Client
+                gets email & SMS when you complete each step.
+              </p>
+            )}
             <textarea
               placeholder="Notes"
               className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"

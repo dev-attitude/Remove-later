@@ -16,10 +16,12 @@ import {
   formatNad,
   serviceLabel,
 } from "@/lib/business-manage";
+import { getRegistrationWorkflow } from "@/lib/registration-workflows";
 
 export default function ManageServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [engagement, setEngagement] = useState<any>(null);
+  const [notifyMsg, setNotifyMsg] = useState<string | null>(null);
   const [newTask, setNewTask] = useState("");
   const [incomeForm, setIncomeForm] = useState({
     amount: "",
@@ -48,11 +50,21 @@ export default function ManageServiceDetailPage() {
   }, [load]);
 
   async function toggleTask(taskId: string, done: boolean) {
-    await fetch(`/api/manage/engagements/${id}/tasks`, {
+    setNotifyMsg(null);
+    const res = await fetch(`/api/manage/engagements/${id}/tasks`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ taskId, done }),
     });
+    const data = await res.json();
+    if (data.notification) {
+      const n = data.notification as { email: boolean; sms: boolean; errors: string[] };
+      if (n.email && n.sms) setNotifyMsg("Update sent to client by email and SMS.");
+      else if (n.email) setNotifyMsg("Update sent to client by email.");
+      else if (n.sms) setNotifyMsg("Update sent to client by SMS.");
+      else if (n.errors?.length)
+        setNotifyMsg(`Notification issue: ${n.errors.join(" ")}`);
+    }
     load();
   }
 
@@ -116,6 +128,12 @@ export default function ManageServiceDetailPage() {
 
   if (!engagement) return <p className="text-slate-500">Loading…</p>;
 
+  const workflow = getRegistrationWorkflow(engagement.packageId);
+  const sortedTasks = [...(engagement.tasks ?? [])].sort(
+    (a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder
+  );
+  const firstOpenIdx = sortedTasks.findIndex((t: { done: boolean }) => !t.done);
+
   return (
     <div>
       <Link
@@ -166,42 +184,89 @@ export default function ManageServiceDetailPage() {
             {formatNad(engagement.paidAmount)}
           </p>
         )}
+        {engagement.client.email || engagement.client.phone ? (
+          <p className="mt-3 text-xs text-slate-500">
+            Client notifications: {engagement.client.email || "no email"} ·{" "}
+            {engagement.client.phone || "no phone"}
+          </p>
+        ) : (
+          <p className="mt-3 text-xs text-amber-700">
+            Add client email and phone to send registration updates automatically.
+          </p>
+        )}
+        {notifyMsg && (
+          <p className="mt-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+            {notifyMsg}
+          </p>
+        )}
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardTitle>Work checklist</CardTitle>
+          <CardTitle>
+            {workflow ? "Registration steps (BIPA workflow)" : "Work checklist"}
+          </CardTitle>
+          {workflow && (
+            <p className="mt-1 text-xs text-slate-500">
+              {workflow.label} — tick each step when complete. Client receives email & SMS update.
+            </p>
+          )}
           <ul className="mt-4 space-y-2">
-            {engagement.tasks.map((t: any) => (
-              <li key={t.id}>
-                <button
-                  type="button"
-                  onClick={() => toggleTask(t.id, !t.done)}
-                  className="flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left text-sm hover:bg-slate-50"
-                >
-                  {t.done ? (
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-                  ) : (
-                    <Circle className="h-5 w-5 shrink-0 text-slate-300" />
-                  )}
-                  <span className={t.done ? "text-slate-500 line-through" : "text-slate-800"}>
-                    {t.title}
-                  </span>
-                </button>
-              </li>
-            ))}
+            {sortedTasks.map((t: any, idx: number) => {
+              const isCurrent = !t.done && idx === firstOpenIdx;
+              return (
+                <li key={t.id}>
+                  <button
+                    type="button"
+                    onClick={() => toggleTask(t.id, !t.done)}
+                    className={`flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-slate-50 ${
+                      isCurrent ? "border border-brand-200 bg-brand-50/50" : ""
+                    }`}
+                  >
+                    {t.done ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+                    ) : (
+                      <Circle
+                        className={`h-5 w-5 shrink-0 ${isCurrent ? "text-brand-600" : "text-slate-300"}`}
+                      />
+                    )}
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className={
+                          t.done ? "text-slate-500 line-through" : "font-medium text-slate-800"
+                        }
+                      >
+                        {idx + 1}. {t.title}
+                      </span>
+                      {t.durationNote && (
+                        <span className="mt-0.5 block text-xs text-slate-500">
+                          {t.durationNote}
+                        </span>
+                      )}
+                      {isCurrent && (
+                        <span className="mt-0.5 block text-xs font-medium text-brand-700">
+                          Current step
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
-          <form onSubmit={addTask} className="mt-4 flex gap-2">
-            <input
-              className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              placeholder="Add task…"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-            />
-            <Button type="submit" variant="secondary">
-              Add
-            </Button>
-          </form>
+          {!workflow && (
+            <form onSubmit={addTask} className="mt-4 flex gap-2">
+              <input
+                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Add task…"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+              />
+              <Button type="submit" variant="secondary">
+                Add
+              </Button>
+            </form>
+          )}
         </Card>
 
         <Card>

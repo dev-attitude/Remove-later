@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
+import { buildRegistrationTaskCreates } from "@/lib/services/registration-engagement";
+import { notifyRegistrationStarted } from "@/lib/services/registration-client-notify";
+import { getRegistrationWorkflow } from "@/lib/registration-workflows";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
 
@@ -55,34 +58,49 @@ export async function POST(req: Request) {
     await requireBusinessAdmin();
     const body = createSchema.parse(await req.json());
 
+    const workflow = getRegistrationWorkflow(body.packageId);
+    const registrationTasks = workflow ? buildRegistrationTaskCreates(body.packageId!) : [];
+    const manualTasks = body.tasks?.length
+      ? body.tasks.map((title, i) => ({
+          title: title.trim(),
+          sortOrder: i,
+        }))
+      : [];
+
+    const taskCreates =
+      registrationTasks.length > 0
+        ? registrationTasks
+        : manualTasks.length > 0
+          ? manualTasks
+          : undefined;
+
     const engagement = await prisma.bizEngagement.create({
       data: {
         clientId: body.clientId,
         title: body.title.trim(),
         serviceSlug: body.serviceSlug,
         packageId: body.packageId || null,
-        status: body.status ?? "inquiry",
-        progressPercent: body.progressPercent ?? 0,
+        status: workflow ? "in_progress" : (body.status ?? "inquiry"),
+        progressPercent: 0,
         quotedAmount: body.quotedAmount ?? null,
         paidAmount: body.paidAmount ?? 0,
         currency: body.currency ?? "NAD",
-        startDate: body.startDate ? new Date(body.startDate) : null,
+        startDate: body.startDate ? new Date(body.startDate) : workflow ? new Date() : null,
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
         notes: body.notes?.trim() || null,
-        tasks: body.tasks?.length
-          ? {
-              create: body.tasks.map((title, i) => ({
-                title: title.trim(),
-                sortOrder: i,
-              })),
-            }
-          : undefined,
+        tasks: taskCreates ? { create: taskCreates } : undefined,
       },
       include: {
-        client: { select: { id: true, name: true } },
-        tasks: true,
+        client: { select: { id: true, name: true, email: true, phone: true } },
+        tasks: { orderBy: { sortOrder: "asc" } },
       },
     });
+
+    if (workflow) {
+      notifyRegistrationStarted(engagement.id).catch((err) =>
+        console.error("[engagement] start notify failed", err)
+      );
+    }
 
     return NextResponse.json({ engagement }, { status: 201 });
   } catch (e) {

@@ -66,6 +66,7 @@ model BizEngagement {
   tasks           BizTask[]
   income          BizIncome[]
   expenses        BizExpense[]
+  notifications   BizNotificationLog[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -79,11 +80,29 @@ model BizTask {
   engagementId String
   engagement   BizEngagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
   title        String
+  stepKey      String?
+  durationNote String?
   done         Boolean       @default(false)
   sortOrder    Int           @default(0)
+  completedAt  DateTime?
   createdAt    DateTime      @default(now())
 
   @@index([engagementId])
+}
+
+model BizNotificationLog {
+  id           String        @id @default(cuid())
+  engagementId String
+  engagement   BizEngagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  channel      String
+  recipient    String
+  message      String        @db.Text
+  stepKey      String?
+  success      Boolean       @default(true)
+  error        String?
+  createdAt    DateTime      @default(now())
+
+  @@index([engagementId, createdAt])
 }
 
 model BizIncome {

@@ -2,18 +2,13 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
 import { computeProgressFromTasks } from "@/lib/business-manage";
+import { notifyStepCompleted } from "@/lib/services/registration-client-notify";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
 
 export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ id: string }> };
-
-const taskSchema = z.object({
-  title: z.string().min(1).max(300).optional(),
-  done: z.boolean().optional(),
-  sortOrder: z.number().optional(),
-});
 
 export async function POST(req: Request, { params }: Params) {
   try {
@@ -53,16 +48,36 @@ export async function PATCH(req: Request, { params }: Params) {
       })
       .parse(await req.json());
 
-    const task = await prisma.bizTask.update({
+    const existing = await prisma.bizTask.findFirst({
       where: { id: body.taskId, engagementId },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    }
+
+    const markingComplete = body.done === true && !existing.done;
+
+    const task = await prisma.bizTask.update({
+      where: { id: body.taskId },
       data: {
         ...(body.title !== undefined ? { title: body.title.trim() } : {}),
-        ...(body.done !== undefined ? { done: body.done } : {}),
+        ...(body.done !== undefined
+          ? {
+              done: body.done,
+              completedAt: body.done ? new Date() : null,
+            }
+          : {}),
       },
     });
 
     await syncEngagementProgress(engagementId);
-    return NextResponse.json({ task });
+
+    let notification: { email: boolean; sms: boolean; errors: string[] } | null = null;
+    if (markingComplete && existing.stepKey) {
+      notification = await notifyStepCompleted(engagementId, existing.stepKey);
+    }
+
+    return NextResponse.json({ task, notification });
   } catch (e) {
     return manageErrorResponse(e);
   }
@@ -76,7 +91,11 @@ async function syncEngagementProgress(engagementId: string) {
       where: { id: engagementId },
       data: {
         progressPercent: progress,
-        ...(progress === 100 ? { status: "completed" } : {}),
+        ...(progress === 100
+          ? { status: "completed" }
+          : progress > 0
+            ? { status: "in_progress" }
+            : {}),
       },
     });
   }
