@@ -61,7 +61,30 @@ export async function ensureRegistrationTasks(
     await prisma.bizTask.createMany({ data: toCreate });
   }
 
-  for (const task of engagement.tasks.filter((t) => !t.stepKey)) {
+  const refreshedTasks = await prisma.bizTask.findMany({
+    where: { engagementId },
+    orderBy: { sortOrder: "asc" },
+  });
+  const tasksByKey = new Map(
+    refreshedTasks.filter((t) => t.stepKey).map((t) => [t.stepKey!, t])
+  );
+
+  for (let i = 0; i < workflow.steps.length; i++) {
+    const step = workflow.steps[i];
+    const task = tasksByKey.get(step.stepKey);
+    if (task) {
+      await prisma.bizTask.update({
+        where: { id: task.id },
+        data: {
+          title: step.title,
+          durationNote: step.durationNote ?? null,
+          sortOrder: i,
+        },
+      });
+    }
+  }
+
+  for (const task of refreshedTasks.filter((t) => !t.stepKey)) {
     const match = workflow.steps.find(
       (s) => s.title.toLowerCase() === task.title.toLowerCase()
     );
