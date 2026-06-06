@@ -24,7 +24,20 @@ const CC_STEPS: RegistrationStep[] = [
   { stepKey: "social_security", title: "Social Security registration" },
 ];
 
-const PTY_NGO_STEPS: RegistrationStep[] = [
+const PTY_STEPS: RegistrationStep[] = [
+  { stepKey: "bipa_name", title: "Name reservation with BIPA" },
+  { stepKey: "documentation_completed", title: "Documentation completed" },
+  { stepKey: "auditor_lawyer", title: "Auditor and lawyer" },
+  {
+    stepKey: "bipa_submission",
+    title: "Submitted for registration at BIPA",
+    durationNote: "Max. 5 working days",
+  },
+  { stepKey: "namra", title: "NamRA tax registration" },
+  { stepKey: "social_security", title: "Social Security registration" },
+];
+
+const NGO_STEPS: RegistrationStep[] = [
   { stepKey: "bipa_name", title: "Name reservation with BIPA" },
   { stepKey: "auditor_lawyer", title: "Auditor and lawyer" },
   {
@@ -61,8 +74,8 @@ const CASHLOAN_STEPS: RegistrationStep[] = [
 export const REGISTRATION_WORKFLOWS: RegistrationWorkflow[] = [
   { packageId: "cc-full-registration", label: "CC — Full Registration", steps: CC_STEPS },
   { packageId: "cc-cashloan-registration", label: "CC — Cash Loan", steps: CASHLOAN_STEPS },
-  { packageId: "pty-registration", label: "(Pty) Ltd Registration", steps: PTY_NGO_STEPS },
-  { packageId: "ngo-registration", label: "NGO / Church Registration", steps: PTY_NGO_STEPS },
+  { packageId: "pty-registration", label: "(Pty) Ltd Registration", steps: PTY_STEPS },
+  { packageId: "ngo-registration", label: "NGO / Church Registration", steps: NGO_STEPS },
 ];
 
 export function getRegistrationWorkflow(packageId: string | null | undefined): RegistrationWorkflow | null {
