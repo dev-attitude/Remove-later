@@ -1,12 +1,17 @@
 import { BRAND } from "@/lib/brand";
 
-/** Production sender — override with CONTACT_FROM_EMAIL on Vercel if needed. */
+/** Production sender — requires verified domain on Resend. */
 export function getEmailFromAddress(): string {
   return (
     process.env.CONTACT_FROM_EMAIL?.trim() ||
     process.env.SMTP_FROM?.trim() ||
     `${BRAND.companyName} <hello@gmconsultations.com>`
   );
+}
+
+/** Resend sandbox sender — only delivers to the Resend account owner email. */
+export function getResendSandboxFromAddress(): string {
+  return `${BRAND.companyName} <onboarding@resend.dev>`;
 }
 
 export function isSmtpConfigured(): boolean {

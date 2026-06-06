@@ -2,6 +2,7 @@ import { normalizePhone } from "@/lib/services/contact-notifications";
 import { COMPANY } from "@/lib/site-content";
 import {
   getEmailFromAddress,
+  getResendSandboxFromAddress,
   isEmailProviderConfigured,
   isResendConfigured,
   isSmtpConfigured,
@@ -48,13 +49,27 @@ function parseResendError(body: string): string {
   try {
     const parsed = JSON.parse(body) as { message?: string };
     const msg = parsed.message ?? body;
-    if (msg.includes("verify a domain") || msg.includes("testing emails")) {
-      return "Resend is in test mode — verify gmconsultations.com at resend.com/domains and set CONTACT_FROM_EMAIL (e.g. hello@gmconsultations.com) on Vercel to email clients.";
+    if (msg.includes("not verified") || msg.includes("verify a domain")) {
+      return "gmconsultations.com is not verified on Resend yet — verify at resend.com/domains, or add Gmail SMTP on Vercel to email clients directly.";
+    }
+    if (msg.includes("testing emails")) {
+      return "Resend test mode — verify gmconsultations.com at resend.com/domains to email clients.";
     }
     return msg;
   } catch {
     return body;
   }
+}
+
+function isResendClientBlocked(status: number, error?: string): boolean {
+  if (status === 403) return true;
+  if (!error) return false;
+  return (
+    error.includes("not verified") ||
+    error.includes("verify a domain") ||
+    error.includes("test mode") ||
+    error.includes("testing")
+  );
 }
 
 async function sendViaResend(input: {
@@ -181,36 +196,41 @@ export async function sendEmailToClient(
   }
   try {
     const from = getEmailFromAddress();
+    const smtpFrom = process.env.SMTP_FROM?.trim() || from;
+
+    // Gmail SMTP works without Resend domain verification — try first when configured.
+    if (isSmtpConfigured()) {
+      const smtp = await sendViaSmtp({ from: smtpFrom, to, subject, html, text });
+      if (smtp.ok) return { ok: true };
+    }
 
     if (isResendConfigured()) {
       const primary = await sendViaResend({ from, to, subject, html, text });
       if (primary.ok) return { ok: true };
 
       if (isSmtpConfigured()) {
-        const smtp = await sendViaSmtp({ from, to, subject, html, text });
+        const smtp = await sendViaSmtp({ from: smtpFrom, to, subject, html, text });
         if (smtp.ok) return { ok: true };
       }
 
       const fallbackTo = getInvoiceFallbackEmail();
-      const isTestModeBlock =
-        primary.status === 403 &&
-        (primary.error?.includes("test mode") || primary.error?.includes("testing")) &&
+      if (
+        isResendClientBlocked(primary.status, primary.error) &&
         fallbackTo &&
-        fallbackTo.toLowerCase() !== to.toLowerCase();
-
-      if (isTestModeBlock) {
+        fallbackTo.toLowerCase() !== to.toLowerCase()
+      ) {
         const fallback = await sendViaResend({
-          from,
+          from: getResendSandboxFromAddress(),
           to: fallbackTo,
           subject: `[Forward to ${to}] ${subject}`,
-          html: `${html}<p style="margin-top:16px;padding:12px;background:#fef3c7;color:#92400e;font-size:13px">Please forward this to the client at <strong>${to}</strong>.</p>`,
+          html: `${html}<p style="margin-top:16px;padding:12px;background:#fef3c7;color:#92400e;font-size:13px">Please forward this to the client at <strong>${to}</strong>. Verify gmconsultations.com on Resend or add Gmail SMTP on Vercel to send to clients automatically.</p>`,
           text: `${text}\n\n[Forward to client: ${to}]`,
         });
         if (fallback.ok) {
           return {
             ok: false,
             fallbackSent: true,
-            error: `${primary.error} Copy sent to ${fallbackTo} — please forward to the client.`,
+            error: `Could not email ${to} (domain not verified on Resend). Copy sent to ${fallbackTo} — please forward to the client.`,
           };
         }
       }
@@ -219,7 +239,7 @@ export async function sendEmailToClient(
     }
 
     if (isSmtpConfigured()) {
-      const smtp = await sendViaSmtp({ from, to, subject, html, text });
+      const smtp = await sendViaSmtp({ from: smtpFrom, to, subject, html, text });
       return smtp.ok ? { ok: true } : { ok: false, error: smtp.error ?? "SMTP send failed" };
     }
 
