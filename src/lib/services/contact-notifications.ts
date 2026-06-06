@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { COMPANY } from "@/lib/site-content";
+import { getEmailFromAddress } from "@/lib/email-from";
 
 export type ContactInquiry = {
   type: "contact" | "purchase";
@@ -177,9 +178,7 @@ async function sendViaResend(
   smsStatus: Pick<NotificationResult, "sms" | "smsConfigured" | "smsError" | "notifyPhones">
 ): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY!.trim();
-  const from =
-    process.env.CONTACT_FROM_EMAIL?.trim() ||
-    `${COMPANY.shortName} <onboarding@resend.dev>`;
+  const from = getEmailFromAddress();
   const subject = `[${COMPANY.shortName}] ${inquiryTitle(inquiry)} — ${inquiry.name}`;
 
   const res = await fetch("https://api.resend.com/emails", {
@@ -213,10 +212,7 @@ async function sendViaSmtp(
   const port = Number(process.env.SMTP_PORT ?? "587");
   const user = process.env.SMTP_USER!.trim();
   const pass = process.env.SMTP_PASS!.trim();
-  const from =
-    process.env.SMTP_FROM?.trim() ||
-    process.env.CONTACT_FROM_EMAIL?.trim() ||
-    `${COMPANY.shortName} <${user}>`;
+  const from = process.env.SMTP_FROM?.trim() || getEmailFromAddress();
 
   const transport = nodemailer.createTransport({
     host,

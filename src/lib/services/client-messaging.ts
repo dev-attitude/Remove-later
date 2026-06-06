@@ -1,12 +1,16 @@
 import { normalizePhone } from "@/lib/services/contact-notifications";
 import { COMPANY } from "@/lib/site-content";
+import {
+  getEmailFromAddress,
+  isEmailProviderConfigured,
+  isResendConfigured,
+  isSmtpConfigured,
+} from "@/lib/email-from";
+
 export type SendResult = { ok: boolean; error?: string; fallbackSent?: boolean };
 
 function isEmailConfigured(): boolean {
-  return Boolean(
-    process.env.RESEND_API_KEY?.trim() ||
-      (process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim() && process.env.SMTP_PASS?.trim())
-  );
+  return isEmailProviderConfigured();
 }
 
 function isTwilioConfigured(): boolean {
@@ -79,6 +83,37 @@ async function sendViaResend(input: {
   return { ok: false, status: res.status, error: parseResendError(errText) };
 }
 
+async function sendViaSmtp(input: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const nodemailer = await import("nodemailer");
+    const transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST!.trim(),
+      port: Number(process.env.SMTP_PORT ?? "587"),
+      secure: Number(process.env.SMTP_PORT ?? "587") === 465,
+      auth: {
+        user: process.env.SMTP_USER!.trim(),
+        pass: process.env.SMTP_PASS!.trim(),
+      },
+    });
+    await transport.sendMail({
+      from: input.from,
+      to: input.to,
+      subject: input.subject,
+      html: input.html,
+      text: input.text,
+    });
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 async function sendTwilioSms(to: string, body: string): Promise<void> {
   const sid = process.env.TWILIO_ACCOUNT_SID!.trim();
   const token = process.env.TWILIO_AUTH_TOKEN!.trim();
@@ -145,14 +180,16 @@ export async function sendEmailToClient(
     return { ok: false, error: "Email not configured" };
   }
   try {
-    const from =
-      process.env.CONTACT_FROM_EMAIL?.trim() ||
-      process.env.SMTP_FROM?.trim() ||
-      `Skyrapay Consultations <onboarding@resend.dev>`;
+    const from = getEmailFromAddress();
 
-    if (process.env.RESEND_API_KEY?.trim()) {
+    if (isResendConfigured()) {
       const primary = await sendViaResend({ from, to, subject, html, text });
       if (primary.ok) return { ok: true };
+
+      if (isSmtpConfigured()) {
+        const smtp = await sendViaSmtp({ from, to, subject, html, text });
+        if (smtp.ok) return { ok: true };
+      }
 
       const fallbackTo = getInvoiceFallbackEmail();
       const isTestModeBlock =
@@ -166,14 +203,14 @@ export async function sendEmailToClient(
           from,
           to: fallbackTo,
           subject: `[Forward to ${to}] ${subject}`,
-          html: `${html}<p style="margin-top:16px;padding:12px;background:#fef3c7;color:#92400e;font-size:13px">Please forward this invoice to the client at <strong>${to}</strong>. Resend test mode only allows email to your account until gmconsultations.com is verified.</p>`,
+          html: `${html}<p style="margin-top:16px;padding:12px;background:#fef3c7;color:#92400e;font-size:13px">Please forward this to the client at <strong>${to}</strong>.</p>`,
           text: `${text}\n\n[Forward to client: ${to}]`,
         });
         if (fallback.ok) {
           return {
             ok: false,
             fallbackSent: true,
-            error: `${primary.error} Invoice copy sent to ${fallbackTo} — please forward to the client.`,
+            error: `${primary.error} Copy sent to ${fallbackTo} — please forward to the client.`,
           };
         }
       }
@@ -181,18 +218,12 @@ export async function sendEmailToClient(
       return { ok: false, error: primary.error ?? "Email send failed" };
     }
 
-    const nodemailer = await import("nodemailer");
-    const transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST!.trim(),
-      port: Number(process.env.SMTP_PORT ?? "587"),
-      secure: Number(process.env.SMTP_PORT ?? "587") === 465,
-      auth: {
-        user: process.env.SMTP_USER!.trim(),
-        pass: process.env.SMTP_PASS!.trim(),
-      },
-    });
-    await transport.sendMail({ from, to, subject, html, text });
-    return { ok: true };
+    if (isSmtpConfigured()) {
+      const smtp = await sendViaSmtp({ from, to, subject, html, text });
+      return smtp.ok ? { ok: true } : { ok: false, error: smtp.error ?? "SMTP send failed" };
+    }
+
+    return { ok: false, error: "Email not configured" };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };
   }
