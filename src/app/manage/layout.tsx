@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { isBusinessAdmin } from "@/lib/business-admin";
 import { ManageShell } from "@/components/manage/ManageShell";
+import { ManageAccessDenied, ManageSignInPrompt } from "@/components/manage/ManageGate";
 
 export default async function ManageLayout({
   children,
@@ -13,11 +13,19 @@ export default async function ManageLayout({
   const role = (session?.user as { role?: string } | undefined)?.role;
 
   if (!session?.user) {
-    redirect("/login?callbackUrl=/manage");
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <ManageSignInPrompt />
+      </div>
+    );
   }
 
   if (!isBusinessAdmin(email, role)) {
-    redirect("/?error=business-admin");
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <ManageAccessDenied email={email} />
+      </div>
+    );
   }
 
   return (
