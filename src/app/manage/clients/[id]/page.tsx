@@ -15,6 +15,7 @@ import {
   formatNad,
   getPackageOptions,
   getServiceOptions,
+  PAYMENT_PLANS,
   serviceLabel,
 } from "@/lib/business-manage";
 import { getRegistrationWorkflow } from "@/lib/registration-workflows";
@@ -28,11 +29,13 @@ export default function ManageClientDetailPage() {
     title: "",
     serviceSlug: "business-consulting",
     packageId: "",
+    paymentPlan: "deposit_60" as "deposit_60" | "full_100",
     status: "inquiry",
     quotedAmount: "",
     notes: "",
     tasks: "",
   });
+  const [createMsg, setCreateMsg] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/manage/clients/${id}`);
@@ -47,6 +50,8 @@ export default function ManageClientDetailPage() {
 
   async function createEngagement(e: React.FormEvent) {
     e.preventDefault();
+    setCreateMsg(null);
+    const workflow = getRegistrationWorkflow(engForm.packageId || null);
     try {
       const res = await fetch("/api/manage/engagements", {
         method: "POST",
@@ -56,6 +61,7 @@ export default function ManageClientDetailPage() {
           title: engForm.title,
           serviceSlug: engForm.serviceSlug,
           packageId: engForm.packageId || undefined,
+          paymentPlan: workflow ? engForm.paymentPlan : undefined,
           status: engForm.status,
           quotedAmount: engForm.quotedAmount ? Number(engForm.quotedAmount) : undefined,
           notes: engForm.notes,
@@ -67,11 +73,25 @@ export default function ManageClientDetailPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+      const payment = data.payment as
+        | { recorded: boolean; amount: number; invoiceSent: boolean; error?: string }
+        | undefined;
+      if (payment?.recorded) {
+        const inv = payment.invoiceSent
+          ? " Invoice emailed to client."
+          : payment.error
+            ? ` Invoice not sent: ${payment.error}`
+            : "";
+        setCreateMsg(
+          `Service created. Payment of ${formatNad(payment.amount)} recorded automatically.${inv}`
+        );
+      }
       setShowEngagement(false);
       setEngForm({
         title: "",
         serviceSlug: "business-consulting",
         packageId: "",
+        paymentPlan: "deposit_60",
         status: "inquiry",
         quotedAmount: "",
         notes: "",
@@ -157,7 +177,15 @@ export default function ManageClientDetailPage() {
             <select
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
               value={engForm.packageId}
-              onChange={(e) => setEngForm({ ...engForm, packageId: e.target.value })}
+              onChange={(e) => {
+                const packageId = e.target.value;
+                const pkg = packages.find((p) => p.id === packageId);
+                setEngForm({
+                  ...engForm,
+                  packageId,
+                  quotedAmount: pkg ? String(pkg.price) : engForm.quotedAmount,
+                });
+              }}
             >
               <option value="">No fixed package</option>
               {packages.map((p) => (
@@ -199,10 +227,39 @@ export default function ManageClientDetailPage() {
               onChange={(e) => setEngForm({ ...engForm, tasks: e.target.value })}
             />
             {selectedWorkflow && (
-              <p className="sm:col-span-2 text-xs text-slate-600">
-                {selectedWorkflow.steps.length} BIPA registration steps will be created. Client
-                gets email & SMS when you complete each step.
-              </p>
+              <>
+                <fieldset className="sm:col-span-2 rounded-lg border border-slate-200 p-3">
+                  <legend className="px-1 text-sm font-medium text-slate-700">
+                    Payment plan *
+                  </legend>
+                  <div className="mt-1 space-y-2">
+                    {PAYMENT_PLANS.map((plan) => (
+                      <label
+                        key={plan.id}
+                        className="flex cursor-pointer items-start gap-2 text-sm text-slate-700"
+                      >
+                        <input
+                          type="radio"
+                          name="paymentPlan"
+                          value={plan.id}
+                          checked={engForm.paymentPlan === plan.id}
+                          onChange={() => setEngForm({ ...engForm, paymentPlan: plan.id })}
+                          className="mt-1"
+                        />
+                        <span>{plan.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Payment is recorded automatically when the service is created. An invoice is
+                    emailed to the client.
+                  </p>
+                </fieldset>
+                <p className="sm:col-span-2 text-xs text-slate-600">
+                  {selectedWorkflow.steps.length} BIPA registration steps will be created. When you
+                  complete a step, the next step becomes active and the client receives email & SMS.
+                </p>
+              </>
             )}
             <textarea
               placeholder="Notes"
@@ -219,6 +276,10 @@ export default function ManageClientDetailPage() {
             </div>
           </form>
         </Card>
+      )}
+
+      {createMsg && (
+        <p className="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{createMsg}</p>
       )}
 
       <Card>

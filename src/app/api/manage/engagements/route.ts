@@ -4,6 +4,10 @@ import { requireBusinessAdmin } from "@/lib/business-admin";
 import { buildRegistrationTaskCreates } from "@/lib/services/registration-engagement";
 import { notifyRegistrationStarted } from "@/lib/services/registration-client-notify";
 import { getRegistrationWorkflow } from "@/lib/registration-workflows";
+import {
+  recordRegistrationPayment,
+  resolvePackagePrice,
+} from "@/lib/services/registration-payments";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
 
@@ -25,6 +29,7 @@ const createSchema = z.object({
   dueDate: z.string().optional(),
   notes: z.string().max(8000).optional(),
   tasks: z.array(z.string().min(1).max(300)).optional(),
+  paymentPlan: z.enum(["deposit_60", "full_100"]).optional(),
 });
 
 export async function GET(req: Request) {
@@ -74,16 +79,30 @@ export async function POST(req: Request) {
           ? manualTasks
           : undefined;
 
+    const quotedAmount =
+      body.quotedAmount ??
+      (workflow && body.packageId ? resolvePackagePrice(body.packageId) : null);
+
+    if (workflow && !body.paymentPlan) {
+      return NextResponse.json(
+        { error: "Select a payment plan: 60% deposit or 100% full payment." },
+        { status: 400 }
+      );
+    }
+
     const engagement = await prisma.bizEngagement.create({
       data: {
         clientId: body.clientId,
         title: body.title.trim(),
         serviceSlug: body.serviceSlug,
         packageId: body.packageId || null,
+        paymentPlan: workflow ? body.paymentPlan : null,
         status: workflow ? "in_progress" : (body.status ?? "inquiry"),
         progressPercent: 0,
-        quotedAmount: body.quotedAmount ?? null,
-        paidAmount: body.paidAmount ?? 0,
+        quotedAmount: quotedAmount && quotedAmount > 0 ? quotedAmount : null,
+        paidAmount: 0,
+        depositPaid: false,
+        balancePaid: false,
         currency: body.currency ?? "NAD",
         startDate: body.startDate ? new Date(body.startDate) : workflow ? new Date() : null,
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
@@ -96,13 +115,15 @@ export async function POST(req: Request) {
       },
     });
 
-    if (workflow) {
+    let payment: Awaited<ReturnType<typeof recordRegistrationPayment>> | null = null;
+    if (workflow && body.paymentPlan) {
+      payment = await recordRegistrationPayment(engagement.id, "initial");
       notifyRegistrationStarted(engagement.id).catch((err) =>
         console.error("[engagement] start notify failed", err)
       );
     }
 
-    return NextResponse.json({ engagement }, { status: 201 });
+    return NextResponse.json({ engagement, payment }, { status: 201 });
   } catch (e) {
     return manageErrorResponse(e);
   }

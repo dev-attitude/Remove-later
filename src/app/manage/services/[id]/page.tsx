@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
@@ -14,6 +14,7 @@ import {
   PAYMENT_METHODS,
   engagementStatusLabel,
   formatNad,
+  PAYMENT_PLANS,
   serviceLabel,
 } from "@/lib/business-manage";
 import { getRegistrationWorkflow } from "@/lib/registration-workflows";
@@ -22,6 +23,8 @@ export default function ManageServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [engagement, setEngagement] = useState<any>(null);
   const [notifyMsg, setNotifyMsg] = useState<string | null>(null);
+  const [highlightTaskId, setHighlightTaskId] = useState<string | null>(null);
+  const taskRefs = useRef<Record<string, HTMLLIElement | null>>({});
   const [newTask, setNewTask] = useState("");
   const [incomeForm, setIncomeForm] = useState({
     amount: "",
@@ -51,21 +54,45 @@ export default function ManageServiceDetailPage() {
 
   async function toggleTask(taskId: string, done: boolean) {
     setNotifyMsg(null);
+    setHighlightTaskId(null);
     const res = await fetch(`/api/manage/engagements/${id}/tasks`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ taskId, done }),
     });
     const data = await res.json();
+    const messages: string[] = [];
     if (data.notification) {
       const n = data.notification as { email: boolean; sms: boolean; errors: string[] };
-      if (n.email && n.sms) setNotifyMsg("Update sent to client by email and SMS.");
-      else if (n.email) setNotifyMsg("Update sent to client by email.");
-      else if (n.sms) setNotifyMsg("Update sent to client by SMS.");
-      else if (n.errors?.length)
-        setNotifyMsg(`Notification issue: ${n.errors.join(" ")}`);
+      if (n.email && n.sms) messages.push("Update sent to client by email and SMS.");
+      else if (n.email) messages.push("Update sent to client by email.");
+      else if (n.sms) messages.push("Update sent to client by SMS.");
+      else if (n.errors?.length) messages.push(`Notification issue: ${n.errors.join(" ")}`);
     }
-    load();
+    if (data.nextTask) {
+      const next = data.nextTask as { id: string; title: string };
+      messages.push(`Next step: ${next.title}`);
+      setHighlightTaskId(next.id);
+    }
+    if (data.payment?.recorded) {
+      const p = data.payment as { amount: number; invoiceSent: boolean; error?: string };
+      const inv = p.invoiceSent
+        ? " Invoice emailed to client."
+        : p.error
+          ? ` Invoice not sent: ${p.error}`
+          : "";
+      messages.push(`Balance payment ${formatNad(p.amount)} recorded.${inv}`);
+    }
+    if (messages.length) setNotifyMsg(messages.join(" "));
+    await load();
+    if (data.nextTask?.id) {
+      requestAnimationFrame(() => {
+        taskRefs.current[data.nextTask.id]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+    }
   }
 
   async function addTask(e: React.FormEvent) {
@@ -129,6 +156,7 @@ export default function ManageServiceDetailPage() {
   if (!engagement) return <p className="text-slate-500">Loading…</p>;
 
   const workflow = getRegistrationWorkflow(engagement.packageId);
+  const paymentPlanLabel = PAYMENT_PLANS.find((p) => p.id === engagement.paymentPlan)?.label;
   const sortedTasks = [...(engagement.tasks ?? [])].sort(
     (a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder
   );
@@ -182,6 +210,16 @@ export default function ManageServiceDetailPage() {
           <p className="mt-3 text-sm text-slate-600">
             Quoted {formatNad(engagement.quotedAmount)} · Received{" "}
             {formatNad(engagement.paidAmount)}
+            {engagement.quotedAmount > engagement.paidAmount && (
+              <> · Balance {formatNad(engagement.quotedAmount - engagement.paidAmount)}</>
+            )}
+          </p>
+        )}
+        {engagement.paymentPlan && (
+          <p className="mt-2 text-xs text-slate-600">
+            Payment plan: {paymentPlanLabel ?? engagement.paymentPlan}
+            {engagement.depositPaid && " · Deposit recorded"}
+            {engagement.balancePaid && " · Fully paid"}
           </p>
         )}
         {engagement.client.email || engagement.client.phone ? (
@@ -214,13 +252,19 @@ export default function ManageServiceDetailPage() {
           <ul className="mt-4 space-y-2">
             {sortedTasks.map((t: any, idx: number) => {
               const isCurrent = !t.done && idx === firstOpenIdx;
+              const isHighlighted = highlightTaskId === t.id || isCurrent;
               return (
-                <li key={t.id}>
+                <li
+                  key={t.id}
+                  ref={(el) => {
+                    taskRefs.current[t.id] = el;
+                  }}
+                >
                   <button
                     type="button"
                     onClick={() => toggleTask(t.id, !t.done)}
-                    className={`flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-slate-50 ${
-                      isCurrent ? "border border-brand-200 bg-brand-50/50" : ""
+                    className={`flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-slate-50 transition-colors ${
+                      isHighlighted ? "border border-brand-300 bg-brand-50 ring-1 ring-brand-200" : ""
                     }`}
                   >
                     {t.done ? (
@@ -243,9 +287,9 @@ export default function ManageServiceDetailPage() {
                           {t.durationNote}
                         </span>
                       )}
-                      {isCurrent && (
+                      {isHighlighted && !t.done && (
                         <span className="mt-0.5 block text-xs font-medium text-brand-700">
-                          Current step
+                          {highlightTaskId === t.id ? "Next step — in progress" : "Current step"}
                         </span>
                       )}
                     </span>
@@ -279,7 +323,16 @@ export default function ManageServiceDetailPage() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardTitle>Record payment (income)</CardTitle>
+          <CardTitle>{workflow ? "Automatic payments" : "Record payment (income)"}</CardTitle>
+          {workflow ? (
+            <p className="mt-3 text-sm text-slate-600">
+              Registration payments are recorded automatically when the service is created
+              {engagement.paymentPlan === "deposit_60"
+                ? " (60% deposit) and when all steps are complete (40% balance)."
+                : " (100% upfront)."}
+              Invoices are emailed to {engagement.client.email || "the client (add email on file)"}.
+            </p>
+          ) : (
           <form onSubmit={recordIncome} className="mt-4 space-y-3">
             <input
               required
@@ -321,6 +374,7 @@ export default function ManageServiceDetailPage() {
             </select>
             <Button type="submit">Save income</Button>
           </form>
+          )}
           {engagement.income?.length > 0 && (
             <ul className="mt-4 space-y-1 border-t border-slate-100 pt-4 text-xs text-slate-600">
               {engagement.income.map((i: any) => (

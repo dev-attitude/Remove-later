@@ -27,13 +27,12 @@ export type RegistrationUpdatePayload = {
 };
 
 function buildSms(payload: RegistrationUpdatePayload): string {
-  const next = payload.nextStep
-    ? ` Next: ${payload.nextStep.title}${payload.nextStep.durationNote ? ` (${payload.nextStep.durationNote})` : ""}.`
-    : " All registration steps are complete.";
   const line =
     payload.kind === "started"
-      ? `We have started your ${payload.serviceTitle}. Current step: ${payload.completedStep.title}.`
-      : `Step completed: ${payload.completedStep.title}.${next}`;
+      ? `We have started your ${payload.serviceTitle}. Step 1: ${payload.completedStep.title}.`
+      : payload.nextStep
+        ? `Step done: ${payload.completedStep.title}. Now in progress: ${payload.nextStep.title}.`
+        : `Step completed: ${payload.completedStep.title}. Registration complete.`;
   const msg = `${BRAND.companyName}: Hi ${payload.clientName.split(" ")[0]}, ${line} Progress: ${payload.progressPercent}%. Call ${COMPANY.phones[0]} for questions.`;
   return msg.length > 320 ? `${msg.slice(0, 317)}...` : msg;
 }
@@ -73,8 +72,10 @@ function buildEmail(payload: RegistrationUpdatePayload) {
     `Dear ${payload.clientName},`,
     "",
     payload.kind === "started"
-      ? `We have started your ${payload.serviceTitle}. Current step: ${payload.completedStep.title}.`
-      : `Step completed: ${payload.completedStep.title}.`,
+      ? `We have started your ${payload.serviceTitle}. Step 1: ${payload.completedStep.title}.`
+      : payload.nextStep
+        ? `Step completed: ${payload.completedStep.title}. Now in progress: ${payload.nextStep.title}.`
+        : `Step completed: ${payload.completedStep.title}. Registration complete.`,
     payload.nextStep ? `Next step: ${payload.nextStep.title}` : "All steps complete.",
     `Progress: ${payload.progressPercent}%`,
     "",

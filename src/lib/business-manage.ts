@@ -46,6 +46,13 @@ export const PAYMENT_METHODS = [
   "Other",
 ] as const;
 
+export type PaymentPlan = "deposit_60" | "full_100";
+
+export const PAYMENT_PLANS: { id: PaymentPlan; label: string }[] = [
+  { id: "deposit_60", label: "60% deposit now — 40% balance on completion" },
+  { id: "full_100", label: "100% full payment upfront" },
+];
+
 export function getServiceOptions() {
   return SERVICES.map((s) => ({
     slug: s.slug as ServiceSlug,

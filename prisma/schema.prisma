@@ -63,6 +63,9 @@ model BizEngagement {
   startDate       DateTime?
   dueDate         DateTime?
   notes           String?       @db.Text
+  paymentPlan     String?
+  depositPaid     Boolean       @default(false)
+  balancePaid     Boolean       @default(false)
   tasks           BizTask[]
   income          BizIncome[]
   expenses        BizExpense[]

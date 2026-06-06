@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
 import { computeProgressFromTasks } from "@/lib/business-manage";
 import { notifyStepCompleted } from "@/lib/services/registration-client-notify";
+import { recordRegistrationPayment } from "@/lib/services/registration-payments";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
 
@@ -73,11 +74,28 @@ export async function PATCH(req: Request, { params }: Params) {
     await syncEngagementProgress(engagementId);
 
     let notification: { email: boolean; sms: boolean; errors: string[] } | null = null;
+    let payment: Awaited<ReturnType<typeof recordRegistrationPayment>> | null = null;
+    let nextTask: { id: string; title: string; stepKey: string | null } | null = null;
+
     if (markingComplete && existing.stepKey) {
       notification = await notifyStepCompleted(engagementId, existing.stepKey);
+
+      const updatedTasks = await prisma.bizTask.findMany({
+        where: { engagementId },
+        orderBy: { sortOrder: "asc" },
+      });
+      const next = updatedTasks.find((t) => !t.done);
+      if (next) {
+        nextTask = { id: next.id, title: next.title, stepKey: next.stepKey };
+      }
+
+      const allDone = updatedTasks.length > 0 && updatedTasks.every((t) => t.done);
+      if (allDone) {
+        payment = await recordRegistrationPayment(engagementId, "balance");
+      }
     }
 
-    return NextResponse.json({ task, notification });
+    return NextResponse.json({ task, notification, payment, nextTask });
   } catch (e) {
     return manageErrorResponse(e);
   }
