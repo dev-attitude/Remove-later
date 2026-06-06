@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/manage/StatusPill";
+import { getEngagementStepStatus } from "@/lib/registration-workflows";
 import {
   ENGAGEMENT_STATUSES,
   engagementStatusLabel,
@@ -72,6 +73,15 @@ export default function ManageServicesPage() {
                   {formatNad(e.paidAmount)} / {formatNad(e.quotedAmount)} paid
                 </p>
               )}
+              {(() => {
+                const stepStatus = getEngagementStepStatus(e.packageId, e.tasks ?? []);
+                if (!stepStatus?.current) return null;
+                return (
+                  <p className="mt-2 rounded-md bg-brand-50 px-2 py-1.5 text-xs font-medium text-brand-800">
+                    Current step: {stepStatus.current.title}
+                  </p>
+                );
+              })()}
             </Card>
           </Link>
         ))}

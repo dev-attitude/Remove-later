@@ -77,9 +77,7 @@ export async function PATCH(req: Request, { params }: Params) {
     let payment: Awaited<ReturnType<typeof recordRegistrationPayment>> | null = null;
     let nextTask: { id: string; title: string; stepKey: string | null } | null = null;
 
-    if (markingComplete && existing.stepKey) {
-      notification = await notifyStepCompleted(engagementId, existing.stepKey);
-
+    if (markingComplete) {
       const updatedTasks = await prisma.bizTask.findMany({
         where: { engagementId },
         orderBy: { sortOrder: "asc" },
@@ -87,6 +85,10 @@ export async function PATCH(req: Request, { params }: Params) {
       const next = updatedTasks.find((t) => !t.done);
       if (next) {
         nextTask = { id: next.id, title: next.title, stepKey: next.stepKey };
+      }
+
+      if (existing.stepKey) {
+        notification = await notifyStepCompleted(engagementId, existing.stepKey);
       }
 
       const allDone = updatedTasks.length > 0 && updatedTasks.every((t) => t.done);

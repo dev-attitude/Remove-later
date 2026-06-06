@@ -17,7 +17,7 @@ import {
   PAYMENT_PLANS,
   serviceLabel,
 } from "@/lib/business-manage";
-import { getRegistrationWorkflow } from "@/lib/registration-workflows";
+import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registration-workflows";
 
 export default function ManageServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +25,7 @@ export default function ManageServiceDetailPage() {
   const [notifyMsg, setNotifyMsg] = useState<string | null>(null);
   const [highlightTaskId, setHighlightTaskId] = useState<string | null>(null);
   const taskRefs = useRef<Record<string, HTMLLIElement | null>>({});
+  const didInitialScroll = useRef(false);
   const [newTask, setNewTask] = useState("");
   const [incomeForm, setIncomeForm] = useState({
     amount: "",
@@ -51,6 +52,25 @@ export default function ManageServiceDetailPage() {
   useEffect(() => {
     load().catch(console.error);
   }, [load]);
+
+  useEffect(() => {
+    if (!engagement || didInitialScroll.current) return;
+    const wf = getRegistrationWorkflow(engagement.packageId);
+    if (!wf) return;
+    const sorted = [...(engagement.tasks ?? [])].sort(
+      (a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder
+    );
+    const stepStatus = getEngagementStepStatus(engagement.packageId, sorted);
+    if (!stepStatus?.current) return;
+    didInitialScroll.current = true;
+    setHighlightTaskId(stepStatus.current.id);
+    requestAnimationFrame(() => {
+      taskRefs.current[stepStatus.current!.id]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+  }, [engagement]);
 
   async function toggleTask(taskId: string, done: boolean) {
     setNotifyMsg(null);
@@ -160,7 +180,11 @@ export default function ManageServiceDetailPage() {
   const sortedTasks = [...(engagement.tasks ?? [])].sort(
     (a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder
   );
+  const stepStatus = workflow ? getEngagementStepStatus(engagement.packageId, sortedTasks) : null;
   const firstOpenIdx = sortedTasks.findIndex((t: { done: boolean }) => !t.done);
+  const lastCompleted = stepStatus?.completed.length
+    ? stepStatus.completed[stepStatus.completed.length - 1]
+    : null;
 
   return (
     <div>
@@ -237,6 +261,29 @@ export default function ManageServiceDetailPage() {
             {notifyMsg}
           </p>
         )}
+        {stepStatus?.current && (
+          <div className="mt-4 rounded-xl border-2 border-brand-400 bg-brand-50 p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">
+              Current step — work on this now
+            </p>
+            <p className="mt-2 text-lg font-bold text-slate-900">
+              Step {stepStatus.currentIndex + 1} of {stepStatus.total}: {stepStatus.current.title}
+            </p>
+            {stepStatus.current.durationNote && (
+              <p className="mt-1 text-sm text-slate-600">{stepStatus.current.durationNote}</p>
+            )}
+            {lastCompleted && (
+              <p className="mt-3 text-sm text-emerald-700">
+                ✓ Completed: {lastCompleted.title}
+              </p>
+            )}
+          </div>
+        )}
+        {stepStatus?.allDone && (
+          <p className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-medium text-emerald-800">
+            All {stepStatus.total} registration steps are complete.
+          </p>
+        )}
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -247,6 +294,20 @@ export default function ManageServiceDetailPage() {
           {workflow && (
             <p className="mt-1 text-xs text-slate-500">
               {workflow.label} — tick each step when complete. Client receives email & SMS update.
+            </p>
+          )}
+          {workflow && stepStatus?.current && (
+            <p className="mt-3 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-800">
+              <span className="font-semibold">Active:</span> Step {stepStatus.currentIndex + 1} —{" "}
+              {stepStatus.current.title}
+              {stepStatus.upcoming.length > 0 && (
+                <span className="block mt-1 text-xs text-brand-700">
+                  Then: {stepStatus.upcoming[0].title}
+                  {stepStatus.upcoming.length > 1
+                    ? ` (+${stepStatus.upcoming.length - 1} more)`
+                    : ""}
+                </span>
+              )}
             </p>
           )}
           <ul className="mt-4 space-y-2">

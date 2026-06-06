@@ -18,7 +18,7 @@ import {
   PAYMENT_PLANS,
   serviceLabel,
 } from "@/lib/business-manage";
-import { getRegistrationWorkflow } from "@/lib/registration-workflows";
+import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registration-workflows";
 
 export default function ManageClientDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -313,6 +313,15 @@ export default function ManageClientDetailPage() {
                       Quoted {formatNad(e.quotedAmount)} · Paid {formatNad(e.paidAmount)}
                     </p>
                   )}
+                  {(() => {
+                    const stepStatus = getEngagementStepStatus(e.packageId, e.tasks ?? []);
+                    if (!stepStatus?.current) return null;
+                    return (
+                      <p className="mt-2 rounded-md bg-brand-50 px-2 py-1.5 text-xs font-medium text-brand-800">
+                        Current step: {stepStatus.current.title}
+                      </p>
+                    );
+                  })()}
                 </Link>
               </li>
             ))}
