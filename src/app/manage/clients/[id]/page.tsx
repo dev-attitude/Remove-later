@@ -65,10 +65,14 @@ export default function ManageClientDetailPage() {
           status: engForm.status,
           quotedAmount: engForm.quotedAmount ? Number(engForm.quotedAmount) : undefined,
           notes: engForm.notes,
-          tasks: engForm.tasks
-            .split("\n")
-            .map((t) => t.trim())
-            .filter(Boolean),
+          ...(workflow
+            ? {}
+            : {
+                tasks: engForm.tasks
+                  .split("\n")
+                  .map((t) => t.trim())
+                  .filter(Boolean),
+              }),
         }),
       });
       const data = await res.json();
@@ -80,7 +84,7 @@ export default function ManageClientDetailPage() {
         const inv = payment.invoiceSent
           ? " Invoice emailed to client."
           : payment.error
-            ? ` Invoice not sent: ${payment.error}`
+            ? ` ${payment.error}`
             : "";
         setCreateMsg(
           `Service created. Payment of ${formatNad(payment.amount)} recorded automatically.${inv}`
@@ -256,9 +260,18 @@ export default function ManageClientDetailPage() {
                   </p>
                 </fieldset>
                 <p className="sm:col-span-2 text-xs text-slate-600">
-                  {selectedWorkflow.steps.length} BIPA registration steps will be created. When you
-                  complete a step, the next step becomes active and the client receives email & SMS.
+                  {selectedWorkflow.steps.length} registration steps will be created for{" "}
+                  {selectedWorkflow.label}. When you complete a step, the next step becomes active
+                  and the client receives email & SMS.
                 </p>
+                <ol className="sm:col-span-2 list-decimal space-y-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 pl-8 text-xs text-slate-700">
+                  {selectedWorkflow.steps.map((step) => (
+                    <li key={step.stepKey}>
+                      {step.title}
+                      {step.durationNote ? ` (${step.durationNote})` : ""}
+                    </li>
+                  ))}
+                </ol>
               </>
             )}
             <textarea

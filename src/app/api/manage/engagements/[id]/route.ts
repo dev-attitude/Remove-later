@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
+import { ensureRegistrationTasks } from "@/lib/services/registration-engagement";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
 
@@ -43,7 +44,19 @@ export async function GET(_req: Request, { params }: Params) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ engagement });
+    await ensureRegistrationTasks(id);
+
+    const refreshed = await prisma.bizEngagement.findUnique({
+      where: { id },
+      include: {
+        client: true,
+        tasks: { orderBy: { sortOrder: "asc" } },
+        income: { orderBy: { date: "desc" } },
+        expenses: { orderBy: { date: "desc" } },
+      },
+    });
+
+    return NextResponse.json({ engagement: refreshed ?? engagement });
   } catch (e) {
     return manageErrorResponse(e);
   }

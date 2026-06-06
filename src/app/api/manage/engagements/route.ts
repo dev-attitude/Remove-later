@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
-import { buildRegistrationTaskCreates } from "@/lib/services/registration-engagement";
+import { buildRegistrationTaskCreates, ensureRegistrationTasks } from "@/lib/services/registration-engagement";
 import { notifyRegistrationStarted } from "@/lib/services/registration-client-notify";
 import { getRegistrationWorkflow } from "@/lib/registration-workflows";
 import {
@@ -117,13 +117,25 @@ export async function POST(req: Request) {
 
     let payment: Awaited<ReturnType<typeof recordRegistrationPayment>> | null = null;
     if (workflow && body.paymentPlan) {
+      await ensureRegistrationTasks(engagement.id);
       payment = await recordRegistrationPayment(engagement.id, "initial");
       notifyRegistrationStarted(engagement.id).catch((err) =>
         console.error("[engagement] start notify failed", err)
       );
     }
 
-    return NextResponse.json({ engagement, payment }, { status: 201 });
+    const finalEngagement = await prisma.bizEngagement.findUnique({
+      where: { id: engagement.id },
+      include: {
+        client: { select: { id: true, name: true, email: true, phone: true } },
+        tasks: { orderBy: { sortOrder: "asc" } },
+      },
+    });
+
+    return NextResponse.json(
+      { engagement: finalEngagement ?? engagement, payment },
+      { status: 201 }
+    );
   } catch (e) {
     return manageErrorResponse(e);
   }

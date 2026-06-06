@@ -1,7 +1,6 @@
-import nodemailer from "nodemailer";
 import { normalizePhone } from "@/lib/services/contact-notifications";
-
-export type SendResult = { ok: boolean; error?: string };
+import { COMPANY } from "@/lib/site-content";
+export type SendResult = { ok: boolean; error?: string; fallbackSent?: boolean };
 
 function isEmailConfigured(): boolean {
   return Boolean(
@@ -30,6 +29,54 @@ export function isClientSmsConfigured(): boolean {
 
 export function isClientEmailConfigured(): boolean {
   return isEmailConfigured();
+}
+
+function getInvoiceFallbackEmail(): string | null {
+  return (
+    process.env.CONTACT_NOTIFY_EMAIL?.trim() ||
+    process.env.BUSINESS_ADMIN_EMAILS?.split(",")[0]?.trim() ||
+    COMPANY.email ||
+    null
+  );
+}
+
+function parseResendError(body: string): string {
+  try {
+    const parsed = JSON.parse(body) as { message?: string };
+    const msg = parsed.message ?? body;
+    if (msg.includes("verify a domain") || msg.includes("testing emails")) {
+      return "Resend is in test mode — verify gmconsultations.com at resend.com/domains and set CONTACT_FROM_EMAIL (e.g. hello@gmconsultations.com) on Vercel to email clients.";
+    }
+    return msg;
+  } catch {
+    return body;
+  }
+}
+
+async function sendViaResend(input: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}): Promise<{ ok: boolean; status: number; error?: string }> {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY!.trim()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: input.from,
+      to: [input.to],
+      subject: input.subject,
+      html: input.html,
+      text: input.text,
+    }),
+  });
+  if (res.ok) return { ok: true, status: res.status };
+  const errText = await res.text();
+  return { ok: false, status: res.status, error: parseResendError(errText) };
 }
 
 async function sendTwilioSms(to: string, body: string): Promise<void> {
@@ -104,27 +151,47 @@ export async function sendEmailToClient(
       `Skyrapay Consultations <onboarding@resend.dev>`;
 
     if (process.env.RESEND_API_KEY?.trim()) {
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY.trim()}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ from, to: [to], subject, html, text }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-    } else {
-      const transport = nodemailer.createTransport({
-        host: process.env.SMTP_HOST!.trim(),
-        port: Number(process.env.SMTP_PORT ?? "587"),
-        secure: Number(process.env.SMTP_PORT ?? "587") === 465,
-        auth: {
-          user: process.env.SMTP_USER!.trim(),
-          pass: process.env.SMTP_PASS!.trim(),
-        },
-      });
-      await transport.sendMail({ from, to, subject, html, text });
+      const primary = await sendViaResend({ from, to, subject, html, text });
+      if (primary.ok) return { ok: true };
+
+      const fallbackTo = getInvoiceFallbackEmail();
+      const isTestModeBlock =
+        primary.status === 403 &&
+        (primary.error?.includes("test mode") || primary.error?.includes("testing")) &&
+        fallbackTo &&
+        fallbackTo.toLowerCase() !== to.toLowerCase();
+
+      if (isTestModeBlock) {
+        const fallback = await sendViaResend({
+          from,
+          to: fallbackTo,
+          subject: `[Forward to ${to}] ${subject}`,
+          html: `${html}<p style="margin-top:16px;padding:12px;background:#fef3c7;color:#92400e;font-size:13px">Please forward this invoice to the client at <strong>${to}</strong>. Resend test mode only allows email to your account until gmconsultations.com is verified.</p>`,
+          text: `${text}\n\n[Forward to client: ${to}]`,
+        });
+        if (fallback.ok) {
+          return {
+            ok: false,
+            fallbackSent: true,
+            error: `${primary.error} Invoice copy sent to ${fallbackTo} — please forward to the client.`,
+          };
+        }
+      }
+
+      return { ok: false, error: primary.error ?? "Email send failed" };
     }
+
+    const nodemailer = await import("nodemailer");
+    const transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST!.trim(),
+      port: Number(process.env.SMTP_PORT ?? "587"),
+      secure: Number(process.env.SMTP_PORT ?? "587") === 465,
+      auth: {
+        user: process.env.SMTP_USER!.trim(),
+        pass: process.env.SMTP_PASS!.trim(),
+      },
+    });
+    await transport.sendMail({ from, to, subject, html, text });
     return { ok: true };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };
