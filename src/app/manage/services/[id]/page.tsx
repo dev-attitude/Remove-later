@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft, CheckCircle2, Circle, Trash2 } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { StatusPill } from "@/components/manage/StatusPill";
@@ -22,8 +22,11 @@ import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registra
 
 export default function ManageServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [engagement, setEngagement] = useState<any>(null);
   const [notifyMsg, setNotifyMsg] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [highlightTaskId, setHighlightTaskId] = useState<string | null>(null);
   const taskRefs = useRef<Record<string, HTMLLIElement | null>>({});
   const didInitialScroll = useRef(false);
@@ -135,6 +138,32 @@ export default function ManageServiceDetailPage() {
       body: JSON.stringify({ status }),
     });
     load();
+  }
+
+  async function deleteService() {
+    if (!engagement) return;
+    setDeleteError(null);
+    const incomeCount = engagement.income?.length ?? 0;
+    const expenseCount = engagement.expenses?.length ?? 0;
+    const financeNote =
+      incomeCount + expenseCount > 0
+        ? `\n\nThis also removes ${incomeCount} payment record(s) and ${expenseCount} expense(s) linked to this service.`
+        : "";
+    const confirmed = window.confirm(
+      `Delete "${engagement.title}" for ${engagement.client.name}? All steps and notifications will be removed.${financeNote}\n\nThis cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/manage/engagements/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to delete service");
+      router.push(`/manage/clients/${engagement.clientId}`);
+    } catch (e) {
+      setDeleteError(e instanceof Error ? e.message : "Failed to delete service");
+      setDeleting(false);
+    }
   }
 
   async function recordIncome(e: React.FormEvent) {
@@ -501,6 +530,28 @@ export default function ManageServiceDetailPage() {
           )}
         </Card>
       </div>
+
+      <Card className="mt-6 border-red-200">
+        <CardTitle className="text-red-800">Delete service</CardTitle>
+        <p className="mt-2 text-sm text-slate-600">
+          Remove this service if it was created by mistake. Only business admins can do this.
+          Linked automatic payments and expenses for this service are removed from your income
+          records too.
+        </p>
+        {deleteError && (
+          <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{deleteError}</p>
+        )}
+        <Button
+          type="button"
+          variant="outline"
+          disabled={deleting}
+          onClick={deleteService}
+          className="mt-4 border-red-300 text-red-700 hover:bg-red-50"
+        >
+          <Trash2 className="h-4 w-4" />
+          {deleting ? "Deleting…" : "Delete this service"}
+        </Button>
+      </Card>
     </div>
   );
 }

@@ -102,7 +102,13 @@ export async function DELETE(_req: Request, { params }: Params) {
   try {
     await requireBusinessAdmin();
     const { id } = await params;
-    await prisma.bizEngagement.delete({ where: { id } });
+
+    await prisma.$transaction([
+      prisma.bizIncome.deleteMany({ where: { engagementId: id } }),
+      prisma.bizExpense.deleteMany({ where: { engagementId: id } }),
+      prisma.bizEngagement.delete({ where: { id } }),
+    ]);
+
     return NextResponse.json({ ok: true });
   } catch (e) {
     return manageErrorResponse(e);
