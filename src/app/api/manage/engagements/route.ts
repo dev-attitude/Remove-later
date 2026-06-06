@@ -29,7 +29,7 @@ const createSchema = z.object({
   dueDate: z.string().optional(),
   notes: z.string().max(8000).optional(),
   tasks: z.array(z.string().min(1).max(300)).optional(),
-  paymentPlan: z.enum(["deposit_60", "full_100"]).optional(),
+  paymentPlan: z.enum(["deposit_50", "deposit_60", "full_100"]).optional(),
 });
 
 export async function GET(req: Request) {
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
 
     if (workflow && !body.paymentPlan) {
       return NextResponse.json(
-        { error: "Select a payment plan: 60% deposit or 100% full payment." },
+        { error: "Select a payment plan: 50% deposit, 60% deposit, or 100% full payment." },
         { status: 400 }
       );
     }

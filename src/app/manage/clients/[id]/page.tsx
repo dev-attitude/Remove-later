@@ -29,7 +29,7 @@ export default function ManageClientDetailPage() {
     title: "",
     serviceSlug: "business-consulting",
     packageId: "",
-    paymentPlan: "deposit_60" as "deposit_60" | "full_100",
+    paymentPlan: "deposit_60" as "deposit_50" | "deposit_60" | "full_100",
     status: "inquiry",
     quotedAmount: "",
     notes: "",

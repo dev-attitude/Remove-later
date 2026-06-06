@@ -15,6 +15,7 @@ import {
   engagementStatusLabel,
   formatNad,
   PAYMENT_PLANS,
+  paymentPlanScheduleLabel,
   serviceLabel,
 } from "@/lib/business-manage";
 import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registration-workflows";
@@ -387,11 +388,9 @@ export default function ManageServiceDetailPage() {
           <CardTitle>{workflow ? "Automatic payments" : "Record payment (income)"}</CardTitle>
           {workflow ? (
             <p className="mt-3 text-sm text-slate-600">
-              Registration payments are recorded automatically when the service is created
-              {engagement.paymentPlan === "deposit_60"
-                ? " (60% deposit) and when all steps are complete (40% balance)."
-                : " (100% upfront)."}
-              Invoices are emailed to {engagement.client.email || "the client (add email on file)"}.
+              Registration payments are recorded automatically when the service is created (
+              {paymentPlanScheduleLabel(engagement.paymentPlan)}). Invoices are emailed to{" "}
+              {engagement.client.email || "the client (add email on file)"}.
             </p>
           ) : (
           <form onSubmit={recordIncome} className="mt-4 space-y-3">

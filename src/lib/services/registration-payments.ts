@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { COMPANY } from "@/lib/site-content";
 import { BRAND } from "@/lib/brand";
 import { formatNad } from "@/lib/business-manage";
-import { getPackageOptions, type PaymentPlan } from "@/lib/business-manage";
+import { getPackageOptions, isDepositPaymentPlan, type PaymentPlan } from "@/lib/business-manage";
 import { sendEmailToClient } from "@/lib/services/client-messaging";
 
 export type { PaymentPlan } from "@/lib/business-manage";
@@ -16,14 +16,35 @@ export function resolvePackagePrice(packageId: string | null, quotedAmount?: num
 }
 
 export function paymentAmounts(total: number, plan: PaymentPlan) {
-  const deposit = Math.round(total * 0.6 * 100) / 100;
+  if (plan === "full_100") {
+    return { total, deposit: total, balance: 0, full: total };
+  }
+  const depositRate = plan === "deposit_50" ? 0.5 : 0.6;
+  const deposit = Math.round(total * depositRate * 100) / 100;
   const balance = Math.round((total - deposit) * 100) / 100;
-  return {
-    total,
-    deposit,
-    balance,
-    full: total,
-  };
+  return { total, deposit, balance, full: total };
+}
+
+function depositLabel(plan: PaymentPlan): string {
+  if (plan === "deposit_50") return "Deposit (50%)";
+  if (plan === "deposit_60") return "Deposit (60%)";
+  return "Full payment (100%)";
+}
+
+function balanceLabel(plan: PaymentPlan): string {
+  if (plan === "deposit_50") return "Final balance (50%)";
+  return "Final balance (40%)";
+}
+
+function depositInvoiceSuffix(plan: PaymentPlan): string {
+  if (plan === "deposit_50") return "DEP50";
+  if (plan === "deposit_60") return "DEP60";
+  return "FULL";
+}
+
+function balanceInvoiceSuffix(plan: PaymentPlan): string {
+  if (plan === "deposit_50") return "BAL50";
+  return "BAL40";
 }
 
 function invoiceNumber(engagementId: string, suffix: string) {
@@ -183,10 +204,10 @@ export async function recordRegistrationPayment(
       return { recorded: false, amount: 0, invoiceSent: false, error: "Initial payment already recorded" };
     }
     amount = plan === "full_100" ? amounts.full : amounts.deposit;
-    paymentLabel = plan === "full_100" ? "Full payment (100%)" : "Deposit (60%)";
-    invoiceSuffix = plan === "full_100" ? "FULL" : "DEP60";
+    paymentLabel = depositLabel(plan);
+    invoiceSuffix = depositInvoiceSuffix(plan);
   } else {
-    if (plan !== "deposit_60") {
+    if (!isDepositPaymentPlan(plan)) {
       return { recorded: false, amount: 0, invoiceSent: false, error: "No balance for full payment plan" };
     }
     if (engagement.balancePaid) {
@@ -196,8 +217,8 @@ export async function recordRegistrationPayment(
       return { recorded: false, amount: 0, invoiceSent: false, error: "Deposit not yet paid" };
     }
     amount = amounts.balance;
-    paymentLabel = "Final balance (40%)";
-    invoiceSuffix = "BAL40";
+    paymentLabel = balanceLabel(plan);
+    invoiceSuffix = balanceInvoiceSuffix(plan);
   }
 
   await prisma.bizIncome.create({
