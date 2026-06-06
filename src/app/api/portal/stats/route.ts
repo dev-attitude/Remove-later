@@ -48,12 +48,16 @@ export async function GET() {
       ? Math.round((understandingKeys.size / getUnderstandingTopicCount()) * 100)
       : 0;
 
+  const supervisorFeedbackReviews = await prisma.supervisorFeedbackReview.count({
+    where: { userId, status: "complete" },
+  });
+
   return NextResponse.json({
     understandingTopicsViewed: understandingKeys.size,
     understandingTopicTotal: getUnderstandingTopicCount(),
     serverTopicProgressPercent: serverTopicPct,
     writingRuns,
     distinctActions: actions.size,
-    supervisorFeedbackNew: 0,
+    supervisorFeedbackReviews,
   });
 }

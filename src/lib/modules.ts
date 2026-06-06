@@ -123,7 +123,7 @@ export const MODULES: ModuleDef[] = [
   {
     id: "collaboration",
     title: "Supervisor & Collaboration",
-    short: "Chat, versions, approvals",
+    short: "Upload supervisor docs, track edits & get fixes",
     href: "/collaboration",
     icon: Users,
     category: "collab",

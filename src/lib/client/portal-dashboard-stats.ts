@@ -129,5 +129,6 @@ export const STUDENT_STAT_HINTS: Record<string, string> = {
   "Word count": "Words from AI Writing, proposals, and saved drafts in this browser",
   Citations:
     "References from Understanding topics, Literature Review, Topic Generator, and DOI lookups",
-  "Supervisor feedback": "Live supervisor comments when your institution enables messaging",
+  "Supervisor feedback":
+    "Supervisor document reviews uploaded in Supervisor & Collaboration",
 };

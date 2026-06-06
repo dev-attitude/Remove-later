@@ -476,3 +476,70 @@ export async function fetchSystemStatus() {
     services: Record<string, boolean>;
   }>(res);
 }
+
+export type SupervisorChange = {
+  id: string;
+  category: string;
+  location: string;
+  supervisorChange: string;
+  intent: string;
+  severity: "high" | "medium" | "low";
+};
+
+export type SupervisorSolution = {
+  changeId: string;
+  recommendedAction: string;
+  exampleRevision: string;
+};
+
+export type SupervisorFeedbackAnalysis = {
+  summary: string;
+  changeCount: number;
+  changes: SupervisorChange[];
+  solutions: SupervisorSolution[];
+  diffStats: { added: number; removed: number; unchanged: number };
+  mode: ApiMode;
+};
+
+export type SupervisorFeedbackReviewSummary = {
+  id: string;
+  title: string;
+  supervisorName: string | null;
+  studentFileName: string | null;
+  supervisorFileName: string;
+  status: string;
+  mode: string | null;
+  createdAt: string;
+  updatedAt?: string;
+};
+
+export async function listSupervisorFeedbackApi() {
+  const res = await fetchWithTimeout("/api/supervisor-feedback", {}, 30_000);
+  return parseJson<{ reviews: SupervisorFeedbackReviewSummary[] }>(res);
+}
+
+export async function uploadSupervisorFeedbackApi(form: FormData) {
+  const res = await fetchWithTimeout("/api/supervisor-feedback", {
+    method: "POST",
+    body: form,
+  }, 120_000);
+  return parseJson<{
+    review: SupervisorFeedbackReviewSummary;
+    analysis: SupervisorFeedbackAnalysis;
+  }>(res);
+}
+
+export async function fetchSupervisorFeedbackApi(id: string) {
+  const res = await fetchWithTimeout(`/api/supervisor-feedback/${id}`, {}, 30_000);
+  return parseJson<{
+    review: SupervisorFeedbackReviewSummary & { hasStudentDraft?: boolean };
+    analysis: SupervisorFeedbackAnalysis | null;
+  }>(res);
+}
+
+export async function deleteSupervisorFeedbackApi(id: string) {
+  const res = await fetchWithTimeout(`/api/supervisor-feedback/${id}`, {
+    method: "DELETE",
+  });
+  return parseJson<{ ok: boolean }>(res);
+}

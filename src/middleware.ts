@@ -13,6 +13,7 @@ const PUBLIC_PREFIXES = [
   "/quote",
   "/about",
   "/contact",
+  "/manage",
   "/api/health",
   "/api/auth",
   "/api/literature",

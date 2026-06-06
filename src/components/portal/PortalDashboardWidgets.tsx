@@ -15,7 +15,7 @@ type Widget = { label: string; value: string };
 type ServerStats = {
   understandingTopicsViewed: number;
   serverTopicProgressPercent: number;
-  supervisorFeedbackNew: number;
+  supervisorFeedbackReviews: number;
 };
 
 const PLACEHOLDER_WIDGETS: Record<PortalId, Widget[]> = {
@@ -51,10 +51,9 @@ function buildStudentWidgets(
       )
     : local.researchProgressPercent;
 
-  const feedback =
-    server && server.supervisorFeedbackNew > 0
-      ? `${server.supervisorFeedbackNew} new`
-      : "0";
+  const feedback = formatDashboardNumber(
+    server?.supervisorFeedbackReviews ?? 0
+  );
 
   return [
     { label: "Research progress", value: `${progress}%` },

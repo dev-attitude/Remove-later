@@ -25,6 +25,119 @@ model User {
   documents     Document[]
   usageLogs     UsageLog[]
   understandingBooks UnderstandingBook[]
+  supervisorFeedbackReviews SupervisorFeedbackReview[]
+}
+
+/** Skyrapay internal business management — clients, services, income & expenses */
+model BizClient {
+  id          String          @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  company     String?
+  location    String?
+  status      String          @default("active")
+  notes       String?         @db.Text
+  createdBy   String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  engagements BizEngagement[]
+  income      BizIncome[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model BizEngagement {
+  id              String        @id @default(cuid())
+  clientId        String
+  client          BizClient     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title           String
+  serviceSlug     String
+  packageId       String?
+  status          String        @default("inquiry")
+  progressPercent Int           @default(0)
+  quotedAmount    Float?
+  paidAmount      Float         @default(0)
+  currency        String        @default("NAD")
+  startDate       DateTime?
+  dueDate         DateTime?
+  notes           String?       @db.Text
+  tasks           BizTask[]
+  income          BizIncome[]
+  expenses        BizExpense[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+  @@index([serviceSlug])
+}
+
+model BizTask {
+  id           String        @id @default(cuid())
+  engagementId String
+  engagement   BizEngagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  title        String
+  done         Boolean       @default(false)
+  sortOrder    Int           @default(0)
+  createdAt    DateTime      @default(now())
+
+  @@index([engagementId])
+}
+
+model BizIncome {
+  id            String         @id @default(cuid())
+  clientId      String?
+  client        BizClient?     @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  engagementId  String?
+  engagement    BizEngagement? @relation(fields: [engagementId], references: [id], onDelete: SetNull)
+  amount        Float
+  currency      String         @default("NAD")
+  date          DateTime
+  category      String         @default("service_payment")
+  description   String?
+  paymentMethod String?
+  createdAt     DateTime       @default(now())
+
+  @@index([date])
+  @@index([clientId])
+}
+
+model BizExpense {
+  id           String         @id @default(cuid())
+  engagementId String?
+  engagement   BizEngagement? @relation(fields: [engagementId], references: [id], onDelete: SetNull)
+  amount       Float
+  currency     String         @default("NAD")
+  date         DateTime
+  category     String         @default("other")
+  vendor       String?
+  description  String?
+  createdAt    DateTime       @default(now())
+
+  @@index([date])
+  @@index([engagementId])
+}
+
+/** Student-uploaded supervisor-returned documents (external institutions) */
+model SupervisorFeedbackReview {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title              String
+  supervisorName     String?
+  studentFileName    String?
+  supervisorFileName String
+  studentText        String?  @db.Text
+  supervisorText     String   @db.Text
+  analysisJson       String?  @db.Text
+  status             String   @default("processing")
+  mode               String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId, createdAt])
 }
 
 model Account {
