@@ -196,106 +196,241 @@ export const SERVICES: ServiceItem[] = [
   },
 ];
 
-export const HOSTING_PLANS: BusinessPackage[] = [
+export const HOSTING_OFFERINGS: BusinessPackage[] = [
   {
-    id: "hosting-starter",
-    name: "Starter Hosting",
-    price: 199,
+    id: "hosting-domain",
+    name: "Domain Registration",
+    price: 450,
     currency: "NAD",
-    priceLabel: "Per month",
+    priceLabel: "From per year",
     description:
-      "Reliable hosting for a single business website, portfolio, or landing page—with email and SSL included.",
-    includes: [
-      "1 website",
-      "10 GB SSD storage",
-      "5 business email accounts",
-      "Free SSL certificate",
-      "Weekly backups",
-      "cPanel access",
-      "Namibian support (Mon–Fri)",
-    ],
-  },
-  {
-    id: "hosting-business",
-    name: "Business Hosting",
-    price: 449,
-    currency: "NAD",
-    priceLabel: "Per month",
-    description:
-      "For growing SMEs running multiple sites, online shops, or client portals that need more speed and support.",
+      "Buy and own your domain name through Skyrapay Hosting—.com, .com.na, .org, .net, and more. We register it in your name and manage renewals.",
     popular: true,
     includes: [
-      "Up to 3 websites",
-      "50 GB SSD storage",
-      "Unlimited business email accounts",
-      "Free SSL on all domains",
-      "Daily backups & restore",
-      "Priority support",
-      "Free website migration",
-      "Staging environment",
+      "Search & register new domains",
+      "Transfer existing domains to us",
+      "DNS management (A, CNAME, MX, TXT)",
+      "Domain privacy where available",
+      "Renewal reminders before expiry",
+      "Point domain to your website or email",
     ],
   },
   {
-    id: "hosting-premium",
-    name: "Premium / VPS Hosting",
-    price: 899,
+    id: "hosting-website",
+    name: "Website Hosting",
+    price: 199,
     currency: "NAD",
-    priceLabel: "Per month",
+    priceLabel: "From per month",
     description:
-      "Dedicated resources for high-traffic sites, custom web apps, and organisations that need maximum performance.",
+      "Host your own website on cPanel—upload files, install WordPress, run PHP apps, and manage everything from your hosting account.",
     includes: [
-      "High-performance VPS resources",
-      "100 GB SSD storage",
-      "Unlimited email accounts",
-      "Daily backups + monitoring",
-      "Dedicated IP (where available)",
-      "Advanced security hardening",
-      "Migration & setup included",
-      "Same-day priority support",
+      "Your own cPanel hosting account",
+      "SSD storage & bandwidth",
+      "FTP / SFTP & File Manager",
+      "One-click WordPress & app installers",
+      "Free SSL certificate",
+      "Subdomains & addon domains",
     ],
   },
   {
     id: "hosting-email",
-    name: "Business Email Only",
+    name: "Business Email",
     price: 99,
     currency: "NAD",
-    priceLabel: "Per month",
+    priceLabel: "From per month",
     description:
-      "Professional email on your own domain—ideal if you already have hosting elsewhere but need @yourcompany.com.na addresses.",
+      "Create professional @yourdomain.com email accounts—webmail, Outlook, and mobile sync for your whole team.",
     includes: [
-      "Up to 10 mailboxes",
-      "Webmail & mobile sync",
+      "Create mailboxes on your domain",
+      "Webmail access (Roundcube / Horde)",
+      "Outlook, Apple Mail & mobile setup",
       "Spam & virus filtering",
-      "Free SSL for webmail",
-      "Domain email setup assistance",
-      "Namibian support",
+      "Autoresponders & email forwarding",
+      "Catch-all & alias addresses",
+    ],
+  },
+  {
+    id: "hosting-mysql",
+    name: "MySQL Databases",
+    price: 0,
+    currency: "NAD",
+    priceLabel: "Included with hosting",
+    description:
+      "Create and manage MySQL databases for WordPress, custom apps, and online stores—access via phpMyAdmin from cPanel.",
+    includes: [
+      "Create MySQL databases in cPanel",
+      "phpMyAdmin database management",
+      "Database users & permissions",
+      "Remote MySQL (where supported)",
+      "Import / export SQL backups",
+      "Works with WordPress, Laravel, PHP apps",
+    ],
+  },
+  {
+    id: "hosting-backup",
+    name: "Website Backups",
+    price: 149,
+    currency: "NAD",
+    priceLabel: "From per month",
+    description:
+      "Automated backups of your website files and databases—restore quickly if something goes wrong.",
+    includes: [
+      "Scheduled automated backups",
+      "Files + MySQL database backups",
+      "One-click restore from cPanel",
+      "Off-site backup storage",
+      "Backup before major updates",
+      "Disaster recovery assistance",
+    ],
+  },
+  {
+    id: "hosting-ssl",
+    name: "SSL Certificates",
+    price: 0,
+    currency: "NAD",
+    priceLabel: "Free with hosting",
+    description:
+      "Secure HTTPS for every site—AutoSSL installs and renews certificates so visitors always see the padlock.",
+    includes: [
+      "Free SSL on all hosted domains",
+      "Auto-install & auto-renewal",
+      "HTTPS redirect setup",
+      "Works with subdomains",
+      "Expiry monitoring",
+      "Premium / EV SSL available on request",
+    ],
+  },
+  {
+    id: "hosting-maintenance",
+    name: "Managed Maintenance",
+    price: 599,
+    currency: "NAD",
+    priceLabel: "From per month",
+    description:
+      "Prefer hands-off? We update WordPress, monitor uptime, and make content changes so you don't have to log in to cPanel.",
+    includes: [
+      "WordPress / CMS plugin & core updates",
+      "Security patches & uptime monitoring",
+      "Content & text updates (fair use)",
+      "Broken link & form checks",
+      "Monthly health report",
+      "Priority support during business hours",
     ],
   },
 ];
 
+/** Website hosting tiers (reseller cPanel — each customer gets their own account) */
+export const HOSTING_WEBSITE_PLANS: BusinessPackage[] = [
+  {
+    id: "hosting-starter",
+    name: "Starter",
+    price: 199,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "One domain, one website, email & MySQL—everything you need to get your business online.",
+    includes: [
+      "1 website / 1 domain",
+      "10 GB SSD storage",
+      "5 email accounts",
+      "2 MySQL databases",
+      "Free SSL certificate",
+      "Full cPanel access",
+    ],
+  },
+  {
+    id: "hosting-business",
+    name: "Business",
+    price: 449,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "Multiple sites, more databases, and daily backups for growing Namibian SMEs and online stores.",
+    popular: true,
+    includes: [
+      "Up to 3 websites / domains",
+      "50 GB SSD storage",
+      "Unlimited email accounts",
+      "10 MySQL databases",
+      "Daily backups & restore",
+      "Free website migration",
+    ],
+  },
+  {
+    id: "hosting-premium",
+    name: "Premium",
+    price: 699,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "High-traffic sites and developers who need more storage, databases, and priority support.",
+    includes: [
+      "Up to 5 websites / domains",
+      "100 GB SSD storage",
+      "Unlimited email accounts",
+      "Unlimited MySQL databases",
+      "Daily backups + staging",
+      "Same-day priority support",
+    ],
+  },
+];
+
+/** What customers can do from their cPanel account */
+export const HOSTING_PLATFORM_FEATURES = [
+  {
+    title: "Register & manage domains",
+    text: "Buy new domains, transfer existing ones, and edit DNS records—all from your account.",
+  },
+  {
+    title: "Host your website",
+    text: "Upload files via FTP, use File Manager, install WordPress in one click, and run PHP applications.",
+  },
+  {
+    title: "Create business email",
+    text: "Set up @yourdomain.com mailboxes, autoresponders, and forwarders. Access via webmail or your phone.",
+  },
+  {
+    title: "MySQL databases",
+    text: "Create databases for WordPress, custom apps, and e-commerce. Manage tables with phpMyAdmin.",
+  },
+  {
+    title: "SSL & security",
+    text: "Free AutoSSL on every domain, IP blocker, hotlink protection, and optional two-factor login.",
+  },
+  {
+    title: "Developer tools",
+    text: "PHP version selector, cron jobs, error logs, Git version control, and SSH access on higher plans.",
+  },
+] as const;
+
 export const HOSTING_HIGHLIGHTS = [
   {
-    title: "Secure & always on",
-    text: "Free SSL, automated backups, and monitoring so your site stays online and trustworthy for customers.",
+    title: "Your account, your control",
+    text: "Every customer gets their own cPanel login—register domains, host sites, create email, and manage MySQL databases yourself.",
   },
   {
-    title: "Local support",
-    text: "Talk to our team in Namibia during business hours—we help with setup, migrations, and troubleshooting.",
+    title: "Enterprise infrastructure",
+    text: "Powered by our Namecheap reseller platform with SSD storage, 99.9% uptime, and global CDN—managed locally by Skyrapay Consultations.",
   },
   {
-    title: "Room to grow",
-    text: "Start on Starter and upgrade to Business or Premium as your traffic, email, and apps expand.",
+    title: "Namibian support when you need it",
+    text: "Stuck on DNS, email setup, or a database import? Our team in Namibia helps Mon–Fri 08:00–18:00—in NAD, in plain language.",
   },
 ] as const;
 
 export const HOSTING_INCLUDED = [
-  "Domain & DNS setup guidance",
-  "Free SSL certificates",
-  "Email accounts on your domain",
-  "cPanel (or equivalent) management panel",
-  "Website migration assistance on Business & Premium plans",
-  "Monthly uptime & performance monitoring",
+  "Domain registration & DNS management",
+  "cPanel hosting account with full access",
+  "Business email accounts on your domain",
+  "MySQL databases & phpMyAdmin",
+  "Free SSL certificates (AutoSSL)",
+  "FTP / SFTP, File Manager & one-click installers",
+  "Automated backups (plan dependent)",
+  "Optional managed maintenance from our team",
 ] as const;
+
+/** @deprecated Use HOSTING_OFFERINGS + HOSTING_WEBSITE_PLANS */
+export const HOSTING_PLANS: BusinessPackage[] = HOSTING_WEBSITE_PLANS;
 
 export type ShopPackage = {
   id: string;

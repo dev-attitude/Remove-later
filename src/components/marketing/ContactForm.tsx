@@ -6,7 +6,8 @@ import { Loader2, CheckCircle2 } from "lucide-react";
 import {
   BUSINESS_DOCUMENT_PACKAGES,
   BUSINESS_REGISTRATION_PACKAGES,
-  HOSTING_PLANS,
+  HOSTING_OFFERINGS,
+  HOSTING_WEBSITE_PLANS,
 } from "@/lib/site-content";
 
 export function ContactForm() {
@@ -17,7 +18,8 @@ export function ContactForm() {
   const allBizPackages = [...BUSINESS_REGISTRATION_PACKAGES, ...BUSINESS_DOCUMENT_PACKAGES];
   const matchedPkg =
     allBizPackages.find((p) => p.id === packageId) ??
-    HOSTING_PLANS.find((p) => p.id === packageId);
+    HOSTING_OFFERINGS.find((p) => p.id === packageId) ??
+    HOSTING_WEBSITE_PLANS.find((p) => p.id === packageId);
 
   const defaultSubject =
     serviceParam === "hosting"
@@ -38,7 +40,7 @@ export function ContactForm() {
     matchedPkg
       ? `I am interested in: ${matchedPkg.name} (N$ ${matchedPkg.price.toLocaleString()}${matchedPkg.priceLabel ? ` ${matchedPkg.priceLabel.toLowerCase()}` : ""}).\n\n`
       : serviceParam === "hosting"
-        ? "I would like to order web hosting.\n\nDomain name (if you have one):\nNumber of email accounts needed:\nExisting website to migrate (yes/no):\n\n"
+        ? "I would like Skyrapay Hosting services.\n\nServices needed (tick what applies):\n[ ] Domain registration\n[ ] Website hosting (cPanel account)\n[ ] Business email accounts\n[ ] MySQL databases\n[ ] Website backups\n[ ] SSL certificate\n[ ] Managed maintenance (optional)\n\nDesired domain name:\nHosting plan (Starter / Business / Premium):\nExisting website to migrate (yes/no):\n\n"
         : serviceParam === "student-assistance"
           ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
           : ""
@@ -134,7 +136,7 @@ export function ContactForm() {
           <option value="gadgets">Gadgets & hardware</option>
           <option value="development">System / software development</option>
           <option value="website">Website or app project</option>
-          <option value="hosting">Web hosting & email</option>
+          <option value="hosting">Skyrapay Hosting (domains, web, email, MySQL)</option>
         </select>
       </div>
       <div>
