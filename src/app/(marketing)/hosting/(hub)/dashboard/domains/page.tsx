@@ -1,4 +1,4 @@
-import { HostingDashboardDomains } from "@/components/hosting/HostingDashboard";
+import { DomainsPage } from "@/components/hosting/account/DomainsPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HostingDashboardDomains />;
+  return <DomainsPage />;
 }

@@ -1,4 +1,4 @@
-import { HostingDashboardOffers } from "@/components/hosting/HostingDashboard";
+import { OffersPage } from "@/components/hosting/account/OffersPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HostingDashboardOffers />;
+  return <OffersPage />;
 }

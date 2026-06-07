@@ -1,4 +1,4 @@
-import { HostingDashboardExpiring } from "@/components/hosting/HostingDashboard";
+import { ExpiringPage } from "@/components/hosting/account/DashboardPages";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HostingDashboardExpiring />;
+  return <ExpiringPage />;
 }

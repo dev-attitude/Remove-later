@@ -10,6 +10,7 @@ import {
   Sparkles,
   Timer,
   User,
+  UserCircle,
 } from "lucide-react";
 
 export type HostingAccountNavItem = {
@@ -29,6 +30,7 @@ export const HOSTING_ACCOUNT_NAV: HostingAccountNavItem[] = [
   { href: "/hosting/dashboard/growth-tools", label: "Growth Tools", icon: Sparkles },
   { href: "/hosting/dashboard/apps", label: "Apps", icon: AppWindow },
   { href: "/hosting/dashboard/offers", label: "My Offers", icon: Gift },
+  { href: "/hosting/dashboard/jun", label: "JUN", icon: UserCircle },
 ];
 
 export const HOSTING_PROFILE_NAV: HostingAccountNavItem = {
@@ -37,5 +39,4 @@ export const HOSTING_PROFILE_NAV: HostingAccountNavItem = {
   icon: User,
 };
 
-/** Demo display name shown above Profile in the account sidebar */
 export const HOSTING_DEMO_USER_NAME = "Jun";

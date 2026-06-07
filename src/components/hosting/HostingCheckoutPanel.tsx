@@ -5,11 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useHostingCart } from "@/lib/hosting-cart-context";
-import {
-  HOSTING_DEMO_STORAGE_KEY,
-  formatHostingPeriod,
-  type HostingDemoAccount,
-} from "@/lib/hosting-demo";
+import { formatHostingPeriod, type HostingDemoAccount } from "@/lib/hosting-demo";
+import { normalizeClientAccount, saveClientAccount } from "@/lib/hosting-account-store";
 import { formatNad } from "@/lib/business-manage";
 
 export function HostingCheckoutPanel() {
@@ -74,7 +71,8 @@ export function HostingCheckoutPanel() {
       };
       if (!res.ok) throw new Error(data.error ?? "Checkout failed");
       if (data.account && data.orderId) {
-        localStorage.setItem(HOSTING_DEMO_STORAGE_KEY, JSON.stringify(data.account));
+        const fullAccount = normalizeClientAccount(data.account as HostingDemoAccount);
+        saveClientAccount(fullAccount);
         clearCart();
         setSuccess({ orderId: data.orderId, account: data.account });
       }

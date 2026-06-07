@@ -1,4 +1,4 @@
-import { HostingDashboardEmail } from "@/components/hosting/HostingDashboard";
+import { EmailPage } from "@/components/hosting/account/EmailPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HostingDashboardEmail />;
+  return <EmailPage />;
 }

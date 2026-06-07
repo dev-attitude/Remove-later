@@ -1,4 +1,4 @@
-import { HostingDashboardOverview } from "@/components/hosting/HostingDashboard";
+import { DashboardPage } from "@/components/hosting/account/DashboardPages";
 import type { Metadata } from "next";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
 
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function HostingDashboardPage() {
-  return <HostingDashboardOverview />;
+  return <DashboardPage />;
 }

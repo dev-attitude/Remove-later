@@ -1,4 +1,4 @@
-import { HostingDashboardGrowthTools } from "@/components/hosting/HostingDashboard";
+import { GrowthToolsPage } from "@/components/hosting/account/GrowthToolsPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HostingDashboardGrowthTools />;
+  return <GrowthToolsPage />;
 }

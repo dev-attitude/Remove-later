@@ -1,4 +1,4 @@
-import { HostingDashboardSsl } from "@/components/hosting/HostingDashboard";
+import { SslPage } from "@/components/hosting/account/SslPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <HostingDashboardSsl />;
+  return <SslPage />;
 }

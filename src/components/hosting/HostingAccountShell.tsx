@@ -5,16 +5,13 @@ import { usePathname } from "next/navigation";
 import { Menu, Server, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
-import {
-  HOSTING_ACCOUNT_NAV,
-  HOSTING_PROFILE_NAV,
-} from "@/lib/hosting-account-nav";
-import { useHostingDemoAccount } from "@/lib/use-hosting-demo-account";
+import { HOSTING_ACCOUNT_NAV, HOSTING_PROFILE_NAV } from "@/lib/hosting-account-nav";
+import { useHostingAccount } from "@/lib/use-hosting-account";
 import { cn } from "@/lib/utils";
 
 export function HostingAccountShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { displayName } = useHostingDemoAccount();
+  const { displayName } = useHostingAccount();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -48,6 +45,7 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
         <ul className="space-y-0.5">
           {HOSTING_ACCOUNT_NAV.map(({ href, label, icon: Icon, exact }) => {
             const active = exact ? pathname === href : pathname.startsWith(href);
+            const navLabel = label === "JUN" ? displayName.toUpperCase() : label;
             return (
               <li key={href}>
                 <Link
@@ -60,7 +58,7 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
                   )}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
-                  {label}
+                  {navLabel}
                 </Link>
               </li>
             );
@@ -69,9 +67,6 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
       </nav>
 
       <div className="border-t border-slate-100 p-3">
-        <p className="mb-2 truncate px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
-          {displayName}
-        </p>
         <Link
           href={HOSTING_PROFILE_NAV.href}
           className={cn(
@@ -118,7 +113,7 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
           >
             <Menu className="h-5 w-5" />
           </button>
-          <p className="truncate text-sm font-semibold text-navy">My account</p>
+          <p className="truncate text-sm font-semibold text-navy">{displayName}</p>
           {menuOpen && (
             <button
               type="button"
