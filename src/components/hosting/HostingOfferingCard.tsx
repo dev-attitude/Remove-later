@@ -1,18 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Cloud,
+  Database,
+  Globe,
+  HardDrive,
+  Mail,
+  Server,
+  Shield,
+  Wrench,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { HostingPrice } from "@/components/hosting/HostingPrice";
 import type { BusinessPackage } from "@/lib/site-content";
 
-export function HostingOfferingCard({
-  plan,
-  icon: Icon,
-}: {
-  plan: BusinessPackage;
-  icon: LucideIcon;
-}) {
+const OFFERING_ICONS: Record<string, LucideIcon> = {
+  "hosting-domain": Globe,
+  "hosting-website": Cloud,
+  "hosting-email": Mail,
+  "hosting-mysql": Database,
+  "hosting-backup": HardDrive,
+  "hosting-ssl": Shield,
+  "hosting-maintenance": Wrench,
+  "hosting-starter": Server,
+  "hosting-business": Server,
+  "hosting-premium": Server,
+};
+
+export function HostingOfferingCard({ plan }: { plan: BusinessPackage }) {
+  const Icon = OFFERING_ICONS[plan.id] ?? Cloud;
+
   return (
     <article
       className={`marketing-service-card relative flex flex-col ${
@@ -47,11 +66,7 @@ export function HostingOfferingCard({
         ))}
       </ul>
       <Link
-        href={
-          plan.id === "hosting-domain"
-            ? "/hosting/domains"
-            : "/hosting/plans"
-        }
+        href={plan.id === "hosting-domain" ? "/hosting/domains" : "/hosting/plans"}
         className="mt-6 block rounded-lg border border-royal/30 bg-brand-50 py-2.5 text-center text-sm font-semibold text-navy transition hover:bg-sky/20"
       >
         {plan.id === "hosting-domain" ? "Buy your own domain name" : "Add to order"}

@@ -4,13 +4,10 @@ import {
   Cloud,
   Database,
   Globe,
-  HardDrive,
   Mail,
   Server,
   Shield,
-  Wrench,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { HostingOfferingCard } from "@/components/hosting/HostingOfferingCard";
 import { HostingCurrencyStrip } from "@/components/hosting/HostingCurrencyStrip";
 import { BRAND, SKYRAPAY_HOSTING } from "@/lib/brand";
@@ -28,16 +25,6 @@ export const metadata: Metadata = {
   title: `${SKYRAPAY_HOSTING.label} | Domains, Websites, Email & MySQL`,
   description:
     "Register domains, host websites, create business email and MySQL databases on cPanel — GM Consultations, Namibia.",
-};
-
-const OFFERING_ICONS: Record<string, LucideIcon> = {
-  "hosting-domain": Globe,
-  "hosting-website": Cloud,
-  "hosting-email": Mail,
-  "hosting-mysql": Database,
-  "hosting-backup": HardDrive,
-  "hosting-ssl": Shield,
-  "hosting-maintenance": Wrench,
 };
 
 const PLATFORM_ICONS = [Globe, Cloud, Mail, Database, Shield, Server] as const;
@@ -140,11 +127,7 @@ export default function HostingPage() {
 
       <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {HOSTING_OFFERINGS.map((plan) => (
-          <HostingOfferingCard
-            key={plan.id}
-            plan={plan}
-            icon={OFFERING_ICONS[plan.id] ?? Cloud}
-          />
+          <HostingOfferingCard key={plan.id} plan={plan} />
         ))}
       </div>
 
@@ -159,11 +142,7 @@ export default function HostingPage() {
 
       <div className="mt-10 grid gap-6 lg:grid-cols-3">
         {HOSTING_WEBSITE_PLANS.map((plan) => (
-          <HostingOfferingCard
-            key={plan.id}
-            plan={plan}
-            icon={OFFERING_ICONS[plan.id] ?? Cloud}
-          />
+          <HostingOfferingCard key={plan.id} plan={plan} />
         ))}
       </div>
 
