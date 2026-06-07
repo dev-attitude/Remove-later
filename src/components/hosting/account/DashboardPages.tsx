@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useHostingAccount } from "@/lib/use-hosting-account";
 import { daysUntil, expiryLabel } from "@/lib/hosting-account-store";
-import { formatNad } from "@/lib/business-manage";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 import {
   AccountEmptyState,
   AccountPageHeader,
@@ -24,6 +24,7 @@ import {
 
 export function DashboardPage() {
   const { account, loaded } = useHostingAccount();
+  const { formatPrice } = useHostingCurrency();
   if (!loaded) return null;
   if (!account) return <AccountEmptyState />;
 
@@ -106,11 +107,11 @@ export function DashboardPage() {
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="text-slate-600">Monthly</dt>
-              <dd className="font-semibold">{formatNad(account.monthlyTotal)}/mo</dd>
+              <dd className="font-semibold">{formatPrice(account.monthlyTotal, "/mo")}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-slate-600">Yearly</dt>
-              <dd className="font-semibold">{formatNad(account.yearlyTotal)}/yr</dd>
+              <dd className="font-semibold">{formatPrice(account.yearlyTotal, "/yr")}</dd>
             </div>
           </dl>
         </div>

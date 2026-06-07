@@ -9,6 +9,7 @@ import {
   Server,
   ShoppingCart,
 } from "lucide-react";
+import { HostingCurrencyBar } from "@/components/hosting/HostingCurrencyBar";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
 import { useHostingCart } from "@/lib/hosting-cart-context";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ export function HostingShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-[60vh] bg-slate-50">
+      <HostingCurrencyBar />
       <div className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 md:px-8">
           <div className="flex items-center gap-3">

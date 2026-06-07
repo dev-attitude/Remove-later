@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Bell, CreditCard, Shield, User } from "lucide-react";
 import { useHostingAccount } from "@/lib/use-hosting-account";
-import { formatNad } from "@/lib/business-manage";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 import {
   AccountEmptyState,
   AccountPageHeader,
@@ -12,6 +12,7 @@ import {
 
 export function JunAccountPage() {
   const { account, loaded, displayName, updateProfile } = useHostingAccount();
+  const { formatPrice } = useHostingCurrency();
 
   if (!loaded) return null;
   if (!account) return <AccountEmptyState />;
@@ -59,11 +60,11 @@ export function JunAccountPage() {
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
           <div className="flex justify-between rounded-lg bg-slate-50 p-3">
             <dt className="text-slate-600">Monthly services</dt>
-            <dd className="font-semibold">{formatNad(account.monthlyTotal)}/mo</dd>
+            <dd className="font-semibold">{formatPrice(account.monthlyTotal, "/mo")}</dd>
           </div>
           <div className="flex justify-between rounded-lg bg-slate-50 p-3">
             <dt className="text-slate-600">Yearly renewals</dt>
-            <dd className="font-semibold">{formatNad(account.yearlyTotal)}/yr</dd>
+            <dd className="font-semibold">{formatPrice(account.yearlyTotal, "/yr")}</dd>
           </div>
         </dl>
       </div>

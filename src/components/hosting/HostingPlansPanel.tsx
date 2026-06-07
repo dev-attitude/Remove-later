@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CheckCircle2, ShoppingCart } from "lucide-react";
-import { PriceDisplay } from "@/components/marketing/PriceDisplay";
+import { HostingPrice } from "@/components/hosting/HostingPrice";
 import { useHostingCart } from "@/lib/hosting-cart-context";
 import { cartItemFromPackage } from "@/lib/hosting-demo";
 import {
@@ -31,9 +31,8 @@ function PlanCard({ plan, type }: { plan: BusinessPackage; type: "plan" | "addon
       <p className="mt-2 flex-1 text-sm text-slate-600">{plan.description}</p>
       <div className="mt-4">
         {plan.price > 0 ? (
-          <PriceDisplay
-            original={plan.price}
-            currency="NAD"
+          <HostingPrice
+            amountNad={plan.price}
             priceLabel={plan.priceLabel ?? "From"}
             size="md"
           />

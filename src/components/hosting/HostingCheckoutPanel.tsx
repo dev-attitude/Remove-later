@@ -7,11 +7,12 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { useHostingCart } from "@/lib/hosting-cart-context";
 import { formatHostingPeriod, type HostingDemoAccount } from "@/lib/hosting-demo";
 import { normalizeClientAccount, saveClientAccount } from "@/lib/hosting-account-store";
-import { formatNad } from "@/lib/business-manage";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 
 export function HostingCheckoutPanel() {
   const router = useRouter();
   const { items, totals, clearCart, itemCount } = useHostingCart();
+  const { formatPrice } = useHostingCurrency();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -148,15 +149,14 @@ export function HostingCheckoutPanel() {
               <li key={item.lineId} className="flex justify-between text-slate-700">
                 <span>{item.name}</span>
                 <span className="font-medium">
-                  {formatNad(item.price)}
-                  {formatHostingPeriod(item.period)}
+                  {formatPrice(item.price, formatHostingPeriod(item.period))}
                 </span>
               </li>
             ))}
           </ul>
           <div className="mt-4 flex justify-between border-t border-slate-200 pt-4 font-bold text-navy">
             <span>Due today</span>
-            <span>{formatNad(totals.firstInvoice)}</span>
+            <span>{formatPrice(totals.firstInvoice)}</span>
           </div>
           <p className="mt-4 rounded-lg bg-brand-50 p-3 text-xs text-slate-700">
             After you submit, our team confirms your order and sends payment details (EFT, card, or

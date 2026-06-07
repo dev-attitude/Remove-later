@@ -4,10 +4,11 @@ import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { useHostingCart } from "@/lib/hosting-cart-context";
 import { formatHostingPeriod } from "@/lib/hosting-demo";
-import { formatNad } from "@/lib/business-manage";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 
 export function HostingCartPanel() {
   const { items, removeItem, totals, itemCount } = useHostingCart();
+  const { formatPrice } = useHostingCurrency();
 
   if (itemCount === 0) {
     return (
@@ -39,8 +40,7 @@ export function HostingCartPanel() {
                 </div>
                 <div className="flex items-center gap-4">
                   <p className="text-sm font-bold text-navy">
-                    {formatNad(item.price)}
-                    {formatHostingPeriod(item.period)}
+                    {formatPrice(item.price, formatHostingPeriod(item.period))}
                   </p>
                   <button
                     type="button"
@@ -63,18 +63,18 @@ export function HostingCartPanel() {
           {totals.monthly > 0 && (
             <div className="flex justify-between">
               <dt className="text-slate-600">Monthly</dt>
-              <dd className="font-semibold text-navy">{formatNad(totals.monthly)}/mo</dd>
+              <dd className="font-semibold text-navy">{formatPrice(totals.monthly, "/mo")}</dd>
             </div>
           )}
           {totals.yearly > 0 && (
             <div className="flex justify-between">
               <dt className="text-slate-600">Yearly</dt>
-              <dd className="font-semibold text-navy">{formatNad(totals.yearly)}/yr</dd>
+              <dd className="font-semibold text-navy">{formatPrice(totals.yearly, "/yr")}</dd>
             </div>
           )}
           <div className="flex justify-between border-t border-slate-200 pt-3">
             <dt className="font-semibold text-navy">Due today</dt>
-            <dd className="font-bold text-navy">{formatNad(totals.firstInvoice)}</dd>
+            <dd className="font-bold text-navy">{formatPrice(totals.firstInvoice)}</dd>
           </div>
         </dl>
         <p className="mt-3 text-xs text-slate-500">

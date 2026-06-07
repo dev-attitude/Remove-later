@@ -3,13 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Loader2, Search, ShoppingCart, XCircle } from "lucide-react";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 import { useHostingCart } from "@/lib/hosting-cart-context";
 import {
   cartItemFromDomain,
   type DomainSearchResult,
   formatHostingPeriod,
 } from "@/lib/hosting-demo";
-import { formatNad } from "@/lib/business-manage";
 
 export function DomainSearchPanel() {
   const [query, setQuery] = useState("");
@@ -18,6 +18,7 @@ export function DomainSearchPanel() {
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState("");
   const { addItem, hasItem, removeItem } = useHostingCart();
+  const { formatPrice, currency } = useHostingCurrency();
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -83,7 +84,9 @@ export function DomainSearchPanel() {
             <p className="text-sm font-semibold text-navy">
               Results for &ldquo;{query.trim().toLowerCase()}&rdquo;
             </p>
-            <p className="text-xs text-slate-500">Prices in NAD — availability updated in real time</p>
+            <p className="text-xs text-slate-500">
+              Prices in {currency} — availability updated in real time
+            </p>
           </div>
           <ul className="divide-y divide-slate-100">
             {results.map((r) => {
@@ -110,8 +113,7 @@ export function DomainSearchPanel() {
                   </div>
                   <div className="flex items-center gap-3">
                     <p className="text-sm font-bold text-navy">
-                      {formatNad(r.priceNad)}
-                      {formatHostingPeriod("year")}
+                      {formatPrice(r.priceNad, formatHostingPeriod("year"))}
                     </p>
                     {r.available &&
                       (inCart ? (
