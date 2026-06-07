@@ -80,10 +80,18 @@ function OfferingCard({ plan }: { plan: BusinessPackage }) {
         ))}
       </ul>
       <Link
-        href={`/contact?service=hosting&package=${plan.id}`}
+        href={
+          plan.id === "hosting-domain"
+            ? "/hosting/domains"
+            : plan.id.startsWith("hosting-") && ["hosting-starter", "hosting-business", "hosting-premium"].includes(plan.id)
+              ? `/hosting/plans`
+              : plan.id === "hosting-website"
+                ? "/hosting/plans"
+                : `/hosting/plans`
+        }
         className="mt-6 block rounded-lg border border-royal/30 bg-brand-50 py-2.5 text-center text-sm font-semibold text-navy transition hover:bg-sky/20"
       >
-        Order this service
+        {plan.id === "hosting-domain" ? "Search domains" : "Add to order"}
       </Link>
     </article>
   );
@@ -107,12 +115,26 @@ export default function HostingPage() {
       </div>
 
       <div className="marketing-info-banner mt-8 max-w-3xl">
-        <p className="font-semibold">{SKYRAPAY_HOSTING.domain}</p>
+        <p className="font-semibold">Try the full hosting platform (demo)</p>
         <p className="mt-1 text-sm opacity-90">
-          Our dedicated hosting site at{" "}
-          <span className="font-medium">{SKYRAPAY_HOSTING.domain}</span> will link here for
-          ordering and client login. Until then, request hosting below or contact us directly.
+          Search domains, pick a plan, checkout, and open your client dashboard — all working in
+          demo mode now. When {SKYRAPAY_HOSTING.domain} and Namecheap reseller go live, the same
+          flow connects to real provisioning.
         </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href="/hosting/domains" className="marketing-btn-primary text-sm">
+            Find a domain
+          </Link>
+          <Link href="/hosting/plans" className="marketing-btn-secondary text-sm">
+            View plans
+          </Link>
+          <Link
+            href="/hosting/dashboard"
+            className="inline-flex items-center rounded-lg border border-white/30 px-4 py-2 text-sm font-semibold transition hover:bg-white/10"
+          >
+            My account
+          </Link>
+        </div>
       </div>
 
       <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -219,10 +241,16 @@ export default function HostingPage() {
             View website packages
           </Link>
           <Link
-            href="/contact?service=hosting"
+            href="/hosting/domains"
             className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-navy transition hover:bg-sky/90"
           >
-            Order Skyrapay Hosting
+            Start demo order
+          </Link>
+          <Link
+            href="/contact?service=hosting"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+          >
+            Contact us instead
           </Link>
         </div>
       </div>

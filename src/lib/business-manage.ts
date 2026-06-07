@@ -1,6 +1,8 @@
 import {
   BUSINESS_DOCUMENT_PACKAGES,
   BUSINESS_REGISTRATION_PACKAGES,
+  HOSTING_OFFERINGS,
+  HOSTING_WEBSITE_PLANS,
   SERVICES,
   type ServiceSlug,
 } from "@/lib/site-content";
@@ -84,6 +86,18 @@ export function getPackageOptions() {
       name: p.name,
       price: p.price,
       group: "Documents",
+    })),
+    ...HOSTING_WEBSITE_PLANS.map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      group: "Hosting plans",
+    })),
+    ...HOSTING_OFFERINGS.map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      group: "Hosting services",
     })),
   ];
 }
