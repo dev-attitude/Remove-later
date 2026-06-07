@@ -16,10 +16,10 @@ export function HostingCartPanel() {
         <p className="mt-2 text-slate-600">Start by searching for a domain or choosing a hosting plan.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link href="/hosting/domains" className="marketing-btn-primary">
-            Find a domain
+            Buy your own domain name
           </Link>
           <Link href="/hosting/plans" className="marketing-btn-secondary">
-            View plans
+            View hosting plans
           </Link>
         </div>
       </div>

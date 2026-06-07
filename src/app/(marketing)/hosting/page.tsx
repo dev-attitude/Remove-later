@@ -91,7 +91,7 @@ function OfferingCard({ plan }: { plan: BusinessPackage }) {
         }
         className="mt-6 block rounded-lg border border-royal/30 bg-brand-50 py-2.5 text-center text-sm font-semibold text-navy transition hover:bg-sky/20"
       >
-        {plan.id === "hosting-domain" ? "Search domains" : "Add to order"}
+        {plan.id === "hosting-domain" ? "Buy your own domain name" : "Add to order"}
       </Link>
     </article>
   );
@@ -123,10 +123,10 @@ export default function HostingPage() {
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link href="/hosting/domains" className="marketing-btn-primary text-sm">
-            Find a domain
+            Buy your own domain name
           </Link>
           <Link href="/hosting/plans" className="marketing-btn-secondary text-sm">
-            View plans
+            View hosting plans
           </Link>
           <Link
             href="/hosting/dashboard"

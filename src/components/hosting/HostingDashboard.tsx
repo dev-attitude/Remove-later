@@ -46,10 +46,10 @@ function EmptyDashboard() {
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link href="/hosting/domains" className="marketing-btn-primary">
-          Find a domain
+          Buy your own domain name
         </Link>
         <Link href="/hosting/plans" className="marketing-btn-secondary">
-          Choose a plan
+          View hosting plans
         </Link>
       </div>
     </div>

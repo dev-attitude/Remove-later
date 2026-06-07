@@ -19,8 +19,8 @@ import { useHostingCart } from "@/lib/hosting-cart-context";
 import { cn } from "@/lib/utils";
 
 const HUB_LINKS = [
-  { href: "/hosting/domains", label: "Find a domain", icon: Search },
-  { href: "/hosting/plans", label: "Hosting plans", icon: Cloud },
+  { href: "/hosting/domains", label: "Buy your own domain name", icon: Search },
+  { href: "/hosting/plans", label: "View hosting plans", icon: Cloud },
   { href: "/hosting/cart", label: "Cart", icon: ShoppingCart, showBadge: true },
   { href: "/hosting/dashboard", label: "My account", icon: LayoutDashboard },
 ] as const;
