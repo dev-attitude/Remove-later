@@ -1,10 +1,5 @@
-import { HostingDashboardDatabases } from "@/components/hosting/HostingDashboard";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "MySQL Databases | Skyrapay Hosting",
-};
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <HostingDashboardDatabases />;
+  redirect("/hosting/dashboard/hosting");
 }

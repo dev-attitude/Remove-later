@@ -4,14 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Cloud,
-  Database,
-  Globe,
-  HardDrive,
   LayoutDashboard,
-  Mail,
   Search,
   Server,
-  Shield,
   ShoppingCart,
 } from "lucide-react";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
@@ -25,20 +20,11 @@ const HUB_LINKS = [
   { href: "/hosting/dashboard", label: "My account", icon: LayoutDashboard },
 ] as const;
 
-const DASHBOARD_LINKS = [
-  { href: "/hosting/dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
-  { href: "/hosting/dashboard/domains", label: "Domains", icon: Globe },
-  { href: "/hosting/dashboard/email", label: "Email", icon: Mail },
-  { href: "/hosting/dashboard/databases", label: "MySQL", icon: Database },
-  { href: "/hosting/dashboard/ssl", label: "SSL", icon: Shield },
-  { href: "/hosting/dashboard/backups", label: "Backups", icon: HardDrive },
-] as const;
-
 export function HostingShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { itemCount } = useHostingCart();
   const isDashboard = pathname.startsWith("/hosting/dashboard");
-  const links = isDashboard ? DASHBOARD_LINKS : HUB_LINKS;
+  const links = HUB_LINKS;
 
   return (
     <div className="min-h-[60vh] bg-slate-50">
@@ -82,7 +68,15 @@ export function HostingShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </div>
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">{children}</div>
+      <div
+        className={
+          isDashboard
+            ? "mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8"
+            : "mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12"
+        }
+      >
+        {children}
+      </div>
     </div>
   );
 }

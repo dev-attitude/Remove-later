@@ -1,10 +1,5 @@
-import { HostingDashboardBackups } from "@/components/hosting/HostingDashboard";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Backups | Skyrapay Hosting",
-};
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <HostingDashboardBackups />;
+  redirect("/hosting/dashboard/hosting");
 }
