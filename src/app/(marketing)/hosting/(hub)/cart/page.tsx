@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: `Cart | ${SKYRAPAY_HOSTING.name}`,
+  title: `Cart | ${SKYRAPAY_HOSTING.label}`,
 };
 
 export default function HostingCartPage() {

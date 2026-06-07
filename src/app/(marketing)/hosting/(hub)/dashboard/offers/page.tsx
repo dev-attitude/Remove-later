@@ -2,7 +2,7 @@ import { HostingDashboardOffers } from "@/components/hosting/HostingDashboard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "My Offers | Skyrapay Hosting",
+  title: "My Offers | GM Consultations Hosting",
 };
 
 export default function Page() {

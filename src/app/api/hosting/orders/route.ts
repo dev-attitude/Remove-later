@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         `• ${i.name} — N$ ${i.price.toLocaleString()}${i.period === "month" ? "/mo" : i.period === "year" ? "/yr" : ""}`
     );
     const message = [
-      `[Skyrapay Hosting Demo Order] ${orderId}`,
+      `[GM Consultations Hosting Order] ${orderId}`,
       "",
       "Cart:",
       ...lines,
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         phone: body.phone,
         subject: "hosting",
         packageId: body.items.find((i) => i.type === "plan")?.catalogId ?? "hosting-order",
-        packageName: "Skyrapay Hosting Order",
+        packageName: "GM Consultations Hosting Order",
         message,
       });
     } catch {
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       demo: true,
       orderId,
       account,
-      message: "Demo order placed. Your hosting account is being provisioned.",
+      message: "Order placed. Our team will confirm and begin provisioning your hosting account.",
     });
   } catch (err) {
     if (err instanceof z.ZodError) {

@@ -25,9 +25,9 @@ import {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `${SKYRAPAY_HOSTING.name} | Domains, Websites, Email & MySQL`,
+  title: `${SKYRAPAY_HOSTING.label} | Domains, Websites, Email & MySQL`,
   description:
-    "Skyrapay Hosting — register domains, host websites, create business email and MySQL databases on cPanel. Namibian support from Skyrapay Consultations.",
+    "Register domains, host websites, create business email and MySQL databases on cPanel — GM Consultations, Namibia.",
 };
 
 const OFFERING_ICONS: Record<string, LucideIcon> = {
@@ -106,20 +106,18 @@ export default function HostingPage() {
           Domains, websites, email &amp; databases—your way
         </h1>
         <p className="mt-4 marketing-lead">
-          <strong>{SKYRAPAY_HOSTING.name}</strong> is the hosting brand of {BRAND.companyLegal}.
           Register your domain, host your website, create business email accounts, and set up MySQL
-          databases—all from your own <strong>cPanel account</strong>. Powered by enterprise
-          infrastructure via our Namecheap reseller platform, with local support from{" "}
-          {COMPANY.location}.
+          databases—all from your own <strong>cPanel account</strong>, managed by{" "}
+          {BRAND.companyLegal}. Enterprise infrastructure via our Namecheap reseller platform, with
+          local support from {COMPANY.location}.
         </p>
       </div>
 
       <div className="marketing-info-banner mt-8 max-w-3xl">
-        <p className="font-semibold">Try the full hosting platform (demo)</p>
+        <p className="font-semibold">Order hosting online</p>
         <p className="mt-1 text-sm opacity-90">
-          Search domains, pick a plan, checkout, and open your client dashboard — all working in
-          demo mode now. When {SKYRAPAY_HOSTING.domain} and Namecheap reseller go live, the same
-          flow connects to real provisioning.
+          Search domains, choose a plan, checkout, and manage everything from your client account at{" "}
+          {SKYRAPAY_HOSTING.domain}/hosting.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link href="/hosting/domains" className="marketing-btn-primary text-sm">
@@ -186,7 +184,7 @@ export default function HostingPage() {
 
       <div className="mt-20">
         <p className="marketing-eyebrow">Services</p>
-        <h2 className="mt-2 text-3xl font-bold text-navy">What you can do with Skyrapay Hosting</h2>
+        <h2 className="mt-2 text-3xl font-bold text-navy">What you can do with our hosting</h2>
         <p className="mt-2 max-w-2xl text-slate-600">
           Order any service on its own or as a bundle—domain + hosting + email is the most common
           package for new businesses going online.
@@ -217,7 +215,7 @@ export default function HostingPage() {
       <div className="mt-20 rounded-2xl border border-slate-200 bg-slate-50 p-8 md:p-10">
         <h2 className="text-2xl font-bold text-navy">Included with every hosting account</h2>
         <p className="mt-2 text-slate-600">
-          Whether you are a startup or an established business, your Skyrapay Hosting account comes
+          Whether you are a startup or an established business, your hosting account comes
           with the full toolkit to run your online presence.
         </p>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -233,7 +231,7 @@ export default function HostingPage() {
       <div className="mt-16 rounded-2xl bg-gradient-to-r from-navy to-royal p-8 text-center text-white md:p-12">
         <h2 className="text-2xl font-bold md:text-3xl">Need a website built too?</h2>
         <p className="mx-auto mt-3 max-w-xl text-slate-200">
-          {BRAND.companyName} designs your site, registers your domain on Skyrapay Hosting, sets up
+          {BRAND.companyName} designs your site, registers your domain, sets up
           email and MySQL, and optionally maintains everything—one team from launch to ongoing care.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -244,7 +242,7 @@ export default function HostingPage() {
             href="/hosting/domains"
             className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-navy transition hover:bg-sky/90"
           >
-            Start demo order
+            Start your order
           </Link>
           <Link
             href="/contact?service=hosting"

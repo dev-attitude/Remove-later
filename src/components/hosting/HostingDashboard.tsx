@@ -21,7 +21,7 @@ function EmptyDashboard() {
       <Server className="mx-auto h-12 w-12 text-slate-300" />
       <h2 className="mt-4 text-xl font-bold text-navy">No hosting account yet</h2>
       <p className="mt-2 text-slate-600">
-        Complete a demo order to see your dashboard, domains, hosting, email, and SSL here.
+        Complete an order to see your dashboard, domains, hosting, email, and SSL here.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link href="/hosting/domains" className="marketing-btn-primary">
@@ -77,7 +77,7 @@ export function HostingDashboardOverview() {
             Provisioning progress
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            {doneSteps} of {account.provisioningSteps.length} steps complete (demo)
+            {doneSteps} of {account.provisioningSteps.length} steps complete
           </p>
           <ul className="mt-4 space-y-3">
             {account.provisioningSteps.map((step) => (
@@ -110,7 +110,7 @@ export function HostingDashboardOverview() {
             className="mt-4 flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-400"
           >
             <ExternalLink className="h-4 w-4" />
-            Open cPanel (available when live)
+            Open cPanel
           </button>
         </div>
       </div>
@@ -314,7 +314,7 @@ export function HostingDashboardEmail() {
       )}
       <div className="border-t border-slate-100 px-6 py-4">
         <button type="button" disabled className="text-sm font-semibold text-slate-400">
-          + Create mailbox (available when live)
+          + Create mailbox
         </button>
       </div>
     </div>
@@ -356,7 +356,7 @@ export function HostingDashboardGrowthTools() {
   if (!account) return <EmptyDashboard />;
 
   const tools = [
-    { name: "Logo Maker", desc: "Create a logo for your brand (demo)" },
+    { name: "Logo Maker", desc: "Create a logo for your brand" },
     { name: "Business Card Maker", desc: "Design print-ready business cards" },
     { name: "Site Maker", desc: "Launch a one-page site on your domain" },
     { name: "Social media kit", desc: "Banners and posts sized for major platforms" },
@@ -365,14 +365,14 @@ export function HostingDashboardGrowthTools() {
   return (
     <div>
       <h1 className="text-xl font-bold text-navy">Growth Tools</h1>
-      <p className="mt-1 text-sm text-slate-500">Marketing and branding tools for your business (demo)</p>
+      <p className="mt-1 text-sm text-slate-500">Marketing and branding tools for your business</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {tools.map((t) => (
           <div key={t.name} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <p className="font-semibold text-navy">{t.name}</p>
             <p className="mt-1 text-sm text-slate-600">{t.desc}</p>
             <button type="button" disabled className="mt-3 text-sm font-medium text-slate-400">
-              Open (coming soon)
+              Open
             </button>
           </div>
         ))}
@@ -405,7 +405,7 @@ export function HostingDashboardApps() {
               <p className="text-sm text-slate-500">{app.desc}</p>
             </div>
             <button type="button" disabled className="text-sm font-medium text-slate-400">
-              Install (demo)
+              Install
             </button>
           </li>
         ))}
@@ -428,7 +428,7 @@ export function HostingDashboardOffers() {
   return (
     <div>
       <h1 className="text-xl font-bold text-navy">My Offers</h1>
-      <p className="mt-1 text-sm text-slate-500">Promotions available on your account (demo)</p>
+      <p className="mt-1 text-sm text-slate-500">Promotions available on your account</p>
       <div className="mt-6 space-y-4">
         {offers.map((o) => (
           <div
@@ -438,7 +438,7 @@ export function HostingDashboardOffers() {
             <p className="font-semibold text-navy">{o.title}</p>
             <p className="mt-1 text-sm text-slate-600">{o.detail}</p>
             <button type="button" disabled className="mt-3 text-sm font-semibold text-slate-400">
-              Redeem (demo)
+              Redeem
             </button>
           </div>
         ))}

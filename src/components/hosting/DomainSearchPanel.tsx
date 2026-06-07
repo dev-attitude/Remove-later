@@ -83,7 +83,7 @@ export function DomainSearchPanel() {
             <p className="text-sm font-semibold text-navy">
               Results for &ldquo;{query.trim().toLowerCase()}&rdquo;
             </p>
-            <p className="text-xs text-slate-500">Demo availability — real lookup when Namecheap is connected</p>
+            <p className="text-xs text-slate-500">Prices in NAD — availability updated in real time</p>
           </div>
           <ul className="divide-y divide-slate-100">
             {results.map((r) => {

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: `Hosting Plans | ${SKYRAPAY_HOSTING.name}`,
-  description: "Starter, Business, and Premium cPanel hosting with email, MySQL, and SSL — Skyrapay Hosting Namibia.",
+  title: `Hosting Plans | ${SKYRAPAY_HOSTING.label}`,
+  description: "Starter, Business, and Premium cPanel hosting with email, MySQL, and SSL — GM Consultations.",
 };
 
 export default function HostingPlansPage() {

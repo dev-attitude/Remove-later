@@ -13,11 +13,13 @@ export const BRAND = {
   },
 } as const;
 
-/** Skyrapay Hosting — web hosting brand (reseller via Namecheap) */
+/** Hosting & domains — live at gmconsultations.com/hosting */
 export const SKYRAPAY_HOSTING = {
-  name: "Skyrapay Hosting",
-  domain: "skyrapayhosting.com",
-  url: "https://skyrapayhosting.com",
+  name: "Hosting & Domains",
+  label: "GM Consultations Hosting",
+  domain: "gmconsultations.com",
+  url: "https://www.gmconsultations.com/hosting",
   tagline: "Domains, websites, email & databases for Namibian businesses",
-  supportEmail: "hosting@skyrapayhosting.com",
+  supportEmail: "hello@gmconsultations.com",
+  cpanelHost: "cpanel.gmconsultations.com",
 } as const;

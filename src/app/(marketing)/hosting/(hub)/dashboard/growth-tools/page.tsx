@@ -2,7 +2,7 @@ import { HostingDashboardGrowthTools } from "@/components/hosting/HostingDashboa
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Growth Tools | Skyrapay Hosting",
+  title: "Growth Tools | GM Consultations Hosting",
 };
 
 export default function Page() {

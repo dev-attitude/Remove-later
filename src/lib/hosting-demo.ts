@@ -3,6 +3,7 @@ import {
   HOSTING_WEBSITE_PLANS,
   type BusinessPackage,
 } from "@/lib/site-content";
+import { SKYRAPAY_HOSTING } from "@/lib/brand";
 
 /** Supported TLDs for demo domain search (NAD/year) */
 export const HOSTING_TLDS = [
@@ -203,7 +204,7 @@ export function buildDemoAccount(
       status: "pending" as const,
       expiresAt: expires.toISOString(),
     })),
-    cpanelUrl: `https://cpanel.skyrapayhosting.com:2083 (demo)`,
+    cpanelUrl: `https://${SKYRAPAY_HOSTING.cpanelHost}:2083`,
     provisioningSteps: [
       { stepKey: "order_received", title: "Order received", done: true },
       { stepKey: "domain_registered", title: "Domain registration", done: false },

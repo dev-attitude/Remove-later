@@ -36,7 +36,7 @@ export function HostingShell({ children }: { children: React.ReactNode }) {
             </div>
             <div>
               <p className="font-display text-lg font-bold text-navy">{SKYRAPAY_HOSTING.name}</p>
-              <p className="text-xs text-slate-500">{SKYRAPAY_HOSTING.domain}</p>
+              <p className="text-xs text-slate-500">{SKYRAPAY_HOSTING.domain}/hosting</p>
             </div>
           </div>
           <nav className="flex flex-wrap gap-1">

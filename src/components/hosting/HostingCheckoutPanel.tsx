@@ -41,10 +41,10 @@ export function HostingCheckoutPanel() {
     return (
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-10 text-center">
         <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-600" />
-        <h2 className="mt-4 text-xl font-bold text-navy">Demo order placed!</h2>
+        <h2 className="mt-4 text-xl font-bold text-navy">Order placed!</h2>
         <p className="mt-2 text-slate-600">
-          Order <strong>{success.orderId}</strong> — provisioning started. Your demo account is
-          ready in the client dashboard.
+          Order <strong>{success.orderId}</strong> — we&apos;ve started provisioning. Our team will
+          email payment instructions shortly. Open your client account to track progress.
         </p>
         <button
           type="button"
@@ -144,7 +144,7 @@ export function HostingCheckoutPanel() {
 
       <div>
         <div className="rounded-xl border border-slate-200 bg-white p-6">
-          <h2 className="text-lg font-bold text-navy">Demo checkout</h2>
+          <h2 className="text-lg font-bold text-navy">Checkout</h2>
           <ul className="mt-4 space-y-2 text-sm">
             {items.map((item) => (
               <li key={item.lineId} className="flex justify-between text-slate-700">
@@ -160,9 +160,9 @@ export function HostingCheckoutPanel() {
             <span>Due today</span>
             <span>{formatNad(totals.firstInvoice)}</span>
           </div>
-          <p className="mt-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
-            This is a demo — no payment is processed. When Namecheap reseller is live, checkout will
-            accept EFT, card, or mobile money.
+          <p className="mt-4 rounded-lg bg-brand-50 p-3 text-xs text-slate-700">
+            After you submit, our team confirms your order and sends payment details (EFT, card, or
+            mobile money) within one business day. Your cPanel login is emailed once setup is complete.
           </p>
           {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
           <button
@@ -176,7 +176,7 @@ export function HostingCheckoutPanel() {
                 Placing order…
               </>
             ) : (
-              "Place demo order"
+              "Place order"
             )}
           </button>
         </div>

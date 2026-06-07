@@ -39,7 +39,7 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
           </div>
           <div>
             <p className="text-sm font-bold text-navy">{SKYRAPAY_HOSTING.name}</p>
-            <p className="text-[10px] text-slate-500">Client account</p>
+            <p className="text-[10px] text-slate-500">{SKYRAPAY_HOSTING.domain}/hosting</p>
           </div>
         </Link>
       </div>

@@ -40,7 +40,7 @@ export function ContactForm() {
     matchedPkg
       ? `I am interested in: ${matchedPkg.name} (N$ ${matchedPkg.price.toLocaleString()}${matchedPkg.priceLabel ? ` ${matchedPkg.priceLabel.toLowerCase()}` : ""}).\n\n`
       : serviceParam === "hosting"
-        ? "I would like Skyrapay Hosting services.\n\nServices needed (tick what applies):\n[ ] Domain registration\n[ ] Website hosting (cPanel account)\n[ ] Business email accounts\n[ ] MySQL databases\n[ ] Website backups\n[ ] SSL certificate\n[ ] Managed maintenance (optional)\n\nDesired domain name:\nHosting plan (Starter / Business / Premium):\nExisting website to migrate (yes/no):\n\n"
+        ? "I would like GM Consultations hosting services.\n\nServices needed (tick what applies):\n[ ] Domain registration\n[ ] Website hosting (cPanel account)\n[ ] Business email accounts\n[ ] MySQL databases\n[ ] Website backups\n[ ] SSL certificate\n[ ] Managed maintenance (optional)\n\nDesired domain name:\nHosting plan (Starter / Business / Premium):\nExisting website to migrate (yes/no):\n\n"
         : serviceParam === "student-assistance"
           ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
           : ""
@@ -136,7 +136,7 @@ export function ContactForm() {
           <option value="gadgets">Gadgets & hardware</option>
           <option value="development">System / software development</option>
           <option value="website">Website or app project</option>
-          <option value="hosting">Skyrapay Hosting (domains, web, email, MySQL)</option>
+          <option value="hosting">Hosting & domains (web, email, MySQL)</option>
         </select>
       </div>
       <div>

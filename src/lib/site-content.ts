@@ -204,7 +204,7 @@ export const HOSTING_OFFERINGS: BusinessPackage[] = [
     currency: "NAD",
     priceLabel: "From per year",
     description:
-      "Buy and own your domain name through Skyrapay Hosting—.com, .com.na, .org, .net, and more. We register it in your name and manage renewals.",
+      "Buy and own your domain name through GM Consultations—.com, .com.na, .org, .net, and more. We register it in your name and manage renewals.",
     popular: true,
     includes: [
       "Search & register new domains",

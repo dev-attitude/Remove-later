@@ -1,4 +1,4 @@
-/** Skyrapay Hosting provisioning steps (manage / demo dashboard) */
+/** GM Consultations hosting provisioning steps (manage / client dashboard) */
 
 export type HostingStep = {
   stepKey: string;

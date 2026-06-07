@@ -73,12 +73,13 @@ export function HostingCartPanel() {
             </div>
           )}
           <div className="flex justify-between border-t border-slate-200 pt-3">
-            <dt className="font-semibold text-navy">Due today (demo)</dt>
+            <dt className="font-semibold text-navy">Due today</dt>
             <dd className="font-bold text-navy">{formatNad(totals.firstInvoice)}</dd>
           </div>
         </dl>
         <p className="mt-3 text-xs text-slate-500">
-          Demo checkout — no real payment. Order is saved locally and emailed to our team.
+          Payment instructions are sent by email after checkout. Monthly and yearly items are billed
+          as shown.
         </p>
         <Link href="/hosting/checkout" className="marketing-btn-primary mt-6 block w-full text-center">
           Proceed to checkout
