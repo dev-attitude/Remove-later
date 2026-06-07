@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { isResearchAdminUserId } from "@/lib/research-admin";
 
 export const FULL_SERVICE_ACTIONS = [
   "ai.generate",
@@ -55,7 +56,9 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
 export async function getTrialStatus(userId: string): Promise<TrialStatus> {
   const daysTotal = trialDays();
   const subscribed = await hasActiveSubscription(userId);
-  if (subscribed) {
+  const isAdmin = await isResearchAdminUserId(userId);
+
+  if (subscribed || isAdmin) {
     const farFuture = new Date(Date.now() + 365 * MS_PER_DAY);
     return {
       daysTotal,
