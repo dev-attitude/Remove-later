@@ -64,6 +64,13 @@ export const config = {
   semanticScholar: {
     apiKey: env("SEMANTIC_SCHOLAR_API_KEY"),
   },
+  copyleaks: {
+    email: env("COPYLEAKS_EMAIL"),
+    apiKey: env("COPYLEAKS_API_KEY"),
+    /** Set false for real scans (requires credits). Default true = free mock scans. */
+    sandbox: env("COPYLEAKS_SANDBOX") !== "false",
+    enabled: () => Boolean(env("COPYLEAKS_EMAIL") && env("COPYLEAKS_API_KEY")),
+  },
 } as const;
 
 export function getRuntimeMode(): "demo" | "live" {

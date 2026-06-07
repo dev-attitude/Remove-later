@@ -45,7 +45,7 @@ export default function PlagiarismModule() {
           />
           <div className="mt-4 flex gap-2">
             <Button onClick={check} disabled={loading}>
-              {loading ? "Checking…" : "Check plagiarism"}
+              {loading ? "Scanning (up to 2 min)…" : "Check plagiarism"}
             </Button>
             <Button variant="outline" disabled={!report}>
               <Download className="h-4 w-4" /> Download report
@@ -66,6 +66,9 @@ export default function PlagiarismModule() {
             >
               {report.similarity}%
             </p>
+            {report.note && (
+              <p className="mt-2 text-xs text-slate-500">{report.note}</p>
+            )}
             <div className="mt-6 space-y-4">
               {report.matches.map((m, i) => (
                 <div key={i} className="rounded-lg bg-amber-50 p-3">

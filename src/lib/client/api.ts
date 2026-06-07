@@ -112,6 +112,7 @@ export type PlagiarismResult = {
   similarity: number;
   matches: { text: string; source: string; percent: number }[];
   mode?: ApiMode;
+  note?: string;
 };
 
 export type AIRiskLevel = "high" | "moderate" | "low";
@@ -172,11 +173,15 @@ export async function extractDocumentTextApi(file: File) {
 }
 
 export async function checkPlagiarismApi(text: string) {
-  const res = await fetchWithTimeout("/api/plagiarism/check", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
-  });
+  const res = await fetchWithTimeout(
+    "/api/plagiarism/check",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    },
+    130_000
+  );
   return parseJson<PlagiarismResult>(res);
 }
 
