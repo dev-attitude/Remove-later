@@ -196,6 +196,107 @@ export const SERVICES: ServiceItem[] = [
   },
 ];
 
+export const HOSTING_PLANS: BusinessPackage[] = [
+  {
+    id: "hosting-starter",
+    name: "Starter Hosting",
+    price: 199,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "Reliable hosting for a single business website, portfolio, or landing page—with email and SSL included.",
+    includes: [
+      "1 website",
+      "10 GB SSD storage",
+      "5 business email accounts",
+      "Free SSL certificate",
+      "Weekly backups",
+      "cPanel access",
+      "Namibian support (Mon–Fri)",
+    ],
+  },
+  {
+    id: "hosting-business",
+    name: "Business Hosting",
+    price: 449,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "For growing SMEs running multiple sites, online shops, or client portals that need more speed and support.",
+    popular: true,
+    includes: [
+      "Up to 3 websites",
+      "50 GB SSD storage",
+      "Unlimited business email accounts",
+      "Free SSL on all domains",
+      "Daily backups & restore",
+      "Priority support",
+      "Free website migration",
+      "Staging environment",
+    ],
+  },
+  {
+    id: "hosting-premium",
+    name: "Premium / VPS Hosting",
+    price: 899,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "Dedicated resources for high-traffic sites, custom web apps, and organisations that need maximum performance.",
+    includes: [
+      "High-performance VPS resources",
+      "100 GB SSD storage",
+      "Unlimited email accounts",
+      "Daily backups + monitoring",
+      "Dedicated IP (where available)",
+      "Advanced security hardening",
+      "Migration & setup included",
+      "Same-day priority support",
+    ],
+  },
+  {
+    id: "hosting-email",
+    name: "Business Email Only",
+    price: 99,
+    currency: "NAD",
+    priceLabel: "Per month",
+    description:
+      "Professional email on your own domain—ideal if you already have hosting elsewhere but need @yourcompany.com.na addresses.",
+    includes: [
+      "Up to 10 mailboxes",
+      "Webmail & mobile sync",
+      "Spam & virus filtering",
+      "Free SSL for webmail",
+      "Domain email setup assistance",
+      "Namibian support",
+    ],
+  },
+];
+
+export const HOSTING_HIGHLIGHTS = [
+  {
+    title: "Secure & always on",
+    text: "Free SSL, automated backups, and monitoring so your site stays online and trustworthy for customers.",
+  },
+  {
+    title: "Local support",
+    text: "Talk to our team in Namibia during business hours—we help with setup, migrations, and troubleshooting.",
+  },
+  {
+    title: "Room to grow",
+    text: "Start on Starter and upgrade to Business or Premium as your traffic, email, and apps expand.",
+  },
+] as const;
+
+export const HOSTING_INCLUDED = [
+  "Domain & DNS setup guidance",
+  "Free SSL certificates",
+  "Email accounts on your domain",
+  "cPanel (or equivalent) management panel",
+  "Website migration assistance on Business & Premium plans",
+  "Monthly uptime & performance monitoring",
+] as const;
+
 export type ShopPackage = {
   id: string;
   name: string;
@@ -537,6 +638,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
+  { href: "/hosting", label: "Hosting" },
   { href: "/shop", label: "Shop" },
   { href: "/shop#our-apps", label: "Our apps" },
   { href: "/about", label: "About" },

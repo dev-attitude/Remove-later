@@ -56,9 +56,14 @@ export default function ServicesPage() {
       <div className="mt-16 rounded-2xl border border-brand-200 bg-brand-50 p-8 text-center md:p-12">
         <h2 className="text-2xl font-bold text-slate-900">Need a website or custom app?</h2>
         <p className="mt-2 text-slate-600">Browse packages and request a quote online.</p>
-        <Link href="/shop" className="marketing-btn-primary mt-6 inline-flex">
-          Go to shop
-        </Link>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+          <Link href="/shop" className="marketing-btn-primary inline-flex">
+            Go to shop
+          </Link>
+          <Link href="/hosting" className="marketing-btn-secondary inline-flex">
+            View hosting plans
+          </Link>
+        </div>
       </div>
     </div>
   );

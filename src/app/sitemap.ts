@@ -11,6 +11,7 @@ type SitemapEntry = {
 const MARKETING_PAGES: SitemapEntry[] = [
   { path: "", priority: 1, changeFrequency: "weekly" },
   { path: "/services", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/hosting", priority: 0.88, changeFrequency: "weekly" },
   { path: "/shop", priority: 0.85, changeFrequency: "weekly" },
   { path: "/quote", priority: 0.85, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.8, changeFrequency: "monthly" },

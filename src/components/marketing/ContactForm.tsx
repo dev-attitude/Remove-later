@@ -6,6 +6,7 @@ import { Loader2, CheckCircle2 } from "lucide-react";
 import {
   BUSINESS_DOCUMENT_PACKAGES,
   BUSINESS_REGISTRATION_PACKAGES,
+  HOSTING_PLANS,
 } from "@/lib/site-content";
 
 export function ContactForm() {
@@ -14,16 +15,20 @@ export function ContactForm() {
   const serviceParam = searchParams.get("service") ?? "";
 
   const allBizPackages = [...BUSINESS_REGISTRATION_PACKAGES, ...BUSINESS_DOCUMENT_PACKAGES];
-  const matchedPkg = allBizPackages.find((p) => p.id === packageId);
+  const matchedPkg =
+    allBizPackages.find((p) => p.id === packageId) ??
+    HOSTING_PLANS.find((p) => p.id === packageId);
 
   const defaultSubject =
-    serviceParam === "student-assistance"
-      ? "student-assistance"
-      : serviceParam === "registration"
-        ? "business"
-        : serviceParam === "documents"
+    serviceParam === "hosting"
+      ? "hosting"
+      : serviceParam === "student-assistance"
+        ? "student-assistance"
+        : serviceParam === "registration"
           ? "business"
-          : "general";
+          : serviceParam === "documents"
+            ? "business"
+            : "general";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,10 +36,12 @@ export function ContactForm() {
   const [subject, setSubject] = useState(defaultSubject);
   const [message, setMessage] = useState(
     matchedPkg
-      ? `I am interested in: ${matchedPkg.name} (${matchedPkg.price > 0 ? `N$ ${matchedPkg.price.toLocaleString()}` : "quote on request"}).\n\n`
-      : serviceParam === "student-assistance"
-        ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
-        : ""
+      ? `I am interested in: ${matchedPkg.name} (N$ ${matchedPkg.price.toLocaleString()}${matchedPkg.priceLabel ? ` ${matchedPkg.priceLabel.toLowerCase()}` : ""}).\n\n`
+      : serviceParam === "hosting"
+        ? "I would like to order web hosting.\n\nDomain name (if you have one):\nNumber of email accounts needed:\nExisting website to migrate (yes/no):\n\n"
+        : serviceParam === "student-assistance"
+          ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
+          : ""
   );
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -127,6 +134,7 @@ export function ContactForm() {
           <option value="gadgets">Gadgets & hardware</option>
           <option value="development">System / software development</option>
           <option value="website">Website or app project</option>
+          <option value="hosting">Web hosting & email</option>
         </select>
       </div>
       <div>
