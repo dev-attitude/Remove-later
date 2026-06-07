@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
-import { PromoBanner } from "@/components/marketing/PromoBanner";
 import {
   BUSINESS_BRANDING_SERVICES,
   BUSINESS_DOCUMENT_PACKAGES,
@@ -56,8 +55,6 @@ function PackageCard({ pkg, contactSubject }: { pkg: BusinessPackage; contactSub
 export function BusinessPackagesSection() {
   return (
     <div className="mt-16 space-y-16">
-      <PromoBanner />
-
       <section>
         <h2 className="text-2xl font-bold text-navy">Branding & digital presence</h2>
         <p className="mt-2 text-slate-600">

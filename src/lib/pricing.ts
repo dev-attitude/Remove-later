@@ -1,6 +1,6 @@
-/** Active promotional pricing — update when the special ends */
+/** Promotional pricing — set active: true to enable site-wide specials */
 export const JUNE_PROMO = {
-  active: true,
+  active: false,
   percentOff: 30,
   title: "June launch special",
   subtitle: "30% off all packages for the whole of June",

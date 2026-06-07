@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { PromoBanner } from "@/components/marketing/PromoBanner";
 import { ShopCheckout } from "@/components/marketing/ShopCheckout";
 import { BRAND } from "@/lib/brand";
 import type { Metadata } from "next";
@@ -28,8 +27,6 @@ export default function QuotePage() {
         Choose a package, tell us about your project, and we&apos;ll email you a tailored quote
         within one business day ({BRAND.companyName} — Mon–Fri 08:00–18:00).
       </p>
-
-      <PromoBanner className="mt-8" />
 
       <section id="get-quote" className="marketing-form-panel mt-10 scroll-mt-24">
         <Suspense fallback={<p className="text-slate-500">Loading form…</p>}>

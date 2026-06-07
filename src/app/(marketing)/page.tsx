@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
-import { PromoBanner } from "@/components/marketing/PromoBanner";
 import { COMPANY, SERVICES, SHOP_PACKAGES } from "@/lib/site-content";
 
 export default function HomePage() {
@@ -36,7 +35,6 @@ export default function HomePage() {
                 {COMPANY.name} combines IT consulting, business advisory, premium gadgets,
                 and custom software development—so your organisation can grow with confidence.
               </p>
-              <PromoBanner className="mt-8" />
 
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link href="/quote" className="marketing-btn-primary">

@@ -4,21 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
-import { PromoBanner } from "@/components/marketing/PromoBanner";
-import {
-  discountedPrice,
-  formatUsd,
-  hasPromoPrice,
-  JUNE_PROMO,
-} from "@/lib/pricing";
+import { formatUsd } from "@/lib/pricing";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 
-type ShopCheckoutProps = {
-  /** Hide promo on dedicated /quote page if parent already shows it */
-  showPromo?: boolean;
-};
-
-export function ShopCheckout({ showPromo = true }: ShopCheckoutProps) {
+export function ShopCheckout() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,7 +27,6 @@ export function ShopCheckout({ showPromo = true }: ShopCheckoutProps) {
   const [error, setError] = useState("");
 
   const selected = SHOP_PACKAGES.find((p) => p.id === selectedId)!;
-  const salePrice = discountedPrice(selected.priceFrom);
 
   useEffect(() => {
     if (packageParam && SHOP_PACKAGES.some((p) => p.id === packageParam)) {
@@ -59,9 +47,7 @@ export function ShopCheckout({ showPromo = true }: ShopCheckoutProps) {
     setLoading(true);
     setError("");
 
-    const priceNote = hasPromoPrice(selected.priceFrom)
-      ? `June special: ${formatUsd(salePrice)} (was ${formatUsd(selected.priceFrom)}, ${JUNE_PROMO.percentOff}% off)`
-      : `${selected.priceLabel} ${formatUsd(selected.priceFrom)}`;
+    const priceNote = `${selected.priceLabel} ${formatUsd(selected.priceFrom)}`;
 
     const message = [
       `Package: ${selected.name} (${selectedId})`,
@@ -121,8 +107,6 @@ export function ShopCheckout({ showPromo = true }: ShopCheckoutProps) {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
-      {showPromo && <PromoBanner />}
-
       <div>
         <label className="block text-sm font-medium text-navy">Select package *</label>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -248,7 +232,7 @@ export function ShopCheckout({ showPromo = true }: ShopCheckoutProps) {
         <p className="mt-2 text-xs text-slate-500">{selected.timeline}</p>
         <ul className="mt-3 space-y-1 text-xs text-slate-500">
           <li>• Quote sent to your email within one business day</li>
-          <li>• Final price depends on scope; June promo applied where shown</li>
+          <li>• Final price depends on scope and features you need</li>
           <li>• Payment arranged after you approve the quote</li>
         </ul>
       </div>

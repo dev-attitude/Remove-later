@@ -4,7 +4,6 @@ import { CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
 import { DevelopedAppsShowcase } from "@/components/marketing/DevelopedAppsShowcase";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
-import { PromoBanner } from "@/components/marketing/PromoBanner";
 import { BRAND } from "@/lib/brand";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 import { ShopCheckout } from "@/components/marketing/ShopCheckout";
@@ -25,8 +24,6 @@ export default function ShopPage() {
         options for your own website or application.
       </p>
 
-      <PromoBanner className="mt-8" />
-
       <div className="mt-16">
         <DevelopedAppsShowcase />
       </div>
@@ -35,8 +32,7 @@ export default function ShopPage() {
         <p className="marketing-eyebrow">Order a new build</p>
         <h2 className="mt-2 text-3xl font-bold text-navy">Website packages</h2>
         <p className="mt-2 text-slate-600">
-          Launch pricing — <strong className="text-royal">30% off for June</strong> on all packages
-          below.
+          Fixed starting prices below—final quote depends on scope and features you need.
         </p>
       </div>
 
@@ -111,7 +107,7 @@ export default function ShopPage() {
         </p>
         <div className="mt-8 max-w-2xl">
           <Suspense fallback={<p className="text-slate-500">Loading form…</p>}>
-            <ShopCheckout showPromo={false} />
+            <ShopCheckout />
           </Suspense>
         </div>
       </section>

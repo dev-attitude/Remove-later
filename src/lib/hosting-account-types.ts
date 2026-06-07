@@ -129,26 +129,4 @@ export const GROWTH_TOOLS = [
   { id: "social-kit" as const, name: "Social Media Kit", desc: "Banners and posts for social platforms" },
 ] as const;
 
-export const DEFAULT_OFFERS: Omit<OfferRecord, "redeemed">[] = [
-  {
-    id: "offer-annual-20",
-    title: "20% off annual hosting",
-    detail: "Pay yearly on Business or Premium and save 20% on your first year.",
-    discount: "20% off",
-    expiresAt: new Date(Date.now() + 90 * 86400000).toISOString(),
-  },
-  {
-    id: "offer-free-domain",
-    title: "Free .com domain with Premium",
-    detail: "Register one .com domain free when you upgrade to Premium hosting.",
-    discount: "Free domain",
-    expiresAt: new Date(Date.now() + 60 * 86400000).toISOString(),
-  },
-  {
-    id: "offer-maintenance",
-    title: "50% off maintenance — first month",
-    detail: "Try managed website maintenance at half price for your first month.",
-    discount: "50% off",
-    expiresAt: new Date(Date.now() + 30 * 86400000).toISOString(),
-  },
-];
+export const DEFAULT_OFFERS: Omit<OfferRecord, "redeemed">[] = [];
