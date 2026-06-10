@@ -1,15 +1,31 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { resolveCampusTenant } from "@/lib/campus/tenant";
 import { CAMPUS_NAV } from "@/lib/campus/nav";
 import { CampusPageHeader } from "@/components/campus/CampusPageHeader";
 import { getTenantMetrics, formatCampusCurrency } from "@/lib/campus/data";
 import { CampusMetricCard } from "@/components/campus/CampusMetricCard";
 import { Users, TrendingUp, Wallet, Award } from "lucide-react";
+import { auth } from "@/auth";
+import { prisma } from "@/lib/db";
 
 type Props = { params: Promise<{ tenant: string }> };
 
+async function isStudentMember(slug: string): Promise<boolean> {
+  const session = await auth();
+  if (!session?.user?.id) return false;
+  const tenant = await prisma.campusTenant.findUnique({ where: { slug } });
+  if (!tenant) return false;
+  const membership = await prisma.campusMembership.findUnique({
+    where: { tenantId_userId: { tenantId: tenant.id, userId: session.user.id } },
+  });
+  return membership?.role === "student";
+}
+
 export default async function CampusOverviewPage({ params }: Props) {
   const { tenant: slug } = await params;
+  if (await isStudentMember(slug)) redirect(`/campus/${slug}/student`);
+
   const tenant = await resolveCampusTenant(slug);
   const metrics = await getTenantMetrics(slug);
 

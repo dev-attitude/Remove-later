@@ -21,9 +21,6 @@ const MARKETING_PAGES: SitemapEntry[] = [
   { path: "/about", priority: 0.75, changeFrequency: "monthly" },
   { path: "/research", priority: 0.7, changeFrequency: "weekly" },
   { path: "/campus", priority: 0.88, changeFrequency: "weekly" },
-  { path: "/campus/meyfield", priority: 0.85, changeFrequency: "weekly" },
-  { path: "/campus/unam-demo", priority: 0.82, changeFrequency: "weekly" },
-  { path: "/campus/nursing-demo", priority: 0.82, changeFrequency: "weekly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

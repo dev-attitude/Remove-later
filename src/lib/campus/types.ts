@@ -17,6 +17,11 @@ export type CampusInstitutionType =
 
 export type CampusModuleId =
   | "overview"
+  | "student-home"
+  | "registration"
+  | "results"
+  | "fees"
+  | "timetable"
   | "executive"
   | "success"
   | "advisor"

@@ -40,7 +40,7 @@ export function VerifyForm({ tenantSlug }: { tenantSlug: string }) {
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="e.g. SC360-MEYFIELD-2024-DEMO"
+          placeholder="e.g. SC360-ACACIA-COLLEGE-2024-DEMO"
           className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
           required
         />

@@ -55,6 +55,7 @@ async function main() {
   const passwordHash = await bcrypt.hash("Demo1234!", 12);
   const adminPasswordHash = await bcrypt.hash("GmResearch!Admin2026", 12);
   const campusPasswordHash = await bcrypt.hash("SmartCampus!Demo2026", 12);
+  const campusStudentPasswordHash = await bcrypt.hash("Student!Demo2026", 12);
 
   await upsertComplimentaryUser({
     email: "demo@gmresearch.com",
@@ -101,11 +102,27 @@ async function main() {
     tierId: "inst-admin",
   });
 
+  await upsertComplimentaryUser({
+    email: "student@smartcampus.demo",
+    name: "Demo Student",
+    role: "student",
+    portal: "student",
+    passwordHash: campusStudentPasswordHash,
+    tierId: "stu-pro",
+  });
+
   const admin = await prisma.user.findUnique({ where: { email: "admin@gmresearch.com" } });
   const campusUser = await prisma.user.findUnique({
     where: { email: "campus@gmconsultations.com" },
   });
-  const campusMembers = [admin?.id, campusUser?.id].filter((id): id is string => Boolean(id));
+  const campusStudent = await prisma.user.findUnique({
+    where: { email: "student@smartcampus.demo" },
+  });
+  const campusMembers = [
+    admin?.id ? { userId: admin.id, role: "vc" } : null,
+    campusUser?.id ? { userId: campusUser.id, role: "vc" } : null,
+    campusStudent?.id ? { userId: campusStudent.id, role: "student" } : null,
+  ].filter((m): m is { userId: string; role: string } => m !== null);
   await seedCampus(prisma, campusMembers);
 
   console.log("Seed complete:");
@@ -113,8 +130,9 @@ async function main() {
   console.log("  demo@gmresearch.com / Demo1234! (student)");
   console.log("  supervisor@gmresearch.com / Demo1234! (institution)");
   console.log("  developer@gmresearch.com / Demo1234! (developer)");
-  console.log("  campus@gmconsultations.com / SmartCampus!Demo2026 (SmartCampus 360)");
-  console.log("  Campus: /campus/login — meyfield, unam-demo, nursing-demo");
+  console.log("  campus@gmconsultations.com / SmartCampus!Demo2026 (SmartCampus 360 management)");
+  console.log("  student@smartcampus.demo / Student!Demo2026 (SmartCampus 360 student)");
+  console.log("  Campus: /campus/login — horizon-university, acacia-college, unity-nursing");
 }
 
 main()

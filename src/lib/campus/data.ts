@@ -1,46 +1,36 @@
 import { prisma } from "@/lib/db";
 import type { CampusInstitutionType, CampusTenantView, ExecutiveMetrics, RiskStudent } from "./types";
 
+/** Fictional white-label demo tenants — show prospects how their own brand would look */
 export const DEMO_TENANTS: CampusTenantView[] = [
   {
-    slug: "meyfield",
-    name: "Meyfield College",
-    tagline: "Excellence in teacher education — Ondangwa",
-    institutionType: "teacher_training",
-    primaryColor: "#1e40af",
-    campuses: ["Ondangwa Main Campus"],
-  },
-  {
-    slug: "unam-demo",
-    name: "University of Namibia (Demo)",
-    tagline: "Multi-campus national university",
+    slug: "horizon-university",
+    name: "Horizon University",
+    tagline: "Multi-campus public university — demo tenant",
     institutionType: "university",
     primaryColor: "#0f766e",
-    campuses: ["Windhoek", "Oshakati", "Henties Bay", "Keetmanshoop"],
+    campuses: ["Main Campus", "Coastal Campus", "Northern Campus"],
   },
   {
-    slug: "nursing-demo",
-    name: "Namibia Nursing Institute (Demo)",
-    tagline: "Clinical & vocational nursing education",
+    slug: "acacia-college",
+    name: "Acacia College",
+    tagline: "Private teacher training college — demo tenant",
+    institutionType: "teacher_training",
+    primaryColor: "#1e40af",
+    campuses: ["City Campus"],
+  },
+  {
+    slug: "unity-nursing",
+    name: "Unity Nursing Institute",
+    tagline: "Nursing & health sciences — demo tenant",
     institutionType: "nursing",
     primaryColor: "#be123c",
-    campuses: ["Windhoek Campus", "Rundu Clinical Site"],
+    campuses: ["Central Campus", "Clinical Training Site"],
   },
 ];
 
 const METRICS_BY_TENANT: Record<string, ExecutiveMetrics> = {
-  meyfield: {
-    enrollment: 2840,
-    retentionPct: 88,
-    graduationRatePct: 72,
-    tuitionRevenue: 18_400_000,
-    outstandingFees: 2_100_000,
-    collectionRatePct: 89,
-    passRatePct: 76,
-    staffCount: 186,
-    currency: "NAD",
-  },
-  "unam-demo": {
+  "horizon-university": {
     enrollment: 32_500,
     retentionPct: 91,
     graduationRatePct: 68,
@@ -51,7 +41,18 @@ const METRICS_BY_TENANT: Record<string, ExecutiveMetrics> = {
     staffCount: 2100,
     currency: "NAD",
   },
-  "nursing-demo": {
+  "acacia-college": {
+    enrollment: 2840,
+    retentionPct: 88,
+    graduationRatePct: 72,
+    tuitionRevenue: 18_400_000,
+    outstandingFees: 2_100_000,
+    collectionRatePct: 89,
+    passRatePct: 76,
+    staffCount: 186,
+    currency: "NAD",
+  },
+  "unity-nursing": {
     enrollment: 920,
     retentionPct: 85,
     graduationRatePct: 78,
@@ -75,9 +76,7 @@ export function formatCampusCurrency(amount: number, currency = "NAD"): string {
 export async function getTenantMetrics(slug: string): Promise<ExecutiveMetrics> {
   const demo = METRICS_BY_TENANT[slug];
   if (demo) return demo;
-  const tenant = await prisma.campusTenant.findUnique({ where: { slug } });
-  if (!tenant) return METRICS_BY_TENANT.meyfield;
-  return METRICS_BY_TENANT.meyfield;
+  return METRICS_BY_TENANT["acacia-college"];
 }
 
 export async function getRiskStudents(slug: string): Promise<RiskStudent[]> {
@@ -105,16 +104,16 @@ export async function getRiskStudents(slug: string): Promise<RiskStudent[]> {
 
 function fallbackRisk(slug: string): RiskStudent[] {
   const base =
-    slug === "unam-demo"
+    slug === "horizon-university"
       ? [
           { studentNumber: "221045678", name: "John M.", programme: "BSc Computer Science" },
           { studentNumber: "221078901", name: "Mary K.", programme: "LLB Law" },
           { studentNumber: "221034567", name: "Paul T.", programme: "BCom Accounting" },
         ]
       : [
-          { studentNumber: "MC2021045", name: "John M.", programme: "Diploma in Education" },
-          { studentNumber: "MC2021088", name: "Mary K.", programme: "BEd Foundation Phase" },
-          { studentNumber: "MC2021032", name: "Paul T.", programme: "Diploma in Education" },
+          { studentNumber: "AC2021045", name: "John M.", programme: "Diploma in Education" },
+          { studentNumber: "AC2021088", name: "Mary K.", programme: "BEd Foundation Phase" },
+          { studentNumber: "AC2021032", name: "Paul T.", programme: "Diploma in Education" },
         ];
   return base.map((s, i) => ({
     ...s,
@@ -140,10 +139,10 @@ export async function getCrmLeads(slug: string) {
 
 function demoCrmLeads() {
   return [
-    { name: "Sponsor — Ministry of Education", leadType: "sponsor", stage: "negotiation", email: "partnerships@moe.gov.na" },
-    { name: "Prospect — T. Shikongo", leadType: "prospect", stage: "application", email: "t.shikongo@email.com" },
-    { name: "Alumni — Class of 2019", leadType: "alumni", stage: "engaged", email: "alumni@meyfield.edu.na" },
-    { name: "Industry — Bank Windhoek", leadType: "partner", stage: "active", email: "hr@bankwindhoek.com.na" },
+    { name: "Sponsor — Ministry of Education", leadType: "sponsor", stage: "negotiation", email: "partnerships@ministry.example" },
+    { name: "Prospect — T. Shikongo", leadType: "prospect", stage: "application", email: "t.shikongo@email.example" },
+    { name: "Alumni — Class of 2019", leadType: "alumni", stage: "engaged", email: "alumni@institution.example" },
+    { name: "Industry — First Capital Bank", leadType: "partner", stage: "active", email: "hr@bank.example" },
   ];
 }
 

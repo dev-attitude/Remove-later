@@ -24,7 +24,7 @@ export default async function DigitalIdPage({ params }: Props) {
             </div>
           </div>
           <p className="mt-4 font-semibold text-slate-900">Demo Student</p>
-          <p className="text-sm text-slate-500">MC2021045 · Valid 2026</p>
+          <p className="text-sm text-slate-500">SC2026001 · Valid 2026</p>
         </div>
       </div>
       <CampusModuleStub

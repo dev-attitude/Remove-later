@@ -6,7 +6,7 @@ import { clsx } from "clsx";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { SMARTCAMPUS } from "@/lib/campus/brand";
-import { CAMPUS_NAV } from "@/lib/campus/nav";
+import { campusNavForRole } from "@/lib/campus/nav";
 import type { CampusRole, CampusTenantView } from "@/lib/campus/types";
 import { institutionTypeLabel } from "@/lib/campus/data";
 import { CampusSignOut } from "./CampusSignOut";
@@ -20,9 +20,7 @@ type Props = {
 export function CampusShell({ tenant, role = "vc", children }: Props) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const nav = CAMPUS_NAV.filter(
-    (item) => item.roles === "all" || item.roles.includes(role)
-  );
+  const nav = campusNavForRole(role);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -78,7 +76,10 @@ export function CampusShell({ tenant, role = "vc", children }: Props) {
             <nav className="rounded-xl border border-slate-200 bg-white p-2">
               {nav.map((item) => {
                 const href = item.href(tenant.slug);
-                const active = pathname === href || pathname.startsWith(`${href}/`);
+                const isHub = item.id === "overview" || item.id === "student-home";
+                const active = isHub
+                  ? pathname === href
+                  : pathname === href || pathname.startsWith(`${href}/`);
                 const Icon = item.icon;
                 return (
                   <Link
@@ -120,9 +121,9 @@ export function CampusShell({ tenant, role = "vc", children }: Props) {
 function TenantSwitcher({ current }: { current: string }) {
   const [open, setOpen] = useState(false);
   const tenants = [
-    { slug: "meyfield", name: "Meyfield College" },
-    { slug: "unam-demo", name: "UNam (Demo)" },
-    { slug: "nursing-demo", name: "Nursing Institute" },
+    { slug: "horizon-university", name: "Horizon University" },
+    { slug: "acacia-college", name: "Acacia College" },
+    { slug: "unity-nursing", name: "Unity Nursing Institute" },
   ];
 
   return (

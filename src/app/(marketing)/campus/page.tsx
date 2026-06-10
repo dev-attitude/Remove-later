@@ -41,10 +41,13 @@ export default function CampusMarketingPage() {
         <p className="mt-4 marketing-lead">{SMARTCAMPUS.pitch}</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/campus/login" className="marketing-btn-primary text-sm">
-            Sign in to live demo
+            Sign in to management demo
           </Link>
-          <Link href="/campus/login?callbackUrl=/campus/meyfield" className="marketing-btn-secondary text-sm">
-            Meyfield College portal
+          <Link
+            href="/campus/login?callbackUrl=/campus/acacia-college/student"
+            className="marketing-btn-secondary text-sm"
+          >
+            Try the student portal
           </Link>
         </div>
       </div>

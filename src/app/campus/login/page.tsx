@@ -12,7 +12,7 @@ import { SMARTCAMPUS } from "@/lib/campus/brand";
 export default function CampusLoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/campus/meyfield";
+  const callbackUrl = searchParams.get("callbackUrl") || "/campus/acacia-college";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,14 +51,21 @@ export default function CampusLoginPage() {
           Access the multi-tenant ERP demo — executive dashboards, student success AI, CRM, finance,
           LMS, and verification modules.
         </p>
-        <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-          <p className="font-medium">Demo credentials</p>
-          <p className="mt-1">
-            <code className="rounded bg-white px-1">campus@gmconsultations.com</code>
-          </p>
-          <p className="mt-1">
-            <code className="rounded bg-white px-1">SmartCampus!Demo2026</code>
-          </p>
+        <div className="mt-4 space-y-3 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
+          <div>
+            <p className="font-medium">Management demo (VC view)</p>
+            <p className="mt-1">
+              <code className="rounded bg-white px-1">campus@gmconsultations.com</code> /{" "}
+              <code className="rounded bg-white px-1">SmartCampus!Demo2026</code>
+            </p>
+          </div>
+          <div>
+            <p className="font-medium">Student demo (student portal)</p>
+            <p className="mt-1">
+              <code className="rounded bg-white px-1">student@smartcampus.demo</code> /{" "}
+              <code className="rounded bg-white px-1">Student!Demo2026</code>
+            </p>
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>

@@ -6,6 +6,8 @@ import {
   Bot,
   Briefcase,
   Building2,
+  CalendarDays,
+  ClipboardList,
   CreditCard,
   FileCheck,
   GraduationCap,
@@ -153,7 +155,76 @@ export const CAMPUS_NAV: CampusNavItem[] = [
   },
 ];
 
+/** Dedicated student portal navigation — what a logged-in student sees */
+export const STUDENT_NAV: CampusNavItem[] = [
+  {
+    id: "student-home",
+    label: "My Dashboard",
+    href: (t) => `/campus/${t}/student`,
+    icon: LayoutDashboard,
+    roles: ["student"],
+  },
+  {
+    id: "registration",
+    label: "Registration",
+    href: (t) => `/campus/${t}/student/registration`,
+    icon: ClipboardList,
+    roles: ["student"],
+  },
+  {
+    id: "results",
+    label: "My Results",
+    href: (t) => `/campus/${t}/student/results`,
+    icon: GraduationCap,
+    roles: ["student"],
+  },
+  {
+    id: "fees",
+    label: "Fees & Wallet",
+    href: (t) => `/campus/${t}/student/fees`,
+    icon: Wallet,
+    roles: ["student"],
+  },
+  {
+    id: "timetable",
+    label: "Timetable",
+    href: (t) => `/campus/${t}/student/timetable`,
+    icon: CalendarDays,
+    roles: ["student"],
+  },
+  {
+    id: "lms",
+    label: "Learning (LMS)",
+    href: (t) => `/campus/${t}/lms`,
+    icon: BookOpen,
+    roles: ["student"],
+  },
+  {
+    id: "digital-id",
+    label: "Digital Campus ID",
+    href: (t) => `/campus/${t}/digital-id`,
+    icon: QrCode,
+    roles: ["student"],
+  },
+  {
+    id: "advisor",
+    label: "AI Academic Advisor",
+    href: (t) => `/campus/${t}/advisor`,
+    icon: Bot,
+    roles: ["student"],
+    badge: "AI",
+  },
+  {
+    id: "chatbot",
+    label: "Campus AI Chat",
+    href: (t) => `/campus/${t}/chatbot`,
+    icon: Bot,
+    roles: ["student"],
+  },
+];
+
 export function campusNavForRole(role: CampusRole): CampusNavItem[] {
+  if (role === "student") return STUDENT_NAV;
   return CAMPUS_NAV.filter(
     (item) => item.roles === "all" || item.roles.includes(role)
   );

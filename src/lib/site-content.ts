@@ -655,7 +655,7 @@ export const DEVELOPED_APPLICATIONS: DevelopedApp[] = [
     accessLinks: [
       { label: "Sign in to demo", href: "/campus/login" },
       { label: "Product overview", href: "/campus" },
-      { label: "Transcript verification (public)", href: "/campus/meyfield/verify" },
+      { label: "Transcript verification (public)", href: "/campus/acacia-college/verify" },
     ],
   },
   {
