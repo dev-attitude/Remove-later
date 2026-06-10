@@ -1,10 +1,24 @@
 import Link from "next/link";
-import { CalendarDays, GraduationCap, Percent, Wallet } from "lucide-react";
+import {
+  AlertTriangle,
+  Bell,
+  CalendarDays,
+  GraduationCap,
+  Percent,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 import { CampusPageHeader } from "@/components/campus/CampusPageHeader";
 import { CampusMetricCard } from "@/components/campus/CampusMetricCard";
 import { resolveCampusTenant } from "@/lib/campus/tenant";
 import { formatCampusCurrency } from "@/lib/campus/data";
 import { getStudentRecord, STUDENT_TIMETABLE } from "@/lib/campus/student";
+import {
+  ACADEMIC_PROGRESS,
+  ASSESSMENTS,
+  MODULE_ATTENDANCE,
+  NOTIFICATIONS,
+} from "@/lib/campus/student-data";
 
 type Props = { params: Promise<{ tenant: string }> };
 
@@ -12,23 +26,31 @@ export default async function StudentDashboardPage({ params }: Props) {
   const { tenant: slug } = await params;
   const tenant = await resolveCampusTenant(slug);
   const student = await getStudentRecord(slug);
+
+  const gradPct = Math.round(
+    (ACADEMIC_PROGRESS.creditsCompleted / ACADEMIC_PROGRESS.creditsTotal) * 100
+  );
+  const openDeadlines = ASSESSMENTS.filter((a) => a.status === "open");
+  const lowAttendance = MODULE_ATTENDANCE.filter(
+    (m) => Math.round((m.attended / m.total) * 100) < 80
+  );
   const todayClasses = STUDENT_TIMETABLE.slice(0, 2);
 
   return (
     <div>
       <CampusPageHeader
-        badge="Student portal"
+        badge="Student Success Dashboard"
         title={`Welcome back, ${student.name.split(" ")[0]}`}
         description={`${student.studentNumber} · ${student.programme} · ${tenant.name}`}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <CampusMetricCard
-          label="Average mark"
-          value={`${student.averageMark}%`}
-          sub="Across registered modules"
+          label="Current GPA"
+          value={ACADEMIC_PROGRESS.cgpa.toFixed(2)}
+          sub="Cumulative (4.0 scale)"
           icon={GraduationCap}
-          tone={student.averageMark >= 60 ? "success" : "warning"}
+          tone="success"
         />
         <CampusMetricCard
           label="Attendance"
@@ -38,31 +60,82 @@ export default async function StudentDashboardPage({ params }: Props) {
           tone={student.attendancePct >= 80 ? "success" : "warning"}
         />
         <CampusMetricCard
-          label="Fees outstanding"
+          label="Graduation progress"
+          value={`${gradPct}%`}
+          sub={`${ACADEMIC_PROGRESS.creditsCompleted}/${ACADEMIC_PROGRESS.creditsTotal} credits`}
+          icon={TrendingUp}
+        />
+        <CampusMetricCard
+          label="Outstanding fees"
           value={formatCampusCurrency(student.feesOutstanding)}
           sub="See Fees & Wallet"
           icon={Wallet}
           tone={student.feesOutstanding > 0 ? "warning" : "success"}
         />
         <CampusMetricCard
-          label="Graduation likelihood"
-          value={`${student.graduationLikelihood}%`}
-          sub="AI prediction"
-          icon={GraduationCap}
+          label="Upcoming deadlines"
+          value={String(openDeadlines.length)}
+          sub="Assessments due"
+          icon={Bell}
+          tone={openDeadlines.length > 0 ? "warning" : "success"}
         />
       </div>
 
-      {student.feesOutstanding > 0 && (
-        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-          You have an outstanding balance of{" "}
-          <strong>{formatCampusCurrency(student.feesOutstanding)}</strong>.{" "}
-          <Link href={`/campus/${slug}/student/fees`} className="font-semibold underline">
-            View statement and pay
-          </Link>
+      {(lowAttendance.length > 0 || student.feesOutstanding > 0) && (
+        <div className="mt-6 space-y-2">
+          {lowAttendance.map((m) => (
+            <div
+              key={m.code}
+              className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-900"
+            >
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>
+                <strong>Academic risk alert:</strong> {m.code} attendance is{" "}
+                {Math.round((m.attended / m.total) * 100)}% — below the 80% exam threshold.{" "}
+                <Link href={`/campus/${slug}/student/attendance`} className="font-semibold underline">
+                  View attendance
+                </Link>
+              </p>
+            </div>
+          ))}
+          {student.feesOutstanding > 0 && (
+            <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>
+                Outstanding balance of{" "}
+                <strong>{formatCampusCurrency(student.feesOutstanding)}</strong>.{" "}
+                <Link href={`/campus/${slug}/student/fees`} className="font-semibold underline">
+                  View statement and pay
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       )}
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">Deadlines</h2>
+            <Link
+              href={`/campus/${slug}/student/assessments`}
+              className="text-sm font-medium text-blue-600 hover:underline"
+            >
+              All assessments
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {openDeadlines.map((a) => (
+              <div key={a.id} className="rounded-xl border border-slate-200 bg-white p-3">
+                <p className="text-sm font-medium text-slate-900">{a.title}</p>
+                <p className="text-xs text-slate-500">
+                  {a.module} · Due {a.due}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900">Upcoming classes</h2>
@@ -70,24 +143,18 @@ export default async function StudentDashboardPage({ params }: Props) {
               href={`/campus/${slug}/student/timetable`}
               className="text-sm font-medium text-blue-600 hover:underline"
             >
-              Full timetable
+              Timetable
             </Link>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {todayClasses.map((c) => (
-              <div
-                key={`${c.day}-${c.time}`}
-                className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4"
-              >
-                <div className="rounded-lg bg-slate-100 p-2">
-                  <CalendarDays className="h-5 w-5 text-slate-700" />
-                </div>
+              <div key={`${c.day}-${c.time}`} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-3">
+                <CalendarDays className="mt-0.5 h-4 w-4 text-slate-400" />
                 <div>
-                  <p className="font-medium text-slate-900">{c.module}</p>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm font-medium text-slate-900">{c.module}</p>
+                  <p className="text-xs text-slate-500">
                     {c.day} · {c.time} · {c.venue}
                   </p>
-                  <p className="text-xs text-slate-500">{c.lecturer}</p>
                 </div>
               </div>
             ))}
@@ -95,26 +162,44 @@ export default async function StudentDashboardPage({ params }: Props) {
         </section>
 
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Quick actions</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              { label: "Register modules", href: `/campus/${slug}/student/registration` },
-              { label: "View results", href: `/campus/${slug}/student/results` },
-              { label: "Pay fees", href: `/campus/${slug}/student/fees` },
-              { label: "Ask AI Advisor", href: `/campus/${slug}/advisor` },
-              { label: "Open LMS", href: `/campus/${slug}/lms` },
-              { label: "My digital ID", href: `/campus/${slug}/digital-id` },
-            ].map((a) => (
-              <Link
-                key={a.href}
-                href={a.href}
-                className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-800 transition hover:border-blue-300 hover:text-blue-700"
-              >
-                {a.label}
-              </Link>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">Notifications</h2>
+            <Link
+              href={`/campus/${slug}/student/announcements`}
+              className="text-sm font-medium text-blue-600 hover:underline"
+            >
+              All
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {NOTIFICATIONS.slice(0, 4).map((n) => (
+              <div key={n.text} className="rounded-xl border border-slate-200 bg-white p-3">
+                <p className="text-sm text-slate-800">{n.text}</p>
+                <p className="text-[11px] text-slate-400">{n.at}</p>
+              </div>
             ))}
           </div>
         </section>
+      </div>
+
+      <h2 className="mb-3 mt-10 text-lg font-semibold text-slate-900">Quick actions</h2>
+      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {[
+          { label: "Register modules", href: `/campus/${slug}/student/registration` },
+          { label: "My results", href: `/campus/${slug}/student/results` },
+          { label: "Pay fees", href: `/campus/${slug}/student/fees` },
+          { label: "Documents", href: `/campus/${slug}/student/documents` },
+          { label: "AI Assistant", href: `/campus/${slug}/advisor` },
+          { label: "My digital ID", href: `/campus/${slug}/digital-id` },
+        ].map((a) => (
+          <Link
+            key={a.href}
+            href={a.href}
+            className="rounded-xl border border-slate-200 bg-white p-4 text-center text-sm font-medium text-slate-800 transition hover:border-blue-300 hover:text-blue-700"
+          >
+            {a.label}
+          </Link>
+        ))}
       </div>
     </div>
   );

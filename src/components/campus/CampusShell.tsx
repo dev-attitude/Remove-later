@@ -74,38 +74,46 @@ export function CampusShell({ tenant, role = "vc", children }: Props) {
               </p>
             </div>
             <nav className="rounded-xl border border-slate-200 bg-white p-2">
-              {nav.map((item) => {
+              {nav.map((item, idx) => {
                 const href = item.href(tenant.slug);
                 const isHub = item.id === "overview" || item.id === "student-home";
                 const active = isHub
                   ? pathname === href
                   : pathname === href || pathname.startsWith(`${href}/`);
                 const Icon = item.icon;
+                const newSection =
+                  item.section && item.section !== nav[idx - 1]?.section;
                 return (
-                  <Link
-                    key={item.id}
-                    href={href}
-                    onClick={() => setMobileOpen(false)}
-                    className={clsx(
-                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition",
-                      active
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-700 hover:bg-slate-100"
+                  <div key={item.id}>
+                    {newSection && (
+                      <p className="mt-3 mb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 first:mt-1">
+                        {item.section}
+                      </p>
                     )}
-                  >
-                    <Icon className="h-4 w-4 shrink-0" />
-                    <span className="flex-1 truncate">{item.label}</span>
-                    {item.badge && (
-                      <span
-                        className={clsx(
-                          "rounded px-1.5 py-0.5 text-[10px] font-bold",
-                          active ? "bg-white/20 text-white" : "bg-blue-100 text-blue-700"
-                        )}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
+                    <Link
+                      href={href}
+                      onClick={() => setMobileOpen(false)}
+                      className={clsx(
+                        "flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition",
+                        active
+                          ? "bg-slate-900 text-white"
+                          : "text-slate-700 hover:bg-slate-100"
+                      )}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="flex-1 truncate">{item.label}</span>
+                      {item.badge && (
+                        <span
+                          className={clsx(
+                            "rounded px-1.5 py-0.5 text-[10px] font-bold",
+                            active ? "bg-white/20 text-white" : "bg-blue-100 text-blue-700"
+                          )}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  </div>
                 );
               })}
             </nav>
