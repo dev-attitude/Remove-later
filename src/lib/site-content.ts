@@ -640,6 +640,25 @@ export const DEVELOPED_APPLICATIONS: DevelopedApp[] = [
     ],
   },
   {
+    id: "smartcampus-360",
+    name: "SmartCampus 360 ERP",
+    description:
+      "Next-generation multi-tenant university ERP — AI student success, finance, LMS, CRM, research, digital verification, and executive analytics for Southern African institutions.",
+    type: "platform",
+    href: "/campus",
+    featured: true,
+    highlights: [
+      "AI at-risk student prediction",
+      "Multi-institution white-label SaaS",
+      "Digital wallet & transcript verification",
+    ],
+    accessLinks: [
+      { label: "Sign in to demo", href: "/campus/login" },
+      { label: "Product overview", href: "/campus" },
+      { label: "Transcript verification (public)", href: "/campus/meyfield/verify" },
+    ],
+  },
+  {
     id: "skyrapay-research-suite",
     name: "Skyrapay Research Suite",
     description:

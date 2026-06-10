@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { seedCampus } from "./seed-campus";
 
 const prisma = new PrismaClient();
 
@@ -53,6 +54,7 @@ async function upsertComplimentaryUser(input: {
 async function main() {
   const passwordHash = await bcrypt.hash("Demo1234!", 12);
   const adminPasswordHash = await bcrypt.hash("GmResearch!Admin2026", 12);
+  const campusPasswordHash = await bcrypt.hash("SmartCampus!Demo2026", 12);
 
   await upsertComplimentaryUser({
     email: "demo@gmresearch.com",
@@ -90,11 +92,29 @@ async function main() {
     tierId: "dev-owner",
   });
 
+  await upsertComplimentaryUser({
+    email: "campus@gmconsultations.com",
+    name: "SmartCampus Demo VC",
+    role: "admin",
+    portal: "institution",
+    passwordHash: campusPasswordHash,
+    tierId: "inst-admin",
+  });
+
+  const admin = await prisma.user.findUnique({ where: { email: "admin@gmresearch.com" } });
+  const campusUser = await prisma.user.findUnique({
+    where: { email: "campus@gmconsultations.com" },
+  });
+  const campusMembers = [admin?.id, campusUser?.id].filter((id): id is string => Boolean(id));
+  await seedCampus(prisma, campusMembers);
+
   console.log("Seed complete:");
   console.log("  admin@gmresearch.com / GmResearch!Admin2026 (all portals, no charge)");
   console.log("  demo@gmresearch.com / Demo1234! (student)");
   console.log("  supervisor@gmresearch.com / Demo1234! (institution)");
   console.log("  developer@gmresearch.com / Demo1234! (developer)");
+  console.log("  campus@gmconsultations.com / SmartCampus!Demo2026 (SmartCampus 360)");
+  console.log("  Campus: /campus/login — meyfield, unam-demo, nursing-demo");
 }
 
 main()

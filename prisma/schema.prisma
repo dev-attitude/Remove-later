@@ -26,6 +26,7 @@ model User {
   usageLogs     UsageLog[]
   understandingBooks UnderstandingBook[]
   supervisorFeedbackReviews SupervisorFeedbackReview[]
+  campusMemberships CampusMembership[]
 }
 
 /** Skyrapay internal business management — clients, services, income & expenses */
@@ -260,4 +261,106 @@ model PlagiarismScanCache {
   updatedAt DateTime @updatedAt
 
   @@index([updatedAt])
+}
+
+// ─── SmartCampus 360 — multi-tenant university ERP ─────────────────────────
+
+model CampusTenant {
+  id           String              @id @default(cuid())
+  slug         String              @unique
+  name         String
+  tagline      String?
+  institutionType String           @default("college")
+  customDomain String?
+  primaryColor String              @default("#2563EB")
+  logoUrl      String?
+  campusesJson String?             @db.Text
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  memberships  CampusMembership[]
+  students     CampusStudent[]
+  programmes   CampusProgramme[]
+  crmLeads     CampusCrmLead[]
+  credentials  CampusCredential[]
+
+  @@index([institutionType])
+}
+
+model CampusMembership {
+  id        String       @id @default(cuid())
+  tenantId  String
+  tenant    CampusTenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String
+  createdAt DateTime     @default(now())
+
+  @@unique([tenantId, userId])
+  @@index([userId])
+}
+
+model CampusStudent {
+  id                   String       @id @default(cuid())
+  tenantId             String
+  tenant               CampusTenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  studentNumber        String
+  name                 String
+  email                String?
+  programmeCode        String?
+  enrollmentYear       Int?
+  attendancePct        Float?
+  averageMark          Float?
+  feesOutstanding      Float        @default(0)
+  failureRisk          Float        @default(0)
+  dropoutRisk          Float        @default(0)
+  feeDefaultRisk       Float        @default(0)
+  graduationLikelihood Float?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  @@unique([tenantId, studentNumber])
+  @@index([tenantId, failureRisk])
+}
+
+model CampusProgramme {
+  id        String       @id @default(cuid())
+  tenantId  String
+  tenant    CampusTenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  code      String
+  name      String
+  faculty   String?
+  nqfLevel  Int?
+  passRate  Float?
+
+  @@unique([tenantId, code])
+}
+
+model CampusCrmLead {
+  id        String       @id @default(cuid())
+  tenantId  String
+  tenant    CampusTenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  leadType  String
+  stage     String
+  email     String?
+  phone     String?
+  notes     String?      @db.Text
+  createdAt DateTime     @default(now())
+
+  @@index([tenantId, stage])
+}
+
+model CampusCredential {
+  id             String       @id @default(cuid())
+  tenantId       String
+  tenant         CampusTenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  studentName    String
+  studentNumber  String
+  qualification  String
+  yearAwarded    Int
+  verifyCode     String       @unique
+  blockchainHash String?
+  issuedAt       DateTime     @default(now())
+
+  @@index([tenantId])
 }

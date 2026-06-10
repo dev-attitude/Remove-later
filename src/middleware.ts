@@ -15,6 +15,7 @@ const PUBLIC_PREFIXES = [
   "/about",
   "/contact",
   "/hosting",
+  "/api/campus",
   "/manage",
   "/api/health",
   "/api/auth",
@@ -58,7 +59,26 @@ export function middleware(req: NextRequest) {
   }
 
   const isPublic = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
-  if (!isProduction || isPublic) return withCountryCookie(NextResponse.next());
+  const isCampusMarketing =
+    pathname === "/campus" || pathname === "/campus/";
+  const isCampusLogin = pathname.startsWith("/campus/login");
+  const isCampusVerify = /^\/campus\/[^/]+\/verify(\/|$)/.test(pathname);
+
+  if (
+    !isProduction ||
+    isPublic ||
+    isCampusMarketing ||
+    isCampusLogin ||
+    isCampusVerify
+  ) {
+    return withCountryCookie(NextResponse.next());
+  }
+
+  if (!hasSessionCookie(req) && /^\/campus\/[^/]+/.test(pathname)) {
+    const login = new URL("/campus/login", req.nextUrl.origin);
+    login.searchParams.set("callbackUrl", pathname);
+    return withCountryCookie(NextResponse.redirect(login));
+  }
 
   if (
     !hasSessionCookie(req) &&
