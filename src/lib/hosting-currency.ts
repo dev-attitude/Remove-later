@@ -120,6 +120,17 @@ const CURRENCY_LOCALE: Record<HostingCurrency, string> = {
 
 export function formatHostingCurrency(amount: number, currency: HostingCurrency): string {
   const locale = CURRENCY_LOCALE[currency];
+
+  // Intl renders NAD as a bare "$", which visitors mistake for US dollars — use the local "N$".
+  if (currency === "NAD") {
+    const fractionDigits = Number.isInteger(amount) ? 0 : 2;
+    const formatted = new Intl.NumberFormat(locale, {
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    }).format(amount);
+    return `N$${formatted}`;
+  }
+
   const fractionDigits =
     currency === "JPY" || currency === "NGN" || currency === "TZS" || currency === "UGX" ? 0 : 2;
   return new Intl.NumberFormat(locale, {
