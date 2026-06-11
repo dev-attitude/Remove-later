@@ -10,6 +10,18 @@ import {
   serviceLabel,
 } from "@/lib/business-manage";
 
+type MasterData = {
+  research: {
+    users: number;
+    newUsers30: number;
+    activeSubscriptions: number;
+    payingSubscriptions: number;
+    usageActions30: number;
+    platformBooks: number;
+  };
+  campus: { tenants: number; students: number };
+};
+
 type DashboardData = {
   clients: { total: number; byStatus: Record<string, number> };
   engagements: { total: number; inProgress: number; byStatus: Record<string, number> };
@@ -34,6 +46,7 @@ type DashboardData = {
 
 export default function ManageOverviewPage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const [master, setMaster] = useState<MasterData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,6 +57,11 @@ export default function ManageOverviewPage() {
       })
       .then(setData)
       .catch((e) => setError(e.message));
+
+    fetch("/api/manage/master")
+      .then(async (res) => (res.ok ? res.json() : null))
+      .then(setMaster)
+      .catch(() => null);
   }, []);
 
   if (error) {
@@ -60,12 +78,62 @@ export default function ManageOverviewPage() {
     <div>
       <div className="mb-8">
         <h1 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">
-          Business overview
+          Master overview
         </h1>
         <p className="mt-1 text-sm text-slate-600">
-          Clients, service progress, income & expenses for {new Date().toLocaleString("en-NA", { month: "long", year: "numeric" })}
+          All services and all clients in one place — business work, Research App, and
+          SmartCampus for {new Date().toLocaleString("en-NA", { month: "long", year: "numeric" })}
         </p>
       </div>
+
+      {master && (
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <Link href="/manage/app-users" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">Research App users</p>
+              <p className="mt-2 text-2xl font-bold">{master.research.users}</p>
+              <p className="mt-1 text-xs text-slate-500">
+                +{master.research.newUsers30} in last 30 days
+              </p>
+            </Card>
+          </Link>
+          <Link href="/manage/app-users" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">Active subscriptions</p>
+              <p className="mt-2 text-2xl font-bold text-emerald-700">
+                {master.research.activeSubscriptions}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {master.research.payingSubscriptions} paying via Stripe
+              </p>
+            </Card>
+          </Link>
+          <Link href="/manage/usage" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">App activity (30 days)</p>
+              <p className="mt-2 text-2xl font-bold text-brand-700">
+                {master.research.usageActions30}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {master.research.platformBooks} platform textbooks loaded
+              </p>
+            </Card>
+          </Link>
+          <Link href="/campus/admin" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">SmartCampus</p>
+              <p className="mt-2 text-2xl font-bold">{master.campus.tenants}</p>
+              <p className="mt-1 text-xs text-slate-500">
+                institutions · {master.campus.students} students
+              </p>
+            </Card>
+          </Link>
+        </div>
+      )}
+
+      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">
+        Consulting & services business
+      </h2>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="!p-4">

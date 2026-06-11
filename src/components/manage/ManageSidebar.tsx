@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Activity,
   ArrowLeft,
+  BookOpen,
   Briefcase,
+  GraduationCap,
   LayoutDashboard,
   LogOut,
-  Receipt,
   TrendingDown,
   TrendingUp,
+  UserCircle2,
   Users,
   X,
 } from "lucide-react";
@@ -17,12 +20,22 @@ import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { BRAND } from "@/lib/brand";
 
-const NAV = [
+const NAV: Array<{
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+  section?: string;
+}> = [
   { href: "/manage", label: "Overview", icon: LayoutDashboard, exact: true },
-  { href: "/manage/clients", label: "Clients", icon: Users },
+  { href: "/manage/clients", label: "Clients", icon: Users, section: "Business" },
   { href: "/manage/services", label: "Services & progress", icon: Briefcase },
   { href: "/manage/income", label: "Income", icon: TrendingUp },
   { href: "/manage/expenses", label: "Expenses", icon: TrendingDown },
+  { href: "/manage/app-users", label: "App users", icon: UserCircle2, section: "Research App" },
+  { href: "/manage/usage", label: "Usage analytics", icon: Activity },
+  { href: "/manage/books", label: "Books & resources", icon: BookOpen },
+  { href: "/campus/admin", label: "Campus platform", icon: GraduationCap, section: "SmartCampus" },
 ];
 
 type ManageSidebarProps = {
@@ -52,24 +65,30 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
         )}
       </div>
 
-      <nav className="flex-1 space-y-1 p-3">
-        {NAV.map(({ href, label, icon: Icon, exact }) => {
+      <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+        {NAV.map(({ href, label, icon: Icon, exact, section }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);
           return (
-            <Link
-              key={href}
-              href={href}
-              onClick={onClose}
-              className={cn(
-                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition",
-                active
-                  ? "bg-brand-50 text-brand-800"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            <div key={href}>
+              {section && (
+                <p className="mb-1 mt-4 px-3 text-[11px] font-semibold uppercase tracking-wide text-slate-400 first:mt-0">
+                  {section}
+                </p>
               )}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {label}
-            </Link>
+              <Link
+                href={href}
+                onClick={onClose}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition",
+                  active
+                    ? "bg-brand-50 text-brand-800"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                )}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {label}
+              </Link>
+            </div>
           );
         })}
       </nav>
