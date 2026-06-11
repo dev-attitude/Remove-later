@@ -21,6 +21,7 @@ type MasterData = {
   };
   campus: { tenants: number; students: number };
   support: { newInquiries: number; errors7: number };
+  hosting: { orders: number; clients: number };
 };
 
 type DashboardData = {
@@ -116,6 +117,15 @@ export default function ManageOverviewPage() {
               </p>
               <p className="mt-1 text-xs text-slate-500">
                 {master.support.errors7 === 0 ? "All systems healthy" : "Click to investigate"}
+              </p>
+            </Card>
+          </Link>
+          <Link href="/manage/hosting" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">Hosting services</p>
+              <p className="mt-2 text-2xl font-bold">{master.hosting.clients}</p>
+              <p className="mt-1 text-xs text-slate-500">
+                {master.hosting.orders} order(s) · domains & plans
               </p>
             </Card>
           </Link>

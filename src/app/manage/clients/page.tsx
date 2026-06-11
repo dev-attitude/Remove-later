@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Plus, Search } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -26,10 +27,13 @@ type ClientRow = {
 };
 
 export default function ManageClientsPage() {
+  const searchParams = useSearchParams();
   const [clients, setClients] = useState<ClientRow[]>([]);
   const [q, setQ] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState(
+    () => searchParams.get("category") ?? ""
+  );
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +65,11 @@ export default function ManageClientsPage() {
       setLoading(false);
     }
   }, [q, statusFilter, categoryFilter]);
+
+  useEffect(() => {
+    const fromUrl = searchParams.get("category");
+    if (fromUrl) setCategoryFilter(fromUrl);
+  }, [searchParams]);
 
   useEffect(() => {
     load();

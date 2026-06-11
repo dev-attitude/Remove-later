@@ -24,6 +24,8 @@ export async function GET() {
       campusStudents,
       newInquiries,
       errors7,
+      hostingOrders,
+      hostingClients,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { createdAt: { gte: since30 } } }),
@@ -39,6 +41,8 @@ export async function GET() {
       prisma.errorLog.count({
         where: { createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } },
       }),
+      prisma.serviceInquiry.count({ where: { kind: "hosting_order" } }),
+      prisma.bizClient.count({ where: { category: "hosting-web" } }),
     ]);
 
     return NextResponse.json({
@@ -57,6 +61,10 @@ export async function GET() {
       support: {
         newInquiries,
         errors7,
+      },
+      hosting: {
+        orders: hostingOrders,
+        clients: hostingClients,
       },
     });
   } catch (e) {
