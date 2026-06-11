@@ -403,21 +403,6 @@ export const HOSTING_PLATFORM_FEATURES = [
   },
 ] as const;
 
-export const HOSTING_HIGHLIGHTS = [
-  {
-    title: "Your account, your control",
-    text: "Every customer gets their own cPanel login—register domains, host sites, create email, and manage MySQL databases yourself.",
-  },
-  {
-    title: "Enterprise infrastructure",
-    text: "Powered by our Namecheap reseller platform with SSD storage, 99.9% uptime, and global CDN—managed locally by Skyrapay Consultations.",
-  },
-  {
-    title: "Namibian support when you need it",
-    text: "Stuck on DNS, email setup, or a database import? Our team in Namibia helps Mon–Fri 08:00–18:00—in NAD, in plain language.",
-  },
-] as const;
-
 export const HOSTING_INCLUDED = [
   "Domain registration & DNS management",
   "cPanel hosting account with full access",
