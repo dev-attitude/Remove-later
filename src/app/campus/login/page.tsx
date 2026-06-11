@@ -51,21 +51,22 @@ export default function CampusLoginPage() {
           Access the multi-tenant ERP demo — executive dashboards, student success AI, CRM, finance,
           LMS, and verification modules.
         </p>
-        <div className="mt-4 space-y-3 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-          <div>
-            <p className="font-medium">Management demo (VC view)</p>
-            <p className="mt-1">
-              <code className="rounded bg-white px-1">campus@gmconsultations.com</code> /{" "}
-              <code className="rounded bg-white px-1">SmartCampus!Demo2026</code>
+        <div className="mt-4 space-y-2 rounded-lg bg-slate-50 p-3 text-xs text-slate-700">
+          <p className="text-sm font-medium">Demo accounts</p>
+          {[
+            ["Management (VC)", "campus@gmconsultations.com", "SmartCampus!Demo2026"],
+            ["Student", "student@smartcampus.demo", "Student!Demo2026"],
+            ["Registrar", "registrar@smartcampus.demo", "Staff!Demo2026"],
+            ["Finance", "finance@smartcampus.demo", "Staff!Demo2026"],
+            ["Lecturer", "lecturer@smartcampus.demo", "Staff!Demo2026"],
+            ["Examinations", "exams@smartcampus.demo", "Staff!Demo2026"],
+          ].map(([label, mail, pass]) => (
+            <p key={mail}>
+              <span className="font-medium">{label}:</span>{" "}
+              <code className="rounded bg-white px-1">{mail}</code> /{" "}
+              <code className="rounded bg-white px-1">{pass}</code>
             </p>
-          </div>
-          <div>
-            <p className="font-medium">Student demo (student portal)</p>
-            <p className="mt-1">
-              <code className="rounded bg-white px-1">student@smartcampus.demo</code> /{" "}
-              <code className="rounded bg-white px-1">Student!Demo2026</code>
-            </p>
-          </div>
+          ))}
         </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>

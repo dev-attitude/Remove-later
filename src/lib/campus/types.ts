@@ -5,6 +5,7 @@ export type CampusRole =
   | "lecturer"
   | "student"
   | "finance"
+  | "exams"
   | "hr"
   | "it";
 
@@ -37,6 +38,10 @@ export type CampusModuleId =
   | "requests"
   | "wellness"
   | "settings"
+  | "inst-admin"
+  | "registrar-portal"
+  | "lecturer-portal"
+  | "exam-office"
   | "executive"
   | "success"
   | "advisor"

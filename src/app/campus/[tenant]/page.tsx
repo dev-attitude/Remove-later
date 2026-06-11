@@ -11,20 +11,31 @@ import { prisma } from "@/lib/db";
 
 type Props = { params: Promise<{ tenant: string }> };
 
-async function isStudentMember(slug: string): Promise<boolean> {
+/** Department staff and students land on their own portal, not the management overview */
+const ROLE_HOME: Record<string, string> = {
+  student: "student",
+  lecturer: "lecturer",
+  registrar: "registrar",
+  exams: "exam-office",
+  finance: "finance",
+};
+
+async function getMemberRole(slug: string): Promise<string | null> {
   const session = await auth();
-  if (!session?.user?.id) return false;
+  if (!session?.user?.id) return null;
   const tenant = await prisma.campusTenant.findUnique({ where: { slug } });
-  if (!tenant) return false;
+  if (!tenant) return null;
   const membership = await prisma.campusMembership.findUnique({
     where: { tenantId_userId: { tenantId: tenant.id, userId: session.user.id } },
   });
-  return membership?.role === "student";
+  return membership?.role ?? null;
 }
 
 export default async function CampusOverviewPage({ params }: Props) {
   const { tenant: slug } = await params;
-  if (await isStudentMember(slug)) redirect(`/campus/${slug}/student`);
+  const role = await getMemberRole(slug);
+  const home = role ? ROLE_HOME[role] : undefined;
+  if (home) redirect(`/campus/${slug}/${home}`);
 
   const tenant = await resolveCampusTenant(slug);
   const metrics = await getTenantMetrics(slug);

@@ -111,6 +111,24 @@ async function main() {
     tierId: "stu-pro",
   });
 
+  const staffAccounts: { email: string; name: string; campusRole: string }[] = [
+    { email: "registrar@smartcampus.demo", name: "Demo Registrar", campusRole: "registrar" },
+    { email: "finance@smartcampus.demo", name: "Demo Finance Officer", campusRole: "finance" },
+    { email: "lecturer@smartcampus.demo", name: "Demo Lecturer", campusRole: "lecturer" },
+    { email: "exams@smartcampus.demo", name: "Demo Exams Officer", campusRole: "exams" },
+  ];
+  const staffPasswordHash = await bcrypt.hash("Staff!Demo2026", 12);
+  for (const s of staffAccounts) {
+    await upsertComplimentaryUser({
+      email: s.email,
+      name: s.name,
+      role: "staff",
+      portal: "institution",
+      passwordHash: staffPasswordHash,
+      tierId: "inst-staff",
+    });
+  }
+
   const admin = await prisma.user.findUnique({ where: { email: "admin@gmresearch.com" } });
   const campusUser = await prisma.user.findUnique({
     where: { email: "campus@gmconsultations.com" },
@@ -123,6 +141,12 @@ async function main() {
     campusUser?.id ? { userId: campusUser.id, role: "vc" } : null,
     campusStudent?.id ? { userId: campusStudent.id, role: "student" } : null,
   ].filter((m): m is { userId: string; role: string } => m !== null);
+
+  for (const s of staffAccounts) {
+    const user = await prisma.user.findUnique({ where: { email: s.email } });
+    if (user) campusMembers.push({ userId: user.id, role: s.campusRole });
+  }
+
   await seedCampus(prisma, campusMembers);
 
   console.log("Seed complete:");
@@ -132,6 +156,7 @@ async function main() {
   console.log("  developer@gmresearch.com / Demo1234! (developer)");
   console.log("  campus@gmconsultations.com / SmartCampus!Demo2026 (SmartCampus 360 management)");
   console.log("  student@smartcampus.demo / Student!Demo2026 (SmartCampus 360 student)");
+  console.log("  registrar|finance|lecturer|exams@smartcampus.demo / Staff!Demo2026 (dept portals)");
   console.log("  Campus: /campus/login — horizon-university, acacia-college, unity-nursing");
 }
 
