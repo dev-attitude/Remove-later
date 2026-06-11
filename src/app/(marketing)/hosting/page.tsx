@@ -18,6 +18,7 @@ import {
   HOSTING_OFFERINGS,
   HOSTING_PLATFORM_FEATURES,
   HOSTING_WEBSITE_PLANS,
+  SKYRAPAY_SERVICE_CATALOGUE,
 } from "@/lib/site-content";
 import type { Metadata } from "next";
 
@@ -160,6 +161,44 @@ export default function HostingPage() {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="mt-20">
+        <p className="marketing-eyebrow">Technology &amp; business solutions</p>
+        <h2 className="mt-2 text-3xl font-bold text-navy">
+          One provider for everything around your hosting
+        </h2>
+        <p className="mt-2 max-w-3xl text-slate-600">
+          {BRAND.companyLegal} is a one-stop technology and business solutions provider. Clients who
+          register a company with us later add a website, hosting, business email, security, and
+          ongoing IT support—one team, one invoice.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {SKYRAPAY_SERVICE_CATALOGUE.map((cat) => (
+          <article
+            key={cat.id}
+            className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          >
+            <h3 className="text-lg font-bold text-navy">{cat.title}</h3>
+            <p className="mt-1 text-sm text-slate-500">{cat.summary}</p>
+            <ul className="mt-4 flex-1 space-y-2">
+              {cat.items.map((item) => (
+                <li key={item} className="flex gap-2 text-sm text-slate-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href={cat.href}
+              className="mt-5 inline-flex items-center text-sm font-semibold text-brand-700 hover:underline"
+            >
+              {cat.cta} →
+            </Link>
+          </article>
+        ))}
       </div>
 
       <div className="mt-16 rounded-2xl bg-gradient-to-r from-navy to-royal p-8 text-center text-white md:p-12">

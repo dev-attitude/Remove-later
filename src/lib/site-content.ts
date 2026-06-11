@@ -426,8 +426,119 @@ export const HOSTING_INCLUDED = [
   "Free SSL certificates (AutoSSL)",
   "FTP / SFTP, File Manager & one-click installers",
   "Automated backups (plan dependent)",
+  "Free website migration to our platform",
+  "Cloud, VPS & dedicated servers on request",
+  "Server management & disaster recovery planning",
   "Optional managed maintenance from our team",
 ] as const;
+
+/** Full Skyrapay service catalogue — one-stop technology & business solutions */
+export type ServiceCategory = {
+  id: string;
+  title: string;
+  summary: string;
+  items: string[];
+  href: string;
+  cta: string;
+};
+
+export const SKYRAPAY_SERVICE_CATALOGUE: ServiceCategory[] = [
+  {
+    id: "hosting-infrastructure",
+    title: "Website Hosting & Domains",
+    summary: "Pure IT infrastructure — everything to put and keep your business online.",
+    items: [
+      "Domain registration & DNS management",
+      "Website, email & database hosting (MySQL)",
+      "Cloud, VPS & dedicated server hosting",
+      "SSL certificates & website backups",
+      "Server management & website migration",
+      "Disaster recovery solutions",
+    ],
+    href: "/hosting/plans",
+    cta: "View hosting plans",
+  },
+  {
+    id: "web-development",
+    title: "Website Development",
+    summary: "Design and build — from landing pages to full custom platforms.",
+    items: [
+      "Website design, development & redesign",
+      "E-commerce & landing page development",
+      "Custom web applications & mobile apps",
+      "API & payment gateway integration",
+    ],
+    href: "/services/web-app-development",
+    cta: "Explore web development",
+  },
+  {
+    id: "cybersecurity",
+    title: "Cybersecurity Solutions",
+    summary: "Protect your systems, data, and customers.",
+    items: [
+      "Security audits & vulnerability assessments",
+      "Penetration testing & malware removal",
+      "Firewall configuration & security monitoring",
+      "SSL management & data protection consulting",
+      "Backup & recovery planning",
+    ],
+    href: "/services/it-consulting",
+    cta: "Request a security review",
+  },
+  {
+    id: "it-support",
+    title: "IT Support & Repairs",
+    summary: "Hands-on technical help for offices, schools, and homes.",
+    items: [
+      "Computer, laptop & printer repairs",
+      "Network installation & Wi-Fi setup",
+      "Software installation & virus removal",
+      "Data recovery & IT help desk",
+      "Remote technical support",
+    ],
+    href: "/services/it-consulting",
+    cta: "Get IT support",
+  },
+  {
+    id: "cloud-business",
+    title: "Cloud & Business Email Services",
+    summary: "Modern workplace tools for teams of any size.",
+    items: [
+      "Microsoft 365 & Google Workspace setup",
+      "Business email systems on your domain",
+      "Cloud storage & cloud backup solutions",
+      "Online collaboration & remote work solutions",
+    ],
+    href: "/contact?service=hosting",
+    cta: "Set up your workspace",
+  },
+  {
+    id: "digital-marketing",
+    title: "Digital Marketing & Branding",
+    summary: "Get found and look professional.",
+    items: [
+      "Logo & graphic design",
+      "SEO & online advertising",
+      "Social media management",
+      "Content management & digital marketing",
+    ],
+    href: "/quote",
+    cta: "Request a quote",
+  },
+  {
+    id: "business-services",
+    title: "Business Registration & Compliance",
+    summary: "Business consulting and administrative services beyond IT.",
+    items: [
+      "CC, company & NGO registration",
+      "Compliance services & policy development",
+      "Business profiles & business plans",
+      "Tender documentation",
+    ],
+    href: "/services/business-consulting",
+    cta: "Register your business",
+  },
+];
 
 /** @deprecated Use HOSTING_OFFERINGS + HOSTING_WEBSITE_PLANS */
 export const HOSTING_PLANS: BusinessPackage[] = HOSTING_WEBSITE_PLANS;
