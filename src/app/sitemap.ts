@@ -14,6 +14,7 @@ const MARKETING_PAGES: SitemapEntry[] = [
   { path: "/hosting", priority: 0.88, changeFrequency: "weekly" },
   { path: "/hosting/domains", priority: 0.86, changeFrequency: "weekly" },
   { path: "/hosting/plans", priority: 0.86, changeFrequency: "weekly" },
+  { path: "/hosting/pricing", priority: 0.86, changeFrequency: "weekly" },
   { path: "/hosting/dashboard", priority: 0.84, changeFrequency: "weekly" },
   { path: "/shop", priority: 0.85, changeFrequency: "weekly" },
   { path: "/quote", priority: 0.85, changeFrequency: "weekly" },

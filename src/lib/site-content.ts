@@ -235,7 +235,7 @@ export const HOSTING_OFFERINGS: BusinessPackage[] = [
   {
     id: "hosting-email",
     name: "Business Email",
-    price: 99,
+    price: 150,
     currency: "NAD",
     priceLabel: "From per month",
     description:
@@ -269,7 +269,7 @@ export const HOSTING_OFFERINGS: BusinessPackage[] = [
   {
     id: "hosting-backup",
     name: "Website Backups",
-    price: 149,
+    price: 50,
     currency: "NAD",
     priceLabel: "From per month",
     description:
@@ -303,7 +303,7 @@ export const HOSTING_OFFERINGS: BusinessPackage[] = [
   {
     id: "hosting-maintenance",
     name: "Managed Maintenance",
-    price: 599,
+    price: 350,
     currency: "NAD",
     priceLabel: "From per month",
     description:
@@ -341,7 +341,7 @@ export const HOSTING_WEBSITE_PLANS: BusinessPackage[] = [
   {
     id: "hosting-business",
     name: "Business",
-    price: 449,
+    price: 499,
     currency: "NAD",
     priceLabel: "Per month",
     description:
@@ -358,8 +358,8 @@ export const HOSTING_WEBSITE_PLANS: BusinessPackage[] = [
   },
   {
     id: "hosting-premium",
-    name: "Premium",
-    price: 699,
+    name: "Corporate",
+    price: 999,
     currency: "NAD",
     priceLabel: "Per month",
     description:
@@ -416,6 +416,161 @@ export const HOSTING_INCLUDED = [
   "Server management & disaster recovery planning",
   "Optional managed maintenance from our team",
 ] as const;
+
+/** Entry-level price list (NAD) — affordable launch pricing with room for upselling */
+export type PriceRow = { service: string; price: string };
+export type PriceCategory = { id: string; title: string; rows: PriceRow[] };
+
+export const ENTRY_PRICE_LIST: PriceCategory[] = [
+  {
+    id: "domains",
+    title: "Hosting & Domain Services",
+    rows: [
+      { service: ".com Domain Registration", price: "N$450/year" },
+      { service: ".org Domain Registration", price: "N$500/year" },
+      { service: ".net Domain Registration", price: "N$550/year" },
+      { service: ".co.za Domain Registration", price: "N$250/year" },
+      { service: ".com.na Domain Registration", price: "N$1,650/year" },
+      { service: "DNS Management", price: "N$100/month" },
+      { service: "Domain Transfer", price: "N$350 once-off" },
+    ],
+  },
+  {
+    id: "hosting",
+    title: "Website Hosting",
+    rows: [
+      { service: "Starter Website Hosting", price: "N$199/month" },
+      { service: "Business Website Hosting", price: "N$499/month" },
+      { service: "Corporate Website Hosting", price: "N$999/month" },
+      { service: "Website Migration", price: "N$500 once-off" },
+      { service: "Additional Storage Upgrade", price: "N$100/month" },
+    ],
+  },
+  {
+    id: "email",
+    title: "Business Email Hosting",
+    rows: [
+      { service: "5 Email Accounts", price: "N$150/month" },
+      { service: "10 Email Accounts", price: "N$250/month" },
+      { service: "20 Email Accounts", price: "N$450/month" },
+      { service: "Email Setup", price: "N$250 once-off" },
+      { service: "Email Migration", price: "N$500 once-off" },
+    ],
+  },
+  {
+    id: "ssl",
+    title: "SSL & Security",
+    rows: [
+      { service: "Free SSL Installation (Let's Encrypt)", price: "Free" },
+      { service: "Premium SSL Certificate", price: "N$800/year" },
+      { service: "SSL Renewal Assistance", price: "N$300" },
+      { service: "Basic Security Hardening", price: "N$500" },
+    ],
+  },
+  {
+    id: "backups",
+    title: "Website Backup & Recovery",
+    rows: [
+      { service: "Weekly Backup", price: "N$50/month" },
+      { service: "Daily Backup", price: "N$100/month" },
+      { service: "Website Restore", price: "N$300 once-off" },
+      { service: "Backup Verification", price: "N$150" },
+    ],
+  },
+  {
+    id: "maintenance",
+    title: "Website Maintenance",
+    rows: [
+      { service: "Basic Maintenance", price: "N$350/month" },
+      { service: "Standard Maintenance", price: "N$750/month" },
+      { service: "Premium Maintenance", price: "N$1,500/month" },
+    ],
+  },
+  {
+    id: "webdev",
+    title: "Website Design & Development",
+    rows: [
+      { service: "Single Landing Page", price: "N$2,500" },
+      { service: "Small Business Website (3–5 pages)", price: "N$5,000" },
+      { service: "School Website", price: "N$8,000" },
+      { service: "NGO/Church Website", price: "N$6,000" },
+      { service: "E-Commerce Website", price: "N$15,000" },
+      { service: "Website Redesign", price: "N$3,000" },
+    ],
+  },
+  {
+    id: "security",
+    title: "Cybersecurity Services",
+    rows: [
+      { service: "Website Security Audit", price: "N$1,500" },
+      { service: "Malware Removal", price: "N$1,000" },
+      { service: "Firewall Configuration", price: "N$1,000" },
+      { service: "Security Monitoring", price: "N$500/month" },
+      { service: "Vulnerability Assessment", price: "N$2,500" },
+    ],
+  },
+  {
+    id: "support",
+    title: "IT Support & Repairs",
+    rows: [
+      { service: "PC/Laptop Diagnostic", price: "N$250" },
+      { service: "Software Installation", price: "N$300" },
+      { service: "Virus Removal", price: "N$500" },
+      { service: "Hardware Repair (Labour)", price: "N$500+" },
+      { service: "Network/Wi-Fi Setup", price: "N$800" },
+      { service: "Remote Support (per hour)", price: "N$250" },
+    ],
+  },
+  {
+    id: "cloud",
+    title: "Cloud & Business Technology",
+    rows: [
+      { service: "Microsoft 365 Setup", price: "N$500" },
+      { service: "Google Workspace Setup", price: "N$500" },
+      { service: "Cloud Backup Setup", price: "N$350" },
+      { service: "Remote Work Solution Setup", price: "N$1,500" },
+      { service: "Business Email Integration", price: "N$500" },
+    ],
+  },
+  {
+    id: "marketing",
+    title: "Digital Marketing & Branding",
+    rows: [
+      { service: "Logo Design", price: "N$500" },
+      { service: "Business Cards", price: "N$500" },
+      { service: "Flyer Design", price: "N$500" },
+      { service: "Social Media Setup", price: "N$500" },
+      { service: "Basic SEO Setup", price: "N$1,500" },
+      { service: "Facebook/Google Ads Setup", price: "N$1,000" },
+    ],
+  },
+  {
+    id: "business",
+    title: "Business Support Services",
+    rows: [
+      { service: "CC Registration (All Inclusive)", price: "N$5,660" },
+      { service: "NGO/Church Registration", price: "N$4,550" },
+      { service: "Company Profile Design", price: "N$2,000" },
+      { service: "Business Email & Domain Package", price: "N$950 setup" },
+    ],
+  },
+];
+
+/** Flagship starter bundle — easy first sale for new companies */
+export const STARTER_BUNDLE = {
+  name: "Business Startup Package",
+  priceUpfront: "N$7,500 upfront",
+  priceMonthly: "N$499/month",
+  audience: "Ideal for new companies going online for the first time.",
+  includes: [
+    "CC Registration",
+    ".com Domain",
+    "5 Business Emails",
+    "Starter Hosting",
+    "Basic Business Website (up to 5 pages)",
+    "Free SSL",
+  ],
+} as const;
 
 /** Full Skyrapay service catalogue — one-stop technology & business solutions */
 export type ServiceCategory = {

@@ -8,10 +8,10 @@ import { SKYRAPAY_HOSTING } from "@/lib/brand";
 /** Supported TLDs for demo domain search (NAD/year) */
 export const HOSTING_TLDS = [
   { ext: ".com", price: 450, label: ".com" },
-  { ext: ".com.na", price: 550, label: ".com.na" },
-  { ext: ".org", price: 480, label: ".org" },
-  { ext: ".net", price: 480, label: ".net" },
-  { ext: ".co.za", price: 420, label: ".co.za" },
+  { ext: ".com.na", price: 1650, label: ".com.na" },
+  { ext: ".org", price: 500, label: ".org" },
+  { ext: ".net", price: 550, label: ".net" },
+  { ext: ".co.za", price: 250, label: ".co.za" },
   { ext: ".africa", price: 650, label: ".africa" },
 ] as const;
 

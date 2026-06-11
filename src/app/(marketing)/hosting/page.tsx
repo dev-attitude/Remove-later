@@ -59,6 +59,9 @@ export default function HostingPage() {
           <Link href="/hosting/plans" className="marketing-btn-secondary text-sm">
             View hosting plans
           </Link>
+          <Link href="/hosting/pricing" className="marketing-btn-secondary text-sm">
+            Full price list
+          </Link>
           <Link
             href="/hosting/dashboard"
             className="inline-flex items-center rounded-lg border border-white/30 px-4 py-2 text-sm font-semibold transition hover:bg-white/10"
