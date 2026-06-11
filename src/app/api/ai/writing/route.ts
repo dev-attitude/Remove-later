@@ -6,6 +6,7 @@ import { generateAcademicWriting } from "@/lib/services/academic-writing";
 import { isResearchLevelId } from "@/lib/research-levels";
 import { WRITING_CHAPTERS, WRITING_SECTIONS } from "@/lib/modules";
 import { enforceTrialOrSubscription, trialExpiredMessage } from "@/lib/billing/trial";
+import { recordError } from "@/lib/server-log";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -120,6 +121,7 @@ export async function POST(req: Request) {
       );
     }
     console.error("[ai/writing]", e);
+    void recordError("api/ai/writing", e);
     return NextResponse.json(
       { error: "Writing generation failed. Please try again." },
       { status: 500 }

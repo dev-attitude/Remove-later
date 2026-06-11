@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { enforceTrialOrSubscription, trialDays } from "@/lib/billing/trial";
 import { loadUnderstandingTopicContent } from "@/lib/services/understanding-topic-content";
+import { recordError } from "@/lib/server-log";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -67,6 +68,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
     console.error("[research/understanding/topic]", e);
+    void recordError("api/research/understanding/topic", e);
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Failed to load topic" },
       { status: 500 }

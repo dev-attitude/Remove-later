@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
+  AlertTriangle,
   ArrowLeft,
   BookOpen,
   Briefcase,
   GraduationCap,
+  Inbox,
   LayoutDashboard,
   LogOut,
   TrendingDown,
@@ -28,6 +30,13 @@ const NAV: Array<{
   section?: string;
 }> = [
   { href: "/manage", label: "Overview", icon: LayoutDashboard, exact: true },
+  {
+    href: "/manage/inquiries",
+    label: "Orders & inquiries",
+    icon: Inbox,
+    section: "Sales & support",
+  },
+  { href: "/manage/errors", label: "Technical errors", icon: AlertTriangle },
   { href: "/manage/clients", label: "Clients", icon: Users, section: "Business" },
   { href: "/manage/services", label: "Services & progress", icon: Briefcase },
   { href: "/manage/income", label: "Income", icon: TrendingUp },

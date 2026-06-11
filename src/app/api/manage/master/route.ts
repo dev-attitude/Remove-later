@@ -22,6 +22,8 @@ export async function GET() {
       platformBooks,
       campusTenants,
       campusStudents,
+      newInquiries,
+      errors7,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { createdAt: { gte: since30 } } }),
@@ -33,6 +35,10 @@ export async function GET() {
       prisma.understandingBook.count({ where: { userId: null } }),
       prisma.campusTenant.count(),
       prisma.campusStudent.count(),
+      prisma.serviceInquiry.count({ where: { status: "new" } }),
+      prisma.errorLog.count({
+        where: { createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } },
+      }),
     ]);
 
     return NextResponse.json({
@@ -47,6 +53,10 @@ export async function GET() {
       campus: {
         tenants: campusTenants,
         students: campusStudents,
+      },
+      support: {
+        newInquiries,
+        errors7,
       },
     });
   } catch (e) {

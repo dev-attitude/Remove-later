@@ -20,6 +20,7 @@ type MasterData = {
     platformBooks: number;
   };
   campus: { tenants: number; students: number };
+  support: { newInquiries: number; errors7: number };
 };
 
 type DashboardData = {
@@ -87,7 +88,37 @@ export default function ManageOverviewPage() {
       </div>
 
       {master && (
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <Link href="/manage/inquiries" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">New orders & inquiries</p>
+              <p
+                className={`mt-2 text-2xl font-bold ${
+                  master.support.newInquiries > 0 ? "text-amber-600" : "text-slate-900"
+                }`}
+              >
+                {master.support.newInquiries}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                Hosting, shop, IT services & contact
+              </p>
+            </Card>
+          </Link>
+          <Link href="/manage/errors" className="block">
+            <Card className="!p-4 h-full transition hover:border-brand-300">
+              <p className="text-xs text-slate-500">Technical errors (7 days)</p>
+              <p
+                className={`mt-2 text-2xl font-bold ${
+                  master.support.errors7 > 0 ? "text-red-600" : "text-emerald-700"
+                }`}
+              >
+                {master.support.errors7}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {master.support.errors7 === 0 ? "All systems healthy" : "Click to investigate"}
+              </p>
+            </Card>
+          </Link>
           <Link href="/manage/app-users" className="block">
             <Card className="!p-4 h-full transition hover:border-brand-300">
               <p className="text-xs text-slate-500">Research App users</p>

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { checkPlagiarism } from "@/lib/services/integrity";
 import { config } from "@/lib/config";
+import { recordError } from "@/lib/server-log";
 
 const schema = z.object({
   text: z.string().min(10).max(100000),
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
     if (e instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
+    void recordError("api/plagiarism/check", e);
     return NextResponse.json({ error: "Check failed" }, { status: 500 });
   }
 }

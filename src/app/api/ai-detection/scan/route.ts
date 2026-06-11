@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { scanTextForAI } from "@/lib/services/ai-detection";
+import { recordError } from "@/lib/server-log";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -28,6 +29,7 @@ export async function POST(req: Request) {
     if (e instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
+    void recordError("api/ai-detection/scan", e);
     const message = e instanceof Error ? e.message : "Scan failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }

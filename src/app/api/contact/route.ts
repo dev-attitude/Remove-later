@@ -4,6 +4,7 @@ import {
   isContactNotifyConfigured,
   notifyContactInquiry,
 } from "@/lib/services/contact-notifications";
+import { recordError, recordInquiry } from "@/lib/server-log";
 
 const contactSchema = z.object({
   type: z.enum(["contact", "purchase"]),
@@ -33,6 +34,18 @@ export async function POST(req: Request) {
       package: body.packageName ?? body.packageId,
       message: summary,
       at: new Date().toISOString(),
+    });
+
+    // Persist for the master admin inbox regardless of notification outcome
+    await recordInquiry({
+      kind: body.type,
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      subject: body.subject,
+      packageId: body.packageId,
+      packageName: body.packageName,
+      message: body.message,
     });
 
     const isProduction = process.env.GM_APP_MODE === "production";
@@ -78,6 +91,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Please check your form fields." }, { status: 400 });
     }
     console.error("[gm-contact-inquiry]", e);
+    await recordError("api/contact", e);
     return NextResponse.json({ error: "Could not send message." }, { status: 500 });
   }
 }

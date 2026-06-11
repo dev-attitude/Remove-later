@@ -6,6 +6,7 @@ import {
   type HostingCartItem,
 } from "@/lib/hosting-demo";
 import { notifyContactInquiry } from "@/lib/services/contact-notifications";
+import { recordError, recordInquiry } from "@/lib/server-log";
 
 const cartItemSchema = z.object({
   lineId: z.string(),
@@ -52,6 +53,18 @@ export async function POST(req: Request) {
 
     console.info("[hosting-demo-order]", { orderId, email: body.email, items: body.items.length });
 
+    await recordInquiry({
+      kind: "hosting_order",
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      packageName: "Hosting order",
+      message: body.notes,
+      itemsJson: JSON.stringify(body.items),
+      totalNad: account.monthlyTotal + account.yearlyTotal,
+      orderRef: orderId,
+    });
+
     try {
       await notifyContactInquiry({
         type: "purchase",
@@ -77,6 +90,7 @@ export async function POST(req: Request) {
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid order data" }, { status: 400 });
     }
+    await recordError("api/hosting/orders", err);
     return NextResponse.json({ error: "Order failed" }, { status: 500 });
   }
 }
