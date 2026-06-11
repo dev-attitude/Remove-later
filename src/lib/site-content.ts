@@ -417,8 +417,12 @@ export const HOSTING_INCLUDED = [
   "Optional managed maintenance from our team",
 ] as const;
 
-/** Entry-level price list (NAD) — affordable launch pricing with room for upselling */
-export type PriceRow = { service: string; price: string };
+/**
+ * Entry-level price list — affordable launch pricing with room for upselling.
+ * Amounts are stored in NAD and converted to the visitor's local currency at display time.
+ * amountNad of 0 means the item is free; suffix is appended after the formatted price.
+ */
+export type PriceRow = { service: string; amountNad: number; suffix?: string };
 export type PriceCategory = { id: string; title: string; rows: PriceRow[] };
 
 export const ENTRY_PRICE_LIST: PriceCategory[] = [
@@ -426,141 +430,141 @@ export const ENTRY_PRICE_LIST: PriceCategory[] = [
     id: "domains",
     title: "Hosting & Domain Services",
     rows: [
-      { service: ".com Domain Registration", price: "N$450/year" },
-      { service: ".org Domain Registration", price: "N$500/year" },
-      { service: ".net Domain Registration", price: "N$550/year" },
-      { service: ".co.za Domain Registration", price: "N$250/year" },
-      { service: ".com.na Domain Registration", price: "N$1,650/year" },
-      { service: "DNS Management", price: "N$100/month" },
-      { service: "Domain Transfer", price: "N$350 once-off" },
+      { service: ".com Domain Registration", amountNad: 450, suffix: "/year" },
+      { service: ".org Domain Registration", amountNad: 500, suffix: "/year" },
+      { service: ".net Domain Registration", amountNad: 550, suffix: "/year" },
+      { service: ".co.za Domain Registration", amountNad: 250, suffix: "/year" },
+      { service: ".com.na Domain Registration", amountNad: 1650, suffix: "/year" },
+      { service: "DNS Management", amountNad: 100, suffix: "/month" },
+      { service: "Domain Transfer", amountNad: 350, suffix: " once-off" },
     ],
   },
   {
     id: "hosting",
     title: "Website Hosting",
     rows: [
-      { service: "Starter Website Hosting", price: "N$199/month" },
-      { service: "Business Website Hosting", price: "N$499/month" },
-      { service: "Corporate Website Hosting", price: "N$999/month" },
-      { service: "Website Migration", price: "N$500 once-off" },
-      { service: "Additional Storage Upgrade", price: "N$100/month" },
+      { service: "Starter Website Hosting", amountNad: 199, suffix: "/month" },
+      { service: "Business Website Hosting", amountNad: 499, suffix: "/month" },
+      { service: "Corporate Website Hosting", amountNad: 999, suffix: "/month" },
+      { service: "Website Migration", amountNad: 500, suffix: " once-off" },
+      { service: "Additional Storage Upgrade", amountNad: 100, suffix: "/month" },
     ],
   },
   {
     id: "email",
     title: "Business Email Hosting",
     rows: [
-      { service: "5 Email Accounts", price: "N$150/month" },
-      { service: "10 Email Accounts", price: "N$250/month" },
-      { service: "20 Email Accounts", price: "N$450/month" },
-      { service: "Email Setup", price: "N$250 once-off" },
-      { service: "Email Migration", price: "N$500 once-off" },
+      { service: "5 Email Accounts", amountNad: 150, suffix: "/month" },
+      { service: "10 Email Accounts", amountNad: 250, suffix: "/month" },
+      { service: "20 Email Accounts", amountNad: 450, suffix: "/month" },
+      { service: "Email Setup", amountNad: 250, suffix: " once-off" },
+      { service: "Email Migration", amountNad: 500, suffix: " once-off" },
     ],
   },
   {
     id: "ssl",
     title: "SSL & Security",
     rows: [
-      { service: "Free SSL Installation (Let's Encrypt)", price: "Free" },
-      { service: "Premium SSL Certificate", price: "N$800/year" },
-      { service: "SSL Renewal Assistance", price: "N$300" },
-      { service: "Basic Security Hardening", price: "N$500" },
+      { service: "Free SSL Installation (Let's Encrypt)", amountNad: 0 },
+      { service: "Premium SSL Certificate", amountNad: 800, suffix: "/year" },
+      { service: "SSL Renewal Assistance", amountNad: 300 },
+      { service: "Basic Security Hardening", amountNad: 500 },
     ],
   },
   {
     id: "backups",
     title: "Website Backup & Recovery",
     rows: [
-      { service: "Weekly Backup", price: "N$50/month" },
-      { service: "Daily Backup", price: "N$100/month" },
-      { service: "Website Restore", price: "N$300 once-off" },
-      { service: "Backup Verification", price: "N$150" },
+      { service: "Weekly Backup", amountNad: 50, suffix: "/month" },
+      { service: "Daily Backup", amountNad: 100, suffix: "/month" },
+      { service: "Website Restore", amountNad: 300, suffix: " once-off" },
+      { service: "Backup Verification", amountNad: 150 },
     ],
   },
   {
     id: "maintenance",
     title: "Website Maintenance",
     rows: [
-      { service: "Basic Maintenance", price: "N$350/month" },
-      { service: "Standard Maintenance", price: "N$750/month" },
-      { service: "Premium Maintenance", price: "N$1,500/month" },
+      { service: "Basic Maintenance", amountNad: 350, suffix: "/month" },
+      { service: "Standard Maintenance", amountNad: 750, suffix: "/month" },
+      { service: "Premium Maintenance", amountNad: 1500, suffix: "/month" },
     ],
   },
   {
     id: "webdev",
     title: "Website Design & Development",
     rows: [
-      { service: "Single Landing Page", price: "N$2,500" },
-      { service: "Small Business Website (3–5 pages)", price: "N$5,000" },
-      { service: "School Website", price: "N$8,000" },
-      { service: "NGO/Church Website", price: "N$6,000" },
-      { service: "E-Commerce Website", price: "N$15,000" },
-      { service: "Website Redesign", price: "N$3,000" },
+      { service: "Single Landing Page", amountNad: 2500 },
+      { service: "Small Business Website (3–5 pages)", amountNad: 5000 },
+      { service: "School Website", amountNad: 8000 },
+      { service: "NGO/Church Website", amountNad: 6000 },
+      { service: "E-Commerce Website", amountNad: 15000 },
+      { service: "Website Redesign", amountNad: 3000 },
     ],
   },
   {
     id: "security",
     title: "Cybersecurity Services",
     rows: [
-      { service: "Website Security Audit", price: "N$1,500" },
-      { service: "Malware Removal", price: "N$1,000" },
-      { service: "Firewall Configuration", price: "N$1,000" },
-      { service: "Security Monitoring", price: "N$500/month" },
-      { service: "Vulnerability Assessment", price: "N$2,500" },
+      { service: "Website Security Audit", amountNad: 1500 },
+      { service: "Malware Removal", amountNad: 1000 },
+      { service: "Firewall Configuration", amountNad: 1000 },
+      { service: "Security Monitoring", amountNad: 500, suffix: "/month" },
+      { service: "Vulnerability Assessment", amountNad: 2500 },
     ],
   },
   {
     id: "support",
     title: "IT Support & Repairs",
     rows: [
-      { service: "PC/Laptop Diagnostic", price: "N$250" },
-      { service: "Software Installation", price: "N$300" },
-      { service: "Virus Removal", price: "N$500" },
-      { service: "Hardware Repair (Labour)", price: "N$500+" },
-      { service: "Network/Wi-Fi Setup", price: "N$800" },
-      { service: "Remote Support (per hour)", price: "N$250" },
+      { service: "PC/Laptop Diagnostic", amountNad: 250 },
+      { service: "Software Installation", amountNad: 300 },
+      { service: "Virus Removal", amountNad: 500 },
+      { service: "Hardware Repair (Labour)", amountNad: 500, suffix: "+" },
+      { service: "Network/Wi-Fi Setup", amountNad: 800 },
+      { service: "Remote Support (per hour)", amountNad: 250, suffix: "/hour" },
     ],
   },
   {
     id: "cloud",
     title: "Cloud & Business Technology",
     rows: [
-      { service: "Microsoft 365 Setup", price: "N$500" },
-      { service: "Google Workspace Setup", price: "N$500" },
-      { service: "Cloud Backup Setup", price: "N$350" },
-      { service: "Remote Work Solution Setup", price: "N$1,500" },
-      { service: "Business Email Integration", price: "N$500" },
+      { service: "Microsoft 365 Setup", amountNad: 500 },
+      { service: "Google Workspace Setup", amountNad: 500 },
+      { service: "Cloud Backup Setup", amountNad: 350 },
+      { service: "Remote Work Solution Setup", amountNad: 1500 },
+      { service: "Business Email Integration", amountNad: 500 },
     ],
   },
   {
     id: "marketing",
     title: "Digital Marketing & Branding",
     rows: [
-      { service: "Logo Design", price: "N$500" },
-      { service: "Business Cards", price: "N$500" },
-      { service: "Flyer Design", price: "N$500" },
-      { service: "Social Media Setup", price: "N$500" },
-      { service: "Basic SEO Setup", price: "N$1,500" },
-      { service: "Facebook/Google Ads Setup", price: "N$1,000" },
+      { service: "Logo Design", amountNad: 500 },
+      { service: "Business Cards", amountNad: 500 },
+      { service: "Flyer Design", amountNad: 500 },
+      { service: "Social Media Setup", amountNad: 500 },
+      { service: "Basic SEO Setup", amountNad: 1500 },
+      { service: "Facebook/Google Ads Setup", amountNad: 1000 },
     ],
   },
   {
     id: "business",
     title: "Business Support Services",
     rows: [
-      { service: "CC Registration (All Inclusive)", price: "N$5,660" },
-      { service: "NGO/Church Registration", price: "N$4,550" },
-      { service: "Company Profile Design", price: "N$2,000" },
-      { service: "Business Email & Domain Package", price: "N$950 setup" },
+      { service: "CC Registration (All Inclusive)", amountNad: 5660 },
+      { service: "NGO/Church Registration", amountNad: 4550 },
+      { service: "Company Profile Design", amountNad: 2000 },
+      { service: "Business Email & Domain Package", amountNad: 950, suffix: " setup" },
     ],
   },
 ];
 
-/** Flagship starter bundle — easy first sale for new companies */
+/** Flagship starter bundle — easy first sale for new companies (NAD base prices) */
 export const STARTER_BUNDLE = {
   name: "Business Startup Package",
-  priceUpfront: "N$7,500 upfront",
-  priceMonthly: "N$499/month",
+  upfrontNad: 7500,
+  monthlyNad: 499,
   audience: "Ideal for new companies going online for the first time.",
   includes: [
     "CC Registration",
