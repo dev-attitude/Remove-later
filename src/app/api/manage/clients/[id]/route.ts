@@ -15,6 +15,17 @@ const patchSchema = z.object({
   company: z.string().max(200).optional(),
   location: z.string().max(200).optional(),
   status: z.enum(["prospect", "active", "completed", "archived"]).optional(),
+  category: z
+    .enum([
+      "hosting-web",
+      "research-app",
+      "business-consulting",
+      "registration",
+      "it-support",
+      "campus",
+      "general",
+    ])
+    .optional(),
   notes: z.string().max(5000).optional(),
 });
 
@@ -62,6 +73,7 @@ export async function PATCH(req: Request, { params }: Params) {
         ...(body.company !== undefined ? { company: body.company.trim() || null } : {}),
         ...(body.location !== undefined ? { location: body.location.trim() || null } : {}),
         ...(body.status !== undefined ? { status: body.status } : {}),
+        ...(body.category !== undefined ? { category: body.category } : {}),
         ...(body.notes !== undefined ? { notes: body.notes.trim() || null } : {}),
       },
     });

@@ -8,6 +8,7 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { StatusPill } from "@/components/manage/StatusPill";
 import {
+  CLIENT_CATEGORIES,
   CLIENT_STATUSES,
   ENGAGEMENT_STATUSES,
   clientStatusLabel,
@@ -124,8 +125,28 @@ export default function ManageClientDetailPage() {
         <div>
           <h1 className="font-display text-2xl font-bold text-slate-900">{client.name}</h1>
           {client.company && <p className="text-slate-600">{client.company}</p>}
-          <div className="mt-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <StatusPill status={client.status} label={clientStatusLabel(client.status)} />
+            <select
+              className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700"
+              value={client.category ?? "general"}
+              onChange={async (e) => {
+                const category = e.target.value;
+                setClient({ ...client, category });
+                await fetch(`/api/manage/clients/${id}`, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ category }),
+                });
+              }}
+              aria-label="Client category"
+            >
+              {CLIENT_CATEGORIES.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <Button type="button" onClick={() => setShowEngagement(true)}>

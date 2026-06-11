@@ -38,6 +38,7 @@ model BizClient {
   company     String?
   location    String?
   status      String          @default("active")
+  category    String          @default("general")
   notes       String?         @db.Text
   createdBy   String?
   createdAt   DateTime        @default(now())

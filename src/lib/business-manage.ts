@@ -14,6 +14,23 @@ export const CLIENT_STATUSES = [
   { id: "archived", label: "Archived" },
 ] as const;
 
+/** Which side of the business a client belongs to — keeps each client list in its own lane */
+export const CLIENT_CATEGORIES = [
+  { id: "hosting-web", label: "Hosting & Website" },
+  { id: "research-app", label: "Research App" },
+  { id: "business-consulting", label: "Business Consultations" },
+  { id: "registration", label: "Business Registration & Compliance" },
+  { id: "it-support", label: "IT Support & Repairs" },
+  { id: "campus", label: "SmartCampus / Institutions" },
+  { id: "general", label: "General / Other" },
+] as const;
+
+export type ClientCategoryId = (typeof CLIENT_CATEGORIES)[number]["id"];
+
+export function clientCategoryLabel(category: string) {
+  return CLIENT_CATEGORIES.find((c) => c.id === category)?.label ?? category;
+}
+
 export const ENGAGEMENT_STATUSES = [
   { id: "inquiry", label: "Inquiry" },
   { id: "quoted", label: "Quoted" },

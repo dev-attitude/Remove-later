@@ -6,7 +6,12 @@ import { Plus, Search } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { StatusPill } from "@/components/manage/StatusPill";
-import { CLIENT_STATUSES, clientStatusLabel } from "@/lib/business-manage";
+import {
+  CLIENT_CATEGORIES,
+  CLIENT_STATUSES,
+  clientCategoryLabel,
+  clientStatusLabel,
+} from "@/lib/business-manage";
 
 type ClientRow = {
   id: string;
@@ -15,6 +20,7 @@ type ClientRow = {
   phone: string | null;
   company: string | null;
   status: string;
+  category: string;
   _count: { engagements: number; income: number };
   engagements: Array<{ id: string; title: string; status: string; progressPercent: number }>;
 };
@@ -23,6 +29,7 @@ export default function ManageClientsPage() {
   const [clients, setClients] = useState<ClientRow[]>([]);
   const [q, setQ] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +40,7 @@ export default function ManageClientsPage() {
     company: "",
     location: "",
     status: "active",
+    category: "general",
     notes: "",
   });
 
@@ -41,6 +49,7 @@ export default function ManageClientsPage() {
     const params = new URLSearchParams();
     if (q.trim()) params.set("q", q.trim());
     if (statusFilter) params.set("status", statusFilter);
+    if (categoryFilter) params.set("category", categoryFilter);
     try {
       const res = await fetch(`/api/manage/clients?${params}`);
       const data = await res.json();
@@ -51,7 +60,7 @@ export default function ManageClientsPage() {
     } finally {
       setLoading(false);
     }
-  }, [q, statusFilter]);
+  }, [q, statusFilter, categoryFilter]);
 
   useEffect(() => {
     load();
@@ -69,7 +78,7 @@ export default function ManageClientsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setShowForm(false);
-      setForm({ name: "", email: "", phone: "", company: "", location: "", status: "active", notes: "" });
+      setForm({ name: "", email: "", phone: "", company: "", location: "", status: "active", category: "general", notes: "" });
       load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Create failed");
@@ -142,6 +151,17 @@ export default function ManageClientsPage() {
                 </option>
               ))}
             </select>
+            <select
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+            >
+              {CLIENT_CATEGORIES.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
             <textarea
               placeholder="Notes"
               className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"
@@ -158,6 +178,34 @@ export default function ManageClientsPage() {
           </form>
         </Card>
       )}
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setCategoryFilter("")}
+          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+            categoryFilter === ""
+              ? "bg-brand-600 text-white"
+              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+          }`}
+        >
+          All categories
+        </button>
+        {CLIENT_CATEGORIES.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => setCategoryFilter(categoryFilter === c.id ? "" : c.id)}
+            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+              categoryFilter === c.id
+                ? "bg-brand-600 text-white"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            }`}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
 
       <div className="mb-4 flex flex-wrap gap-3">
         <div className="relative min-w-[200px] flex-1">
@@ -190,31 +238,54 @@ export default function ManageClientsPage() {
           <p className="text-sm text-slate-600">No clients found. Add your first client above.</p>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {clients.map((c) => (
-            <Link key={c.id} href={`/manage/clients/${c.id}`}>
-              <Card className="h-full transition hover:border-brand-200 hover:shadow-md">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-semibold text-slate-900">{c.name}</p>
-                    {c.company && <p className="text-sm text-slate-600">{c.company}</p>}
-                  </div>
-                  <StatusPill status={c.status} label={clientStatusLabel(c.status)} />
+        <div className="space-y-8">
+          {CLIENT_CATEGORIES.filter((cat) =>
+            clients.some((c) => c.category === cat.id)
+          ).map((cat) => {
+            const group = clients.filter((c) => c.category === cat.id);
+            return (
+              <section key={cat.id}>
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+                  {cat.label}
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+                    {group.length}
+                  </span>
+                </h2>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {group.map((c) => (
+                    <Link key={c.id} href={`/manage/clients/${c.id}`}>
+                      <Card className="h-full transition hover:border-brand-200 hover:shadow-md">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <p className="font-semibold text-slate-900">{c.name}</p>
+                            {c.company && <p className="text-sm text-slate-600">{c.company}</p>}
+                          </div>
+                          <StatusPill status={c.status} label={clientStatusLabel(c.status)} />
+                        </div>
+                        <p className="mt-2 text-xs text-slate-500">
+                          {[c.email, c.phone].filter(Boolean).join(" · ") || "No contact details"}
+                        </p>
+                        <p className="mt-3 text-xs font-medium text-slate-600">
+                          {c._count.engagements} service(s) · {c._count.income} payment(s)
+                        </p>
+                        {c.engagements[0] && (
+                          <p className="mt-1 text-xs text-brand-700">
+                            Latest: {c.engagements[0].title} ({c.engagements[0].progressPercent}%)
+                          </p>
+                        )}
+                      </Card>
+                    </Link>
+                  ))}
                 </div>
-                <p className="mt-2 text-xs text-slate-500">
-                  {[c.email, c.phone].filter(Boolean).join(" · ") || "No contact details"}
-                </p>
-                <p className="mt-3 text-xs font-medium text-slate-600">
-                  {c._count.engagements} service(s) · {c._count.income} payment(s)
-                </p>
-                {c.engagements[0] && (
-                  <p className="mt-1 text-xs text-brand-700">
-                    Latest: {c.engagements[0].title} ({c.engagements[0].progressPercent}%)
-                  </p>
-                )}
-              </Card>
-            </Link>
-          ))}
+              </section>
+            );
+          })}
+          {clients.some((c) => !CLIENT_CATEGORIES.some((cat) => cat.id === c.category)) && (
+            <p className="text-xs text-slate-400">
+              Some clients have an unknown category — open them and set a category to file them
+              correctly.
+            </p>
+          )}
         </div>
       )}
     </div>

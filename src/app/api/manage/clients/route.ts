@@ -6,6 +6,16 @@ import { manageErrorResponse } from "@/lib/manage-api";
 
 export const dynamic = "force-dynamic";
 
+const categorySchema = z.enum([
+  "hosting-web",
+  "research-app",
+  "business-consulting",
+  "registration",
+  "it-support",
+  "campus",
+  "general",
+]);
+
 const createSchema = z.object({
   name: z.string().min(1).max(200),
   email: z.string().email().optional().or(z.literal("")),
@@ -13,6 +23,7 @@ const createSchema = z.object({
   company: z.string().max(200).optional(),
   location: z.string().max(200).optional(),
   status: z.enum(["prospect", "active", "completed", "archived"]).optional(),
+  category: categorySchema.optional(),
   notes: z.string().max(5000).optional(),
 });
 
@@ -21,11 +32,13 @@ export async function GET(req: Request) {
     await requireBusinessAdmin();
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
+    const category = searchParams.get("category");
     const q = searchParams.get("q")?.trim();
 
     const clients = await prisma.bizClient.findMany({
       where: {
         ...(status ? { status } : {}),
+        ...(category ? { category } : {}),
         ...(q
           ? {
               OR: [
@@ -67,6 +80,7 @@ export async function POST(req: Request) {
         company: body.company?.trim() || null,
         location: body.location?.trim() || null,
         status: body.status ?? "active",
+        category: body.category ?? "general",
         notes: body.notes?.trim() || null,
         createdBy: session.user.id,
       },
