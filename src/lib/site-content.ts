@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { BRAND } from "./brand";
+import { domainPriceListRows } from "./domain-pricing";
 
 export const COMPANY = {
   name: BRAND.companyLegal,
@@ -200,7 +201,7 @@ export const HOSTING_OFFERINGS: BusinessPackage[] = [
   {
     id: "hosting-domain",
     name: "Domain Registration",
-    price: 450,
+    price: 159.85,
     currency: "NAD",
     priceLabel: "From per year",
     description:
@@ -430,11 +431,7 @@ export const ENTRY_PRICE_LIST: PriceCategory[] = [
     id: "domains",
     title: "Hosting & Domain Services",
     rows: [
-      { service: ".com Domain Registration", amountNad: 450, suffix: "/year" },
-      { service: ".org Domain Registration", amountNad: 500, suffix: "/year" },
-      { service: ".net Domain Registration", amountNad: 550, suffix: "/year" },
-      { service: ".co.za Domain Registration", amountNad: 250, suffix: "/year" },
-      { service: ".com.na Domain Registration", amountNad: 1650, suffix: "/year" },
+      ...domainPriceListRows(),
       { service: "DNS Management", amountNad: 100, suffix: "/month" },
       { service: "Domain Transfer", amountNad: 350, suffix: " once-off" },
     ],

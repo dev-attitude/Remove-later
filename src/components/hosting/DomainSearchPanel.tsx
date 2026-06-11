@@ -11,6 +11,92 @@ import {
   formatHostingPeriod,
 } from "@/lib/hosting-demo";
 
+function DomainPrice({
+  result,
+  formatPrice,
+}: {
+  result: DomainSearchResult;
+  formatPrice: (amountNad: number, suffix?: string) => string;
+}) {
+  return (
+    <div className="text-right">
+      <p className="text-base font-bold text-navy">
+        {formatPrice(result.priceNad, formatHostingPeriod("year"))}
+      </p>
+      {result.retailPriceNad != null && result.retailPriceNad > result.priceNad && (
+        <p className="text-xs text-slate-400 line-through">
+          Retail {formatPrice(result.retailPriceNad, formatHostingPeriod("year"))}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function DomainRow({
+  result,
+  formatPrice,
+  hasItem,
+  addItem,
+  removeItem,
+  highlight,
+}: {
+  result: DomainSearchResult;
+  formatPrice: (amountNad: number, suffix?: string) => string;
+  hasItem: (lineId: string) => boolean;
+  addItem: (item: ReturnType<typeof cartItemFromDomain>) => void;
+  removeItem: (lineId: string) => void;
+  highlight?: boolean;
+}) {
+  const lineId = `domain-${result.domain}`;
+  const inCart = hasItem(lineId);
+
+  return (
+    <li
+      className={`flex flex-wrap items-center justify-between gap-3 px-4 py-4 ${
+        highlight ? "bg-brand-50/40" : ""
+      }`}
+    >
+      <div className="flex min-w-0 items-center gap-3">
+        {result.available ? (
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+        ) : (
+          <XCircle className="h-5 w-5 shrink-0 text-red-400" />
+        )}
+        <div className="min-w-0">
+          <p className="truncate font-semibold text-navy">{result.domain}</p>
+          <p className="text-xs text-slate-500">
+            {result.available ? "Available" : "Taken"}
+            {result.premium ? " · Premium" : ""}
+            {result.isNa ? " · Namibian namespace" : ""}
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <DomainPrice result={result} formatPrice={formatPrice} />
+        {result.available &&
+          (inCart ? (
+            <button
+              type="button"
+              onClick={() => removeItem(lineId)}
+              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+            >
+              Remove
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => addItem(cartItemFromDomain(result))}
+              className="flex items-center gap-1.5 rounded-lg bg-royal px-3 py-1.5 text-sm font-semibold text-white hover:bg-navy"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              Add to cart
+            </button>
+          ))}
+      </div>
+    </li>
+  );
+}
+
 export function DomainSearchPanel() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DomainSearchResult[]>([]);
@@ -45,6 +131,12 @@ export function DomainSearchPanel() {
     }
   }
 
+  const primary = results[0];
+  const suggested = results.slice(1).filter((r) => !r.isNa);
+  const naPremium = results.filter((r) => r.isNa);
+
+  const rowProps = { formatPrice, hasItem, addItem, removeItem };
+
   return (
     <div>
       <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row">
@@ -54,7 +146,7 @@ export function DomainSearchPanel() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search your domain — e.g. mybusiness"
+            placeholder="Search your domain — e.g. mybusiness or skyrapay"
             className="marketing-input w-full pl-10"
             minLength={2}
             required
@@ -79,66 +171,57 @@ export function DomainSearchPanel() {
       )}
 
       {results.length > 0 && (
-        <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 bg-slate-50 px-4 py-3">
-            <p className="text-sm font-semibold text-navy">
-              Results for &ldquo;{query.trim().toLowerCase()}&rdquo;
-            </p>
-            <p className="text-xs text-slate-500">
-              Prices in {currency} — availability updated in real time
-            </p>
+        <div className="mt-8 space-y-6">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-100 bg-slate-50 px-4 py-3">
+              <p className="text-sm font-semibold text-navy">
+                Results for &ldquo;{query.trim().toLowerCase()}&rdquo;
+              </p>
+              <p className="text-xs text-slate-500">
+                Prices in {currency} per year — each extension has its own rate.{" "}
+                <span className="font-medium text-navy">.na domains are premium.</span>
+              </p>
+            </div>
+
+            {primary && (
+              <ul className="divide-y divide-slate-100">
+                <DomainRow result={primary} {...rowProps} highlight />
+              </ul>
+            )}
           </div>
-          <ul className="divide-y divide-slate-100">
-            {results.map((r) => {
-              const lineId = `domain-${r.domain}`;
-              const inCart = hasItem(lineId);
-              return (
-                <li
-                  key={r.domain}
-                  className="flex flex-wrap items-center justify-between gap-3 px-4 py-4"
-                >
-                  <div className="flex items-center gap-3">
-                    {r.available ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                    ) : (
-                      <XCircle className="h-5 w-5 text-red-400" />
-                    )}
-                    <div>
-                      <p className="font-semibold text-navy">{r.domain}</p>
-                      <p className="text-xs text-slate-500">
-                        {r.available ? "Available" : "Taken"}
-                        {r.premium ? " · Premium domain" : ""}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <p className="text-sm font-bold text-navy">
-                      {formatPrice(r.priceNad, formatHostingPeriod("year"))}
-                    </p>
-                    {r.available &&
-                      (inCart ? (
-                        <button
-                          type="button"
-                          onClick={() => removeItem(lineId)}
-                          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
-                        >
-                          Remove
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => addItem(cartItemFromDomain(r))}
-                          className="flex items-center gap-1.5 rounded-lg bg-royal px-3 py-1.5 text-sm font-semibold text-white hover:bg-navy"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                          Add to cart
-                        </button>
-                      ))}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+
+          {suggested.length > 0 && (
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+              <div className="border-b border-slate-100 px-4 py-3">
+                <p className="text-sm font-semibold text-navy">Suggested extensions</p>
+                <p className="text-xs text-slate-500">
+                  International domains — from {formatPrice(159.85, "/yr")}
+                </p>
+              </div>
+              <ul className="divide-y divide-slate-100">
+                {suggested.map((r) => (
+                  <DomainRow key={r.domain} result={r} {...rowProps} />
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {naPremium.length > 0 && (
+            <div className="overflow-hidden rounded-xl border border-amber-200 bg-white shadow-sm">
+              <div className="border-b border-amber-100 bg-amber-50 px-4 py-3">
+                <p className="text-sm font-semibold text-navy">Namibian domains (.na)</p>
+                <p className="text-xs text-slate-600">
+                  Official .na namespace — premium pricing up to{" "}
+                  {formatPrice(450, "/yr")}
+                </p>
+              </div>
+              <ul className="divide-y divide-slate-100">
+                {naPremium.map((r) => (
+                  <DomainRow key={r.domain} result={r} {...rowProps} />
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
 

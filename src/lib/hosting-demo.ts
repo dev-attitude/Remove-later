@@ -4,16 +4,14 @@ import {
   type BusinessPackage,
 } from "@/lib/site-content";
 import { SKYRAPAY_HOSTING } from "@/lib/brand";
+import {
+  DOMAIN_TLD_CATALOG,
+  getDomainPriceNad,
+  getDomainRetailNad,
+  HOSTING_TLDS,
+} from "@/lib/domain-pricing";
 
-/** Supported TLDs for demo domain search (NAD/year) */
-export const HOSTING_TLDS = [
-  { ext: ".com", price: 450, label: ".com" },
-  { ext: ".com.na", price: 1650, label: ".com.na" },
-  { ext: ".org", price: 500, label: ".org" },
-  { ext: ".net", price: 550, label: ".net" },
-  { ext: ".co.za", price: 250, label: ".co.za" },
-  { ext: ".africa", price: 650, label: ".africa" },
-] as const;
+export { HOSTING_TLDS };
 
 export type HostingCartItemType = "domain" | "plan" | "addon";
 
@@ -30,9 +28,12 @@ export type HostingCartItem = {
 
 export type DomainSearchResult = {
   domain: string;
+  tld: string;
   available: boolean;
   priceNad: number;
+  retailPriceNad?: number;
   premium?: boolean;
+  isNa?: boolean;
 };
 
 export type HostingDemoAccount = {
@@ -83,18 +84,32 @@ export function searchDomainsDemo(query: string): DomainSearchResult[] {
 
   if (!base || base.length < 2) return [];
 
-  return HOSTING_TLDS.map(({ ext, price }) => {
+  const results = DOMAIN_TLD_CATALOG.map(({ ext, isNa }) => {
     const domain = `${base}${ext}`;
     const h = hashString(domain);
     const available = h % 5 !== 0;
     const premium = h % 17 === 0;
+    const priceNad = getDomainPriceNad(ext, { premium });
+    const retailPriceNad = getDomainRetailNad(ext);
     return {
       domain,
+      tld: ext,
       available,
-      priceNad: premium ? Math.round(price * 2.5) : price,
+      priceNad,
+      retailPriceNad: retailPriceNad && retailPriceNad > priceNad ? retailPriceNad : undefined,
       premium,
+      isNa,
     };
   });
+
+  // Primary .com first, then international TLDs by price, .na premium last
+  const com = results.find((r) => r.tld === ".com");
+  const international = results
+    .filter((r) => r.tld !== ".com" && !r.isNa)
+    .sort((a, b) => a.priceNad - b.priceNad);
+  const na = results.filter((r) => r.isNa).sort((a, b) => a.priceNad - b.priceNad);
+
+  return [...(com ? [com] : []), ...international, ...na];
 }
 
 export function cartItemFromDomain(result: DomainSearchResult): HostingCartItem {
