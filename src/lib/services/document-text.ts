@@ -3,14 +3,11 @@ import mammoth from "mammoth";
 const DEFAULT_MAX_EXTRACT_CHARS = 80_000;
 export const MAX_BOOK_EXTRACT_CHARS = 250_000;
 
-type PdfParseFn = (buffer: Buffer) => Promise<{ text: string }>;
-
+/** unpdf bundles a serverless build of PDF.js — works on Vercel where pdf-parse's runtime require fails */
 async function extractPdfText(buffer: Buffer): Promise<string> {
-  const { createRequire } = await import("node:module");
-  const require = createRequire(`${process.cwd()}/package.json`);
-  const pdfParse = require("pdf-parse/lib/pdf-parse.js") as PdfParseFn;
-  const data = await pdfParse(buffer);
-  return data.text || "";
+  const { extractText } = await import("unpdf");
+  const { text } = await extractText(new Uint8Array(buffer), { mergePages: true });
+  return text || "";
 }
 
 export async function extractTextFromFile(
