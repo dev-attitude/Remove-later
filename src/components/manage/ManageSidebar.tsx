@@ -12,6 +12,7 @@ import {
   GraduationCap,
   Inbox,
   LayoutDashboard,
+  ListTodo,
   LogOut,
   Receipt,
   Server,
@@ -33,6 +34,7 @@ const NAV: Array<{
   section?: string;
 }> = [
   { href: "/manage", label: "Overview", icon: LayoutDashboard, exact: true },
+  { href: "/manage/todos", label: "To-do & planning", icon: ListTodo },
   {
     href: "/manage/inquiries",
     label: "Orders & inquiries",

@@ -168,6 +168,29 @@ model BizTask {
   @@index([engagementId])
 }
 
+/** Internal business to-do & planning — reminders for team operations and developments */
+model BizTodo {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?   @db.Text
+  category        String    @default("general")
+  priority        String    @default("medium")
+  status          String    @default("pending")
+  dueDate         DateTime?
+  reminderEnabled Boolean   @default(true)
+  lastReminderAt  DateTime?
+  completedAt     DateTime?
+  sortOrder       Int       @default(0)
+  createdBy       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status])
+  @@index([dueDate])
+  @@index([category])
+  @@index([priority])
+}
+
 model BizNotificationLog {
   id           String         @id @default(cuid())
   engagementId String?

@@ -46,6 +46,46 @@ type DashboardData = {
   }>;
 };
 
+function TodoSummaryCard() {
+  const [summary, setSummary] = useState<{ open: number; overdue: number; dueToday: number } | null>(
+    null
+  );
+
+  useEffect(() => {
+    fetch("/api/manage/todos")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setSummary(d?.summary ?? null))
+      .catch(() => null);
+  }, []);
+
+  if (!summary) {
+    return (
+      <Card className="!p-4">
+        <p className="text-xs text-slate-500">To-do & planning</p>
+        <p className="mt-2 text-2xl font-bold text-slate-300">—</p>
+      </Card>
+    );
+  }
+
+  return (
+    <Link href="/manage/todos" className="block">
+      <Card className="!p-4 h-full transition hover:border-brand-300">
+        <p className="text-xs text-slate-500">To-do & planning</p>
+        <p className="mt-2 text-2xl font-bold text-slate-900">{summary.open}</p>
+        <p className="mt-1 text-xs text-slate-500">
+          {summary.overdue > 0 ? (
+            <span className="text-red-600">{summary.overdue} overdue</span>
+          ) : summary.dueToday > 0 ? (
+            <span className="text-amber-700">{summary.dueToday} due today</span>
+          ) : (
+            "All caught up"
+          )}
+        </p>
+      </Card>
+    </Link>
+  );
+}
+
 function StaleRegistrationsCard() {
   const [count, setCount] = useState<number | null>(null);
 
@@ -210,7 +250,7 @@ export default function ManageOverviewPage() {
         Consulting & services business
       </h2>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <Card className="!p-4">
           <p className="text-xs text-slate-500">Clients</p>
           <p className="mt-2 text-2xl font-bold">{clients.total}</p>
@@ -218,6 +258,7 @@ export default function ManageOverviewPage() {
             {clients.byStatus.active ?? 0} active · {clients.byStatus.prospect ?? 0} prospects
           </p>
         </Card>
+        <TodoSummaryCard />
         <Card className="!p-4">
           <p className="text-xs text-slate-500">Services in progress</p>
           <p className="mt-2 text-2xl font-bold">{engagements.inProgress}</p>
