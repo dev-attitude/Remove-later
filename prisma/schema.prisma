@@ -45,7 +45,37 @@ model BizClient {
   updatedAt   DateTime        @updatedAt
   engagements BizEngagement[]
   income      BizIncome[]
+  quotations  BizQuotation[]
 
+  @@index([status])
+  @@index([createdAt])
+}
+
+/** Client quotations — ex-VAT line items, 15% VAT, emailed automatically */
+model BizQuotation {
+  id            String     @id @default(cuid())
+  quoteNumber   String     @unique
+  clientId      String
+  client        BizClient  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  engagementId  String?
+  title         String
+  itemsJson     String     @db.Text
+  subtotalExVat Float
+  vatRate       Float      @default(0.15)
+  vatAmount     Float
+  totalInclVat  Float
+  currency      String     @default("NAD")
+  notes         String?    @db.Text
+  validUntil    DateTime?
+  status        String     @default("draft")
+  sentAt        DateTime?
+  emailSent     Boolean    @default(false)
+  emailError    String?
+  createdBy     String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([clientId])
   @@index([status])
   @@index([createdAt])
 }

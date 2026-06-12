@@ -153,6 +153,12 @@ export default function ManageClientDetailPage() {
           <Plus className="mr-2 h-4 w-4" />
           New service
         </Button>
+        <Link
+          href={`/manage/quotations?clientId=${id}`}
+          className="inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          Send quotation
+        </Link>
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
