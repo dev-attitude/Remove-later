@@ -9,6 +9,8 @@ import {
   Laptop,
   ShoppingBag,
   Headphones,
+  PenLine,
+  BookMarked,
 } from "lucide-react";
 
 import { BRAND } from "./brand";
@@ -37,6 +39,8 @@ export const COMPANY = {
 export type ServiceSlug =
   | "it-consulting"
   | "student-assistance"
+  | "assignment-writing"
+  | "research-writing"
   | "business-consulting"
   | "gadgets"
   | "system-development"
@@ -83,19 +87,18 @@ export const SERVICES: ServiceItem[] = [
     slug: "student-assistance",
     title: "Student Assistance",
     short:
-      "Assignment writing, research support, data collection, and data analysis for school, college, and university students.",
+      "Overview of our academic support—assignment writing, research projects, data collection, and analysis for all levels.",
     description:
-      "Skyrapay Consultations CC helps students succeed academically with structured support for assignments, research projects, dissertations, and theses. We guide you through writing, methodology, data collection, and analysis—while upholding academic integrity. Many students also use our Skyrapay Research Suite platform for AI-assisted writing, literature search, citations, and research planning.",
+      "Skyrapay Consultations CC helps students succeed academically with structured support for assignments, research projects, dissertations, and theses. Choose dedicated Assignment Writing or Research Writing services for fixed packages, or contact us for data collection and analysis. Many students also use our Skyrapay Research Suite platform for AI-assisted writing, literature search, citations, and research planning.",
     icon: GraduationCap,
     features: [
-      "Assignment & essay writing support (all levels)",
-      "Research proposals, dissertations & thesis chapters",
+      "Dedicated assignment writing packages (school to postgraduate)",
+      "Research proposals, dissertations & thesis support",
       "Literature review & reference management",
       "Questionnaire & interview guide design",
       "Field & online data collection support",
       "Quantitative analysis (SPSS, Excel, R where needed)",
       "Qualitative analysis & thematic coding",
-      "Results, discussion & conclusion drafting",
       "Formatting to institutional guidelines (APA, Harvard, etc.)",
     ],
     deliverables: [
@@ -105,6 +108,56 @@ export const SERVICES: ServiceItem[] = [
       "Tables, charts & analysis write-ups",
       "One-on-one consultation (Mon–Fri 08:00–18:00)",
       "Optional access guidance for Skyrapay Research Suite",
+    ],
+  },
+  {
+    slug: "assignment-writing",
+    title: "Assignment Writing",
+    short:
+      "Professional assignment and essay writing for school, college, and university—structured to your rubric and deadline.",
+    description:
+      "Get expert help with essays, reports, case studies, and module assignments at every academic level. We work to your faculty guidelines, word count, and deadline—with editing, proofreading, and proper formatting included. Ideal when you need a polished draft to review and learn from while meeting institutional standards.",
+    icon: PenLine,
+    features: [
+      "High school, TVET, diploma & degree assignments",
+      "Essays, reports, case studies & reflective writing",
+      "Editing, proofreading & paraphrasing",
+      "APA, Harvard, MLA & institutional formatting",
+      "Rush deadlines (subject to availability)",
+      "Plagiarism-conscious original drafts",
+      "Revision rounds before submission",
+    ],
+    deliverables: [
+      "Rubric-aligned assignment draft",
+      "Reference list & in-text citations",
+      "Formatted document (Word/PDF)",
+      "Brief writer notes on structure & key arguments",
+      "Optional consultation call",
+    ],
+  },
+  {
+    slug: "research-writing",
+    title: "Research Writing",
+    short:
+      "Research proposals, dissertation chapters, literature reviews, and full thesis support—from topic to final submission.",
+    description:
+      "Structured research writing for honours, masters, and doctoral students. We support proposals, methodology chapters, literature reviews, results discussions, and full dissertation or thesis projects—aligned with your supervisor feedback and ethics requirements.",
+    icon: BookMarked,
+    features: [
+      "Research proposals & ethics applications",
+      "Chapter 1–5 structure & drafting",
+      "Literature review & research gap analysis",
+      "Methodology & research design chapters",
+      "Results, discussion & conclusion chapters",
+      "Supervisor feedback revisions",
+      "Full dissertation / thesis project management",
+    ],
+    deliverables: [
+      "Chapter-by-chapter or full research document",
+      "Proper academic citations & bibliography",
+      "Tables, figures & appendices as scoped",
+      "Revision support after supervisor comments",
+      "Progress updates throughout the project",
     ],
   },
   {
@@ -773,6 +826,184 @@ export const BUSINESS_REGISTRATION_PACKAGES: BusinessPackage[] = [
       "Document binding",
       "Completion of all registration paperwork",
       "Excludes: lawyer, accountant & auditor charges (client arranges & pays directly)",
+    ],
+  },
+];
+
+/** Assignment writing packages (NAD, ex VAT — use in quotations & invoices) */
+export const ASSIGNMENT_WRITING_PACKAGES: BusinessPackage[] = [
+  {
+    id: "assignment-highschool",
+    name: "High School Assignment",
+    price: 350,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Essays, reports, and homework assignments for secondary school learners.",
+    includes: [
+      "Up to ~1,500 words (scope confirmed on inquiry)",
+      "Basic research & citations",
+      "Proofreading & formatting",
+      "One revision round",
+    ],
+  },
+  {
+    id: "assignment-college",
+    name: "College / TVET Assignment",
+    price: 500,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Module assignments for certificate, diploma, and TVET programmes.",
+    popular: true,
+    includes: [
+      "Structured report or essay format",
+      "Referencing per faculty guidelines",
+      "Editing & formatting",
+      "One revision round",
+    ],
+  },
+  {
+    id: "assignment-undergrad",
+    name: "University Assignment",
+    price: 750,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Undergraduate essays, case studies, and module deliverables.",
+    includes: [
+      "Higher word-count assignments",
+      "Academic tone & argument structure",
+      "APA / Harvard formatting",
+      "Two revision rounds",
+    ],
+  },
+  {
+    id: "assignment-postgrad",
+    name: "Postgraduate Assignment",
+    price: 950,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Honours and masters-level assignments with deeper analysis.",
+    includes: [
+      "Advanced academic writing",
+      "Critical analysis & literature integration",
+      "Institutional formatting",
+      "Two revision rounds",
+    ],
+  },
+  {
+    id: "assignment-editing",
+    name: "Editing & Proofreading",
+    price: 300,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Polish your own draft—grammar, flow, citations, and formatting.",
+    includes: [
+      "Language & clarity edits",
+      "Citation & reference check",
+      "Formatting to guidelines",
+      "Track-changes or clean copy",
+    ],
+  },
+  {
+    id: "assignment-group",
+    name: "Group Project / Report",
+    price: 1200,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Collaborative reports and group assignment deliverables.",
+    includes: [
+      "Consistent structure across sections",
+      "Combined references & appendices",
+      "Presentation notes (optional)",
+      "Team coordination support",
+    ],
+  },
+];
+
+/** Research writing packages (NAD, ex VAT) */
+export const RESEARCH_WRITING_PACKAGES: BusinessPackage[] = [
+  {
+    id: "research-proposal",
+    name: "Research Proposal",
+    price: 1500,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Full research proposal for ethics submission and supervisor approval.",
+    popular: true,
+    includes: [
+      "Introduction, problem statement & objectives",
+      "Literature review outline",
+      "Methodology section",
+      "Timeline & budget outline",
+    ],
+  },
+  {
+    id: "research-literature",
+    name: "Literature Review Chapter",
+    price: 2000,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Standalone literature review chapter with gap identification.",
+    includes: [
+      "Thematic or chronological review",
+      "Recent peer-reviewed sources",
+      "Critical synthesis & research gap",
+      "Full reference list",
+    ],
+  },
+  {
+    id: "research-methodology",
+    name: "Methodology Chapter",
+    price: 1800,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Research design, instruments, sampling, and analysis plan.",
+    includes: [
+      "Design justification",
+      "Data collection instruments",
+      "Ethical considerations",
+      "Analysis approach",
+    ],
+  },
+  {
+    id: "research-chapter",
+    name: "Dissertation / Thesis Chapter",
+    price: 3500,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "One full chapter (e.g. results, discussion, or findings).",
+    includes: [
+      "Chapter structure per institution",
+      "Citations & cross-references",
+      "Tables / figures as scoped",
+      "Supervisor revision support",
+    ],
+  },
+  {
+    id: "research-data-analysis",
+    name: "Data Analysis & Results Chapter",
+    price: 2000,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "Statistical or qualitative analysis with results write-up.",
+    includes: [
+      "SPSS / Excel analysis (as scoped)",
+      "Tables, charts & interpretation",
+      "Results chapter narrative",
+      "Appendix outputs",
+    ],
+  },
+  {
+    id: "research-full",
+    name: "Full Thesis / Dissertation Support",
+    price: 8500,
+    priceLabel: "From",
+    currency: "NAD",
+    description: "End-to-end support for full research project (scoped by level & word count).",
+    includes: [
+      "All chapters from proposal to conclusion",
+      "Milestone-based delivery",
+      "Supervisor feedback revisions",
+      "Final formatting & submission pack",
     ],
   },
 ];

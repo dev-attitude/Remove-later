@@ -4,9 +4,15 @@ import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { BusinessPackagesSection } from "@/components/marketing/BusinessPackagesSection";
 import { ItServicesCatalog } from "@/components/marketing/ItServicesCatalog";
 import { StudentAssistanceSection } from "@/components/marketing/StudentAssistanceSection";
+import { StudentWritingPackagesSection } from "@/components/marketing/StudentWritingPackagesSection";
 import { BRAND } from "@/lib/brand";
 import { IT_SERVICES_POSITIONING } from "@/lib/it-services";
-import { getServiceBySlug, SERVICES } from "@/lib/site-content";
+import {
+  ASSIGNMENT_WRITING_PACKAGES,
+  getServiceBySlug,
+  RESEARCH_WRITING_PACKAGES,
+  SERVICES,
+} from "@/lib/site-content";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -35,6 +41,8 @@ export default async function ServiceDetailPage({ params }: Props) {
   const isBusiness = slug === "business-consulting";
   const isIt = slug === "it-consulting";
   const isStudent = slug === "student-assistance";
+  const isAssignment = slug === "assignment-writing";
+  const isResearch = slug === "research-writing";
 
   return (
     <div
@@ -99,6 +107,24 @@ export default async function ServiceDetailPage({ params }: Props) {
 
       {isStudent && <StudentAssistanceSection />}
 
+      {isAssignment && (
+        <StudentWritingPackagesSection
+          title="Assignment writing packages"
+          description="Fixed starting prices for common assignment types. Tell us your module, word count, and deadline—we confirm the final fee before work begins."
+          packages={ASSIGNMENT_WRITING_PACKAGES}
+          contactService="assignment-writing"
+        />
+      )}
+
+      {isResearch && (
+        <StudentWritingPackagesSection
+          title="Research writing packages"
+          description="From proposals to full dissertations—milestone-based delivery with supervisor revision support."
+          packages={RESEARCH_WRITING_PACKAGES}
+          contactService="research-writing"
+        />
+      )}
+
       <div className="mt-12 flex flex-wrap gap-4">
         <Link href="/contact" className="marketing-btn-primary">
           Request consultation
@@ -120,6 +146,12 @@ export default async function ServiceDetailPage({ params }: Props) {
         )}
         {isStudent && (
           <>
+            <Link href="/services/assignment-writing" className="marketing-btn-secondary">
+              Assignment writing packages
+            </Link>
+            <Link href="/services/research-writing" className="marketing-btn-secondary">
+              Research writing packages
+            </Link>
             <Link
               href="/contact?service=student-assistance"
               className="marketing-btn-secondary"
@@ -130,6 +162,16 @@ export default async function ServiceDetailPage({ params }: Props) {
               Skyrapay Research Suite
             </Link>
           </>
+        )}
+        {isAssignment && (
+          <Link href="/contact?service=assignment-writing" className="marketing-btn-secondary">
+            Request assignment help
+          </Link>
+        )}
+        {isResearch && (
+          <Link href="/contact?service=research-writing" className="marketing-btn-secondary">
+            Request research support
+          </Link>
         )}
       </div>
     </div>

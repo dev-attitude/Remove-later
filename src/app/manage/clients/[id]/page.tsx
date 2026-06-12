@@ -15,6 +15,7 @@ import {
   engagementStatusLabel,
   formatNad,
   getPackageOptions,
+  serviceSlugForPackage,
   getServiceOptions,
   PAYMENT_PLANS,
   serviceLabel,
@@ -159,6 +160,12 @@ export default function ManageClientDetailPage() {
         >
           Send quotation
         </Link>
+        <Link
+          href={`/manage/invoices?clientId=${id}`}
+          className="inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          Create invoice
+        </Link>
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -211,10 +218,13 @@ export default function ManageClientDetailPage() {
               onChange={(e) => {
                 const packageId = e.target.value;
                 const pkg = packages.find((p) => p.id === packageId);
+                const slug = packageId ? serviceSlugForPackage(packageId) : undefined;
                 setEngForm({
                   ...engForm,
                   packageId,
                   quotedAmount: pkg ? String(pkg.price) : engForm.quotedAmount,
+                  ...(slug ? { serviceSlug: slug } : {}),
+                  ...(pkg && !engForm.title.trim() ? { title: pkg.name } : {}),
                 });
               }}
             >

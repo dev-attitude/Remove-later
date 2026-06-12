@@ -88,6 +88,8 @@ function inquiryTitle(inquiry: ContactInquiry): string {
     development: "System / software development",
     website: "Website or app project",
     "student-assistance": "Student assistance",
+    "assignment-writing": "Assignment writing",
+    "research-writing": "Research writing",
   };
   return topics[inquiry.subject ?? ""] ?? inquiry.subject ?? "Contact form";
 }

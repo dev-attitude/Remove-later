@@ -46,6 +46,7 @@ model BizClient {
   engagements BizEngagement[]
   income      BizIncome[]
   quotations  BizQuotation[]
+  invoices    BizInvoice[]
 
   @@index([status])
   @@index([createdAt])
@@ -80,6 +81,47 @@ model BizQuotation {
   @@index([createdAt])
 }
 
+/** Tax invoices — ex-VAT line items, 15% VAT, balance due & automated reminders */
+model BizInvoice {
+  id                   String         @id @default(cuid())
+  invoiceNumber        String         @unique
+  clientId             String
+  client               BizClient      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  engagementId         String?
+  engagement           BizEngagement? @relation(fields: [engagementId], references: [id], onDelete: SetNull)
+  title                String
+  itemsJson            String         @db.Text
+  subtotalExVat        Float
+  vatRate              Float          @default(0.15)
+  vatAmount            Float
+  totalInclVat         Float
+  amountPaid           Float          @default(0)
+  balanceDue           Float
+  currency             String         @default("NAD")
+  invoiceType          String         @default("service")
+  notes                String?        @db.Text
+  dueDate              DateTime?
+  reminderEnabled      Boolean        @default(true)
+  reminderIntervalDays Int            @default(3)
+  lastReminderAt       DateTime?
+  nextReminderAt       DateTime?
+  status               String         @default("draft")
+  sentAt               DateTime?
+  emailSent            Boolean        @default(false)
+  emailError           String?
+  createdBy            String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  notifications        BizNotificationLog[]
+
+  @@index([clientId])
+  @@index([engagementId])
+  @@index([status])
+  @@index([balanceDue])
+  @@index([nextReminderAt])
+  @@index([createdAt])
+}
+
 model BizEngagement {
   id              String        @id @default(cuid())
   clientId        String
@@ -102,6 +144,7 @@ model BizEngagement {
   income          BizIncome[]
   expenses        BizExpense[]
   notifications   BizNotificationLog[]
+  invoices        BizInvoice[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -126,9 +169,11 @@ model BizTask {
 }
 
 model BizNotificationLog {
-  id           String        @id @default(cuid())
-  engagementId String
-  engagement   BizEngagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  id           String         @id @default(cuid())
+  engagementId String?
+  engagement   BizEngagement? @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  invoiceId    String?
+  invoice      BizInvoice?    @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   channel      String
   recipient    String
   message      String        @db.Text
@@ -138,6 +183,7 @@ model BizNotificationLog {
   createdAt    DateTime      @default(now())
 
   @@index([engagementId, createdAt])
+  @@index([invoiceId, createdAt])
 }
 
 model BizIncome {

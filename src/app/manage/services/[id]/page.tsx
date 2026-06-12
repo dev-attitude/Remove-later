@@ -265,7 +265,17 @@ export default function ManageServiceDetailPage() {
             Quoted {formatNad(engagement.quotedAmount)} · Received{" "}
             {formatNad(engagement.paidAmount)}
             {engagement.quotedAmount > engagement.paidAmount && (
-              <> · Balance {formatNad(engagement.quotedAmount - engagement.paidAmount)}</>
+              <>
+                {" "}
+                · Balance {formatNad(engagement.quotedAmount - engagement.paidAmount)}
+                {" · "}
+                <Link
+                  href={`/manage/invoices?clientId=${engagement.client.id}&engagementId=${engagement.id}`}
+                  className="font-semibold text-brand-700 hover:underline"
+                >
+                  Invoice balance
+                </Link>
+              </>
             )}
           </p>
         )}

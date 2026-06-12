@@ -19,6 +19,7 @@ const patchSchema = z.object({
     .enum([
       "hosting-web",
       "research-app",
+      "student-writing",
       "business-consulting",
       "registration",
       "it-support",

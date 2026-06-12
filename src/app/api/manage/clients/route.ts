@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 const categorySchema = z.enum([
   "hosting-web",
   "research-app",
+  "student-writing",
   "business-consulting",
   "registration",
   "it-support",

@@ -1,6 +1,8 @@
 import {
+  ASSIGNMENT_WRITING_PACKAGES,
   BUSINESS_DOCUMENT_PACKAGES,
   BUSINESS_REGISTRATION_PACKAGES,
+  RESEARCH_WRITING_PACKAGES,
   HOSTING_OFFERINGS,
   HOSTING_WEBSITE_PLANS,
   SERVICES,
@@ -18,6 +20,7 @@ export const CLIENT_STATUSES = [
 export const CLIENT_CATEGORIES = [
   { id: "hosting-web", label: "Hosting & Website" },
   { id: "research-app", label: "Research App" },
+  { id: "student-writing", label: "Assignment & Research Writing" },
   { id: "business-consulting", label: "Business Consultations" },
   { id: "registration", label: "Business Registration & Compliance" },
   { id: "it-support", label: "IT Support & Repairs" },
@@ -90,33 +93,82 @@ export function getServiceOptions() {
   }));
 }
 
-export function getPackageOptions() {
-  return [
+export type PackageOption = {
+  id: string;
+  name: string;
+  price: number;
+  group: string;
+  serviceSlug?: ServiceSlug;
+};
+
+const PACKAGE_SERVICE_MAP: Record<string, ServiceSlug> = {
+  ...Object.fromEntries(
+    ASSIGNMENT_WRITING_PACKAGES.map((p) => [p.id, "assignment-writing" as ServiceSlug])
+  ),
+  ...Object.fromEntries(
+    RESEARCH_WRITING_PACKAGES.map((p) => [p.id, "research-writing" as ServiceSlug])
+  ),
+  ...Object.fromEntries(
+    BUSINESS_REGISTRATION_PACKAGES.map((p) => [p.id, "business-consulting" as ServiceSlug])
+  ),
+  ...Object.fromEntries(
+    BUSINESS_DOCUMENT_PACKAGES.map((p) => [p.id, "business-consulting" as ServiceSlug])
+  ),
+};
+
+export function serviceSlugForPackage(packageId: string): ServiceSlug | undefined {
+  return PACKAGE_SERVICE_MAP[packageId];
+}
+
+export function getPackageOptions(serviceSlug?: string): PackageOption[] {
+  const all: PackageOption[] = [
+    ...ASSIGNMENT_WRITING_PACKAGES.map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      group: "Assignment writing",
+      serviceSlug: "assignment-writing" as ServiceSlug,
+    })),
+    ...RESEARCH_WRITING_PACKAGES.map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      group: "Research writing",
+      serviceSlug: "research-writing" as ServiceSlug,
+    })),
     ...BUSINESS_REGISTRATION_PACKAGES.map((p) => ({
       id: p.id,
       name: p.name,
       price: p.price,
       group: "Registration",
+      serviceSlug: "business-consulting" as ServiceSlug,
     })),
     ...BUSINESS_DOCUMENT_PACKAGES.map((p) => ({
       id: p.id,
       name: p.name,
       price: p.price,
       group: "Documents",
+      serviceSlug: "business-consulting" as ServiceSlug,
     })),
     ...HOSTING_WEBSITE_PLANS.map((p) => ({
       id: p.id,
       name: p.name,
       price: p.price,
       group: "Hosting plans",
+      serviceSlug: "web-app-development" as ServiceSlug,
     })),
     ...HOSTING_OFFERINGS.map((p) => ({
       id: p.id,
       name: p.name,
       price: p.price,
       group: "Hosting services",
+      serviceSlug: "web-app-development" as ServiceSlug,
     })),
   ];
+  if (serviceSlug) {
+    return all.filter((p) => p.serviceSlug === serviceSlug);
+  }
+  return all;
 }
 
 export function serviceLabel(slug: string) {

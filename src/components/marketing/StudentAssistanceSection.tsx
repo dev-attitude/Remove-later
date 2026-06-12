@@ -7,6 +7,21 @@ export function StudentAssistanceSection() {
   return (
     <div className="mt-16 space-y-12">
       <section>
+        <h2 className="text-2xl font-bold text-navy">Dedicated writing services</h2>
+        <p className="mt-2 max-w-3xl text-slate-600">
+          For fixed packages and formal quotations, browse our dedicated services:
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/services/assignment-writing" className="marketing-btn-primary inline-flex text-sm">
+            Assignment writing
+          </Link>
+          <Link href="/services/research-writing" className="marketing-btn-secondary inline-flex text-sm">
+            Research writing
+          </Link>
+        </div>
+      </section>
+
+      <section>
         <h2 className="text-2xl font-bold text-navy">How we help students</h2>
         <p className="mt-2 max-w-3xl text-slate-600">
           Whether you need help with a single assignment or a full research project, we work with

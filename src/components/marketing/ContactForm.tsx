@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import {
+  ASSIGNMENT_WRITING_PACKAGES,
   BUSINESS_DOCUMENT_PACKAGES,
   BUSINESS_REGISTRATION_PACKAGES,
   HOSTING_OFFERINGS,
   HOSTING_WEBSITE_PLANS,
+  RESEARCH_WRITING_PACKAGES,
 } from "@/lib/site-content";
 
 export function ContactForm() {
@@ -15,7 +17,12 @@ export function ContactForm() {
   const packageId = searchParams.get("package") ?? "";
   const serviceParam = searchParams.get("service") ?? "";
 
-  const allBizPackages = [...BUSINESS_REGISTRATION_PACKAGES, ...BUSINESS_DOCUMENT_PACKAGES];
+  const allBizPackages = [
+    ...BUSINESS_REGISTRATION_PACKAGES,
+    ...BUSINESS_DOCUMENT_PACKAGES,
+    ...ASSIGNMENT_WRITING_PACKAGES,
+    ...RESEARCH_WRITING_PACKAGES,
+  ];
   const matchedPkg =
     allBizPackages.find((p) => p.id === packageId) ??
     HOSTING_OFFERINGS.find((p) => p.id === packageId) ??
@@ -24,13 +31,17 @@ export function ContactForm() {
   const defaultSubject =
     serviceParam === "hosting"
       ? "hosting"
-      : serviceParam === "student-assistance"
-        ? "student-assistance"
-        : serviceParam === "registration"
-          ? "business"
-          : serviceParam === "documents"
-            ? "business"
-            : "general";
+      : serviceParam === "assignment-writing"
+        ? "assignment-writing"
+        : serviceParam === "research-writing"
+          ? "research-writing"
+          : serviceParam === "student-assistance"
+            ? "student-assistance"
+            : serviceParam === "registration"
+              ? "business"
+              : serviceParam === "documents"
+                ? "business"
+                : "general";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +54,11 @@ export function ContactForm() {
         ? "I would like GM Consultations hosting services.\n\nServices needed (tick what applies):\n[ ] Domain registration\n[ ] Website hosting (cPanel account)\n[ ] Business email accounts\n[ ] MySQL databases\n[ ] Website backups\n[ ] SSL certificate\n[ ] Managed maintenance (optional)\n\nDesired domain name:\nHosting plan (Starter / Business / Premium):\nExisting website to migrate (yes/no):\n\n"
         : serviceParam === "student-assistance"
           ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
-          : ""
+          : serviceParam === "assignment-writing"
+            ? "I need assignment writing help:\n\nPackage (if known):\nAcademic level:\nModule / subject:\nWord count:\nDeadline:\nBrief topic description:\n\n"
+            : serviceParam === "research-writing"
+              ? "I need research writing support:\n\nPackage (if known):\nLevel (honours / masters / PhD):\nResearch topic:\nCurrent stage (proposal / chapter / full thesis):\nDeadline:\n\n"
+              : ""
   );
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -130,7 +145,9 @@ export function ContactForm() {
           className="marketing-input mt-1"
         >
           <option value="general">General inquiry</option>
-          <option value="student-assistance">Student assistance</option>
+          <option value="assignment-writing">Assignment writing</option>
+          <option value="research-writing">Research writing</option>
+          <option value="student-assistance">Student assistance (general)</option>
           <option value="it">IT consulting</option>
           <option value="business">Business consulting</option>
           <option value="gadgets">Gadgets & hardware</option>
