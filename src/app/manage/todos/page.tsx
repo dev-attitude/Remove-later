@@ -15,10 +15,10 @@ import {
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import {
+  formatTodoCategory,
   TODO_CATEGORIES,
   TODO_PRIORITIES,
   TODO_STATUSES,
-  todoCategoryLabel,
   todoDueBucket,
   todoPriorityLabel,
   todoStatusLabel,
@@ -29,6 +29,7 @@ type TodoRow = {
   title: string;
   description: string | null;
   category: string;
+  categoryOther: string | null;
   priority: string;
   status: string;
   dueDate: string | null;
@@ -78,6 +79,7 @@ export default function ManageTodosPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("general");
+  const [categoryOther, setCategoryOther] = useState("");
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
   const [reminderEnabled, setReminderEnabled] = useState(true);
@@ -125,6 +127,10 @@ export default function ManageTodosPage() {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!title.trim()) return;
+    if (category === "other" && !categoryOther.trim()) {
+      setError("Please specify the other category.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -135,6 +141,7 @@ export default function ManageTodosPage() {
           title: title.trim(),
           description: description.trim() || undefined,
           category,
+          categoryOther: category === "other" ? categoryOther.trim() : null,
           priority,
           dueDate: dueDate || null,
           reminderEnabled,
@@ -144,6 +151,7 @@ export default function ManageTodosPage() {
       if (!res.ok) throw new Error(data.error);
       setTitle("");
       setDescription("");
+      setCategoryOther("");
       setDueDate("");
       setShowForm(false);
       load();
@@ -251,7 +259,10 @@ export default function ManageTodosPage() {
                 <select
                   className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    if (e.target.value !== "other") setCategoryOther("");
+                  }}
                 >
                   {TODO_CATEGORIES.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -260,6 +271,18 @@ export default function ManageTodosPage() {
                   ))}
                 </select>
               </label>
+              {category === "other" && (
+                <label className="block text-sm sm:col-span-2">
+                  <span className="font-medium text-slate-700">Specify other category *</span>
+                  <input
+                    required
+                    placeholder="e.g. Staff training, Legal, Partnerships…"
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                    value={categoryOther}
+                    onChange={(e) => setCategoryOther(e.target.value)}
+                  />
+                </label>
+              )}
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Priority</span>
                 <select
@@ -397,7 +420,7 @@ export default function ManageTodosPage() {
                                   {todoPriorityLabel(todo.priority)}
                                 </span>
                                 <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
-                                  {todoCategoryLabel(todo.category)}
+                                  {formatTodoCategory(todo.category, todo.categoryOther)}
                                 </span>
                               </div>
                             </div>

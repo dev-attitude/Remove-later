@@ -3,20 +3,32 @@ import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
+import { TODO_CATEGORY_IDS } from "@/lib/business-todos";
+import { todoCategoryData } from "@/lib/business-todos-schema";
 
 export const dynamic = "force-dynamic";
 
-const createSchema = z.object({
-  title: z.string().min(1).max(300),
-  description: z.string().max(5000).optional(),
-  category: z
-    .enum(["general", "operations", "development", "marketing", "finance", "clients", "compliance"])
-    .optional(),
-  priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
-  status: z.enum(["pending", "in_progress", "done", "cancelled"]).optional(),
-  dueDate: z.string().nullable().optional(),
-  reminderEnabled: z.boolean().optional(),
-});
+const createSchema = z
+  .object({
+    title: z.string().min(1).max(300),
+    description: z.string().max(5000).optional(),
+    category: z.enum(TODO_CATEGORY_IDS).optional(),
+    categoryOther: z.string().max(120).nullable().optional(),
+    priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
+    status: z.enum(["pending", "in_progress", "done", "cancelled"]).optional(),
+    dueDate: z.string().nullable().optional(),
+    reminderEnabled: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const category = data.category ?? "general";
+    if (category === "other" && !data.categoryOther?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please specify the other category",
+        path: ["categoryOther"],
+      });
+    }
+  });
 
 export async function GET(req: Request) {
   try {
@@ -60,6 +72,7 @@ export async function POST(req: Request) {
   try {
     const session = await requireBusinessAdmin();
     const body = createSchema.parse(await req.json());
+    const { category, categoryOther } = todoCategoryData(body);
 
     const maxOrder = await prisma.bizTodo.aggregate({ _max: { sortOrder: true } });
 
@@ -67,7 +80,8 @@ export async function POST(req: Request) {
       data: {
         title: body.title.trim(),
         description: body.description?.trim() || null,
-        category: body.category ?? "general",
+        category,
+        categoryOther,
         priority: body.priority ?? "medium",
         status: body.status ?? "pending",
         dueDate: body.dueDate ? new Date(body.dueDate) : null,

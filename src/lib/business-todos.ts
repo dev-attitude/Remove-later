@@ -1,4 +1,16 @@
-export const TODO_CATEGORIES = [
+export const TODO_CATEGORY_IDS = [
+  "general",
+  "operations",
+  "development",
+  "marketing",
+  "finance",
+  "clients",
+  "compliance",
+  "research-assignment",
+  "other",
+] as const;
+
+export const TODO_CATEGORIES: Array<{ id: (typeof TODO_CATEGORY_IDS)[number]; label: string }> = [
   { id: "general", label: "General" },
   { id: "operations", label: "Operations & admin" },
   { id: "development", label: "Products & development" },
@@ -6,7 +18,9 @@ export const TODO_CATEGORIES = [
   { id: "finance", label: "Finance & billing" },
   { id: "clients", label: "Client follow-up" },
   { id: "compliance", label: "Compliance & registrations" },
-] as const;
+  { id: "research-assignment", label: "Research & assignment" },
+  { id: "other", label: "Other" },
+];
 
 export const TODO_PRIORITIES = [
   { id: "low", label: "Low" },
@@ -22,12 +36,21 @@ export const TODO_STATUSES = [
   { id: "cancelled", label: "Cancelled" },
 ] as const;
 
-export type TodoCategoryId = (typeof TODO_CATEGORIES)[number]["id"];
+export type TodoCategoryId = (typeof TODO_CATEGORY_IDS)[number];
 export type TodoPriorityId = (typeof TODO_PRIORITIES)[number]["id"];
 export type TodoStatusId = (typeof TODO_STATUSES)[number]["id"];
 
 export function todoCategoryLabel(id: string) {
   return TODO_CATEGORIES.find((c) => c.id === id)?.label ?? id;
+}
+
+/** Display label — uses custom text when category is Other */
+export function formatTodoCategory(category: string, categoryOther?: string | null) {
+  if (category === "other") {
+    const custom = categoryOther?.trim();
+    return custom ? `Other: ${custom}` : "Other (please specify)";
+  }
+  return todoCategoryLabel(category);
 }
 
 export function todoPriorityLabel(id: string) {
@@ -61,4 +84,16 @@ export function todoDueBucket(dueDate: Date | null, status: string): string {
   weekAhead.setDate(weekAhead.getDate() + 7);
   if (due <= weekAhead) return "upcoming";
   return "later";
+}
+
+export function normalizeTodoCategoryFields(input: {
+  category?: string;
+  categoryOther?: string | null;
+}): { category: string; categoryOther: string | null } {
+  const category = input.category ?? "general";
+  if (category !== "other") {
+    return { category, categoryOther: null };
+  }
+  const categoryOther = input.categoryOther?.trim() || null;
+  return { category: "other", categoryOther };
 }

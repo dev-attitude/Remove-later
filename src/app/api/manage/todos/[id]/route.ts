@@ -3,22 +3,33 @@ import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
+import { TODO_CATEGORY_IDS } from "@/lib/business-todos";
+import { todoCategoryData } from "@/lib/business-todos-schema";
 
 export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ id: string }> };
 
-const patchSchema = z.object({
-  title: z.string().min(1).max(300).optional(),
-  description: z.string().max(5000).nullable().optional(),
-  category: z
-    .enum(["general", "operations", "development", "marketing", "finance", "clients", "compliance"])
-    .optional(),
-  priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
-  status: z.enum(["pending", "in_progress", "done", "cancelled"]).optional(),
-  dueDate: z.string().nullable().optional(),
-  reminderEnabled: z.boolean().optional(),
-});
+const patchSchema = z
+  .object({
+    title: z.string().min(1).max(300).optional(),
+    description: z.string().max(5000).nullable().optional(),
+    category: z.enum(TODO_CATEGORY_IDS).optional(),
+    categoryOther: z.string().max(120).nullable().optional(),
+    priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
+    status: z.enum(["pending", "in_progress", "done", "cancelled"]).optional(),
+    dueDate: z.string().nullable().optional(),
+    reminderEnabled: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.category === "other" && data.categoryOther !== undefined && !data.categoryOther?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please specify the other category",
+        path: ["categoryOther"],
+      });
+    }
+  });
 
 export async function PATCH(req: Request, { params }: Params) {
   try {
@@ -34,12 +45,32 @@ export async function PATCH(req: Request, { params }: Params) {
     const markingDone = body.status === "done" && existing.status !== "done";
     const reopening = body.status && body.status !== "done" && existing.status === "done";
 
+    let categoryPatch: { category?: string; categoryOther?: string | null } = {};
+    if (body.category !== undefined || body.categoryOther !== undefined) {
+      const merged = todoCategoryData({
+        category: body.category ?? existing.category,
+        categoryOther:
+          body.categoryOther !== undefined
+            ? body.categoryOther
+            : body.category === "other"
+              ? existing.categoryOther
+              : null,
+      });
+      if (merged.category === "other" && !merged.categoryOther) {
+        return NextResponse.json(
+          { error: "Please specify the other category" },
+          { status: 400 }
+        );
+      }
+      categoryPatch = merged;
+    }
+
     const todo = await prisma.bizTodo.update({
       where: { id },
       data: {
         ...(body.title !== undefined ? { title: body.title.trim() } : {}),
         ...(body.description !== undefined ? { description: body.description } : {}),
-        ...(body.category !== undefined ? { category: body.category } : {}),
+        ...categoryPatch,
         ...(body.priority !== undefined ? { priority: body.priority } : {}),
         ...(body.status !== undefined ? { status: body.status } : {}),
         ...(body.dueDate !== undefined

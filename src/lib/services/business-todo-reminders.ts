@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/db";
 import { BRAND } from "@/lib/brand";
 import {
+  formatTodoCategory,
   isTodoOpen,
   startOfDay,
-  todoCategoryLabel,
   todoPriorityLabel,
 } from "@/lib/business-todos";
 import { sendEmailToClient } from "@/lib/services/client-messaging";
@@ -21,6 +21,7 @@ export type TodoReminderItem = {
   id: string;
   title: string;
   category: string;
+  categoryOther: string | null;
   priority: string;
   status: string;
   dueDate: string | null;
@@ -66,6 +67,7 @@ export async function listTodosForReminder(): Promise<TodoReminderItem[]> {
       id: todo.id,
       title: todo.title,
       category: todo.category,
+      categoryOther: todo.categoryOther,
       priority: todo.priority,
       status: todo.status,
       dueDate: todo.dueDate.toISOString(),
@@ -90,7 +92,7 @@ function buildDigestHtml(items: TodoReminderItem[]): string {
       const list = rows
         .map(
           (t) =>
-            `<li style="margin:8px 0"><strong>${t.title}</strong><br><span style="font-size:12px;color:#64748b">${todoCategoryLabel(t.category)} · ${todoPriorityLabel(t.priority)} priority</span></li>`
+            `<li style="margin:8px 0"><strong>${t.title}</strong><br><span style="font-size:12px;color:#64748b">${formatTodoCategory(t.category, t.categoryOther)} · ${todoPriorityLabel(t.priority)} priority</span></li>`
         )
         .join("");
       return `<h3 style="color:${color};margin:16px 0 8px">${title} (${rows.length})</h3><ul style="padding-left:20px;margin:0">${list}</ul>`;
@@ -121,7 +123,7 @@ export async function processBusinessTodoReminders(): Promise<{
   const text = items
     .map(
       (t) =>
-        `[${t.bucket.toUpperCase()}] ${t.title} (${todoCategoryLabel(t.category)}, ${todoPriorityLabel(t.priority)})`
+        `[${t.bucket.toUpperCase()}] ${t.title} (${formatTodoCategory(t.category, t.categoryOther)}, ${todoPriorityLabel(t.priority)})`
     )
     .join("\n");
 
