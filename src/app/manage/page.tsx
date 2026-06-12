@@ -46,6 +46,40 @@ type DashboardData = {
   }>;
 };
 
+function StaleRegistrationsCard() {
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/manage/registration-reminders")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setCount(d?.count ?? 0))
+      .catch(() => setCount(0));
+  }, []);
+
+  if (count === null) {
+    return (
+      <Card className="!p-4">
+        <p className="text-xs text-slate-500">Stale registrations</p>
+        <p className="mt-2 text-2xl font-bold text-slate-300">—</p>
+      </Card>
+    );
+  }
+
+  return (
+    <Link href="/manage/services" className="block">
+      <Card className="!p-4 h-full transition hover:border-brand-300">
+        <p className="text-xs text-slate-500">Stale registrations (3+ days)</p>
+        <p className={`mt-2 text-2xl font-bold ${count > 0 ? "text-amber-600" : "text-emerald-700"}`}>
+          {count}
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          {count > 0 ? "Auto-reminders + admin digest" : "All registrations up to date"}
+        </p>
+      </Card>
+    </Link>
+  );
+}
+
 export default function ManageOverviewPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [master, setMaster] = useState<MasterData | null>(null);
@@ -176,7 +210,7 @@ export default function ManageOverviewPage() {
         Consulting & services business
       </h2>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <Card className="!p-4">
           <p className="text-xs text-slate-500">Clients</p>
           <p className="mt-2 text-2xl font-bold">{clients.total}</p>
@@ -189,6 +223,7 @@ export default function ManageOverviewPage() {
           <p className="mt-2 text-2xl font-bold">{engagements.inProgress}</p>
           <p className="mt-1 text-xs text-slate-500">{engagements.total} total engagements</p>
         </Card>
+        <StaleRegistrationsCard />
         <Card className="!p-4">
           <p className="text-xs text-slate-500">Income (this month)</p>
           <p className="mt-2 text-2xl font-bold text-emerald-700">
