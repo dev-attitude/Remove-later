@@ -8,6 +8,8 @@ import {
   recordRegistrationPayment,
   resolvePackagePrice,
 } from "@/lib/services/registration-payments";
+import { createPhdRetainerInvoice } from "@/lib/services/phd-retainer-invoices";
+import { PHD_MONTHLY_PACKAGE_ID } from "@/lib/business-manage";
 import { prisma } from "@/lib/db";
 import { manageErrorResponse } from "@/lib/manage-api";
 
@@ -124,6 +126,25 @@ export async function POST(req: Request) {
       );
     }
 
+    let phdRetainerInvoice: Awaited<ReturnType<typeof createPhdRetainerInvoice>> | null = null;
+    if (
+      body.packageId === PHD_MONTHLY_PACKAGE_ID &&
+      ["in_progress", "quoted"].includes(engagement.status)
+    ) {
+      phdRetainerInvoice = await createPhdRetainerInvoice({
+        id: engagement.id,
+        packageId: engagement.packageId,
+        quotedAmount: engagement.quotedAmount,
+        status: engagement.status,
+        client: engagement.client,
+      }).catch((err) => ({
+        engagementId: engagement.id,
+        clientName: engagement.client.name,
+        ok: false as const,
+        error: err instanceof Error ? err.message : "Retainer invoice failed",
+      }));
+    }
+
     const finalEngagement = await prisma.bizEngagement.findUnique({
       where: { id: engagement.id },
       include: {
@@ -133,7 +154,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { engagement: finalEngagement ?? engagement, payment },
+      { engagement: finalEngagement ?? engagement, payment, phdRetainerInvoice },
       { status: 201 }
     );
   } catch (e) {

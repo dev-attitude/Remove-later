@@ -16,6 +16,7 @@ import {
   formatNad,
   PAYMENT_PLANS,
   paymentPlanScheduleLabel,
+  PHD_MONTHLY_PACKAGE_ID,
   serviceLabel,
 } from "@/lib/business-manage";
 import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registration-workflows";
@@ -206,6 +207,7 @@ export default function ManageServiceDetailPage() {
   if (!engagement) return <p className="text-slate-500">Loading…</p>;
 
   const workflow = getRegistrationWorkflow(engagement.packageId);
+  const isPhdRetainer = engagement.packageId === PHD_MONTHLY_PACKAGE_ID;
   const paymentPlanLabel = PAYMENT_PLANS.find((p) => p.id === engagement.paymentPlan)?.label;
   const sortedTasks = [...(engagement.tasks ?? [])].sort(
     (a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder
@@ -248,6 +250,17 @@ export default function ManageServiceDetailPage() {
           ))}
         </select>
       </div>
+
+      {isPhdRetainer && (
+        <div className="mb-6 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-900">
+          <p className="font-semibold">PhD monthly retainer</p>
+          <p className="mt-1 text-violet-800">
+            This client is billed N$ {engagement.quotedAmount ?? 800} per month (+ 15% VAT). The
+            first invoice is sent when the service is created; after that, invoices are generated
+            automatically on the 1st of each month while status is In progress or Quoted.
+          </p>
+        </div>
+      )}
 
       <Card className="mb-6">
         <div className="flex items-center justify-between gap-4">

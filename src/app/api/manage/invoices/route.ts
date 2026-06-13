@@ -32,7 +32,7 @@ const createSchema = z.object({
   dueDate: z.string().optional(),
   reminderEnabled: z.boolean().optional(),
   reminderIntervalDays: z.number().int().min(1).max(30).optional(),
-  invoiceType: z.enum(["service", "deposit", "balance"]).optional(),
+  invoiceType: z.enum(["service", "deposit", "balance", "retainer"]).optional(),
   sendEmail: z.boolean().optional(),
 });
 

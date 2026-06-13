@@ -93,6 +93,9 @@ export function getServiceOptions() {
   }));
 }
 
+/** Ongoing PhD monthly retainer — auto-invoiced on the 1st of each month */
+export const PHD_MONTHLY_PACKAGE_ID = "research-phd-monthly";
+
 export type PackageOption = {
   id: string;
   name: string;

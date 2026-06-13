@@ -15,6 +15,7 @@ import {
   engagementStatusLabel,
   formatNad,
   getPackageOptions,
+  PHD_MONTHLY_PACKAGE_ID,
   serviceSlugForPackage,
   getServiceOptions,
   PAYMENT_PLANS,
@@ -91,6 +92,22 @@ export default function ManageClientDetailPage() {
         setCreateMsg(
           `Service created. Payment of ${formatNad(payment.amount)} recorded automatically.${inv}`
         );
+      } else {
+        const retainer = data.phdRetainerInvoice as
+          | { ok: boolean; skipped?: boolean; invoiceNumber?: string; emailSent?: boolean; error?: string; reason?: string }
+          | undefined;
+        if (retainer?.ok) {
+          const inv = retainer.emailSent
+            ? " Invoice emailed to client."
+            : retainer.error
+              ? ` ${retainer.error}`
+              : "";
+          setCreateMsg(
+            `PhD retainer service created. Monthly invoice ${retainer.invoiceNumber} generated.${inv}`
+          );
+        } else if (retainer && !retainer.skipped && retainer.error) {
+          setCreateMsg(`Service created, but retainer invoice failed: ${retainer.error}`);
+        }
       }
       setShowEngagement(false);
       setEngForm({

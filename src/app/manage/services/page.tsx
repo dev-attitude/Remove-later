@@ -28,6 +28,8 @@ export default function ManageServicesPage() {
   const [staleCount, setStaleCount] = useState(0);
   const [sendingReminders, setSendingReminders] = useState(false);
   const [reminderMessage, setReminderMessage] = useState<string | null>(null);
+  const [phdInvoicing, setPhdInvoicing] = useState(false);
+  const [phdInvoiceMessage, setPhdInvoiceMessage] = useState<string | null>(null);
 
   const loadStale = useCallback(() => {
     fetch("/api/manage/registration-reminders")
@@ -79,12 +81,46 @@ export default function ManageServicesPage() {
     }
   }
 
+  async function runPhdRetainerInvoices() {
+    setPhdInvoicing(true);
+    setPhdInvoiceMessage(null);
+    try {
+      const res = await fetch("/api/manage/phd-retainer-invoices", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed");
+      const r = data.result;
+      setPhdInvoiceMessage(
+        `PhD retainer run (${r.billingPeriod}): ${r.created} invoice(s) created, ${r.skipped} skipped, ${r.failed} failed.`
+      );
+    } catch (e) {
+      setPhdInvoiceMessage(e instanceof Error ? e.message : "PhD invoicing failed");
+    } finally {
+      setPhdInvoicing(false);
+    }
+  }
+
   return (
     <div>
       <ManagePageHeader
         title="Services & progress"
         description="Track every client service — registration, IT, student assistance, websites & more. Registrations with no step update in 3+ days receive automatic client reminders."
+        actions={
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={phdInvoicing}
+            onClick={runPhdRetainerInvoices}
+          >
+            {phdInvoicing ? "Invoicing…" : "Run PhD monthly invoices"}
+          </Button>
+        }
       />
+
+      {phdInvoiceMessage && (
+        <p className="mb-4 rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-900">
+          {phdInvoiceMessage}
+        </p>
+      )}
 
       {staleCount > 0 && (
         <Card variant="manage" className="mb-6 !border-amber-200 !bg-amber-50/60">
