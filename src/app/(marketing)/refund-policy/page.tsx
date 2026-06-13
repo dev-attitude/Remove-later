@@ -18,15 +18,25 @@ const SECTIONS = [
     ],
   },
   {
-    title: "2. Professional & consulting services",
+    title: "2. Business services — consultation, business plans & registration",
     body: [
-      "Fees for business registration, IT consulting, system development, student assistance, assignment writing, research writing, and similar professional work are generally non-refundable once work has commenced, because time and resources are allocated to your project.",
+      "This section applies to refundable business services, including business consultation, business plans, proposals, company profiles, business registration packages, and related document or advisory work offered under our business consulting services.",
+      "Where a refund is approved for these services, a 30% service and administration charge applies to the refundable amount. You will receive 70% of the eligible payment back. Example: if N$ 1,000 qualifies for refund, N$ 300 is retained and N$ 700 is refunded.",
+      "Fees are generally non-refundable once substantive work has commenced (research, drafting, filing, or client meetings completed), because time and resources are allocated to your project. If work has not yet started, a full refund may be considered minus the 30% charge above where policy allows.",
+      "If you cancel before we begin substantive work, we may refund the eligible balance after the 30% charge, or reallocate the amount as credit toward a future business service within 90 days.",
+      "If we are unable to deliver the agreed scope due to our fault, we will offer a partial or full refund without the 30% charge, or complete the work at no additional charge—whichever is most appropriate.",
+    ],
+  },
+  {
+    title: "3. Other professional & consulting services",
+    body: [
+      "Fees for IT consulting, system development, student assistance, assignment writing, research writing, and similar professional work are generally non-refundable once work has commenced.",
       "If you cancel before we begin substantive work, we may refund any unused deposit minus reasonable administrative costs, or reallocate the amount as credit toward a future service within 90 days.",
       "If we are unable to deliver the agreed scope due to our fault, we will offer a partial or full refund, or complete the work at no additional charge—whichever is most appropriate.",
     ],
   },
   {
-    title: "3. Hosting, domains & recurring services",
+    title: "4. Hosting, domains & recurring services",
     body: [
       "Domain registrations, SSL certificates, and third-party registry fees are usually non-refundable once submitted to a registrar, even if the registration is later cancelled.",
       "Hosting, email, and other subscription plans may be cancelled before the next billing cycle. Refunds for unused prepaid periods are considered on a case-by-case basis and are not guaranteed for partial months already in progress.",
@@ -34,7 +44,7 @@ const SECTIONS = [
     ],
   },
   {
-    title: "4. Shop orders & physical products",
+    title: "5. Shop orders & physical products",
     body: [
       "Gadgets, hardware, and other physical items may be returned within 7 calendar days of delivery if unused, in original packaging, and accompanied by proof of purchase.",
       "Opened software licences, personalised items, and products marked as final sale cannot be refunded unless defective.",
@@ -42,21 +52,21 @@ const SECTIONS = [
     ],
   },
   {
-    title: "5. Digital subscriptions & software",
+    title: "6. Digital subscriptions & software",
     body: [
       "Subscriptions to the Skyrapay Research Suite and other digital products may be cancelled at any time. Cancellation stops future billing; fees already paid for the current billing period are generally not refunded unless required by law or explicitly stated at purchase.",
       "Free trials convert to paid plans according to the terms shown at signup. Please cancel before the trial ends if you do not wish to be charged.",
     ],
   },
   {
-    title: "6. Deposits, quotations & invoices",
+    title: "7. Deposits, quotations & invoices",
     body: [
       "Deposits quoted on invoices or quotations confirm your booking and may be forfeited if you cancel after work has started or after materials or third-party services have been ordered on your behalf.",
       "Balance invoices for completed milestones are due as stated on the invoice. Disputes must be raised in writing within 7 days of invoice delivery.",
     ],
   },
   {
-    title: "7. How to request a refund",
+    title: "8. How to request a refund",
     body: [
       "Use the refund request form on this page, or email us with your full name, order or invoice reference, date of payment, and a clear explanation of your request.",
       "We aim to acknowledge refund requests within 2 business days and to resolve them within 10 business days, subject to verification and any third-party processing times.",
@@ -64,14 +74,14 @@ const SECTIONS = [
     ],
   },
   {
-    title: "8. Chargebacks & disputes",
+    title: "9. Chargebacks & disputes",
     body: [
       "Please contact us before initiating a chargeback or payment dispute. We will work in good faith to resolve legitimate concerns.",
       "Unjustified chargebacks for services already delivered may result in suspension of access to hosting, software, or ongoing support until the matter is resolved.",
     ],
   },
   {
-    title: "9. Changes to this policy",
+    title: "10. Changes to this policy",
     body: [
       "We may update this Refund Policy from time to time. The version published on this page applies to purchases made after the update date shown below.",
     ],
@@ -91,6 +101,16 @@ export default function RefundPolicyPage() {
             How refunds and cancellations work for services and products from {COMPANY.name}.
           </p>
           <p className="mt-2 text-sm text-slate-500">Last updated: {updated}</p>
+
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
+            <p className="font-semibold">30% charge on refundable business services</p>
+            <p className="mt-1 leading-relaxed">
+              Approved refunds for business consultation, business plans, registration packages, and
+              related business consulting work are subject to a{" "}
+              <strong>30% service and administration charge</strong>. The refundable balance paid
+              to you is <strong>70%</strong> of the eligible amount.
+            </p>
+          </div>
 
           <div className="mt-12 space-y-10">
             {SECTIONS.map((section) => (

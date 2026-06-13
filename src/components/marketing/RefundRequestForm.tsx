@@ -4,8 +4,10 @@ import { useState } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 const PRODUCT_TYPES = [
-  { id: "consulting", label: "IT / business consulting" },
+  { id: "business-consultation", label: "Business consultation" },
+  { id: "business-plan", label: "Business plan / proposal / company profile" },
   { id: "business-registration", label: "Business registration or documents" },
+  { id: "consulting", label: "IT consulting" },
   { id: "student-writing", label: "Student / assignment / research writing" },
   { id: "hosting", label: "Hosting, domain or email" },
   { id: "shop", label: "Shop order (gadgets / hardware)" },
@@ -20,7 +22,7 @@ export function RefundRequestForm() {
   const [orderRef, setOrderRef] = useState("");
   const [paymentDate, setPaymentDate] = useState("");
   const [amount, setAmount] = useState("");
-  const [productType, setProductType] = useState("consulting");
+  const [productType, setProductType] = useState("business-consultation");
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -195,7 +197,9 @@ export function RefundRequestForm() {
       </div>
 
       <p className="text-xs leading-relaxed text-slate-500">
-        Submitting this form does not guarantee a refund. We review each request against our{" "}
+        Submitting this form does not guarantee a refund. Business consultation, business plans,
+        and related business services are subject to a{" "}
+        <strong>30% service charge</strong> on approved refunds (70% returned). See our{" "}
         <a href="#policy" className="text-royal hover:underline">
           refund policy
         </a>

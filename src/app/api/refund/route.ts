@@ -18,8 +18,10 @@ const refundSchema = z.object({
 });
 
 const PRODUCT_LABELS: Record<string, string> = {
-  consulting: "IT / business consulting",
+  "business-consultation": "Business consultation",
+  "business-plan": "Business plan / proposal / company profile",
   "business-registration": "Business registration or documents",
+  consulting: "IT consulting",
   "student-writing": "Student / assignment / research writing",
   hosting: "Hosting, domain or email",
   shop: "Shop order (gadgets / hardware)",

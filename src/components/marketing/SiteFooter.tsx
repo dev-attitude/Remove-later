@@ -35,11 +35,30 @@ export function SiteFooter() {
               </li>
             ))}
             <li>
+              <Link href="/refund-policy" className="transition hover:text-sky">
+                Refund Policy
+              </Link>
+            </li>
+            <li>
               <Link href={COMPANY.researchAppPath} className="transition hover:text-sky">
                 Skyrapay Research
               </Link>
             </li>
           </ul>
+          <p className="mt-4 text-xs leading-relaxed text-slate-500">
+            Read our{" "}
+            <Link href="/refund-policy" className="text-sky transition hover:text-white">
+              refund policy
+            </Link>{" "}
+            for business services, hosting, shop orders, and how to{" "}
+            <Link
+              href="/refund-policy#request-refund"
+              className="text-sky transition hover:text-white"
+            >
+              request a refund
+            </Link>
+            .
+          </p>
         </div>
 
         <div>
@@ -95,8 +114,11 @@ export function SiteFooter() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-3 px-4 sm:flex-row sm:gap-6">
           <p>© {new Date().getFullYear()} {COMPANY.name}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-            <Link href="/refund-policy#request-refund" className="transition hover:text-sky">
+            <Link href="/refund-policy" className="transition hover:text-sky">
               Refund Policy
+            </Link>
+            <Link href="/refund-policy#request-refund" className="transition hover:text-sky">
+              Request a refund
             </Link>
             <Link href="/contact" className="transition hover:text-sky">
               Contact
