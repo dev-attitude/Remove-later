@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
 import { StatusPill } from "@/components/manage/StatusPill";
-import { getEngagementStepStatus } from "@/lib/registration-workflows";
+import { getEngagementStepStatus } from "@/lib/service-workflows";
 import {
   ENGAGEMENT_STATUSES,
   engagementStatusLabel,

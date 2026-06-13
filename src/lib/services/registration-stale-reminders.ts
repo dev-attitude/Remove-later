@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/db";
 import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/site-content";
+import { getEngagementStepStatus } from "@/lib/service-workflows";
 import {
-  getEngagementStepStatus,
   getRegistrationWorkflow,
   isRegistrationPackage,
 } from "@/lib/registration-workflows";

@@ -143,27 +143,3 @@ export type EngagementStepStatus = {
   total: number;
   allDone: boolean;
 };
-
-export function getEngagementStepStatus(
-  packageId: string | null | undefined,
-  tasks: EngagementTask[]
-): EngagementStepStatus | null {
-  const workflow = getRegistrationWorkflow(packageId);
-  if (!workflow || tasks.length === 0) return null;
-
-  const ordered = [...tasks].sort((a, b) => a.sortOrder - b.sortOrder);
-  const completed = ordered.filter((t) => t.done);
-  const current = ordered.find((t) => !t.done) ?? null;
-  const currentIndex = current ? ordered.findIndex((t) => t.id === current.id) : ordered.length;
-  const upcoming = current ? ordered.filter((t) => !t.done && t.id !== current.id) : [];
-
-  return {
-    workflow,
-    completed,
-    current,
-    currentIndex,
-    upcoming,
-    total: ordered.length,
-    allDone: !current,
-  };
-}

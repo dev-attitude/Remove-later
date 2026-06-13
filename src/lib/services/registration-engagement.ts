@@ -1,11 +1,11 @@
-import { getRegistrationWorkflow } from "@/lib/registration-workflows";
+import { getServiceWorkflow } from "@/lib/service-workflows";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@prisma/client";
 
-export function buildRegistrationTaskCreates(
+export function buildServiceTaskCreates(
   packageId: string
 ): Prisma.BizTaskCreateWithoutEngagementInput[] {
-  const workflow = getRegistrationWorkflow(packageId);
+  const workflow = getServiceWorkflow(packageId);
   if (!workflow) return [];
 
   return workflow.steps.map((step, i) => ({
@@ -17,8 +17,11 @@ export function buildRegistrationTaskCreates(
   }));
 }
 
-/** Create or repair BIPA workflow tasks when missing (e.g. Cash Loan NAMFISA steps). */
-export async function ensureRegistrationTasks(
+/** @deprecated Use buildServiceTaskCreates */
+export const buildRegistrationTaskCreates = buildServiceTaskCreates;
+
+/** Create or repair workflow tasks when missing or outdated. */
+export async function ensureServiceTasks(
   engagementId: string
 ): Promise<{ created: number; repaired: boolean }> {
   const engagement = await prisma.bizEngagement.findUnique({
@@ -27,7 +30,7 @@ export async function ensureRegistrationTasks(
   });
   if (!engagement?.packageId) return { created: 0, repaired: false };
 
-  const workflow = getRegistrationWorkflow(engagement.packageId);
+  const workflow = getServiceWorkflow(engagement.packageId);
   if (!workflow) return { created: 0, repaired: false };
 
   const existingByKey = new Map(
@@ -35,7 +38,7 @@ export async function ensureRegistrationTasks(
   );
 
   if (engagement.tasks.length === 0) {
-    const creates = buildRegistrationTaskCreates(engagement.packageId);
+    const creates = buildServiceTaskCreates(engagement.packageId);
     await prisma.bizTask.createMany({
       data: creates.map((t) => ({ ...t, engagementId })),
     });
@@ -102,3 +105,6 @@ export async function ensureRegistrationTasks(
 
   return { created: toCreate.length, repaired: toCreate.length > 0 };
 }
+
+/** @deprecated Use ensureServiceTasks */
+export const ensureRegistrationTasks = ensureServiceTasks;

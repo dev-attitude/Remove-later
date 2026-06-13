@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireBusinessAdmin } from "@/lib/business-admin";
-import { buildRegistrationTaskCreates, ensureRegistrationTasks } from "@/lib/services/registration-engagement";
+import { buildServiceTaskCreates, ensureServiceTasks } from "@/lib/services/registration-engagement";
 import { notifyRegistrationStarted } from "@/lib/services/registration-client-notify";
 import { getRegistrationWorkflow } from "@/lib/registration-workflows";
+import { getServiceWorkflow } from "@/lib/service-workflows";
 import {
   recordRegistrationPayment,
   resolvePackagePrice,
@@ -65,8 +66,11 @@ export async function POST(req: Request) {
     await requireBusinessAdmin();
     const body = createSchema.parse(await req.json());
 
-    const workflow = getRegistrationWorkflow(body.packageId);
-    const registrationTasks = workflow ? buildRegistrationTaskCreates(body.packageId!) : [];
+    const regWorkflow = getRegistrationWorkflow(body.packageId);
+    const serviceWorkflow = getServiceWorkflow(body.packageId);
+    const workflowTasks = serviceWorkflow
+      ? buildServiceTaskCreates(body.packageId!)
+      : [];
     const manualTasks = body.tasks?.length
       ? body.tasks.map((title, i) => ({
           title: title.trim(),
@@ -75,17 +79,17 @@ export async function POST(req: Request) {
       : [];
 
     const taskCreates =
-      registrationTasks.length > 0
-        ? registrationTasks
+      workflowTasks.length > 0
+        ? workflowTasks
         : manualTasks.length > 0
           ? manualTasks
           : undefined;
 
     const quotedAmount =
       body.quotedAmount ??
-      (workflow && body.packageId ? resolvePackagePrice(body.packageId) : null);
+      (serviceWorkflow && body.packageId ? resolvePackagePrice(body.packageId) : null);
 
-    if (workflow && !body.paymentPlan) {
+    if (regWorkflow && !body.paymentPlan) {
       return NextResponse.json(
         { error: "Select a payment plan: 50% deposit, 60% deposit, or 100% full payment." },
         { status: 400 }
@@ -98,15 +102,15 @@ export async function POST(req: Request) {
         title: body.title.trim(),
         serviceSlug: body.serviceSlug,
         packageId: body.packageId || null,
-        paymentPlan: workflow ? body.paymentPlan : null,
-        status: workflow ? "in_progress" : (body.status ?? "inquiry"),
+        paymentPlan: regWorkflow ? body.paymentPlan : null,
+        status: regWorkflow ? "in_progress" : (body.status ?? "inquiry"),
         progressPercent: 0,
         quotedAmount: quotedAmount && quotedAmount > 0 ? quotedAmount : null,
         paidAmount: 0,
         depositPaid: false,
         balancePaid: false,
         currency: body.currency ?? "NAD",
-        startDate: body.startDate ? new Date(body.startDate) : workflow ? new Date() : null,
+        startDate: body.startDate ? new Date(body.startDate) : regWorkflow ? new Date() : null,
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
         notes: body.notes?.trim() || null,
         tasks: taskCreates ? { create: taskCreates } : undefined,
@@ -118,8 +122,8 @@ export async function POST(req: Request) {
     });
 
     let payment: Awaited<ReturnType<typeof recordRegistrationPayment>> | null = null;
-    if (workflow && body.paymentPlan) {
-      await ensureRegistrationTasks(engagement.id);
+    if (regWorkflow && body.paymentPlan) {
+      await ensureServiceTasks(engagement.id);
       payment = await recordRegistrationPayment(engagement.id, "initial");
       notifyRegistrationStarted(engagement.id).catch((err) =>
         console.error("[engagement] start notify failed", err)

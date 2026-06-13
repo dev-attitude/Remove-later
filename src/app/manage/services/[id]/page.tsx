@@ -19,7 +19,11 @@ import {
   PHD_MONTHLY_PACKAGE_ID,
   serviceLabel,
 } from "@/lib/business-manage";
-import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registration-workflows";
+import {
+  getEngagementStepStatus,
+  getServiceWorkflow,
+  isRegistrationPackage,
+} from "@/lib/service-workflows";
 
 export default function ManageServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -60,7 +64,7 @@ export default function ManageServiceDetailPage() {
 
   useEffect(() => {
     if (!engagement || didInitialScroll.current) return;
-    const wf = getRegistrationWorkflow(engagement.packageId);
+    const wf = getServiceWorkflow(engagement.packageId);
     if (!wf) return;
     const sorted = [...(engagement.tasks ?? [])].sort(
       (a: { sortOrder: number }, b: { sortOrder: number }) => a.sortOrder - b.sortOrder
@@ -206,7 +210,8 @@ export default function ManageServiceDetailPage() {
 
   if (!engagement) return <p className="text-slate-500">Loading…</p>;
 
-  const workflow = getRegistrationWorkflow(engagement.packageId);
+  const workflow = getServiceWorkflow(engagement.packageId);
+  const isRegWorkflow = isRegistrationPackage(engagement.packageId);
   const isPhdRetainer = engagement.packageId === PHD_MONTHLY_PACKAGE_ID;
   const paymentPlanLabel = PAYMENT_PLANS.find((p) => p.id === engagement.paymentPlan)?.label;
   const sortedTasks = [...(engagement.tasks ?? [])].sort(
@@ -342,11 +347,16 @@ export default function ManageServiceDetailPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardTitle>
-            {workflow ? "Registration steps (BIPA workflow)" : "Work checklist"}
+            {isRegWorkflow
+              ? "Registration steps (BIPA workflow)"
+              : workflow
+                ? "Service checklist"
+                : "Work checklist"}
           </CardTitle>
           {workflow && (
             <p className="mt-1 text-xs text-slate-500">
-              {workflow.label} — tick each step when complete. Client receives email & SMS update.
+              {workflow.label} — tick each step when complete.
+              {isRegWorkflow ? " Client receives email & SMS update." : ""}
             </p>
           )}
           {workflow && stepStatus?.current && (
@@ -365,7 +375,7 @@ export default function ManageServiceDetailPage() {
           )}
           {workflow && sortedTasks.length === 0 && (
             <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              Registration steps are loading… refresh the page if this message stays.
+              Checklist steps are loading… refresh the page if this message stays.
             </p>
           )}
           <ul className="mt-4 space-y-2">

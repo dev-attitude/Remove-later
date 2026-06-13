@@ -21,7 +21,11 @@ import {
   PAYMENT_PLANS,
   serviceLabel,
 } from "@/lib/business-manage";
-import { getRegistrationWorkflow, getEngagementStepStatus } from "@/lib/registration-workflows";
+import {
+  getEngagementStepStatus,
+  getServiceWorkflow,
+  isRegistrationPackage,
+} from "@/lib/service-workflows";
 
 export default function ManageClientDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -54,7 +58,8 @@ export default function ManageClientDetailPage() {
   async function createEngagement(e: React.FormEvent) {
     e.preventDefault();
     setCreateMsg(null);
-    const workflow = getRegistrationWorkflow(engForm.packageId || null);
+    const regWorkflow = isRegistrationPackage(engForm.packageId || null);
+    const serviceWorkflow = getServiceWorkflow(engForm.packageId || null);
     try {
       const res = await fetch("/api/manage/engagements", {
         method: "POST",
@@ -64,11 +69,11 @@ export default function ManageClientDetailPage() {
           title: engForm.title,
           serviceSlug: engForm.serviceSlug,
           packageId: engForm.packageId || undefined,
-          paymentPlan: workflow ? engForm.paymentPlan : undefined,
+          paymentPlan: regWorkflow ? engForm.paymentPlan : undefined,
           status: engForm.status,
           quotedAmount: engForm.quotedAmount ? Number(engForm.quotedAmount) : undefined,
           notes: engForm.notes,
-          ...(workflow
+          ...(serviceWorkflow
             ? {}
             : {
                 tasks: engForm.tasks
@@ -131,7 +136,8 @@ export default function ManageClientDetailPage() {
 
   const packages = getPackageOptions();
   const services = getServiceOptions();
-  const selectedWorkflow = getRegistrationWorkflow(engForm.packageId || null);
+  const selectedWorkflow = getServiceWorkflow(engForm.packageId || null);
+  const selectedRegWorkflow = isRegistrationPackage(engForm.packageId || null);
 
   return (
     <div>
@@ -275,7 +281,7 @@ export default function ManageClientDetailPage() {
             <textarea
               placeholder={
                 selectedWorkflow
-                  ? "Registration steps are added automatically from the selected package."
+                  ? "Service checklist steps are added automatically from the selected package."
                   : "Progress checklist (one task per line)"
               }
               className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm disabled:bg-slate-50"
@@ -284,7 +290,7 @@ export default function ManageClientDetailPage() {
               disabled={Boolean(selectedWorkflow)}
               onChange={(e) => setEngForm({ ...engForm, tasks: e.target.value })}
             />
-            {selectedWorkflow && (
+            {selectedRegWorkflow && (
               <>
                 <fieldset className="sm:col-span-2 rounded-lg border border-slate-200 p-3">
                   <legend className="px-1 text-sm font-medium text-slate-700">
@@ -313,10 +319,16 @@ export default function ManageClientDetailPage() {
                     emailed to the client.
                   </p>
                 </fieldset>
+              </>
+            )}
+            {selectedWorkflow && (
+              <>
                 <p className="sm:col-span-2 text-xs text-slate-600">
-                  {selectedWorkflow.steps.length} registration steps will be created for{" "}
-                  {selectedWorkflow.label}. When you complete a step, the next step becomes active
-                  and the client receives email & SMS.
+                  {selectedWorkflow.steps.length} checklist steps will be created for{" "}
+                  {selectedWorkflow.label}.
+                  {selectedRegWorkflow
+                    ? " When you complete a step, the next becomes active and the client receives email & SMS."
+                    : " Tick each step as you progress through the project."}
                 </p>
                 <ol className="sm:col-span-2 list-decimal space-y-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 pl-8 text-xs text-slate-700">
                   {selectedWorkflow.steps.map((step) => (
