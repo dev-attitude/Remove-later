@@ -33,7 +33,7 @@ function PackageCard({
         <PriceDisplay
           original={pkg.price}
           currency="NAD"
-          priceLabel={pkg.priceLabel || "From"}
+          priceLabel={pkg.priceLabel === undefined ? "From" : pkg.priceLabel}
           size="md"
         />
       </div>
@@ -67,8 +67,8 @@ export function StudentWritingPackagesSection({
       <h2 className="text-2xl font-bold text-navy">{title}</h2>
       <p className="mt-2 max-w-3xl text-slate-600">{description}</p>
       <p className="mt-2 text-sm text-slate-500">
-        Prices shown are starting rates (ex VAT). Final quotes depend on word count, deadline, and
-        complexity — we issue formal quotations and invoices through our business office.
+        Prices are in Namibian dollars (NAD, ex VAT). Scope is confirmed before work begins — we
+        issue formal quotations and invoices through our business office.
       </p>
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {packages.map((pkg) => (

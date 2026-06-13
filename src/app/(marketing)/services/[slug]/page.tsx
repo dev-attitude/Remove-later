@@ -110,7 +110,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       {isAssignment && (
         <StudentWritingPackagesSection
           title="Assignment writing packages"
-          description="Fixed starting prices for common assignment types. Tell us your module, word count, and deadline—we confirm the final fee before work begins."
+          description="Fixed assignment rates for undergraduate and postgraduate work. Tell us your module, word count, and deadline—we confirm scope before starting."
           packages={ASSIGNMENT_WRITING_PACKAGES}
           contactService="assignment-writing"
         />
@@ -119,7 +119,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       {isResearch && (
         <StudentWritingPackagesSection
           title="Research writing packages"
-          description="From proposals to full dissertations—milestone-based delivery with supervisor revision support."
+          description="Proposals, theses, PhD monthly support, and data collection — fixed rates by academic level."
           packages={RESEARCH_WRITING_PACKAGES}
           contactService="research-writing"
         />
