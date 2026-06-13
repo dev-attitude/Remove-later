@@ -10,6 +10,8 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
+    "db:cofounder": "npx tsx scripts/upsert-cofounder.ts",
+    "db:reset-owner": "npx tsx scripts/reset-owner-password.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {

@@ -7,6 +7,8 @@ import { COUNTRY_COOKIE } from "@/lib/hosting-currency";
 const PUBLIC_PREFIXES = [
   "/login",
   "/register",
+  "/forgot-password",
+  "/reset-password",
   "/business/login",
   "/download",
   "/research",
