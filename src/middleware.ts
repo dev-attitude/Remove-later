@@ -7,6 +7,7 @@ import { COUNTRY_COOKIE } from "@/lib/hosting-currency";
 const PUBLIC_PREFIXES = [
   "/login",
   "/register",
+  "/business/login",
   "/download",
   "/research",
   "/services",
@@ -16,7 +17,6 @@ const PUBLIC_PREFIXES = [
   "/contact",
   "/hosting",
   "/api/campus",
-  "/manage",
   "/api/health",
   "/api/auth",
   "/api/literature",
@@ -56,6 +56,12 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/_next")
   ) {
     return withCountryCookie(NextResponse.next());
+  }
+
+  if (!hasSessionCookie(req) && pathname.startsWith("/manage")) {
+    const login = new URL("/business/login", req.nextUrl.origin);
+    login.searchParams.set("callbackUrl", pathname);
+    return withCountryCookie(NextResponse.redirect(login));
   }
 
   const isPublic = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));

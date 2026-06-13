@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -16,6 +16,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (callbackUrl.startsWith("/manage")) {
+      router.replace(
+        `/business/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      );
+    }
+  }, [callbackUrl, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
