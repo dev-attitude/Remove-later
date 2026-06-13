@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
+import { ManageStatCard } from "@/components/manage/ManageStatCard";
 import {
   INCOME_CATEGORIES,
   PAYMENT_METHODS,
@@ -53,18 +55,20 @@ export default function ManageIncomePage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-slate-900">Income</h1>
-      <p className="mt-1 mb-6 text-sm text-slate-600">
-        Record client payments — registrations, consulting, student assistance & more.
-      </p>
+      <ManagePageHeader
+        title="Income"
+        description="Record client payments — registrations, consulting, student assistance & more."
+      />
 
-      <Card className="mb-6 !p-4">
-        <p className="text-xs text-slate-500">Total recorded</p>
-        <p className="text-2xl font-bold text-emerald-700">{formatNad(total)}</p>
-      </Card>
+      <ManageStatCard
+        className="mb-6"
+        label="Total recorded"
+        value={formatNad(total)}
+        tone="success"
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card variant="manage">
           <CardTitle>Record income</CardTitle>
           <form onSubmit={submit} className="mt-4 space-y-3">
             <select

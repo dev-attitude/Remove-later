@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Plus, Search } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
 import { StatusPill } from "@/components/manage/StatusPill";
 import {
   CLIENT_CATEGORIES,
@@ -96,61 +97,61 @@ export default function ManageClientsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">Clients</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Manage all Skyrapay clients — registrations, IT, student assistance & more.
-          </p>
-        </div>
-        <Button type="button" onClick={() => setShowForm((v) => !v)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add client
-        </Button>
-      </div>
+      <ManagePageHeader
+        title="Clients"
+        description="Manage all Skyrapay clients — registrations, IT, student assistance & more."
+        actions={
+          <Button type="button" onClick={() => setShowForm((v) => !v)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add client
+          </Button>
+        }
+      />
 
       {error && (
-        <p className="mb-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{error}</p>
+        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
       )}
 
       {showForm && (
-        <Card className="mb-6">
+        <Card variant="manage" className="mb-6">
           <CardTitle>New client</CardTitle>
           <form onSubmit={createClient} className="mt-4 grid gap-4 sm:grid-cols-2">
             <input
               required
               placeholder="Full name *"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
             <input
               placeholder="Company / organisation"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.company}
               onChange={(e) => setForm({ ...form, company: e.target.value })}
             />
             <input
               type="email"
               placeholder="Email"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
             <input
               placeholder="Phone"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
             />
             <input
               placeholder="Location (town / region)"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.location}
               onChange={(e) => setForm({ ...form, location: e.target.value })}
             />
             <select
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value })}
             >
@@ -161,7 +162,7 @@ export default function ManageClientsPage() {
               ))}
             </select>
             <select
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
             >
@@ -220,14 +221,14 @@ export default function ManageClientsPage() {
         <div className="relative min-w-[200px] flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
-            className="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm"
+            className="manage-input py-2 pl-9"
             placeholder="Search name, email, company…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
         <select
-          className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="manage-input w-auto"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -243,7 +244,7 @@ export default function ManageClientsPage() {
       {loading ? (
         <p className="text-sm text-slate-500">Loading…</p>
       ) : clients.length === 0 ? (
-        <Card>
+        <Card variant="manage">
           <p className="text-sm text-slate-600">No clients found. Add your first client above.</p>
         </Card>
       ) : (

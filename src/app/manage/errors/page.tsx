@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
+import { ManageStatCard } from "@/components/manage/ManageStatCard";
 
 type ErrorsData = {
   last7: number;
@@ -44,30 +46,19 @@ export default function ManageErrorsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">
-          Technical errors
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Server errors your clients ran into — so you can assist before they even report it.
-        </p>
-      </div>
+      <ManagePageHeader
+        title="Technical errors"
+        description="Server errors your clients ran into — so you can assist before they even report it."
+      />
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2">
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Errors (last 7 days)</p>
-          <p
-            className={`mt-2 text-2xl font-bold ${
-              data.last7 > 0 ? "text-red-600" : "text-emerald-700"
-            }`}
-          >
-            {data.last7}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {data.last7 === 0 ? "All quiet — no failures recorded" : "Across all services"}
-          </p>
-        </Card>
-        <Card className="!p-4">
+        <ManageStatCard
+          label="Errors (last 7 days)"
+          value={data.last7}
+          tone={data.last7 > 0 ? "danger" : "success"}
+          hint={data.last7 === 0 ? "All quiet — no failures recorded" : "Across all services"}
+        />
+        <Card variant="manage">
           <CardTitle>By source (7 days)</CardTitle>
           {data.bySource.length === 0 ? (
             <p className="mt-2 text-sm text-slate-500">No errors this week.</p>

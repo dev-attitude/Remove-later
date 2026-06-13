@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 
 type InquiryInput = {
-  kind: "contact" | "purchase" | "hosting_order";
+  kind: "contact" | "purchase" | "hosting_order" | "refund_request";
   name: string;
   email: string;
   phone?: string | null;

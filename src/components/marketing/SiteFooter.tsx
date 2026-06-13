@@ -92,7 +92,17 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10 bg-black/10 py-5 text-center text-xs text-slate-300">
-        © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-3 px-4 sm:flex-row sm:gap-6">
+          <p>© {new Date().getFullYear()} {COMPANY.name}. All rights reserved.</p>
+          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <Link href="/refund-policy#request-refund" className="transition hover:text-sky">
+              Refund Policy
+            </Link>
+            <Link href="/contact" className="transition hover:text-sky">
+              Contact
+            </Link>
+          </nav>
+        </div>
       </div>
     </footer>
   );

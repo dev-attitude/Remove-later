@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
+import { ManageStatCard } from "@/components/manage/ManageStatCard";
 import {
   formatTodoCategory,
   TODO_CATEGORIES,
@@ -196,59 +198,50 @@ export default function ManageTodosPage() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">To-do & planning</h1>
-          <p className="mt-1 max-w-2xl text-sm text-slate-600">
-            Plan business operations, product developments, and follow-ups. Daily email reminders
-            go to your business inbox for overdue, due today, and due tomorrow items.
-          </p>
-        </div>
-        <Button type="button" onClick={() => setShowForm((v) => !v)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add to-do
-        </Button>
-      </div>
+      <ManagePageHeader
+        title="To-do & planning"
+        description="Plan business operations, product developments, and follow-ups. Daily email reminders go to your business inbox for overdue, due today, and due tomorrow items."
+        actions={
+          <Button type="button" onClick={() => setShowForm((v) => !v)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add to-do
+          </Button>
+        }
+      />
 
       {summary && (
-        <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="!p-4">
-            <p className="text-xs text-slate-500">Open tasks</p>
-            <p className="mt-1 text-2xl font-bold text-slate-900">{summary.open}</p>
-          </Card>
-          <Card className="!p-4 !border-red-200 !bg-red-50/40">
-            <p className="text-xs text-red-700">Overdue</p>
-            <p className="mt-1 text-2xl font-bold text-red-700">{summary.overdue}</p>
-          </Card>
-          <Card className="!p-4 !border-amber-200 !bg-amber-50/40">
-            <p className="text-xs text-amber-800">Due today</p>
-            <p className="mt-1 text-2xl font-bold text-amber-800">{summary.dueToday}</p>
-          </Card>
-          <Card className="!p-4">
-            <p className="flex items-center gap-1 text-xs text-slate-500">
-              <Bell className="h-3 w-3" /> Daily reminders
-            </p>
-            <p className="mt-1 text-sm font-medium text-slate-700">07:00 UTC to admin email</p>
-          </Card>
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ManageStatCard label="Open tasks" value={summary.open} />
+          <ManageStatCard label="Overdue" value={summary.overdue} tone="danger" />
+          <ManageStatCard label="Due today" value={summary.dueToday} tone="warning" />
+          <ManageStatCard
+            label="Daily reminders"
+            value="07:00 UTC"
+            hint="Sent to admin email"
+          />
         </div>
       )}
 
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+      {error && (
+        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       {showForm && (
-        <Card className="mb-6">
+        <Card variant="manage" className="mb-6">
           <CardTitle>New to-do</CardTitle>
           <form onSubmit={handleCreate} className="mt-4 space-y-4">
             <input
               required
               placeholder="What needs to be done? *"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <textarea
               placeholder="Details, links, or plan notes (optional)"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="manage-input"
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -257,7 +250,7 @@ export default function ManageTodosPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Category</span>
                 <select
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   value={category}
                   onChange={(e) => {
                     setCategory(e.target.value);
@@ -277,7 +270,7 @@ export default function ManageTodosPage() {
                   <input
                     required
                     placeholder="e.g. Staff training, Legal, Partnerships…"
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                    className="manage-input mt-1"
                     value={categoryOther}
                     onChange={(e) => setCategoryOther(e.target.value)}
                   />
@@ -286,7 +279,7 @@ export default function ManageTodosPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Priority</span>
                 <select
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
                 >
@@ -301,7 +294,7 @@ export default function ManageTodosPage() {
                 <span className="font-medium text-slate-700">Due date</span>
                 <input
                   type="date"
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
                 />

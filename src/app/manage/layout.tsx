@@ -13,19 +13,11 @@ export default async function ManageLayout({
   const role = (session?.user as { role?: string } | undefined)?.role;
 
   if (!session?.user) {
-    return (
-      <div className="min-h-screen bg-slate-50">
-        <ManageSignInPrompt />
-      </div>
-    );
+    return <ManageSignInPrompt />;
   }
 
   if (!isBusinessAdmin(email, role)) {
-    return (
-      <div className="min-h-screen bg-slate-50">
-        <ManageAccessDenied email={email} />
-      </div>
-    );
+    return <ManageAccessDenied email={email} />;
   }
 
   return (

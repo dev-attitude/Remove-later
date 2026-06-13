@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
+import { ManageStatCard } from "@/components/manage/ManageStatCard";
 import { EXPENSE_CATEGORIES, formatNad } from "@/lib/business-manage";
 
 export default function ManageExpensesPage() {
@@ -40,18 +42,20 @@ export default function ManageExpensesPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-slate-900">Expenses</h1>
-      <p className="mt-1 mb-6 text-sm text-slate-600">
-        Track filing fees, travel, software, subcontractors & other business costs.
-      </p>
+      <ManagePageHeader
+        title="Expenses"
+        description="Track filing fees, travel, software, subcontractors & other business costs."
+      />
 
-      <Card className="mb-6 !p-4">
-        <p className="text-xs text-slate-500">Total recorded</p>
-        <p className="text-2xl font-bold text-red-600">{formatNad(total)}</p>
-      </Card>
+      <ManageStatCard
+        className="mb-6"
+        label="Total recorded"
+        value={formatNad(total)}
+        tone="danger"
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card variant="manage">
           <CardTitle>Record expense</CardTitle>
           <form onSubmit={submit} className="mt-4 space-y-3">
             <input

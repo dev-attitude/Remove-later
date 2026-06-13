@@ -13,6 +13,17 @@ export type ContactInquiry = {
   packageName?: string;
 };
 
+export type RefundRequest = {
+  name: string;
+  email: string;
+  phone?: string;
+  orderRef: string;
+  paymentDate: string;
+  amount?: number;
+  productType: string;
+  reason: string;
+};
+
 export type NotificationResult = {
   email: boolean;
   sms: boolean;
@@ -172,6 +183,215 @@ function buildSmsBody(inquiry: ContactInquiry): string {
   const clientPhone = inquiry.phone ? ` | ${inquiry.phone}` : "";
   const text = `Skyrapay: ${title} from ${inquiry.name}${pkg}${clientPhone}. Email: ${inquiry.email}`;
   return text.length > 320 ? `${text.slice(0, 317)}...` : text;
+}
+
+function buildRefundSmsBody(refund: RefundRequest): string {
+  const amt = refund.amount != null ? ` N$${refund.amount}` : "";
+  const text = `Skyrapay REFUND: ${refund.orderRef}${amt} from ${refund.name}. ${refund.productType}. ${refund.email}`;
+  return text.length > 320 ? `${text.slice(0, 317)}...` : text;
+}
+
+function buildRefundEmailHtml(
+  refund: RefundRequest,
+  smsStatus: Pick<NotificationResult, "sms" | "smsConfigured" | "smsError" | "notifyPhones">
+): string {
+  const rows = [
+    ["Reference", refund.orderRef],
+    ["Product / service", refund.productType],
+    ["Payment date", refund.paymentDate],
+    ["Amount paid", refund.amount != null ? `N$ ${refund.amount.toLocaleString()}` : "—"],
+    ["Name", refund.name],
+    ["Email", refund.email],
+    ["Phone", refund.phone || "—"],
+    ["Reason", refund.reason.replace(/\n/g, "<br>")],
+    ["Received", new Date().toLocaleString("en-NA", { timeZone: "Africa/Windhoek" })],
+  ];
+
+  const tableRows = rows
+    .map(
+      ([label, value]) =>
+        `<tr><td style="padding:8px 12px;font-weight:600;color:#0f172a;vertical-align:top">${label}</td><td style="padding:8px 12px;color:#1f2937">${value}</td></tr>`
+    )
+    .join("");
+
+  return `
+    <div style="font-family:system-ui,sans-serif;max-width:600px">
+      <h2 style="color:#0f172a;margin:0 0 16px">Refund request — action required</h2>
+      <p style="color:#64748b;margin:0 0 20px">${COMPANY.name} — ${refund.orderRef}</p>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+        ${tableRows}
+      </table>
+      <p style="margin-top:24px;font-size:13px;color:#64748b">Reply directly to this email to reach the client. Review in Business Manager → Orders & inquiries.</p>
+      ${adminSmsStatusNote(smsStatus)}
+    </div>
+  `;
+}
+
+function buildRefundEmailText(
+  refund: RefundRequest,
+  smsStatus: Pick<NotificationResult, "sms" | "smsConfigured" | "smsError" | "notifyPhones">
+): string {
+  let smsLine = "";
+  if (!smsStatus.smsConfigured) smsLine = "\n\n[Admin] SMS not sent — no SMS provider configured.";
+  else if (!smsStatus.sms) smsLine = `\n\n[Admin] SMS failed: ${smsStatus.smsError ?? "unknown"}`;
+  else smsLine = `\n\n[Admin] SMS sent to ${smsStatus.notifyPhones.join(", ")}.`;
+
+  return [
+    `Refund request — ${COMPANY.name}`,
+    "",
+    `Reference: ${refund.orderRef}`,
+    `Product: ${refund.productType}`,
+    `Payment date: ${refund.paymentDate}`,
+    `Amount: ${refund.amount != null ? `N$ ${refund.amount}` : "—"}`,
+    `Name: ${refund.name}`,
+    `Email: ${refund.email}`,
+    `Phone: ${refund.phone || "—"}`,
+    "",
+    "Reason:",
+    refund.reason,
+    smsLine,
+  ].join("\n");
+}
+
+async function sendRefundViaResend(
+  refund: RefundRequest,
+  to: string,
+  smsStatus: Pick<NotificationResult, "sms" | "smsConfigured" | "smsError" | "notifyPhones">
+): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY!.trim();
+  const from = getEmailFromAddress();
+  const subject = `[${COMPANY.shortName}] Refund request — ${refund.orderRef} — ${refund.name}`;
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      reply_to: refund.email,
+      subject,
+      html: buildRefundEmailHtml(refund, smsStatus),
+      text: buildRefundEmailText(refund, smsStatus),
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Resend failed (${res.status}): ${err}`);
+  }
+}
+
+async function sendRefundViaSmtp(
+  refund: RefundRequest,
+  to: string,
+  smsStatus: Pick<NotificationResult, "sms" | "smsConfigured" | "smsError" | "notifyPhones">
+): Promise<void> {
+  const host = process.env.SMTP_HOST!.trim();
+  const port = Number(process.env.SMTP_PORT ?? "587");
+  const user = process.env.SMTP_USER!.trim();
+  const pass = process.env.SMTP_PASS!.trim();
+  const from = process.env.SMTP_FROM?.trim() || getEmailFromAddress();
+
+  const transport = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  });
+
+  await transport.sendMail({
+    from,
+    to,
+    replyTo: refund.email,
+    subject: `[${COMPANY.shortName}] Refund request — ${refund.orderRef} — ${refund.name}`,
+    html: buildRefundEmailHtml(refund, smsStatus),
+    text: buildRefundEmailText(refund, smsStatus),
+  });
+}
+
+async function sendRefundSms(refund: RefundRequest): Promise<{ ok: boolean; error?: string }> {
+  if (!isSmsConfigured()) {
+    return { ok: false, error: "SMS provider not configured" };
+  }
+
+  const body = buildRefundSmsBody(refund);
+  const phones = notifyPhones();
+  if (phones.length === 0) {
+    return { ok: false, error: "No notify phone numbers" };
+  }
+
+  const provider = smsProvider()!;
+  const errors: string[] = [];
+
+  for (const to of phones) {
+    try {
+      if (provider === "africastalking") {
+        await sendAfricaTalkingSms(to, body);
+      } else {
+        await sendTwilioSms(to, body);
+      }
+    } catch (e) {
+      errors.push(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  if (errors.length === phones.length) {
+    return { ok: false, error: errors.join(" | ") };
+  }
+  return { ok: true, error: errors.length > 0 ? errors.join(" | ") : undefined };
+}
+
+export async function notifyRefundRequest(refund: RefundRequest): Promise<NotificationResult> {
+  const emailConfigured = isEmailConfigured();
+  const smsConfigured = isSmsConfigured();
+  const phones = notifyPhones();
+
+  const base: NotificationResult = {
+    email: false,
+    sms: false,
+    emailConfigured,
+    smsConfigured,
+    smsProvider: smsProvider(),
+    notifyPhones: phones,
+  };
+
+  if (!emailConfigured && !smsConfigured) {
+    console.info("[refund-notify] not configured — stored in admin inbox only");
+    return base;
+  }
+
+  let smsResult: { ok: boolean; error?: string } = { ok: false };
+  if (smsConfigured) {
+    smsResult = await sendRefundSms(refund);
+    base.sms = smsResult.ok;
+    base.smsError = smsResult.error;
+  }
+
+  const smsStatus = {
+    sms: base.sms,
+    smsConfigured,
+    smsError: base.smsError,
+    notifyPhones: phones,
+  };
+
+  if (emailConfigured) {
+    try {
+      const to = notifyEmail();
+      if (process.env.RESEND_API_KEY?.trim()) {
+        await sendRefundViaResend(refund, to, smsStatus);
+      } else {
+        await sendRefundViaSmtp(refund, to, smsStatus);
+      }
+      base.email = true;
+    } catch (e) {
+      console.error("[refund-notify] email failed:", e);
+    }
+  }
+
+  return base;
 }
 
 async function sendViaResend(

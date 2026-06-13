@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AlertTriangle, Bell, Mail } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
 import { StatusPill } from "@/components/manage/StatusPill";
 import { getEngagementStepStatus } from "@/lib/registration-workflows";
 import {
@@ -80,14 +81,13 @@ export default function ManageServicesPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-slate-900">Services & progress</h1>
-      <p className="mt-1 mb-6 text-sm text-slate-600">
-        Track every client service — registration, IT, student assistance, websites & more.
-        Registrations with no step update in 3+ days receive automatic client reminders.
-      </p>
+      <ManagePageHeader
+        title="Services & progress"
+        description="Track every client service — registration, IT, student assistance, websites & more. Registrations with no step update in 3+ days receive automatic client reminders."
+      />
 
       {staleCount > 0 && (
-        <Card className="mb-6 !border-amber-200 !bg-amber-50/60">
+        <Card variant="manage" className="mb-6 !border-amber-200 !bg-amber-50/60">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex gap-3">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
@@ -118,7 +118,7 @@ export default function ManageServicesPage() {
       )}
 
       <select
-        className="mb-4 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+        className="manage-input mb-4 w-auto"
         value={statusFilter}
         onChange={(e) => setStatusFilter(e.target.value)}
       >

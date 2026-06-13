@@ -20,6 +20,7 @@ const MARKETING_PAGES: SitemapEntry[] = [
   { path: "/quote", priority: 0.85, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
   { path: "/about", priority: 0.75, changeFrequency: "monthly" },
+  { path: "/refund-policy", priority: 0.5, changeFrequency: "yearly" },
   { path: "/research", priority: 0.7, changeFrequency: "weekly" },
   { path: "/campus", priority: 0.88, changeFrequency: "weekly" },
 ];

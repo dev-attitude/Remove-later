@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
+import { ManageStatCard } from "@/components/manage/ManageStatCard";
 import { StatusPill } from "@/components/manage/StatusPill";
 
 type Inquiry = {
@@ -34,10 +36,12 @@ const KIND_LABELS: Record<string, string> = {
   hosting_order: "Hosting order",
   purchase: "Shop / service purchase",
   contact: "Contact / inquiry",
+  refund_request: "Refund request",
 };
 
 const KIND_FILTERS = [
   { id: "all", label: "All" },
+  { id: "refund_request", label: "Refunds" },
   { id: "hosting_order", label: "Hosting" },
   { id: "purchase", label: "Shop & IT services" },
   { id: "contact", label: "Contact" },
@@ -103,35 +107,26 @@ export default function ManageInquiriesPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">
-          Orders & inquiries
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Everything clients submit across hosting, the shop, IT services, and contact forms —
-          in one inbox.
-        </p>
-      </div>
+      <ManagePageHeader
+        title="Orders & inquiries"
+        description="Everything clients submit across hosting, the shop, IT services, and contact forms — in one inbox."
+      />
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">New (needs attention)</p>
-          <p className="mt-2 text-2xl font-bold text-amber-600">
-            {data.summary.byStatus.new ?? 0}
-          </p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">In progress</p>
-          <p className="mt-2 text-2xl font-bold text-sky-700">
-            {data.summary.byStatus.in_progress ?? 0}
-          </p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Resolved</p>
-          <p className="mt-2 text-2xl font-bold text-emerald-700">
-            {data.summary.byStatus.resolved ?? 0}
-          </p>
-        </Card>
+        <ManageStatCard
+          label="New (needs attention)"
+          value={data.summary.byStatus.new ?? 0}
+          tone="warning"
+        />
+        <ManageStatCard
+          label="In progress"
+          value={data.summary.byStatus.in_progress ?? 0}
+        />
+        <ManageStatCard
+          label="Resolved"
+          value={data.summary.byStatus.resolved ?? 0}
+          tone="success"
+        />
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">

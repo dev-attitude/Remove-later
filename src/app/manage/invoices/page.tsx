@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bell, FileText, Mail, Plus, Receipt, Trash2 } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
 import { StatusPill } from "@/components/manage/StatusPill";
 import { formatNad } from "@/lib/business-manage";
 import { calculateInvoiceTotals, computeBalanceDue, VAT_RATE } from "@/lib/invoice";
@@ -318,25 +319,30 @@ export default function ManageInvoicesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">Invoices</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Branded tax invoices with 15% VAT, balance due tracking, and automatic payment
-            reminders every {reminderDays} days until settled.
-          </p>
-        </div>
-        <Button type="button" onClick={() => setShowForm((v) => !v)}>
-          <Plus className="mr-2 h-4 w-4" />
-          New invoice
-        </Button>
-      </div>
+      <ManagePageHeader
+        title="Invoices"
+        description={`Branded tax invoices with 15% VAT, balance due tracking, and automatic payment reminders every ${reminderDays} days until settled.`}
+        actions={
+          <Button type="button" onClick={() => setShowForm((v) => !v)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New invoice
+          </Button>
+        }
+      />
 
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
-      {success && <p className="mb-4 text-sm text-emerald-700">{success}</p>}
+      {error && (
+        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+      {success && (
+        <p className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {success}
+        </p>
+      )}
 
       {dueCount > 0 && (
-        <Card className="mb-6 !border-amber-200 !bg-amber-50/60">
+        <Card variant="manage" className="mb-6 !border-amber-200 !bg-amber-50/60">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm font-semibold text-amber-900">
               {dueCount} invoice{dueCount === 1 ? "" : "s"} with balance due — reminder ready to
@@ -356,7 +362,7 @@ export default function ManageInvoicesPage() {
       )}
 
       {showForm && (
-        <Card className="mb-8">
+        <Card variant="manage" className="mb-8">
           <CardTitle>Create tax invoice</CardTitle>
           <form onSubmit={handleCreate} className="mt-4 space-y-4">
             <p className="text-sm text-slate-600">
@@ -369,7 +375,7 @@ export default function ManageInvoicesPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Client</span>
                 <select
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   value={clientId}
                   onChange={(e) => {
                     setClientId(e.target.value);
@@ -390,7 +396,7 @@ export default function ManageInvoicesPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Linked service (optional)</span>
                 <select
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   value={engagementId}
                   onChange={(e) => setEngagementId(e.target.value)}
                   disabled={!clientId}
@@ -473,7 +479,7 @@ export default function ManageInvoicesPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Already paid (N$)</span>
                 <input
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   type="number"
                   min="0"
                   step="0.01"
@@ -484,7 +490,7 @@ export default function ManageInvoicesPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Payment due in (days)</span>
                 <input
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   type="number"
                   min="1"
                   value={dueDays}
@@ -494,7 +500,7 @@ export default function ManageInvoicesPage() {
               <label className="block text-sm">
                 <span className="font-medium text-slate-700">Remind every (days)</span>
                 <input
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="manage-input mt-1"
                   type="number"
                   min="1"
                   max="30"
@@ -531,17 +537,17 @@ export default function ManageInvoicesPage() {
       )}
 
       {invoices.length === 0 ? (
-        <Card>
+        <Card variant="manage">
           <p className="text-sm text-slate-500">
             No invoices yet. Create one above — balance reminders will email automatically until
             paid.
           </p>
         </Card>
       ) : (
-        <Card className="overflow-x-auto !p-0">
+        <div className="manage-table-wrap">
           <table className="w-full min-w-[900px] text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500">
+              <tr>
                 <th className="px-4 py-3">Invoice</th>
                 <th className="px-4 py-3">Client</th>
                 <th className="px-4 py-3">Total</th>
@@ -651,7 +657,7 @@ export default function ManageInvoicesPage() {
               ))}
             </tbody>
           </table>
-        </Card>
+        </div>
       )}
 
       <p className="mt-6 flex items-center gap-2 text-xs text-slate-500">

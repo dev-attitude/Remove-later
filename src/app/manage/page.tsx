@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardTitle } from "@/components/ui/Card";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
+import { ManageStatCard } from "@/components/manage/ManageStatCard";
 import { StatusPill } from "@/components/manage/StatusPill";
 import {
   engagementStatusLabel,
@@ -59,30 +61,26 @@ function TodoSummaryCard() {
   }, []);
 
   if (!summary) {
-    return (
-      <Card className="!p-4">
-        <p className="text-xs text-slate-500">To-do & planning</p>
-        <p className="mt-2 text-2xl font-bold text-slate-300">—</p>
-      </Card>
-    );
+    return <ManageStatCard label="To-do & planning" value="—" />;
   }
 
+  const tone =
+    summary.overdue > 0 ? "danger" : summary.dueToday > 0 ? "warning" : ("default" as const);
+
   return (
-    <Link href="/manage/todos" className="block">
-      <Card className="!p-4 h-full transition hover:border-brand-300">
-        <p className="text-xs text-slate-500">To-do & planning</p>
-        <p className="mt-2 text-2xl font-bold text-slate-900">{summary.open}</p>
-        <p className="mt-1 text-xs text-slate-500">
-          {summary.overdue > 0 ? (
-            <span className="text-red-600">{summary.overdue} overdue</span>
-          ) : summary.dueToday > 0 ? (
-            <span className="text-amber-700">{summary.dueToday} due today</span>
-          ) : (
-            "All caught up"
-          )}
-        </p>
-      </Card>
-    </Link>
+    <ManageStatCard
+      label="To-do & planning"
+      value={summary.open}
+      tone={tone}
+      href="/manage/todos"
+      hint={
+        summary.overdue > 0
+          ? `${summary.overdue} overdue`
+          : summary.dueToday > 0
+            ? `${summary.dueToday} due today`
+            : "All caught up"
+      }
+    />
   );
 }
 
@@ -97,26 +95,17 @@ function StaleRegistrationsCard() {
   }, []);
 
   if (count === null) {
-    return (
-      <Card className="!p-4">
-        <p className="text-xs text-slate-500">Stale registrations</p>
-        <p className="mt-2 text-2xl font-bold text-slate-300">—</p>
-      </Card>
-    );
+    return <ManageStatCard label="Stale registrations (3+ days)" value="—" />;
   }
 
   return (
-    <Link href="/manage/services" className="block">
-      <Card className="!p-4 h-full transition hover:border-brand-300">
-        <p className="text-xs text-slate-500">Stale registrations (3+ days)</p>
-        <p className={`mt-2 text-2xl font-bold ${count > 0 ? "text-amber-600" : "text-emerald-700"}`}>
-          {count}
-        </p>
-        <p className="mt-1 text-xs text-slate-500">
-          {count > 0 ? "Auto-reminders + admin digest" : "All registrations up to date"}
-        </p>
-      </Card>
-    </Link>
+    <ManageStatCard
+      label="Stale registrations (3+ days)"
+      value={count}
+      tone={count > 0 ? "warning" : "success"}
+      href="/manage/services"
+      hint={count > 0 ? "Auto-reminders + admin digest" : "All registrations up to date"}
+    />
   );
 }
 
@@ -141,7 +130,11 @@ export default function ManageOverviewPage() {
   }, []);
 
   if (error) {
-    return <p className="text-sm text-red-600">{error}</p>;
+    return (
+      <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        {error}
+      </p>
+    );
   }
 
   if (!data) {
@@ -149,150 +142,105 @@ export default function ManageOverviewPage() {
   }
 
   const { clients, engagements, finances, recentEngagements } = data;
+  const monthLabel = new Date().toLocaleString("en-NA", { month: "long", year: "numeric" });
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">
-          Master overview
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          All services and all clients in one place — business work, Research App, and
-          SmartCampus for {new Date().toLocaleString("en-NA", { month: "long", year: "numeric" })}
-        </p>
-      </div>
+      <ManagePageHeader
+        title="Master overview"
+        description={`All services and all clients in one place — business work, Research App, and SmartCampus for ${monthLabel}.`}
+      />
 
       {master && (
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <Link href="/manage/inquiries" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">New orders & inquiries</p>
-              <p
-                className={`mt-2 text-2xl font-bold ${
-                  master.support.newInquiries > 0 ? "text-amber-600" : "text-slate-900"
-                }`}
-              >
-                {master.support.newInquiries}
-              </p>
-              <p className="mt-1 text-xs text-slate-500">
-                Hosting, shop, IT services & contact
-              </p>
-            </Card>
-          </Link>
-          <Link href="/manage/errors" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">Technical errors (7 days)</p>
-              <p
-                className={`mt-2 text-2xl font-bold ${
-                  master.support.errors7 > 0 ? "text-red-600" : "text-emerald-700"
-                }`}
-              >
-                {master.support.errors7}
-              </p>
-              <p className="mt-1 text-xs text-slate-500">
-                {master.support.errors7 === 0 ? "All systems healthy" : "Click to investigate"}
-              </p>
-            </Card>
-          </Link>
-          <Link href="/manage/hosting" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">Hosting services</p>
-              <p className="mt-2 text-2xl font-bold">{master.hosting.clients}</p>
-              <p className="mt-1 text-xs text-slate-500">
-                {master.hosting.orders} order(s) · domains & plans
-              </p>
-            </Card>
-          </Link>
-          <Link href="/manage/app-users" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">Research App users</p>
-              <p className="mt-2 text-2xl font-bold">{master.research.users}</p>
-              <p className="mt-1 text-xs text-slate-500">
-                +{master.research.newUsers30} in last 30 days
-              </p>
-            </Card>
-          </Link>
-          <Link href="/manage/app-users" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">Active subscriptions</p>
-              <p className="mt-2 text-2xl font-bold text-emerald-700">
-                {master.research.activeSubscriptions}
-              </p>
-              <p className="mt-1 text-xs text-slate-500">
-                {master.research.payingSubscriptions} paying via Stripe
-              </p>
-            </Card>
-          </Link>
-          <Link href="/manage/usage" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">App activity (30 days)</p>
-              <p className="mt-2 text-2xl font-bold text-brand-700">
-                {master.research.usageActions30}
-              </p>
-              <p className="mt-1 text-xs text-slate-500">
-                {master.research.platformBooks} platform textbooks loaded
-              </p>
-            </Card>
-          </Link>
-          <Link href="/campus/admin" className="block">
-            <Card className="!p-4 h-full transition hover:border-brand-300">
-              <p className="text-xs text-slate-500">SmartCampus</p>
-              <p className="mt-2 text-2xl font-bold">{master.campus.tenants}</p>
-              <p className="mt-1 text-xs text-slate-500">
-                institutions · {master.campus.students} students
-              </p>
-            </Card>
-          </Link>
+        <div className="mb-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <ManageStatCard
+            label="New orders & inquiries"
+            value={master.support.newInquiries}
+            tone={master.support.newInquiries > 0 ? "warning" : "default"}
+            href="/manage/inquiries"
+            hint="Hosting, shop, IT services & contact"
+          />
+          <ManageStatCard
+            label="Technical errors (7 days)"
+            value={master.support.errors7}
+            tone={master.support.errors7 > 0 ? "danger" : "success"}
+            href="/manage/errors"
+            hint={master.support.errors7 === 0 ? "All systems healthy" : "Click to investigate"}
+          />
+          <ManageStatCard
+            label="Hosting services"
+            value={master.hosting.clients}
+            href="/manage/hosting"
+            hint={`${master.hosting.orders} order(s) · domains & plans`}
+          />
+          <ManageStatCard
+            label="Research App users"
+            value={master.research.users}
+            href="/manage/app-users"
+            hint={`+${master.research.newUsers30} in last 30 days`}
+          />
+          <ManageStatCard
+            label="Active subscriptions"
+            value={master.research.activeSubscriptions}
+            tone="success"
+            href="/manage/app-users"
+            hint={`${master.research.payingSubscriptions} paying via Stripe`}
+          />
+          <ManageStatCard
+            label="App activity (30 days)"
+            value={master.research.usageActions30}
+            href="/manage/usage"
+            hint={`${master.research.platformBooks} platform textbooks loaded`}
+          />
+          <ManageStatCard
+            label="SmartCampus"
+            value={master.campus.tenants}
+            href="/campus/admin"
+            hint={`institutions · ${master.campus.students} students`}
+          />
         </div>
       )}
 
-      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
         Consulting & services business
       </h2>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Clients</p>
-          <p className="mt-2 text-2xl font-bold">{clients.total}</p>
-          <p className="mt-1 text-xs text-slate-500">
-            {clients.byStatus.active ?? 0} active · {clients.byStatus.prospect ?? 0} prospects
-          </p>
-        </Card>
+      <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <ManageStatCard
+          label="Clients"
+          value={clients.total}
+          href="/manage/clients"
+          hint={`${clients.byStatus.active ?? 0} active · ${clients.byStatus.prospect ?? 0} prospects`}
+        />
         <TodoSummaryCard />
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Services in progress</p>
-          <p className="mt-2 text-2xl font-bold">{engagements.inProgress}</p>
-          <p className="mt-1 text-xs text-slate-500">{engagements.total} total engagements</p>
-        </Card>
+        <ManageStatCard
+          label="Services in progress"
+          value={engagements.inProgress}
+          href="/manage/services"
+          hint={`${engagements.total} total engagements`}
+        />
         <StaleRegistrationsCard />
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Income (this month)</p>
-          <p className="mt-2 text-2xl font-bold text-emerald-700">
-            {formatNad(finances.incomeMtd)}
-          </p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Net (this month)</p>
-          <p
-            className={`mt-2 text-2xl font-bold ${
-              finances.netMtd >= 0 ? "text-emerald-700" : "text-red-600"
-            }`}
-          >
-            {formatNad(finances.netMtd)}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            Expenses {formatNad(finances.expenseMtd)}
-          </p>
-        </Card>
+        <ManageStatCard
+          label="Income (this month)"
+          value={formatNad(finances.incomeMtd)}
+          tone="success"
+          href="/manage/income"
+        />
+        <ManageStatCard
+          label="Net (this month)"
+          value={formatNad(finances.netMtd)}
+          tone={finances.netMtd >= 0 ? "success" : "danger"}
+          hint={`Expenses ${formatNad(finances.expenseMtd)}`}
+        />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card variant="manage">
           <CardTitle>Recent service work</CardTitle>
           {recentEngagements.length === 0 ? (
             <p className="mt-4 text-sm text-slate-500">
               No services yet.{" "}
-              <Link href="/manage/clients" className="text-brand-700 underline">
+              <Link href="/manage/clients" className="font-medium text-brand-700 hover:underline">
                 Add a client
               </Link>{" "}
               and start tracking their work.
@@ -303,7 +251,7 @@ export default function ManageOverviewPage() {
                 <li key={e.id}>
                   <Link
                     href={`/manage/services/${e.id}`}
-                    className="block rounded-lg border border-slate-200 p-3 transition hover:border-brand-200 hover:bg-brand-50/30"
+                    className="block rounded-lg border border-slate-200/80 p-3 transition hover:border-brand-200 hover:bg-brand-50/30"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="font-medium text-slate-900">{e.title}</p>
@@ -336,24 +284,24 @@ export default function ManageOverviewPage() {
           )}
         </Card>
 
-        <Card>
+        <Card variant="manage">
           <CardTitle>All-time finances</CardTitle>
           <dl className="mt-4 space-y-4">
             <div className="flex justify-between text-sm">
               <dt className="text-slate-600">Total income</dt>
-              <dd className="font-semibold text-emerald-700">
+              <dd className="font-semibold tabular-nums text-emerald-700">
                 {formatNad(finances.incomeAllTime)}
               </dd>
             </div>
             <div className="flex justify-between text-sm">
               <dt className="text-slate-600">Total expenses</dt>
-              <dd className="font-semibold text-red-600">
+              <dd className="font-semibold tabular-nums text-red-600">
                 {formatNad(finances.expenseAllTime)}
               </dd>
             </div>
             <div className="flex justify-between border-t border-slate-200 pt-4 text-sm">
               <dt className="font-medium text-slate-900">Net profit</dt>
-              <dd className="font-bold text-slate-900">
+              <dd className="font-bold tabular-nums text-slate-900">
                 {formatNad(finances.incomeAllTime - finances.expenseAllTime)}
               </dd>
             </div>
@@ -361,13 +309,13 @@ export default function ManageOverviewPage() {
           <div className="mt-6 flex flex-wrap gap-2">
             <Link
               href="/manage/income"
-              className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-700"
+              className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
             >
               Record income
             </Link>
             <Link
               href="/manage/expenses"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
             >
               Record expense
             </Link>

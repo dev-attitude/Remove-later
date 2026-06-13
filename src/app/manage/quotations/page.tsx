@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FileText, Mail, Plus, Trash2 } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ManagePageHeader } from "@/components/manage/ManagePageHeader";
 import { StatusPill } from "@/components/manage/StatusPill";
 import { formatNad } from "@/lib/business-manage";
 import { calculateQuotationTotals, VAT_RATE } from "@/lib/quotation";
@@ -198,28 +199,30 @@ export default function ManageQuotationsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">Quotations</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Generate branded quotations with 15% VAT — emailed automatically to your client.
-          </p>
-        </div>
-        <Button type="button" onClick={() => setShowForm((v) => !v)}>
-          <Plus className="mr-2 h-4 w-4" />
-          New quotation
-        </Button>
-      </div>
+      <ManagePageHeader
+        title="Quotations"
+        description="Generate branded quotations with 15% VAT — emailed automatically to your client."
+        actions={
+          <Button type="button" onClick={() => setShowForm((v) => !v)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New quotation
+          </Button>
+        }
+      />
 
       {error && (
-        <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
       )}
       {success && (
-        <p className="mb-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{success}</p>
+        <p className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {success}
+        </p>
       )}
 
       {showForm && (
-        <Card className="mb-8">
+        <Card variant="manage" className="mb-8">
           <CardTitle>Create &amp; send quotation</CardTitle>
           <p className="mt-1 text-xs text-slate-500">
             Line prices are <strong>excluding VAT</strong>. We add 15% VAT and email the total to
@@ -233,7 +236,7 @@ export default function ManageQuotationsPage() {
                   required
                   value={clientId}
                   onChange={(e) => setClientId(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="manage-input mt-1"
                 >
                   <option value="">Select client…</option>
                   {clients.map((c) => (
@@ -252,7 +255,7 @@ export default function ManageQuotationsPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Website hosting & domain package"
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="manage-input mt-1"
                 />
               </div>
             </div>
@@ -335,7 +338,7 @@ export default function ManageQuotationsPage() {
                   min="1"
                   value={validDays}
                   onChange={(e) => setValidDays(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="manage-input mt-1"
                 />
               </div>
               <div>
@@ -345,7 +348,7 @@ export default function ManageQuotationsPage() {
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2}
                   placeholder="Payment terms, delivery timeline…"
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="manage-input mt-1"
                 />
               </div>
             </div>
@@ -365,17 +368,17 @@ export default function ManageQuotationsPage() {
       {loading ? (
         <p className="text-sm text-slate-500">Loading quotations…</p>
       ) : quotations.length === 0 ? (
-        <Card>
+        <Card variant="manage">
           <p className="text-sm text-slate-600">
             No quotations yet. Create one above — it will be emailed to your client with VAT
             breakdown and your company logo.
           </p>
         </Card>
       ) : (
-        <Card className="!p-0 overflow-hidden">
+        <div className="manage-table-wrap">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+              <tr>
                 <th className="px-4 py-3">Quote #</th>
                 <th className="px-4 py-3">Client</th>
                 <th className="px-4 py-3">Subject</th>
@@ -428,7 +431,7 @@ export default function ManageQuotationsPage() {
               ))}
             </tbody>
           </table>
-        </Card>
+        </div>
       )}
 
       <p className="mt-6 flex items-center gap-2 text-xs text-slate-500">

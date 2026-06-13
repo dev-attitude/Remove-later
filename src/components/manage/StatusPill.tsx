@@ -1,23 +1,29 @@
 import { cn } from "@/lib/utils";
 
 const STYLES: Record<string, string> = {
-  prospect: "bg-sky-50 text-sky-800",
-  active: "bg-emerald-50 text-emerald-800",
-  completed: "bg-slate-100 text-slate-700",
-  archived: "bg-slate-100 text-slate-500",
-  inquiry: "bg-sky-50 text-sky-800",
-  quoted: "bg-violet-50 text-violet-800",
-  in_progress: "bg-amber-50 text-amber-900",
-  on_hold: "bg-orange-50 text-orange-800",
-  cancelled: "bg-red-50 text-red-700",
+  prospect: "border-sky-200 bg-sky-50 text-sky-800",
+  active: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  completed: "border-slate-200 bg-slate-100 text-slate-700",
+  archived: "border-slate-200 bg-slate-100 text-slate-500",
+  inquiry: "border-sky-200 bg-sky-50 text-sky-800",
+  quoted: "border-violet-200 bg-violet-50 text-violet-800",
+  in_progress: "border-amber-200 bg-amber-50 text-amber-900",
+  on_hold: "border-orange-200 bg-orange-50 text-orange-800",
+  cancelled: "border-red-200 bg-red-50 text-red-700",
+  pending: "border-slate-200 bg-slate-100 text-slate-700",
+  partial: "border-amber-200 bg-amber-50 text-amber-900",
+  paid: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  overdue: "border-red-200 bg-red-50 text-red-800",
+  sent: "border-brand-200 bg-brand-50 text-brand-800",
+  draft: "border-slate-200 bg-slate-50 text-slate-600",
 };
 
 export function StatusPill({ status, label }: { status: string; label: string }) {
   return (
     <span
       className={cn(
-        "inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize",
-        STYLES[status] ?? "bg-slate-100 text-slate-700"
+        "inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
+        STYLES[status] ?? "border-slate-200 bg-slate-100 text-slate-700"
       )}
     >
       {label}
