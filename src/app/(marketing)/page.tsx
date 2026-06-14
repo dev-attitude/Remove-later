@@ -148,7 +148,6 @@ export default function HomePage() {
               <div className="mt-6">
                 <PriceDisplay
                   original={featured.priceFrom}
-                  currency="USD"
                   priceLabel={featured.priceLabel}
                   size="lg"
                 />

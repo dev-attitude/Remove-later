@@ -1,27 +1,35 @@
-import { discountedPrice, formatNad, formatUsd, hasPromoPrice, JUNE_PROMO } from "@/lib/pricing";
+"use client";
+
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
+import { HOSTING_BASE_CURRENCY } from "@/lib/hosting-currency";
+import { discountedPrice, hasPromoPrice, JUNE_PROMO } from "@/lib/pricing";
 
 type PriceDisplayProps = {
+  /** Amount stored in NAD (Namibian Dollar). */
   original: number;
-  currency: "USD" | "NAD";
   priceLabel?: string;
+  suffix?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
+  showBaseNote?: boolean;
 };
 
 export function PriceDisplay({
   original,
-  currency,
   priceLabel = "From",
+  suffix,
   size = "md",
   className = "",
+  showBaseNote = true,
 }: PriceDisplayProps) {
+  const { formatPrice, currency, isConverted } = useHostingCurrency();
+
   if (original <= 0) {
     return <p className={`font-bold text-navy ${className}`}>Quote on request</p>;
   }
 
   const sale = discountedPrice(original);
   const showPromo = hasPromoPrice(original);
-  const format = currency === "NAD" ? formatNad : formatUsd;
 
   const sizeClasses = {
     sm: { original: "text-sm", sale: "text-lg", badge: "text-[10px] px-1.5 py-0.5" },
@@ -44,20 +52,29 @@ export function PriceDisplay({
         )}
         {showPromo ? (
           <>
-            <span className={`font-bold text-royal ${sizeClasses.sale}`}>{format(sale)}</span>
+            <span className={`font-bold text-royal ${sizeClasses.sale}`}>
+              {formatPrice(sale, suffix)}
+            </span>
             <span className={`text-slate-400 line-through ${sizeClasses.original}`}>
-              {format(original)}
+              {formatPrice(original, suffix)}
             </span>
           </>
         ) : (
-          <span className={`font-bold text-royal ${sizeClasses.sale}`}>{format(original)}</span>
-        )}
-        {currency === "USD" && size !== "sm" && (
-          <span className="text-sm font-normal text-slate-500">USD</span>
+          <span className={`font-bold text-royal ${sizeClasses.sale}`}>
+            {formatPrice(original, suffix)}
+          </span>
         )}
       </div>
       {showPromo && (
         <p className="mt-1 text-xs text-emerald-700">June special — save {JUNE_PROMO.percentOff}%</p>
+      )}
+      {showBaseNote && isConverted && (
+        <p className="mt-1 text-xs text-slate-500">
+          Approx. rate · invoiced in {HOSTING_BASE_CURRENCY}
+        </p>
+      )}
+      {showBaseNote && !isConverted && currency === HOSTING_BASE_CURRENCY && size !== "sm" && (
+        <p className="mt-1 text-xs text-slate-500">{currency}</p>
       )}
     </div>
   );

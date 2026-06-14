@@ -741,8 +741,8 @@ export type ShopPackage = {
   id: string;
   name: string;
   priceLabel: string;
+  /** Starting price in NAD (Namibian Dollar). */
   priceFrom: number;
-  currency: string;
   description: string;
   icon: LucideIcon;
   features: string[];
@@ -1144,8 +1144,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "starter-website",
     name: "Starter Website",
     priceLabel: "From",
-    priceFrom: 499,
-    currency: "USD",
+    priceFrom: 9073,
     description: "Professional online presence for small businesses and professionals.",
     icon: Laptop,
     timeline: "2–3 weeks",
@@ -1161,8 +1160,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "business-website",
     name: "Business Website",
     priceLabel: "From",
-    priceFrom: 1299,
-    currency: "USD",
+    priceFrom: 23618,
     description: "Full corporate site with CMS, blog, and conversion-focused layout.",
     icon: Globe,
     timeline: "4–6 weeks",
@@ -1179,8 +1177,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "ecommerce",
     name: "E-Commerce Store",
     priceLabel: "From",
-    priceFrom: 2499,
-    currency: "USD",
+    priceFrom: 45436,
     description: "Sell products online with secure payments and inventory management.",
     icon: ShoppingBag,
     timeline: "6–10 weeks",
@@ -1196,8 +1193,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "web-app",
     name: "Custom Web Application",
     priceLabel: "From",
-    priceFrom: 4999,
-    currency: "USD",
+    priceFrom: 90891,
     description: "Portals, dashboards, and bespoke tools—like our Skyrapay Research Suite platform.",
     icon: Server,
     timeline: "Scoped per project",
@@ -1213,8 +1209,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "mobile-app",
     name: "Mobile App",
     priceLabel: "From",
-    priceFrom: 5999,
-    currency: "USD",
+    priceFrom: 109073,
     description: "Native or cross-platform apps for iOS and Android.",
     icon: Smartphone,
     timeline: "8–14 weeks",
@@ -1230,8 +1225,7 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "care-plan",
     name: "Website Care Plan",
     priceLabel: "From",
-    priceFrom: 99,
-    currency: "USD",
+    priceFrom: 1800,
     description: "Monthly maintenance, updates, backups, and security monitoring.",
     icon: Headphones,
     timeline: "Ongoing monthly",

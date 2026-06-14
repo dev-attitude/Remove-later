@@ -18,6 +18,7 @@ import {
 } from "@/lib/research-suite/catalog";
 import { ResearchSuiteToolGrid } from "@/components/research/ResearchSuiteToolGrid";
 import { ResearchSystemsPanel } from "@/components/research/ResearchSystemsPanel";
+import { PortalTierPrice } from "@/components/portal/PortalTierPrice";
 
 export const metadata = {
   title: `${BRAND.productName} | Portals`,
@@ -87,12 +88,13 @@ export default function ResearchHubPage() {
                     {portal.roles.length > 3 ? " · …" : ""}
                   </p>
                   <p className="mt-4 text-sm font-semibold text-slate-800">
-                    From{" "}
-                    {from.priceMonthly === "custom"
-                      ? "custom pricing"
-                      : from.priceMonthly === 0
-                        ? "Free"
-                        : `$${from.priceMonthly}/mo`}
+                    {from.priceMonthly === "custom" || from.priceMonthly === 0 ? (
+                      <PortalTierPrice tier={from} />
+                    ) : (
+                      <>
+                        From <PortalTierPrice tier={from} />
+                      </>
+                    )}
                   </p>
                   <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-600">
                     Enter portal <ArrowRight className="h-4 w-4" />

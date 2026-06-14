@@ -24,7 +24,6 @@ function PackageCard({ pkg, contactSubject }: { pkg: BusinessPackage; contactSub
       <div className="mt-2">
         <PriceDisplay
           original={pkg.price}
-          currency="NAD"
           priceLabel={
             pkg.priceLabel === "Quote on request"
               ? undefined

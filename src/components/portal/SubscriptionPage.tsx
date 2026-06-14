@@ -3,10 +3,10 @@
 import { useState } from "react";
 import {
   getPortal,
-  formatPrice,
   portalPath,
   type PortalId,
 } from "@/lib/portals";
+import { PortalTierPrice } from "@/components/portal/PortalTierPrice";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { CreditCard, Check } from "lucide-react";
@@ -69,7 +69,9 @@ export function SubscriptionPage({ portalId }: { portalId: PortalId }) {
               </span>
             )}
             <CardTitle>{tier.name}</CardTitle>
-            <p className="mt-2 text-3xl font-bold text-brand-600">{formatPrice(tier)}</p>
+            <p className="mt-2 text-3xl font-bold text-brand-600">
+              <PortalTierPrice tier={tier} />
+            </p>
             <p className="mt-2 text-sm text-slate-500">{tier.description}</p>
             <ul className="mt-4 space-y-2 text-sm text-slate-700">
               {tier.features.map((f) => (

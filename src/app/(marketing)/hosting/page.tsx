@@ -9,7 +9,6 @@ import {
   Shield,
 } from "lucide-react";
 import { HostingOfferingCard } from "@/components/hosting/HostingOfferingCard";
-import { HostingCurrencyStrip } from "@/components/hosting/HostingCurrencyStrip";
 import { BRAND, SKYRAPAY_HOSTING } from "@/lib/brand";
 import {
   COMPANY,
@@ -32,7 +31,6 @@ const PLATFORM_ICONS = [Globe, Cloud, Mail, Database, Shield, Server] as const;
 export default function HostingPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24">
-      <HostingCurrencyStrip />
       <div className="max-w-3xl">
         <p className="marketing-eyebrow">{SKYRAPAY_HOSTING.name}</p>
         <h1 className="marketing-page-title">

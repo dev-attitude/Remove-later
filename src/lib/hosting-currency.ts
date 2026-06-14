@@ -89,6 +89,12 @@ export function isSupportedCurrency(value: string): value is HostingCurrency {
   return (SUPPORTED_CURRENCIES as readonly string[]).includes(value);
 }
 
+/** Convert a USD list price to NAD (catalog base currency). */
+export function usdToNad(amountUsd: number): number {
+  if (amountUsd <= 0) return 0;
+  return Math.round(amountUsd / NAD_TO_CURRENCY.USD);
+}
+
 export function convertFromNad(amountNad: number, target: HostingCurrency): number {
   if (amountNad <= 0) return 0;
   const rate = NAD_TO_CURRENCY[target] ?? NAD_TO_CURRENCY.USD;

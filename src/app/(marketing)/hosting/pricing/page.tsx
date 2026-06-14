@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { BRAND, SKYRAPAY_HOSTING } from "@/lib/brand";
-import { HostingCurrencyStrip } from "@/components/hosting/HostingCurrencyStrip";
 import { EntryPriceTables, StarterBundleBanner } from "@/components/hosting/EntryPriceList";
 
 export const metadata: Metadata = {
@@ -32,10 +31,6 @@ export default function HostingPricingPage() {
       </div>
 
       <div className="mt-10">
-        <HostingCurrencyStrip />
-      </div>
-
-      <div className="mt-4">
         <StarterBundleBanner />
       </div>
 

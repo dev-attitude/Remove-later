@@ -57,7 +57,6 @@ export default function ShopPage() {
               <div className="mt-4">
                 <PriceDisplay
                   original={pkg.priceFrom}
-                  currency="USD"
                   priceLabel={pkg.priceLabel}
                   size="md"
                 />

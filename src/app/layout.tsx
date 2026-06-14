@@ -1,7 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { cookies, headers } from "next/headers";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ConditionalDemoBanner } from "@/components/marketing/ConditionalDemoBanner";
+import { HostingCurrencyProvider } from "@/lib/hosting-currency-context";
+import {
+  COUNTRY_COOKIE,
+  detectCountryFromHeaders,
+} from "@/lib/hosting-currency";
 import { BRAND } from "@/lib/brand";
 import {
   DEFAULT_OG_TITLE,
@@ -72,17 +78,26 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headerStore = await headers();
+  const cookieStore = await cookies();
+  const country = detectCountryFromHeaders(
+    headerStore.get("x-vercel-ip-country") ?? headerStore.get("cf-ipcountry"),
+    cookieStore.get(COUNTRY_COOKIE)?.value
+  );
+
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
       <body className="overflow-x-hidden font-sans antialiased">
         <SessionProvider>
-          <ConditionalDemoBanner />
-          {children}
+          <HostingCurrencyProvider initialCountry={country}>
+            <ConditionalDemoBanner />
+            {children}
+          </HostingCurrencyProvider>
         </SessionProvider>
       </body>
     </html>

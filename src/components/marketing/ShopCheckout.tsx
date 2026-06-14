@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
-import { formatUsd } from "@/lib/pricing";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 import { SHOP_PACKAGES } from "@/lib/site-content";
 
 export function ShopCheckout() {
@@ -27,6 +27,7 @@ export function ShopCheckout() {
   const [error, setError] = useState("");
 
   const selected = SHOP_PACKAGES.find((p) => p.id === selectedId)!;
+  const { formatPrice } = useHostingCurrency();
 
   useEffect(() => {
     if (packageParam && SHOP_PACKAGES.some((p) => p.id === packageParam)) {
@@ -47,7 +48,7 @@ export function ShopCheckout() {
     setLoading(true);
     setError("");
 
-    const priceNote = `${selected.priceLabel} ${formatUsd(selected.priceFrom)}`;
+    const priceNote = `${selected.priceLabel} ${formatPrice(selected.priceFrom)}`;
 
     const message = [
       `Package: ${selected.name} (${selectedId})`,
@@ -146,9 +147,9 @@ export function ShopCheckout() {
                 <div className="bg-white p-4">
                   <PriceDisplay
                     original={pkg.priceFrom}
-                    currency="USD"
                     priceLabel={pkg.priceLabel}
                     size="sm"
+                    showBaseNote={false}
                   />
                 </div>
               </button>
@@ -224,9 +225,9 @@ export function ShopCheckout() {
         <div className="mt-2">
           <PriceDisplay
             original={selected.priceFrom}
-            currency="USD"
             priceLabel={selected.priceLabel}
             size="sm"
+            showBaseNote={false}
           />
         </div>
         <p className="mt-2 text-xs text-slate-500">{selected.timeline}</p>

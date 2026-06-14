@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Loader2, CheckCircle2 } from "lucide-react";
+import { useHostingCurrency } from "@/lib/hosting-currency-context";
 import {
   ASSIGNMENT_WRITING_PACKAGES,
   BUSINESS_DOCUMENT_PACKAGES,
@@ -14,6 +15,7 @@ import {
 
 export function ContactForm() {
   const searchParams = useSearchParams();
+  const { formatPrice } = useHostingCurrency();
   const packageId = searchParams.get("package") ?? "";
   const serviceParam = searchParams.get("service") ?? "";
 
@@ -47,22 +49,42 @@ export function ContactForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [subject, setSubject] = useState(defaultSubject);
-  const [message, setMessage] = useState(
-    matchedPkg
-      ? `I am interested in: ${matchedPkg.name} (N$ ${matchedPkg.price.toLocaleString()}${matchedPkg.priceLabel ? ` ${matchedPkg.priceLabel.toLowerCase()}` : ""}).\n\n`
-      : serviceParam === "hosting"
-        ? "I would like GM Consultations hosting services.\n\nServices needed (tick what applies):\n[ ] Domain registration\n[ ] Website hosting (cPanel account)\n[ ] Business email accounts\n[ ] MySQL databases\n[ ] Website backups\n[ ] SSL certificate\n[ ] Managed maintenance (optional)\n\nDesired domain name:\nHosting plan (Starter / Business / Premium):\nExisting website to migrate (yes/no):\n\n"
-        : serviceParam === "student-assistance"
-          ? "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
-          : serviceParam === "assignment-writing"
-            ? "I need assignment writing help:\n\nPackage (if known):\nAcademic level:\nModule / subject:\nWord count:\nDeadline:\nBrief topic description:\n\n"
-            : serviceParam === "research-writing"
-              ? "I need research writing support:\n\nPackage (if known):\nLevel (honours / masters / PhD):\nResearch topic:\nCurrent stage (proposal / chapter / full thesis):\nDeadline:\n\n"
-              : ""
-  );
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (matchedPkg) {
+      setMessage(
+        `I am interested in: ${matchedPkg.name} (${formatPrice(matchedPkg.price)}${matchedPkg.priceLabel ? ` ${matchedPkg.priceLabel.toLowerCase()}` : ""}).\n\n`
+      );
+      return;
+    }
+    if (serviceParam === "hosting") {
+      setMessage(
+        "I would like GM Consultations hosting services.\n\nServices needed (tick what applies):\n[ ] Domain registration\n[ ] Website hosting (cPanel account)\n[ ] Business email accounts\n[ ] MySQL databases\n[ ] Website backups\n[ ] SSL certificate\n[ ] Managed maintenance (optional)\n\nDesired domain name:\nHosting plan (Starter / Business / Premium):\nExisting website to migrate (yes/no):\n\n"
+      );
+      return;
+    }
+    if (serviceParam === "student-assistance") {
+      setMessage(
+        "I need student assistance with:\n\n[Assignment / research / data collection / data analysis — please describe]\n\nLevel (e.g. diploma, degree, honours, masters):\nModule or subject:\nDeadline:\n\n"
+      );
+      return;
+    }
+    if (serviceParam === "assignment-writing") {
+      setMessage(
+        "I need assignment writing help:\n\nPackage (if known):\nAcademic level:\nModule / subject:\nWord count:\nDeadline:\nBrief topic description:\n\n"
+      );
+      return;
+    }
+    if (serviceParam === "research-writing") {
+      setMessage(
+        "I need research writing support:\n\nPackage (if known):\nLevel (honours / masters / PhD):\nResearch topic:\nCurrent stage (proposal / chapter / full thesis):\nDeadline:\n\n"
+      );
+    }
+  }, [matchedPkg, formatPrice, serviceParam]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

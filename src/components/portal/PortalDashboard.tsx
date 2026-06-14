@@ -3,9 +3,9 @@ import {
   getModulesForPortal,
   getPortal,
   portalPath,
-  formatPrice,
   type PortalId,
 } from "@/lib/portals";
+import { PortalTierPrice } from "@/components/portal/PortalTierPrice";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Download, CreditCard, ArrowRight } from "lucide-react";
 import { PortalDashboardWidgets } from "./PortalDashboardWidgets";
@@ -43,7 +43,8 @@ export function PortalDashboard({ portalId }: { portalId: PortalId }) {
             href={portalPath(portalId, "subscription")}
             className="inline-flex items-center gap-2 rounded-lg border border-white/40 px-4 py-2 text-sm font-medium hover:bg-white/10"
           >
-            <CreditCard className="h-4 w-4" /> Plans from {formatPrice(featured)}
+            <CreditCard className="h-4 w-4" /> Plans from{" "}
+            <PortalTierPrice tier={featured} />
           </Link>
           <Link
             href="/download"
