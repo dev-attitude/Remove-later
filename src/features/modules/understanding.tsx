@@ -7,7 +7,6 @@ import { ModuleHeader } from "@/components/ModuleHeader";
 import { ModuleWorkspace } from "@/components/ModuleWorkspace";
 import { Button } from "@/components/ui/Button";
 import { LearningGuidePanel } from "@/components/research/LearningGuidePanel";
-import { UnderstandingBooksPanel } from "@/components/research/UnderstandingBooksPanel";
 import { UNDERSTANDING_RESEARCH_TOPICS } from "@/lib/research-suite/understanding-topics";
 import {
   fetchUnderstandingTopicApi,
@@ -33,7 +32,6 @@ export default function UnderstandingPage() {
   const [content, setContent] = useState<UnderstandingTopicContentResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [booksVersion, setBooksVersion] = useState(0);
 
   const loadTopic = useCallback(
     async (topic: SelectedTopic) => {
@@ -63,7 +61,7 @@ export default function UnderstandingPage() {
 
   useEffect(() => {
     if (selected) loadTopic(selected);
-  }, [selected, loadTopic, booksVersion]);
+  }, [selected, loadTopic]);
 
   useEffect(() => {
     if (selected && contentRef.current) {
@@ -106,8 +104,6 @@ export default function UnderstandingPage() {
           Open a topic for a unified guide in paragraphs. All sources — textbooks, AI, and
           library databases — are listed together in References below each topic.
         </p>
-
-        <UnderstandingBooksPanel onBooksChange={() => setBooksVersion((v) => v + 1)} />
 
         <div className="space-y-3">
           {UNDERSTANDING_RESEARCH_TOPICS.map((mod) => {
