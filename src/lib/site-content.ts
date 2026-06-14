@@ -36,6 +36,8 @@ export const COMPANY = {
   researchAppPath: "/research",
   /** Google Business Profile — leave a review */
   googleReviewUrl: "https://g.page/r/CQT4LU4r4K8CEBM/review",
+  /** Resolved from the review link — used with Google Places API */
+  googlePlaceId: "ChIJm7k-B6qVChwRBPgtTivgrwI",
 } as const;
 
 export type ServiceSlug =

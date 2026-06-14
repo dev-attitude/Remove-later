@@ -4,9 +4,9 @@ import {
   CheckCircle2,
   FlaskConical,
   Sparkles,
-  Star,
 } from "lucide-react";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
+import { GoogleReviewsSection } from "@/components/marketing/GoogleReviewsSection";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
 import { COMPANY, SERVICES, SHOP_PACKAGES } from "@/lib/site-content";
 
@@ -117,6 +117,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <GoogleReviewsSection />
+
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -126,27 +128,13 @@ export default function HomePage() {
                 Choose a package or request a custom quote. We handle design, development,
                 hosting guidance, and launch support.
               </p>
-              <div className="mt-8 rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
-                <div className="flex items-center gap-2">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="mt-3 text-sm italic text-slate-700">
-                  &ldquo;Professional delivery from brief to go-live. Our business site and
-                  research tools both run on Skyrapay Consultations infrastructure.&rdquo;
-                </p>
-                <p className="mt-2 text-xs text-slate-500">— Satisfied client</p>
-                <a
-                  href={COMPANY.googleReviewUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
-                >
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  Leave us a review on Google
-                </a>
-              </div>
+              <Link
+                href="#reviews"
+                className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
+              >
+                See client reviews on Google
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
             <div className="rounded-xl border border-brand-100 bg-white p-8 shadow-sm ring-1 ring-brand-50">
               <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
