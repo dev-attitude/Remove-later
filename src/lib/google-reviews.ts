@@ -16,6 +16,8 @@ export type GoogleReviewsData = {
   totalReviews: number;
   reviews: GoogleReview[];
   live: boolean;
+  /** True when GOOGLE_PLACES_API_KEY is set (does not expose the key). */
+  configured: boolean;
 };
 
 type PlacesDetailsResponse = {
@@ -131,16 +133,18 @@ async function fetchPlacesNewReviews(
     totalReviews: data.userRatingCount ?? reviews.length,
     reviews,
     live: true,
+    configured: true,
   };
 }
 
-function emptyReviews(): GoogleReviewsData {
+function emptyReviews(configured = false): GoogleReviewsData {
   return {
     placeName: COMPANY.shortName,
     rating: null,
     totalReviews: 0,
     reviews: [],
     live: false,
+    configured,
   };
 }
 
@@ -148,7 +152,7 @@ function emptyReviews(): GoogleReviewsData {
 export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
   const apiKey = process.env.GOOGLE_PLACES_API_KEY?.trim();
   if (!apiKey) {
-    return emptyReviews();
+    return emptyReviews(false);
   }
 
   const placeId = process.env.GOOGLE_PLACE_ID?.trim() || COMPANY.googlePlaceId;
@@ -162,13 +166,13 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
     const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
     if (!res.ok) {
       console.error("[google-reviews] HTTP", res.status);
-      return emptyReviews();
+      return emptyReviews(true);
     }
 
     const data = (await res.json()) as PlacesDetailsResponse;
     if (data.status !== "OK" || !data.result) {
       console.error("[google-reviews]", data.status, data.error_message);
-      return emptyReviews();
+      return emptyReviews(true);
     }
 
     const { result } = data;
@@ -182,16 +186,17 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
       totalReviews: result.user_ratings_total ?? reviews.length,
       reviews,
       live: true,
+      configured: true,
     };
 
     if (reviews.length === 0 && (payload.totalReviews ?? 0) > 0) {
       const fromNewApi = await fetchPlacesNewReviews(apiKey, placeId);
-      if (fromNewApi?.reviews.length) return fromNewApi;
+      if (fromNewApi?.reviews.length) return { ...fromNewApi, configured: true };
     }
 
     return payload;
   } catch (err) {
     console.error("[google-reviews] fetch failed", err);
-    return emptyReviews();
+    return emptyReviews(true);
   }
 }
