@@ -1,5 +1,7 @@
 "use client";
 
+import { prepareBookFileForUpload } from "@/lib/client/prepare-book-file";
+
 export type ApiMode = "demo" | "live";
 
 export class ApiError extends Error {
@@ -30,6 +32,8 @@ async function parseJson<T>(res: Response): Promise<T> {
         ? "Please sign in to use AI writing"
         : res.status === 402
           ? "Your 3-day free trial has ended. Please subscribe to continue."
+        : res.status === 413
+          ? "File is too large for the server (max ~4MB per upload). For large PDFs, text is extracted in your browser automatically — try again, or use DOCX/TXT."
         : res.status === 504
           ? "Request timed out — try again"
           : "Request failed");
@@ -344,16 +348,18 @@ export async function uploadUnderstandingBookApi(
   file: File,
   options?: { title?: string; moduleScope?: string }
 ) {
+  const prepared = await prepareBookFileForUpload(file);
   const form = new FormData();
-  form.append("file", file);
+  form.append("file", prepared.file);
   if (options?.title) form.append("title", options.title);
   if (options?.moduleScope) form.append("moduleScope", options.moduleScope);
   const res = await fetchWithTimeout(
     "/api/research/understanding/books",
     { method: "POST", body: form },
-    120_000
+    180_000
   );
-  return parseJson<{ book: UnderstandingBookSummary }>(res);
+  const data = await parseJson<{ book: UnderstandingBookSummary }>(res);
+  return { ...data, notice: prepared.notice };
 }
 
 export async function deleteUnderstandingBookApi(id: string) {

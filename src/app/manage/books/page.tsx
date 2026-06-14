@@ -3,32 +3,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BookOpen, Trash2, Upload } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/Card";
-
-type Book = {
-  id: string;
-  title: string;
-  fileName: string;
-  moduleScope: string | null;
-  charCount: number;
-  createdAt: string;
-};
+import {
+  deleteUnderstandingBookApi,
+  fetchUnderstandingBooksApi,
+  uploadUnderstandingBookApi,
+  type UnderstandingBookSummary,
+} from "@/lib/client/api";
+import { MAX_DIRECT_BOOK_UPLOAD_BYTES } from "@/lib/client/prepare-book-file";
 
 export default function ManageBooksPage() {
-  const [books, setBooks] = useState<Book[] | null>(null);
+  const [books, setBooks] = useState<UnderstandingBookSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadPhase, setUploadPhase] = useState<"extracting" | "uploading">("uploading");
   const [title, setTitle] = useState("");
   const [moduleScope, setModuleScope] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(() => {
-    fetch("/api/research/understanding/books")
-      .then(async (res) => {
-        if (!res.ok) throw new Error((await res.json()).error || "Failed to load");
-        return res.json();
-      })
+    fetchUnderstandingBooksApi()
       .then((d) => setBooks(d.books))
-      .catch((e) => setError(e.message));
+      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"));
   }, []);
 
   useEffect(() => {
@@ -43,35 +39,36 @@ export default function ManageBooksPage() {
       return;
     }
     setError(null);
+    setNotice(null);
     setUploading(true);
+    setUploadPhase(
+      file.size > MAX_DIRECT_BOOK_UPLOAD_BYTES && file.name.toLowerCase().endsWith(".pdf")
+        ? "extracting"
+        : "uploading"
+    );
     try {
-      const form = new FormData();
-      form.append("file", file);
-      if (title.trim()) form.append("title", title.trim());
-      if (moduleScope.trim()) form.append("moduleScope", moduleScope.trim());
-
-      const res = await fetch("/api/research/understanding/books", {
-        method: "POST",
-        body: form,
+      const result = await uploadUnderstandingBookApi(file, {
+        title: title.trim() || undefined,
+        moduleScope: moduleScope.trim() || undefined,
       });
-      if (!res.ok) throw new Error((await res.json()).error || "Upload failed");
 
       setTitle("");
       setModuleScope("");
       if (fileRef.current) fileRef.current.value = "";
+      if (result.notice) setNotice(result.notice);
       load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
+      setUploadPhase("uploading");
     }
   }
 
   async function handleDelete(id: string) {
     if (!confirm("Remove this textbook? Students will no longer get content from it.")) return;
     try {
-      const res = await fetch(`/api/research/understanding/books/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error((await res.json()).error || "Delete failed");
+      await deleteUnderstandingBookApi(id);
       load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Delete failed");
@@ -92,6 +89,11 @@ export default function ManageBooksPage() {
 
       {error && (
         <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+      )}
+      {notice && (
+        <p className="mb-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {notice}
+        </p>
       )}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
@@ -139,11 +141,16 @@ export default function ManageBooksPage() {
               className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
             >
               <Upload className="h-4 w-4" />
-              {uploading ? "Extracting text…" : "Upload textbook"}
+              {uploading
+                ? uploadPhase === "extracting"
+                  ? "Extracting PDF text in browser…"
+                  : "Uploading…"
+                : "Upload textbook"}
             </button>
             <p className="text-xs text-slate-500">
               Text is extracted automatically and matched to topics. Scanned/image-only PDFs
-              won&apos;t work — use text-based files.
+              won&apos;t work — use text-based files. Large PDFs over ~4MB are converted to text
+              in your browser before upload.
             </p>
           </form>
         </Card>
