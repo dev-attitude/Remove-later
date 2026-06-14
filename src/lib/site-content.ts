@@ -34,6 +34,8 @@ export const COMPANY = {
     note: "All business consultations are scheduled within these hours.",
   },
   researchAppPath: "/research",
+  /** Google Business Profile — leave a review */
+  googleReviewUrl: "https://g.page/r/CQT4LU4r4K8CEBM/review",
 } as const;
 
 export type ServiceSlug =

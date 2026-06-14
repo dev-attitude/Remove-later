@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone, Star } from "lucide-react";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/site-content";
@@ -89,6 +89,22 @@ export default function ContactPage() {
               </div>
             </li>
           </ul>
+
+          <div className="mt-10 rounded-xl border border-amber-100 bg-amber-50/80 p-5">
+            <p className="text-sm font-semibold text-slate-900">Happy with our service?</p>
+            <p className="mt-1 text-sm text-slate-600">
+              A Google review helps other businesses and students find us in Namibia.
+            </p>
+            <a
+              href={COMPANY.googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-800"
+            >
+              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              Leave a review on Google
+            </a>
+          </div>
         </div>
 
         <div className="marketing-form-panel">

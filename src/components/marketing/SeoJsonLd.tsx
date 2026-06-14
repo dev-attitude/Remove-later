@@ -32,7 +32,7 @@ export function SeoJsonLd() {
       opens: "08:00",
       closes: "18:00",
     },
-    sameAs: [] as string[],
+    sameAs: [COMPANY.googleReviewUrl],
   };
 
   const website = {

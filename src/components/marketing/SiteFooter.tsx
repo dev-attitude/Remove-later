@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Star } from "lucide-react";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { COMPANY, NAV_LINKS, SERVICES } from "@/lib/site-content";
 
@@ -48,6 +48,17 @@ export function SiteFooter() {
               <Link href="/business/login" className="transition hover:text-sky">
                 Staff login
               </Link>
+            </li>
+            <li>
+              <a
+                href={COMPANY.googleReviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition hover:text-sky"
+              >
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                Leave a Google review
+              </a>
             </li>
           </ul>
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
@@ -128,6 +139,14 @@ export function SiteFooter() {
             <Link href="/contact" className="transition hover:text-sky">
               Contact
             </Link>
+            <a
+              href={COMPANY.googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-sky"
+            >
+              Google review
+            </a>
             <Link href="/business/login" className="transition hover:text-sky">
               Staff login
             </Link>

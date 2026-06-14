@@ -137,6 +137,15 @@ export default function HomePage() {
                   research tools both run on Skyrapay Consultations infrastructure.&rdquo;
                 </p>
                 <p className="mt-2 text-xs text-slate-500">— Satisfied client</p>
+                <a
+                  href={COMPANY.googleReviewUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
+                >
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  Leave us a review on Google
+                </a>
               </div>
             </div>
             <div className="rounded-xl border border-brand-100 bg-white p-8 shadow-sm ring-1 ring-brand-50">
