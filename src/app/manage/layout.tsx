@@ -11,13 +11,12 @@ export default async function ManageLayout({
 }) {
   const session = await auth();
   const email = session?.user?.email;
-  const role = (session?.user as { role?: string } | undefined)?.role;
 
   if (!session?.user) {
     redirect("/business/login?callbackUrl=/manage");
   }
 
-  if (!isBusinessAdmin(email, role)) {
+  if (!isBusinessAdmin(email)) {
     return <ManageAccessDenied email={email} />;
   }
 

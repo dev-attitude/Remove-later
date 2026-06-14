@@ -20,8 +20,8 @@ export function ManageAccessDenied({ email }: { email?: string | null }) {
         </div>
         <h1 className="font-display text-2xl font-bold text-slate-900">Staff access only</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Signed in as <strong>{email || "unknown"}</strong>. This account is for the Research App,
-          not Business Manager.
+          Signed in as <strong>{email || "unknown"}</strong>. Business Manager is restricted to
+          authorised staff accounts only (Erastus and Gazzy).
         </p>
         <Card variant="manage" className="mt-8 !p-6 text-left">
           <p className="text-sm text-slate-600">

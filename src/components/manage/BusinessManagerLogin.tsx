@@ -35,6 +35,12 @@ export function BusinessManagerLogin() {
           router.replace(callbackUrl);
           return;
         }
+        if (!cancelled && res.status === 403) {
+          await signOut({ redirect: false });
+          setError(
+            "Your current session is a demo or client account. Sign in with Erastus or Gazzy staff credentials."
+          );
+        }
       } catch {
         /* not signed in */
       }
