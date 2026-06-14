@@ -148,7 +148,9 @@ export default function HomePage() {
               <div className="mt-6">
                 <PriceDisplay
                   original={featured.priceFrom}
+                  originalTo={featured.priceTo}
                   priceLabel={featured.priceLabel}
+                  plusVat={featured.plusVat}
                   size="lg"
                 />
               </div>

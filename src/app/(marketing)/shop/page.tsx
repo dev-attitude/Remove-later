@@ -57,7 +57,9 @@ export default function ShopPage() {
               <div className="mt-4">
                 <PriceDisplay
                   original={pkg.priceFrom}
+                  originalTo={pkg.priceTo}
                   priceLabel={pkg.priceLabel}
+                  plusVat={pkg.plusVat}
                   size="md"
                 />
               </div>

@@ -7,8 +7,11 @@ import { discountedPrice, hasPromoPrice, JUNE_PROMO } from "@/lib/pricing";
 type PriceDisplayProps = {
   /** Amount stored in NAD (Namibian Dollar). */
   original: number;
+  /** Upper bound for a price range (NAD). */
+  originalTo?: number;
   priceLabel?: string;
   suffix?: string;
+  plusVat?: boolean;
   size?: "sm" | "md" | "lg";
   className?: string;
   showBaseNote?: boolean;
@@ -16,8 +19,10 @@ type PriceDisplayProps = {
 
 export function PriceDisplay({
   original,
+  originalTo,
   priceLabel = "From",
   suffix,
+  plusVat = false,
   size = "md",
   className = "",
   showBaseNote = true,
@@ -28,14 +33,25 @@ export function PriceDisplay({
     return <p className={`font-bold text-navy ${className}`}>Quote on request</p>;
   }
 
+  const isRange = originalTo != null && originalTo > original;
   const sale = discountedPrice(original);
-  const showPromo = hasPromoPrice(original);
+  const saleTo = isRange ? discountedPrice(originalTo) : null;
+  const showPromo = hasPromoPrice(original) && !isRange;
 
   const sizeClasses = {
     sm: { original: "text-sm", sale: "text-lg", badge: "text-[10px] px-1.5 py-0.5" },
     md: { original: "text-base", sale: "text-2xl", badge: "text-xs px-2 py-0.5" },
     lg: { original: "text-lg", sale: "text-3xl", badge: "text-xs px-2.5 py-1" },
   }[size];
+
+  const vatSuffix = plusVat ? " + VAT" : "";
+
+  function renderAmount(from: number, to?: number | null) {
+    if (to != null && to > from) {
+      return `${formatPrice(from, suffix)} – ${formatPrice(to, suffix)}${vatSuffix}`;
+    }
+    return `${formatPrice(from, suffix)}${vatSuffix}`;
+  }
 
   return (
     <div className={className}>
@@ -47,21 +63,21 @@ export function PriceDisplay({
         </span>
       )}
       <div className="flex flex-wrap items-baseline gap-2">
-        {priceLabel && (
+        {!isRange && priceLabel && (
           <span className="text-sm font-medium text-slate-500">{priceLabel}</span>
         )}
         {showPromo ? (
           <>
             <span className={`font-bold text-royal ${sizeClasses.sale}`}>
-              {formatPrice(sale, suffix)}
+              {renderAmount(sale, saleTo)}
             </span>
             <span className={`text-slate-400 line-through ${sizeClasses.original}`}>
-              {formatPrice(original, suffix)}
+              {renderAmount(original, originalTo)}
             </span>
           </>
         ) : (
           <span className={`font-bold text-royal ${sizeClasses.sale}`}>
-            {formatPrice(original, suffix)}
+            {renderAmount(original, isRange ? originalTo : null)}
           </span>
         )}
       </div>

@@ -740,9 +740,13 @@ export const HOSTING_PLANS: BusinessPackage[] = HOSTING_WEBSITE_PLANS;
 export type ShopPackage = {
   id: string;
   name: string;
-  priceLabel: string;
+  priceLabel?: string;
   /** Starting price in NAD (Namibian Dollar). */
   priceFrom: number;
+  /** Upper price bound in NAD when shown as a range. */
+  priceTo?: number;
+  /** Show "+ VAT" after the price. */
+  plusVat?: boolean;
   description: string;
   icon: LucideIcon;
   features: string[];
@@ -1143,8 +1147,9 @@ export const SHOP_PACKAGES: ShopPackage[] = [
   {
     id: "starter-website",
     name: "Starter Website",
-    priceLabel: "From",
-    priceFrom: 9073,
+    priceFrom: 5000,
+    priceTo: 8000,
+    plusVat: true,
     description: "Professional online presence for small businesses and professionals.",
     icon: Laptop,
     timeline: "2–3 weeks",
@@ -1177,7 +1182,8 @@ export const SHOP_PACKAGES: ShopPackage[] = [
     id: "ecommerce",
     name: "E-Commerce Store",
     priceLabel: "From",
-    priceFrom: 45436,
+    priceFrom: 10000,
+    plusVat: true,
     description: "Sell products online with secure payments and inventory management.",
     icon: ShoppingBag,
     timeline: "6–10 weeks",

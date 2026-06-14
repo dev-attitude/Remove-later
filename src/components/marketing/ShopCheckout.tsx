@@ -48,7 +48,10 @@ export function ShopCheckout() {
     setLoading(true);
     setError("");
 
-    const priceNote = `${selected.priceLabel} ${formatPrice(selected.priceFrom)}`;
+    const priceNote =
+      selected.priceTo != null && selected.priceTo > selected.priceFrom
+        ? `${formatPrice(selected.priceFrom)} – ${formatPrice(selected.priceTo)}${selected.plusVat ? " + VAT" : ""}`
+        : `${selected.priceLabel ? `${selected.priceLabel} ` : ""}${formatPrice(selected.priceFrom)}${selected.plusVat ? " + VAT" : ""}`;
 
     const message = [
       `Package: ${selected.name} (${selectedId})`,
@@ -147,7 +150,9 @@ export function ShopCheckout() {
                 <div className="bg-white p-4">
                   <PriceDisplay
                     original={pkg.priceFrom}
+                    originalTo={pkg.priceTo}
                     priceLabel={pkg.priceLabel}
+                    plusVat={pkg.plusVat}
                     size="sm"
                     showBaseNote={false}
                   />
@@ -225,7 +230,9 @@ export function ShopCheckout() {
         <div className="mt-2">
           <PriceDisplay
             original={selected.priceFrom}
+            originalTo={selected.priceTo}
             priceLabel={selected.priceLabel}
+            plusVat={selected.plusVat}
             size="sm"
             showBaseNote={false}
           />
