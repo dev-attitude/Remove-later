@@ -44,6 +44,11 @@ export function SiteFooter() {
                 Skyrapay Research
               </Link>
             </li>
+            <li>
+              <Link href="/business/login" className="transition hover:text-sky">
+                Staff login
+              </Link>
+            </li>
           </ul>
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
             Read our{" "}
@@ -122,6 +127,9 @@ export function SiteFooter() {
             </Link>
             <Link href="/contact" className="transition hover:text-sky">
               Contact
+            </Link>
+            <Link href="/business/login" className="transition hover:text-sky">
+              Staff login
             </Link>
           </nav>
         </div>
