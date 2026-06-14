@@ -103,6 +103,27 @@ export async function GoogleReviewsSection() {
               <ReviewCard key={review.id} review={review} />
             ))}
           </div>
+        ) : data.live && data.totalReviews > 0 ? (
+          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+            <StarRating rating={data.rating ?? 5} size="lg" className="justify-center" />
+            <p className="mt-4 text-lg font-semibold text-slate-900">
+              {data.rating?.toFixed(1)} on Google · {data.totalReviews} review
+              {data.totalReviews === 1 ? "" : "s"}
+            </p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-slate-600">
+              Your business is rated on Google. Open your profile to read the full review and add
+              more.
+            </p>
+            <a
+              href={COMPANY.googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="marketing-btn-primary mt-6 inline-flex"
+            >
+              Read &amp; leave reviews on Google
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
         ) : (
           <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
             <StarRating rating={5} size="lg" className="justify-center" />

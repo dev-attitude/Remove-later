@@ -38,6 +38,102 @@ type PlacesDetailsResponse = {
   };
 };
 
+type PlacesNewReview = {
+  name?: string;
+  relativePublishTimeDescription?: string;
+  rating?: number;
+  text?: { text?: string; languageCode?: string };
+  originalText?: { text?: string; languageCode?: string };
+  authorAttribution?: {
+    displayName?: string;
+    uri?: string;
+    photoUri?: string;
+  };
+  publishTime?: string;
+};
+
+type PlacesNewResponse = {
+  displayName?: { text?: string };
+  rating?: number;
+  userRatingCount?: number;
+  reviews?: PlacesNewReview[];
+  error?: { message?: string };
+};
+
+function mapLegacyReview(
+  r: NonNullable<PlacesDetailsResponse["result"]>["reviews"] extends (infer T)[] | undefined
+    ? T
+    : never,
+  index: number
+): GoogleReview | null {
+  const rating = r.rating ?? 0;
+  const text = r.text?.trim();
+  if (!text && rating <= 0) return null;
+
+  return {
+    id: `${r.time ?? index}-${r.author_name ?? "review"}`,
+    authorName: r.author_name?.trim() || "Google user",
+    rating: Math.min(5, Math.max(1, rating || 5)),
+    text: text || "Left a star rating on Google.",
+    relativeTime: r.relative_time_description?.trim() || "",
+    profilePhotoUrl: r.profile_photo_url,
+    authorUrl: r.author_url,
+  };
+}
+
+function mapNewReview(r: PlacesNewReview, index: number): GoogleReview | null {
+  const rating = r.rating ?? 0;
+  const text = r.text?.text?.trim() || r.originalText?.text?.trim();
+  if (!text && rating <= 0) return null;
+
+  return {
+    id: r.name ?? `new-${index}-${r.authorAttribution?.displayName ?? "review"}`,
+    authorName: r.authorAttribution?.displayName?.trim() || "Google user",
+    rating: Math.min(5, Math.max(1, rating || 5)),
+    text: text || "Left a star rating on Google.",
+    relativeTime: r.relativePublishTimeDescription?.trim() || "",
+    profilePhotoUrl: r.authorAttribution?.photoUri,
+    authorUrl: r.authorAttribution?.uri,
+  };
+}
+
+async function fetchPlacesNewReviews(
+  apiKey: string,
+  placeId: string
+): Promise<GoogleReviewsData | null> {
+  const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": apiKey,
+      "X-Goog-FieldMask": "displayName,rating,userRatingCount,reviews",
+    },
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) {
+    console.error("[google-reviews] Places (New) HTTP", res.status);
+    return null;
+  }
+
+  const data = (await res.json()) as PlacesNewResponse;
+  if (data.error) {
+    console.error("[google-reviews] Places (New)", data.error.message);
+    return null;
+  }
+
+  const reviews = (data.reviews ?? [])
+    .map(mapNewReview)
+    .filter((r): r is GoogleReview => r !== null);
+
+  return {
+    placeName: data.displayName?.text?.trim() || COMPANY.shortName,
+    rating: data.rating ?? null,
+    totalReviews: data.userRatingCount ?? reviews.length,
+    reviews,
+    live: true,
+  };
+}
+
 function emptyReviews(): GoogleReviewsData {
   return {
     placeName: COMPANY.shortName,
@@ -76,25 +172,24 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
     }
 
     const { result } = data;
-    const reviews: GoogleReview[] = (result.reviews ?? [])
-      .filter((r) => r.text?.trim())
-      .map((r, index) => ({
-        id: `${r.time ?? index}-${r.author_name ?? "review"}`,
-        authorName: r.author_name?.trim() || "Google user",
-        rating: Math.min(5, Math.max(1, r.rating ?? 5)),
-        text: r.text!.trim(),
-        relativeTime: r.relative_time_description?.trim() || "",
-        profilePhotoUrl: r.profile_photo_url,
-        authorUrl: r.author_url,
-      }));
+    const reviews = (result.reviews ?? [])
+      .map(mapLegacyReview)
+      .filter((r): r is GoogleReview => r !== null);
 
-    return {
+    const payload: GoogleReviewsData = {
       placeName: result.name?.trim() || COMPANY.shortName,
       rating: result.rating ?? null,
       totalReviews: result.user_ratings_total ?? reviews.length,
       reviews,
       live: true,
     };
+
+    if (reviews.length === 0 && (payload.totalReviews ?? 0) > 0) {
+      const fromNewApi = await fetchPlacesNewReviews(apiKey, placeId);
+      if (fromNewApi?.reviews.length) return fromNewApi;
+    }
+
+    return payload;
   } catch (err) {
     console.error("[google-reviews] fetch failed", err);
     return emptyReviews();
