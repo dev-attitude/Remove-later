@@ -11,6 +11,11 @@ import {
   Headphones,
   PenLine,
   BookMarked,
+  Layers,
+  MapPin,
+  Rocket,
+  CircleDollarSign,
+  ShieldCheck,
 } from "lucide-react";
 
 import { BRAND } from "./brand";
@@ -39,6 +44,69 @@ export const COMPANY = {
   /** Resolved from the review link — used with Google Places API */
   googlePlaceId: "ChIJm7k-B6qVChwRBPgtTivgrwI",
 } as const;
+
+export type WhyChooseItem = {
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+};
+
+/** Reasons to choose Skyrapay Consultations CC — homepage & about. */
+export const WHY_CHOOSE_US: WhyChooseItem[] = [
+  {
+    id: "one-partner",
+    title: "One partner for tech & business",
+    description:
+      "IT consulting, company registration, websites, hosting, documents, and custom software—one team, one point of contact, fewer hand-offs.",
+    icon: Layers,
+  },
+  {
+    id: "namibia",
+    title: "Built in Namibia, for Namibia",
+    description:
+      "Offices in Osona, Okahandja, and Windhoek. We understand local registration, NAD billing, tenders, banks, and how SMEs actually operate here.",
+    icon: MapPin,
+  },
+  {
+    id: "proven",
+    title: "Proven products, not just pitches",
+    description:
+      "Live websites, college systems, and our Skyrapay Research Suite—work you can visit and test before you buy.",
+    icon: Rocket,
+  },
+  {
+    id: "pricing",
+    title: "Clear NAD pricing",
+    description:
+      "Fixed packages for websites, registration, and student services—with formal quotations and invoices before work begins.",
+    icon: CircleDollarSign,
+  },
+  {
+    id: "delivery",
+    title: "From brief to go-live",
+    description:
+      "Design, development, domains, hosting, launch support, and optional care plans—we stay with you after delivery.",
+    icon: Server,
+  },
+  {
+    id: "students",
+    title: "Trusted by students & institutions",
+    description:
+      "Assignment and research support plus academic tools—structured workflows, deadlines, and integrity built in.",
+    icon: GraduationCap,
+  },
+  {
+    id: "accountable",
+    title: "Registered & accountable",
+    description:
+      "Skyrapay Consultations CC with published refund policy, business hours, and reviews on Google—professional from first quote.",
+    icon: ShieldCheck,
+  },
+];
+
+export const WHY_CHOOSE_SUMMARY =
+  "Choose Skyrapay Consultations CC when you want a Namibian team that combines business registration, IT, websites, and software—with clear NAD pricing, live products in production, and support from first quote to go-live and beyond.";
 
 export type ServiceSlug =
   | "it-consulting"

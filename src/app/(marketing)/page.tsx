@@ -8,6 +8,7 @@ import {
 import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { GoogleReviewsSection } from "@/components/marketing/GoogleReviewsSection";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
+import { WhyChooseUsSection } from "@/components/marketing/WhyChooseUsSection";
 import { COMPANY, SERVICES, SHOP_PACKAGES } from "@/lib/site-content";
 
 export default function HomePage() {
@@ -116,6 +117,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <WhyChooseUsSection showAboutLink={false} />
 
       <GoogleReviewsSection />
 
