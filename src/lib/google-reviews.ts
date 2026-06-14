@@ -18,6 +18,10 @@ export type GoogleReviewsData = {
   live: boolean;
   /** True when GOOGLE_PLACES_API_KEY is set (does not expose the key). */
   configured: boolean;
+  /** Google API status when the fetch failed (e.g. REQUEST_DENIED). */
+  googleStatus?: string;
+  /** Human-readable hint for fixing configuration (no secrets). */
+  hint?: string;
 };
 
 type PlacesDetailsResponse = {
@@ -59,8 +63,24 @@ type PlacesNewResponse = {
   rating?: number;
   userRatingCount?: number;
   reviews?: PlacesNewReview[];
-  error?: { message?: string };
+  error?: { message?: string; status?: string };
 };
+
+function hintForGoogleStatus(status: string, message?: string): string {
+  if (status === "REQUEST_DENIED") {
+    if (message?.toLowerCase().includes("referer")) {
+      return "Set API key Application restrictions to None (HTTP referrers block server-side requests from Vercel).";
+    }
+    return "Enable Places API on the same Google Cloud project as this key, and set Application restrictions to None.";
+  }
+  if (status === "INVALID_REQUEST") {
+    return "Check GOOGLE_PLACE_ID matches your Google Business location.";
+  }
+  if (status === "OVER_QUERY_LIMIT") {
+    return "Google Places API quota exceeded — try again later.";
+  }
+  return message || "Google Places API request failed — check key restrictions and enabled APIs.";
+}
 
 function mapLegacyReview(
   r: NonNullable<PlacesDetailsResponse["result"]>["reviews"] extends (infer T)[] | undefined
@@ -99,6 +119,23 @@ function mapNewReview(r: PlacesNewReview, index: number): GoogleReview | null {
   };
 }
 
+function failure(
+  configured: boolean,
+  googleStatus?: string,
+  hint?: string
+): GoogleReviewsData {
+  return {
+    placeName: COMPANY.shortName,
+    rating: null,
+    totalReviews: 0,
+    reviews: [],
+    live: false,
+    configured,
+    googleStatus,
+    hint,
+  };
+}
+
 async function fetchPlacesNewReviews(
   apiKey: string,
   placeId: string
@@ -109,7 +146,7 @@ async function fetchPlacesNewReviews(
       "X-Goog-Api-Key": apiKey,
       "X-Goog-FieldMask": "displayName,rating,userRatingCount,reviews",
     },
-    next: { revalidate: 3600 },
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -120,7 +157,7 @@ async function fetchPlacesNewReviews(
   const data = (await res.json()) as PlacesNewResponse;
   if (data.error) {
     console.error("[google-reviews] Places (New)", data.error.message);
-    return null;
+    return failure(true, data.error.status ?? "ERROR", data.error.message);
   }
 
   const reviews = (data.reviews ?? [])
@@ -137,22 +174,11 @@ async function fetchPlacesNewReviews(
   };
 }
 
-function emptyReviews(configured = false): GoogleReviewsData {
-  return {
-    placeName: COMPANY.shortName,
-    rating: null,
-    totalReviews: 0,
-    reviews: [],
-    live: false,
-    configured,
-  };
-}
-
-/** Fetches public Google reviews via Places API (server-only). Cached 1 hour. */
+/** Fetches public Google reviews via Places API (server-only). */
 export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
   const apiKey = process.env.GOOGLE_PLACES_API_KEY?.trim();
   if (!apiKey) {
-    return emptyReviews(false);
+    return failure(false);
   }
 
   const placeId = process.env.GOOGLE_PLACE_ID?.trim() || COMPANY.googlePlaceId;
@@ -163,16 +189,24 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
   url.searchParams.set("language", "en");
 
   try {
-    const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
+    const res = await fetch(url.toString(), { cache: "no-store" });
     if (!res.ok) {
       console.error("[google-reviews] HTTP", res.status);
-      return emptyReviews(true);
+      const fromNew = await fetchPlacesNewReviews(apiKey, placeId);
+      if (fromNew?.live) return fromNew;
+      return failure(true, `HTTP_${res.status}`, "Google Places API HTTP error.");
     }
 
     const data = (await res.json()) as PlacesDetailsResponse;
     if (data.status !== "OK" || !data.result) {
       console.error("[google-reviews]", data.status, data.error_message);
-      return emptyReviews(true);
+      const fromNew = await fetchPlacesNewReviews(apiKey, placeId);
+      if (fromNew?.live) return fromNew;
+      return failure(
+        true,
+        data.status,
+        hintForGoogleStatus(data.status, data.error_message)
+      );
     }
 
     const { result } = data;
@@ -191,12 +225,12 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
 
     if (reviews.length === 0 && (payload.totalReviews ?? 0) > 0) {
       const fromNewApi = await fetchPlacesNewReviews(apiKey, placeId);
-      if (fromNewApi?.reviews.length) return { ...fromNewApi, configured: true };
+      if (fromNewApi?.live) return fromNewApi;
     }
 
     return payload;
   } catch (err) {
     console.error("[google-reviews] fetch failed", err);
-    return emptyReviews(true);
+    return failure(true, "FETCH_ERROR", "Could not reach Google Places API.");
   }
 }

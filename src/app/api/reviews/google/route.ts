@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 /** Public Google reviews feed for the marketing site (cached 1 hour). */
 export async function GET() {
