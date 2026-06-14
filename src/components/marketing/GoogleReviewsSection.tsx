@@ -1,59 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, Star } from "lucide-react";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
 import { COMPANY } from "@/lib/site-content";
 import { StarRating } from "@/components/marketing/StarRating";
-
-function ReviewCard({
-  review,
-}: {
-  review: {
-    id: string;
-    authorName: string;
-    rating: number;
-    text: string;
-    relativeTime: string;
-    profilePhotoUrl?: string;
-  };
-}) {
-  const initials = review.authorName
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0])
-    .join("")
-    .toUpperCase();
-
-  return (
-    <article className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center gap-3">
-        {review.profilePhotoUrl ? (
-          <Image
-            src={review.profilePhotoUrl}
-            alt=""
-            width={40}
-            height={40}
-            className="h-10 w-10 rounded-full object-cover"
-          />
-        ) : (
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
-            {initials || "G"}
-          </span>
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold text-slate-900">{review.authorName}</p>
-          {review.relativeTime && (
-            <p className="text-xs text-slate-500">{review.relativeTime}</p>
-          )}
-        </div>
-        <StarRating rating={review.rating} size="sm" />
-      </div>
-      <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-700 line-clamp-6">
-        &ldquo;{review.text}&rdquo;
-      </p>
-    </article>
-  );
-}
+import { GoogleReviewsCarousel } from "@/components/marketing/GoogleReviewsCarousel";
 
 export async function GoogleReviewsSection() {
   const data = await fetchGoogleReviews();
@@ -67,7 +17,8 @@ export async function GoogleReviewsSection() {
             <p className="marketing-eyebrow">Client reviews</p>
             <h2 className="marketing-section-title">What our clients say</h2>
             <p className="mt-4 marketing-body">
-              Real feedback from Google — updated automatically from our business profile.
+              Real feedback from Google — swipe or use the arrows to browse reviews from our
+              clients.
             </p>
           </div>
 
@@ -98,11 +49,7 @@ export async function GoogleReviewsSection() {
         </div>
 
         {hasReviews ? (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {data.reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
-          </div>
+          <GoogleReviewsCarousel reviews={data.reviews} totalReviews={data.totalReviews} />
         ) : data.live && data.totalReviews > 0 ? (
           <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
             <StarRating rating={data.rating ?? 5} size="lg" className="justify-center" />
