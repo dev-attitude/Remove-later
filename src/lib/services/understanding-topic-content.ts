@@ -13,6 +13,10 @@ import {
 } from "@/lib/services/understanding-books";
 import { buildTopicSearchPhrases, phraseMatchScore } from "@/lib/services/book-topic-match";
 import { formatExtractedBookText, normalizeGuideMarkdown } from "@/lib/services/format-book-text";
+import {
+  getCachedTopicContent,
+  setCachedTopicContent,
+} from "@/lib/services/understanding-topic-cache";
 
 export type TopicReference = {
   id: string;
@@ -39,6 +43,8 @@ export type UnderstandingTopicContent = {
   sourcesQueried: string[];
   errors: string[];
   booksUsed?: { id: string; title: string }[];
+  fromCache?: boolean;
+  phase?: "quick" | "full";
 };
 
 const SYSTEM_PROMPT = `You are an expert research methods educator for Skyrapay Research Suite.
@@ -312,6 +318,7 @@ async function fetchTopicReferences(module: string, topic: string) {
     buildUnderstandingSearchQuery(topic),
     [...UNDERSTANDING_API_SOURCE_IDS]
   );
+
   if (primary.papers.length >= MIN_REFERENCES) {
     return { ...primary, papers: primary.papers.slice(0, MAX_REFERENCES) };
   }
@@ -321,20 +328,57 @@ async function fetchTopicReferences(module: string, topic: string) {
     `${topic} ${moduleHint} research`,
     [...UNDERSTANDING_API_SOURCE_IDS]
   );
-  const merged = mergePaperResults(primary, fallback);
-  if (merged.papers.length > 0) return merged;
+  return mergePaperResults(primary, fallback);
+}
 
-  const broad = await multiSourceSearch(topic, [...UNDERSTANDING_API_SOURCE_IDS]);
-  return mergePaperResults(primary, broad);
+/** Fast path: textbook excerpts only — shown while the full guide loads */
+export async function loadUnderstandingTopicQuick(
+  module: string,
+  topic: string
+): Promise<UnderstandingTopicContent> {
+  const bookExcerpts = await getBookExcerptsForTopic(module, topic);
+  const booksUsed = bookExcerpts.map((b) => ({ id: b.bookId, title: b.title }));
+
+  return {
+    module,
+    topic,
+    overview: buildSynthesizedGuide(module, topic, bookExcerpts),
+    mode: bookExcerpts.length > 0 ? "live" : "demo",
+    contentSource: "literature",
+    references: buildTopicReferences(bookExcerpts, []),
+    papers: [],
+    sourcesQueried:
+      booksUsed.length > 0 ? [`Course textbooks (${booksUsed.length})`] : [],
+    errors: [],
+    booksUsed: booksUsed.length > 0 ? booksUsed : undefined,
+    phase: "quick",
+  };
 }
 
 export async function loadUnderstandingTopicContent(
   module: string,
   topic: string,
-  options?: { useAi?: boolean; /** When trial ended, still synthesise textbook excerpts with AI */ allowBookAi?: boolean }
+  options?: {
+    useAi?: boolean;
+    /** When trial ended, still synthesise textbook excerpts with AI */
+    allowBookAi?: boolean;
+    phase?: "quick" | "full";
+    refresh?: boolean;
+  }
 ): Promise<UnderstandingTopicContent> {
-  const search = await fetchTopicReferences(module, topic);
-  const bookExcerpts = await getBookExcerptsForTopic(module, topic);
+  if (options?.phase === "quick") {
+    return loadUnderstandingTopicQuick(module, topic);
+  }
+
+  if (!options?.refresh) {
+    const cached = await getCachedTopicContent(module, topic);
+    if (cached) return { ...cached, phase: "full" };
+  }
+
+  const [search, bookExcerpts] = await Promise.all([
+    fetchTopicReferences(module, topic),
+    getBookExcerptsForTopic(module, topic),
+  ]);
   const booksUsed = bookExcerpts.map((b) => ({ id: b.bookId, title: b.title }));
 
   const hasRealPapers = search.papers.length > 0;
@@ -359,28 +403,40 @@ export async function loadUnderstandingTopicContent(
   };
 
   if (!runAi) {
-    return {
+    const result: UnderstandingTopicContent = {
       ...base,
       overview: buildSynthesizedGuide(module, topic, bookExcerpts),
       mode: hasRealPapers || runtimeLive || bookExcerpts.length > 0 ? "live" : "demo",
       contentSource: "literature",
       references: buildTopicReferences(bookExcerpts, search.papers),
+      phase: "full",
     };
+    await setCachedTopicContent(module, topic, result).catch((e) =>
+      console.error("[understanding-topic-content] cache write failed:", e)
+    );
+    return result;
   }
 
   try {
     const ai = await generateAiOverview(module, topic, search.papers, bookExcerpts);
-    return {
+    const result: UnderstandingTopicContent = {
       ...base,
       overview: finalizeGuideMarkdown(ai.content),
       mode: "live",
       contentSource: "ai",
       aiProvider: ai.provider,
-      references: buildTopicReferences(bookExcerpts, search.papers, { provider: ai.provider }),
+      references: buildTopicReferences(bookExcerpts, search.papers, {
+        provider: ai.provider,
+      }),
+      phase: "full",
     };
+    await setCachedTopicContent(module, topic, result).catch((e) =>
+      console.error("[understanding-topic-content] cache write failed:", e)
+    );
+    return result;
   } catch (e) {
     console.error("[understanding-topic-content] AI failed, using synthesized guide:", e);
-    return {
+    const result: UnderstandingTopicContent = {
       ...base,
       overview: buildSynthesizedGuide(module, topic, bookExcerpts),
       mode: hasRealPapers || bookExcerpts.length > 0 ? "live" : "demo",
@@ -392,6 +448,9 @@ export async function loadUnderstandingTopicContent(
           ? []
           : ["AI guide unavailable — configure OPENAI_API_KEY on the server for full guides."]),
       ],
+      phase: "full",
     };
+    await setCachedTopicContent(module, topic, result).catch(() => {});
+    return result;
   }
 }

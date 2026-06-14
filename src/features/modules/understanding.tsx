@@ -31,29 +31,68 @@ export default function UnderstandingPage() {
   });
   const [content, setContent] = useState<UnderstandingTopicContentResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [enriching, setEnriching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const loadIdRef = useRef(0);
 
   const loadTopic = useCallback(
-    async (topic: SelectedTopic) => {
-      setLoading(true);
+    async (topic: SelectedTopic, refresh = false) => {
+      const loadId = ++loadIdRef.current;
+      let hasQuickContent = false;
       setError(null);
-      setContent(null);
+      setEnriching(false);
+
+      if (!refresh) {
+        setLoading(true);
+        setContent(null);
+        try {
+          const quick = await fetchUnderstandingTopicApi({
+            module: topic.module,
+            topic: topic.label,
+            portal: portalId,
+            phase: "quick",
+          });
+          if (loadId !== loadIdRef.current) return;
+          setContent(quick);
+          hasQuickContent = true;
+          setLoading(false);
+          setEnriching(true);
+        } catch (e) {
+          if (loadId !== loadIdRef.current) return;
+          setError(e instanceof Error ? e.message : "Could not load topic");
+          setLoading(false);
+          return;
+        }
+      } else {
+        setLoading(true);
+        setContent(null);
+      }
+
       try {
-        const data = await fetchUnderstandingTopicApi({
+        const full = await fetchUnderstandingTopicApi({
           module: topic.module,
           topic: topic.label,
           portal: portalId,
+          phase: "full",
+          refresh,
         });
-        setContent(data);
+        if (loadId !== loadIdRef.current) return;
+        setContent(full);
         markUnderstandingTopicViewed(
           topic.module,
           topic.label,
-          data.references?.length ?? 0
+          full.references?.length ?? 0
         );
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Could not load topic");
+        if (loadId !== loadIdRef.current) return;
+        if (!hasQuickContent) {
+          setError(e instanceof Error ? e.message : "Could not load topic");
+        }
       } finally {
-        setLoading(false);
+        if (loadId === loadIdRef.current) {
+          setLoading(false);
+          setEnriching(false);
+        }
       }
     },
     [portalId]
@@ -85,8 +124,12 @@ export default function UnderstandingPage() {
   const statusLabel =
     content?.contentSource === "ai"
       ? content.aiProvider === "grok"
-        ? "Synthesised guide (Grok)"
-        : "Synthesised guide (AI)"
+        ? content.fromCache
+          ? "Synthesised guide (Grok, cached)"
+          : "Synthesised guide (Grok)"
+        : content.fromCache
+          ? "Synthesised guide (AI, cached)"
+          : "Synthesised guide (AI)"
       : content?.mode === "live"
         ? "Live content"
         : undefined;
@@ -161,10 +204,11 @@ export default function UnderstandingPage() {
                                 selected={selected}
                                 content={content}
                                 loading={loading}
+                                enriching={enriching}
                                 error={error}
                                 statusLabel={statusLabel}
                                 portalId={portalId}
-                                onRefresh={() => selected && loadTopic(selected)}
+                                onRefresh={() => selected && loadTopic(selected, true)}
                               />
                             </div>
                           )}
@@ -186,6 +230,7 @@ function TopicContent({
   selected,
   content,
   loading,
+  enriching,
   error,
   statusLabel,
   portalId,
@@ -194,6 +239,7 @@ function TopicContent({
   selected: SelectedTopic;
   content: UnderstandingTopicContentResult | null;
   loading: boolean;
+  enriching: boolean;
   error: string | null;
   statusLabel: string | undefined;
   portalId: string;
@@ -240,7 +286,7 @@ function TopicContent({
               Databases: {content.sourcesQueried.join(" · ")}
             </p>
           )}
-          {!loading && (
+          {!loading && !enriching && (
             <Button type="button" variant="outline" className="mt-4" onClick={onRefresh}>
               Refresh topic
             </Button>
@@ -264,6 +310,7 @@ function TopicContent({
           </div>
           <LearningGuidePanel
             loading={loading}
+            enriching={enriching}
             content={content?.overview ?? ""}
             mode={content?.mode}
             statusLabel={statusLabel}
@@ -272,7 +319,7 @@ function TopicContent({
 
         {/* References — textbooks, AI, and library sources */}
         <section className="border-t border-slate-200 bg-slate-50/40 px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-          <ReferencesSection loading={loading} content={content} />
+          <ReferencesSection loading={loading && !content} enriching={enriching} content={content} />
         </section>
       </div>
     </div>
@@ -283,9 +330,11 @@ const INITIAL_REFERENCES_VISIBLE = 2;
 
 function ReferencesSection({
   loading,
+  enriching,
   content,
 }: {
   loading: boolean;
+  enriching: boolean;
   content: UnderstandingTopicContentResult | null;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -328,6 +377,13 @@ function ReferencesSection({
         </p>
       </div>
 
+      {enriching && (
+        <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Loading library references…
+        </div>
+      )}
+
       {loading && (
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -335,11 +391,11 @@ function ReferencesSection({
         </div>
       )}
 
-      {!loading && content?.errors && content.errors.length > 0 && (
+      {!loading && !enriching && content?.errors && content.errors.length > 0 && (
         <p className="mb-4 text-sm text-amber-800">{content.errors.join(" · ")}</p>
       )}
 
-      {!loading && references.length === 0 && (
+      {!loading && !enriching && references.length === 0 && (
         <p className="text-sm text-slate-500">
           No references found yet. Try <strong>Refresh topic</strong>.
         </p>

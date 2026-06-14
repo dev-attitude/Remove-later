@@ -326,6 +326,8 @@ export type UnderstandingTopicContentResult = {
   errors: string[];
   trialNotice?: string;
   booksUsed?: { id: string; title: string }[];
+  fromCache?: boolean;
+  phase?: "quick" | "full";
 };
 
 export type UnderstandingBookSummary = {
@@ -373,6 +375,8 @@ export async function fetchUnderstandingTopicApi(input: {
   module: string;
   topic: string;
   portal?: string;
+  phase?: "quick" | "full";
+  refresh?: boolean;
 }) {
   const res = await fetchWithTimeout(
     "/api/research/understanding/topic",
@@ -381,7 +385,7 @@ export async function fetchUnderstandingTopicApi(input: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
     },
-    120_000
+    input.phase === "quick" ? 60_000 : 120_000
   );
   return parseJson<UnderstandingTopicContentResult>(res);
 }

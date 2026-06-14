@@ -367,6 +367,21 @@ model UnderstandingBook {
   @@index([userId])
 }
 
+/** Cached Research Understanding topic guides (24h TTL, invalidated when textbooks change) */
+model UnderstandingTopicCache {
+  id         String   @id @default(cuid())
+  module     String
+  topic      String
+  booksEpoch String
+  payload    String   @db.Text
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([module, topic])
+  @@index([expiresAt])
+}
+
 /** Every client request across all services — hosting orders, shop purchases, IT service & contact inquiries */
 model ServiceInquiry {
   id          String   @id @default(cuid())

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { canManagePlatformTextbooks } from "@/lib/services/understanding-books";
+import { clearUnderstandingTopicCache } from "@/lib/services/understanding-topic-cache";
+import { warmUnderstandingTopicCache } from "@/lib/services/understanding-topic-warm";
 
 export const dynamic = "force-dynamic";
 
@@ -33,5 +35,10 @@ export async function DELETE(
   }
 
   await prisma.understandingBook.delete({ where: { id } });
+  void clearUnderstandingTopicCache().then(() =>
+    warmUnderstandingTopicCache(8).catch((e) =>
+      console.error("[understanding/books DELETE] cache warm failed:", e)
+    )
+  );
   return NextResponse.json({ ok: true });
 }

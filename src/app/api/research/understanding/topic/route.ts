@@ -13,6 +13,8 @@ const schema = z.object({
   module: z.string().min(1).max(200),
   topic: z.string().min(1).max(200),
   portal: z.string().optional(),
+  phase: z.enum(["quick", "full"]).optional().default("full"),
+  refresh: z.boolean().optional().default(false),
 });
 
 export async function POST(req: Request) {
@@ -41,9 +43,11 @@ export async function POST(req: Request) {
     const result = await loadUnderstandingTopicContent(body.module, body.topic, {
       useAi,
       allowBookAi: true,
+      phase: body.phase,
+      refresh: body.refresh,
     });
 
-    if (useAi) {
+    if (useAi && body.phase === "full") {
       try {
         await prisma.usageLog.create({
           data: {

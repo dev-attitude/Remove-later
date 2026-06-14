@@ -159,11 +159,13 @@ function parseGuideSections(markdown: string): string[] {
 
 export function LearningGuidePanel({
   loading,
+  enriching,
   content,
   mode,
   statusLabel,
 }: {
   loading: boolean;
+  enriching?: boolean;
   content: string;
   mode?: "demo" | "live" | null;
   statusLabel?: string;
@@ -175,7 +177,7 @@ export function LearningGuidePanel({
         <div className="text-center">
           <p className="font-medium text-brand-900">Preparing your learning guide</p>
           <p className="mt-1 text-sm text-slate-600">
-            Gathering academic sources and structuring the topic…
+            Loading textbook excerpts for this topic…
           </p>
         </div>
       </div>
@@ -189,6 +191,12 @@ export function LearningGuidePanel({
 
   return (
     <article className="learning-guide">
+      {enriching && (
+        <div className="mb-6 flex items-center gap-2 rounded-lg border border-brand-200 bg-brand-50/80 px-4 py-3 text-sm text-brand-900">
+          <Loader2 className="h-4 w-4 shrink-0 animate-spin text-brand-600" />
+          Enhancing with AI synthesis and academic library sources…
+        </div>
+      )}
       {mode && (
         <div className="mb-8 flex flex-wrap items-center justify-end gap-2">
           <span

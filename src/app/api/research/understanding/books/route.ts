@@ -10,6 +10,8 @@ import {
   listPlatformTextbooks,
   MAX_PLATFORM_BOOKS,
 } from "@/lib/services/understanding-books";
+import { clearUnderstandingTopicCache } from "@/lib/services/understanding-topic-cache";
+import { warmUnderstandingTopicCache } from "@/lib/services/understanding-topic-warm";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -114,6 +116,12 @@ export async function POST(req: Request) {
         moduleScope: moduleScope || undefined,
       },
     });
+
+    void clearUnderstandingTopicCache().then(() =>
+      warmUnderstandingTopicCache(8).catch((e) =>
+        console.error("[understanding/books] cache warm failed:", e)
+      )
+    );
 
     return NextResponse.json({
       book: {
