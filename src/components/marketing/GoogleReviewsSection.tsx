@@ -17,8 +17,8 @@ export async function GoogleReviewsSection() {
             <p className="marketing-eyebrow">Client reviews</p>
             <h2 className="marketing-section-title">What our clients say</h2>
             <p className="mt-4 marketing-body">
-              Real feedback from Google — swipe or use the arrows to browse reviews from our
-              clients.
+              Real feedback from Google — each review slides automatically. Swipe or use the
+              arrows to browse them all.
             </p>
           </div>
 

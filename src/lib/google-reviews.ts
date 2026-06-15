@@ -16,11 +16,8 @@ export type GoogleReviewsData = {
   totalReviews: number;
   reviews: GoogleReview[];
   live: boolean;
-  /** True when GOOGLE_PLACES_API_KEY is set (does not expose the key). */
   configured: boolean;
-  /** Google API status when the fetch failed (e.g. REQUEST_DENIED). */
   googleStatus?: string;
-  /** Human-readable hint for fixing configuration (no secrets). */
   hint?: string;
 };
 
@@ -34,7 +31,6 @@ type PlacesDetailsResponse = {
     reviews?: Array<{
       author_name?: string;
       author_url?: string;
-      language?: string;
       profile_photo_url?: string;
       rating?: number;
       relative_time_description?: string;
@@ -48,14 +44,13 @@ type PlacesNewReview = {
   name?: string;
   relativePublishTimeDescription?: string;
   rating?: number;
-  text?: { text?: string; languageCode?: string };
-  originalText?: { text?: string; languageCode?: string };
+  text?: { text?: string };
+  originalText?: { text?: string };
   authorAttribution?: {
     displayName?: string;
     uri?: string;
     photoUri?: string;
   };
-  publishTime?: string;
 };
 
 type PlacesNewResponse = {
@@ -65,22 +60,6 @@ type PlacesNewResponse = {
   reviews?: PlacesNewReview[];
   error?: { message?: string; status?: string };
 };
-
-function hintForGoogleStatus(status: string, message?: string): string {
-  if (status === "REQUEST_DENIED") {
-    if (message?.toLowerCase().includes("referer")) {
-      return "Set API key Application restrictions to None (HTTP referrers block server-side requests from Vercel).";
-    }
-    return "Enable Places API on the same Google Cloud project as this key, and set Application restrictions to None.";
-  }
-  if (status === "INVALID_REQUEST") {
-    return "Check GOOGLE_PLACE_ID matches your Google Business location.";
-  }
-  if (status === "OVER_QUERY_LIMIT") {
-    return "Google Places API quota exceeded — try again later.";
-  }
-  return message || "Google Places API request failed — check key restrictions and enabled APIs.";
-}
 
 function mapLegacyReview(
   r: NonNullable<PlacesDetailsResponse["result"]>["reviews"] extends (infer T)[] | undefined
@@ -136,41 +115,95 @@ function failure(
   };
 }
 
-async function fetchPlacesNewReviews(
+function dedupeReviews(reviews: GoogleReview[]): GoogleReview[] {
+  const seen = new Set<string>();
+  const out: GoogleReview[] = [];
+  for (const r of reviews) {
+    const key = `${r.authorName.toLowerCase()}::${r.text.slice(0, 80).toLowerCase()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(r);
+  }
+  return out;
+}
+
+async function fetchLegacyPlaceReviews(
+  apiKey: string,
+  placeId: string,
+  reviewsSort?: "most_relevant" | "newest"
+): Promise<{ reviews: GoogleReview[]; result?: PlacesDetailsResponse["result"] } | null> {
+  const url = new URL("https://maps.googleapis.com/maps/api/place/details/json");
+  url.searchParams.set("place_id", placeId);
+  url.searchParams.set("fields", "name,rating,reviews,user_ratings_total");
+  url.searchParams.set("key", apiKey);
+  url.searchParams.set("language", "en");
+  if (reviewsSort) url.searchParams.set("reviews_sort", reviewsSort);
+
+  const res = await fetch(url.toString(), { cache: "no-store" });
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as PlacesDetailsResponse;
+  if (data.status !== "OK" || !data.result) return null;
+
+  const reviews = (data.result.reviews ?? [])
+    .map(mapLegacyReview)
+    .filter((r): r is GoogleReview => r !== null);
+
+  return { reviews, result: data.result };
+}
+
+async function fetchPlacesNewReviewList(
   apiKey: string,
   placeId: string
-): Promise<GoogleReviewsData | null> {
+): Promise<GoogleReview[]> {
   const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
     headers: {
       "Content-Type": "application/json",
       "X-Goog-Api-Key": apiKey,
-      "X-Goog-FieldMask": "displayName,rating,userRatingCount,reviews",
+      "X-Goog-FieldMask": "reviews",
     },
     cache: "no-store",
   });
 
-  if (!res.ok) {
-    console.error("[google-reviews] Places (New) HTTP", res.status);
-    return null;
-  }
+  if (!res.ok) return [];
 
   const data = (await res.json()) as PlacesNewResponse;
-  if (data.error) {
-    console.error("[google-reviews] Places (New)", data.error.message);
-    return failure(true, data.error.status ?? "ERROR", data.error.message);
-  }
+  if (data.error) return [];
 
-  const reviews = (data.reviews ?? [])
+  return (data.reviews ?? [])
     .map(mapNewReview)
     .filter((r): r is GoogleReview => r !== null);
+}
+
+async function fetchAllAvailableReviews(
+  apiKey: string,
+  placeId: string
+): Promise<{
+  reviews: GoogleReview[];
+  placeName: string;
+  rating: number | null;
+  totalReviews: number;
+} | null> {
+  const [relevant, newest, newApiReviews] = await Promise.all([
+    fetchLegacyPlaceReviews(apiKey, placeId, "most_relevant"),
+    fetchLegacyPlaceReviews(apiKey, placeId, "newest"),
+    fetchPlacesNewReviewList(apiKey, placeId),
+  ]);
+
+  const base = relevant ?? newest;
+  if (!base?.result) return null;
+
+  const merged = dedupeReviews([
+    ...(relevant?.reviews ?? []),
+    ...(newest?.reviews ?? []),
+    ...newApiReviews,
+  ]);
 
   return {
-    placeName: data.displayName?.text?.trim() || COMPANY.shortName,
-    rating: data.rating ?? null,
-    totalReviews: data.userRatingCount ?? reviews.length,
-    reviews,
-    live: true,
-    configured: true,
+    reviews: merged,
+    placeName: base.result.name?.trim() || COMPANY.shortName,
+    rating: base.result.rating ?? null,
+    totalReviews: base.result.user_ratings_total ?? merged.length,
   };
 }
 
@@ -182,53 +215,33 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsData> {
   }
 
   const placeId = process.env.GOOGLE_PLACE_ID?.trim() || COMPANY.googlePlaceId;
-  const url = new URL("https://maps.googleapis.com/maps/api/place/details/json");
-  url.searchParams.set("place_id", placeId);
-  url.searchParams.set("fields", "name,rating,reviews,user_ratings_total");
-  url.searchParams.set("key", apiKey);
-  url.searchParams.set("language", "en");
 
   try {
-    const res = await fetch(url.toString(), { cache: "no-store" });
-    if (!res.ok) {
-      console.error("[google-reviews] HTTP", res.status);
-      const fromNew = await fetchPlacesNewReviews(apiKey, placeId);
-      if (fromNew?.live) return fromNew;
-      return failure(true, `HTTP_${res.status}`, "Google Places API HTTP error.");
+    const bundle = await fetchAllAvailableReviews(apiKey, placeId);
+    if (bundle && bundle.reviews.length > 0) {
+      return {
+        placeName: bundle.placeName,
+        rating: bundle.rating,
+        totalReviews: bundle.totalReviews,
+        reviews: bundle.reviews,
+        live: true,
+        configured: true,
+      };
     }
 
-    const data = (await res.json()) as PlacesDetailsResponse;
-    if (data.status !== "OK" || !data.result) {
-      console.error("[google-reviews]", data.status, data.error_message);
-      const fromNew = await fetchPlacesNewReviews(apiKey, placeId);
-      if (fromNew?.live) return fromNew;
-      return failure(
-        true,
-        data.status,
-        hintForGoogleStatus(data.status, data.error_message)
-      );
+    const legacy = await fetchLegacyPlaceReviews(apiKey, placeId);
+    if (legacy?.result) {
+      return {
+        placeName: legacy.result.name?.trim() || COMPANY.shortName,
+        rating: legacy.result.rating ?? null,
+        totalReviews: legacy.result.user_ratings_total ?? legacy.reviews.length,
+        reviews: legacy.reviews,
+        live: true,
+        configured: true,
+      };
     }
 
-    const { result } = data;
-    const reviews = (result.reviews ?? [])
-      .map(mapLegacyReview)
-      .filter((r): r is GoogleReview => r !== null);
-
-    const payload: GoogleReviewsData = {
-      placeName: result.name?.trim() || COMPANY.shortName,
-      rating: result.rating ?? null,
-      totalReviews: result.user_ratings_total ?? reviews.length,
-      reviews,
-      live: true,
-      configured: true,
-    };
-
-    if (reviews.length === 0 && (payload.totalReviews ?? 0) > 0) {
-      const fromNewApi = await fetchPlacesNewReviews(apiKey, placeId);
-      if (fromNewApi?.live) return fromNewApi;
-    }
-
-    return payload;
+    return failure(true, "NO_REVIEWS", "No Google reviews returned for this place.");
   } catch (err) {
     console.error("[google-reviews] fetch failed", err);
     return failure(true, "FETCH_ERROR", "Could not reach Google Places API.");

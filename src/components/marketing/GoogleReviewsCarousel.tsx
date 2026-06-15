@@ -69,24 +69,10 @@ type GoogleReviewsCarouselProps = {
 export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [slidesPerView, setSlidesPerView] = useState(1);
 
   const slideCount = reviews.length;
-  const maxIndex = Math.max(0, slideCount - slidesPerView);
-  const showControls = slideCount > slidesPerView;
-
-  const updateSlidesPerView = useCallback(() => {
-    const w = window.innerWidth;
-    if (w >= 1024) setSlidesPerView(Math.min(3, slideCount));
-    else if (w >= 640) setSlidesPerView(Math.min(2, slideCount));
-    else setSlidesPerView(1);
-  }, [slideCount]);
-
-  useEffect(() => {
-    updateSlidesPerView();
-    window.addEventListener("resize", updateSlidesPerView);
-    return () => window.removeEventListener("resize", updateSlidesPerView);
-  }, [updateSlidesPerView]);
+  const maxIndex = Math.max(0, slideCount - 1);
+  const showControls = slideCount > 1;
 
   useEffect(() => {
     setActiveIndex((i) => Math.min(i, maxIndex));
@@ -118,7 +104,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
         slide?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
         return next;
       });
-    }, 6000);
+    }, 5000);
 
     return () => window.clearInterval(timer);
   }, [showControls, maxIndex]);
@@ -149,11 +135,9 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
 
   if (slideCount === 0) return null;
 
-  const dotCount = maxIndex + 1;
-
   return (
     <div className="mt-10">
-      <div className="relative">
+      <div className="relative mx-auto max-w-2xl">
         {showControls && (
           <>
             <button
@@ -161,7 +145,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
               aria-label="Previous review"
               onClick={() => scrollToIndex(activeIndex - 1)}
               disabled={activeIndex === 0}
-              className="absolute -left-3 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 shadow-md transition hover:bg-slate-50 disabled:opacity-30 sm:flex"
+              className="absolute -left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 shadow-md transition hover:bg-slate-50 disabled:opacity-30 sm:-left-12"
             >
               <ChevronLeft className="h-5 w-5 text-navy" />
             </button>
@@ -170,7 +154,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
               aria-label="Next review"
               onClick={() => scrollToIndex(activeIndex + 1)}
               disabled={activeIndex >= maxIndex}
-              className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 shadow-md transition hover:bg-slate-50 disabled:opacity-30 sm:flex"
+              className="absolute -right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 shadow-md transition hover:bg-slate-50 disabled:opacity-30 sm:-right-12"
             >
               <ChevronRight className="h-5 w-5 text-navy" />
             </button>
@@ -182,23 +166,20 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
           className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {reviews.map((review) => (
-            <div
-              key={review.id}
-              className="w-full shrink-0 snap-start sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
-            >
+            <div key={review.id} className="w-full shrink-0 snap-start">
               <ReviewCard review={review} />
             </div>
           ))}
         </div>
       </div>
 
-      {showControls && dotCount > 1 && (
-        <div className="mt-6 flex justify-center gap-2">
-          {Array.from({ length: dotCount }, (_, i) => (
+      {showControls && (
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          {reviews.map((review, i) => (
             <button
-              key={i}
+              key={review.id}
               type="button"
-              aria-label={`Go to review slide ${i + 1}`}
+              aria-label={`Go to review by ${review.authorName}`}
               onClick={() => scrollToIndex(i)}
               className={`h-2 rounded-full transition-all ${
                 i === activeIndex ? "w-6 bg-brand-600" : "w-2 bg-slate-300 hover:bg-slate-400"
@@ -210,7 +191,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
 
       {totalReviews > reviews.length && (
         <p className="mt-6 text-center text-sm text-slate-600">
-          Showing {reviews.length} of {totalReviews} Google reviews.{" "}
+          Showing {reviews.length} of {totalReviews} Google reviews on our site.{" "}
           <Link
             href={COMPANY.googleReviewUrl}
             target="_blank"
