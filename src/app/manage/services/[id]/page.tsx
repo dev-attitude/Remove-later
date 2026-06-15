@@ -19,6 +19,7 @@ import {
   PHD_MONTHLY_PACKAGE_ID,
   serviceLabel,
 } from "@/lib/business-manage";
+import { totalsFromQuotedExVat } from "@/lib/invoice";
 import {
   getEngagementStepStatus,
   getServiceWorkflow,
@@ -278,14 +279,17 @@ export default function ManageServiceDetailPage() {
             style={{ width: `${engagement.progressPercent}%` }}
           />
         </div>
-        {engagement.quotedAmount != null && (
+        {engagement.quotedAmount != null && (() => {
+          const totalInclVat = totalsFromQuotedExVat(engagement.quotedAmount).totalInclVat;
+          const balanceDue = Math.max(0, totalInclVat - engagement.paidAmount);
+          return (
           <p className="mt-3 text-sm text-slate-600">
-            Quoted {formatNad(engagement.quotedAmount)} · Received{" "}
+            Total {formatNad(totalInclVat)} incl. VAT · Received{" "}
             {formatNad(engagement.paidAmount)}
-            {engagement.quotedAmount > engagement.paidAmount && (
+            {balanceDue > 0 && (
               <>
                 {" "}
-                · Balance {formatNad(engagement.quotedAmount - engagement.paidAmount)}
+                · Balance {formatNad(balanceDue)}
                 {" · "}
                 <Link
                   href={`/manage/invoices?clientId=${engagement.client.id}&engagementId=${engagement.id}`}
@@ -296,7 +300,8 @@ export default function ManageServiceDetailPage() {
               </>
             )}
           </p>
-        )}
+          );
+        })()}
         {engagement.paymentPlan && (
           <p className="mt-2 text-xs text-slate-600">
             Payment plan: {paymentPlanLabel ?? engagement.paymentPlan}

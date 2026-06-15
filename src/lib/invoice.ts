@@ -14,6 +14,14 @@ export type InvoiceLineItem = QuotationLineItem;
 export type InvoiceTotals = QuotationTotals;
 export const calculateInvoiceTotals = calculateQuotationTotals;
 
+/** Engagement quotedAmount is ex VAT — compute incl. VAT totals for payments and display */
+export function totalsFromQuotedExVat(subtotalExVat: number): InvoiceTotals {
+  return calculateInvoiceTotals(
+    [{ description: "Service", quantity: 1, unitPriceExVat: subtotalExVat }],
+    VAT_RATE
+  );
+}
+
 export function generateInvoiceNumber(): string {
   const d = new Date();
   const ymd = d.toISOString().slice(0, 10).replace(/-/g, "");

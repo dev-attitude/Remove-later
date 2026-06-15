@@ -3,6 +3,11 @@ import { COMPANY } from "@/lib/site-content";
 import { BRAND } from "@/lib/brand";
 import { formatNad } from "@/lib/business-manage";
 import { getPackageOptions, isDepositPaymentPlan, type PaymentPlan } from "@/lib/business-manage";
+import {
+  quotationLogoUrl,
+  type QuotationTotals,
+} from "@/lib/quotation";
+import { totalsFromQuotedExVat } from "@/lib/invoice";
 import { sendEmailToClient } from "@/lib/services/client-messaging";
 
 export type { PaymentPlan } from "@/lib/business-manage";
@@ -15,14 +20,21 @@ export function resolvePackagePrice(packageId: string | null, quotedAmount?: num
   return pkg?.price ?? 0;
 }
 
-export function paymentAmounts(total: number, plan: PaymentPlan) {
+/** quotedAmount on engagements is stored ex VAT — same as quotations and shop prices */
+export { totalsFromQuotedExVat } from "@/lib/invoice";
+
+export function paymentAmounts(subtotalExVat: number, plan: PaymentPlan) {
+  const totals = totalsFromQuotedExVat(subtotalExVat);
+  const totalInclVat = totals.totalInclVat;
+
   if (plan === "full_100") {
-    return { total, deposit: total, balance: 0, full: total };
+    return { totals, totalInclVat, deposit: totalInclVat, balance: 0, full: totalInclVat };
   }
+
   const depositRate = plan === "deposit_50" ? 0.5 : 0.6;
-  const deposit = Math.round(total * depositRate * 100) / 100;
-  const balance = Math.round((total - deposit) * 100) / 100;
-  return { total, deposit, balance, full: total };
+  const deposit = Math.round(totalInclVat * depositRate * 100) / 100;
+  const balance = Math.round((totalInclVat - deposit) * 100) / 100;
+  return { totals, totalInclVat, deposit, balance, full: totalInclVat };
 }
 
 function depositLabel(plan: PaymentPlan): string {
@@ -59,13 +71,15 @@ function buildInvoiceHtml(input: {
   serviceTitle: string;
   packageLabel: string;
   amount: number;
-  currency: string;
   paymentLabel: string;
-  totalQuoted: number;
+  totals: QuotationTotals;
   paidToDate: number;
   balanceRemaining: number;
   date: Date;
 }) {
+  const vatPct = Math.round(input.totals.vatRate * 100);
+  const logoUrl = quotationLogoUrl();
+
   const rows = [
     ["Invoice number", input.invoiceNo],
     ["Date", input.date.toLocaleDateString("en-NA")],
@@ -73,33 +87,66 @@ function buildInvoiceHtml(input: {
     ["Email", input.clientEmail],
     ["Service", input.serviceTitle],
     ["Package", input.packageLabel],
-    ["This payment", `${input.paymentLabel} — ${formatNad(input.amount)}`],
-    ["Package total", formatNad(input.totalQuoted)],
-    ["Paid to date", formatNad(input.paidToDate)],
-    ["Balance remaining", formatNad(input.balanceRemaining)],
   ];
 
   const tableRows = rows
     .map(
       ([label, value]) =>
-        `<tr><td style="padding:8px 12px;font-weight:600;color:#0f172a;border-bottom:1px solid #e2e8f0">${label}</td><td style="padding:8px 12px;color:#1f2937;border-bottom:1px solid #e2e8f0">${value}</td></tr>`
+        `<tr><td style="padding:8px 12px;font-weight:600;color:#0f172a;border-bottom:1px solid #e2e8f0;width:40%">${label}</td><td style="padding:8px 12px;color:#1f2937;border-bottom:1px solid #e2e8f0">${value}</td></tr>`
     )
     .join("");
 
   return `
-    <div style="font-family:system-ui,sans-serif;max-width:640px;color:#1f2937">
-      <h1 style="color:#0f172a;margin:0 0 4px;font-size:22px">Tax Invoice</h1>
-      <p style="margin:0 0 20px;color:#64748b">${BRAND.companyLegal}</p>
-      <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;margin-bottom:20px">
-        ${tableRows}
-      </table>
-      <p style="font-size:18px;font-weight:700;color:#0f172a">Amount received: ${formatNad(input.amount)}</p>
-      <p style="font-size:13px;color:#64748b;margin-top:24px">
-        ${COMPANY.name}<br>
-        ${COMPANY.poBox}<br>
-        ${COMPANY.phones.join(" · ")} · ${COMPANY.email}<br>
-        Thank you for your business.
-      </p>
+    <div style="font-family:system-ui,-apple-system,sans-serif;max-width:640px;color:#1f2937;background:#fff">
+      <div style="padding:20px 20px 12px;border-bottom:3px solid #2563eb">
+        <img src="${logoUrl}" alt="${BRAND.companyLegal}" width="160" style="display:block;max-width:160px;height:auto;margin-bottom:8px" />
+        <p style="margin:0;font-size:12px;color:#64748b">${BRAND.companyLegal} · VAT registered · Namibia</p>
+      </div>
+      <div style="padding:20px">
+        <h1 style="color:#0f172a;margin:0 0 16px;font-size:22px">Tax Invoice</h1>
+        <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;margin-bottom:20px;font-size:14px">
+          ${tableRows}
+        </table>
+
+        <table style="width:100%;max-width:320px;margin-left:auto;font-size:14px;margin-bottom:20px">
+          <tr>
+            <td style="padding:8px 0;color:#64748b">Subtotal (ex VAT)</td>
+            <td style="padding:8px 0;text-align:right;font-weight:600;color:#0f172a">${formatNad(input.totals.subtotalExVat)}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#64748b">VAT (${vatPct}%)</td>
+            <td style="padding:8px 0;text-align:right;font-weight:600;color:#0f172a">${formatNad(input.totals.vatAmount)}</td>
+          </tr>
+          <tr style="border-top:2px solid #0f172a">
+            <td style="padding:12px 0;font-size:16px;font-weight:700;color:#0f172a">Total (incl. VAT)</td>
+            <td style="padding:12px 0;text-align:right;font-size:16px;font-weight:700;color:#2563eb">${formatNad(input.totals.totalInclVat)}</td>
+          </tr>
+        </table>
+
+        <table style="width:100%;max-width:360px;margin-left:auto;font-size:14px;border-top:2px solid #e2e8f0;padding-top:12px">
+          <tr>
+            <td style="padding:6px 0;color:#64748b">${input.paymentLabel}</td>
+            <td style="padding:6px 0;text-align:right;font-weight:600;color:#0f172a">${formatNad(input.amount)}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#64748b">Paid to date (incl. VAT)</td>
+            <td style="padding:6px 0;text-align:right;font-weight:600;color:#059669">${formatNad(input.paidToDate)}</td>
+          </tr>
+          <tr style="border-top:2px solid #0f172a">
+            <td style="padding:12px 0;font-size:16px;font-weight:700;color:#0f172a">Balance due (incl. VAT)</td>
+            <td style="padding:12px 0;text-align:right;font-size:18px;font-weight:700;color:${input.balanceRemaining > 0 ? "#dc2626" : "#059669"}">${formatNad(input.balanceRemaining)}</td>
+          </tr>
+        </table>
+
+        <p style="font-size:13px;color:#64748b;margin-top:24px;line-height:1.6">
+          All amounts in Namibian Dollars (NAD). Please use invoice number <strong>${input.invoiceNo}</strong> as payment reference.
+        </p>
+        <p style="font-size:13px;color:#64748b;margin-top:16px;line-height:1.6">
+          ${COMPANY.name}<br>
+          ${COMPANY.poBox}<br>
+          ${COMPANY.phones.join(" · ")} · ${COMPANY.email}
+        </p>
+      </div>
     </div>
   `;
 }
@@ -110,17 +157,24 @@ function buildInvoiceText(input: {
   serviceTitle: string;
   amount: number;
   paymentLabel: string;
+  totals: QuotationTotals;
   paidToDate: number;
   balanceRemaining: number;
 }) {
+  const vatPct = Math.round(input.totals.vatRate * 100);
   return [
     `Tax Invoice — ${BRAND.companyLegal}`,
     `Invoice: ${input.invoiceNo}`,
     `Client: ${input.clientName}`,
     `Service: ${input.serviceTitle}`,
+    "",
+    `Subtotal (ex VAT): ${formatNad(input.totals.subtotalExVat)}`,
+    `VAT (${vatPct}%): ${formatNad(input.totals.vatAmount)}`,
+    `TOTAL (incl. VAT): ${formatNad(input.totals.totalInclVat)}`,
+    "",
     `${input.paymentLabel}: ${formatNad(input.amount)}`,
-    `Paid to date: ${formatNad(input.paidToDate)}`,
-    `Balance remaining: ${formatNad(input.balanceRemaining)}`,
+    `Paid to date (incl. VAT): ${formatNad(input.paidToDate)}`,
+    `Balance due (incl. VAT): ${formatNad(input.balanceRemaining)}`,
     "",
     COMPANY.phones.join(" · "),
     COMPANY.email,
@@ -136,14 +190,14 @@ export async function sendClientInvoice(input: {
   amount: number;
   currency: string;
   paymentLabel: string;
-  totalQuoted: number;
+  totals: QuotationTotals;
   paidToDate: number;
   balanceRemaining: number;
   invoiceSuffix: string;
 }): Promise<{ ok: boolean; invoiceNo: string; error?: string }> {
   const invoiceNo = invoiceNumber(input.engagementId, input.invoiceSuffix);
   const date = new Date();
-  const subject = `${BRAND.companyName} — Invoice ${invoiceNo} (${formatNad(input.amount)})`;
+  const subject = `${BRAND.companyName} — Invoice ${invoiceNo} (${formatNad(input.amount)} incl. VAT)`;
   const html = buildInvoiceHtml({ ...input, invoiceNo, date });
   const text = buildInvoiceText({
     invoiceNo,
@@ -151,6 +205,7 @@ export async function sendClientInvoice(input: {
     serviceTitle: input.serviceTitle,
     amount: input.amount,
     paymentLabel: input.paymentLabel,
+    totals: input.totals,
     paidToDate: input.paidToDate,
     balanceRemaining: input.balanceRemaining,
   });
@@ -189,12 +244,12 @@ export async function recordRegistrationPayment(
   }
 
   const plan = engagement.paymentPlan as PaymentPlan;
-  const total = engagement.quotedAmount ?? 0;
-  if (total <= 0) {
+  const subtotalExVat = engagement.quotedAmount ?? 0;
+  if (subtotalExVat <= 0) {
     return { recorded: false, amount: 0, invoiceSent: false, error: "No quoted amount" };
   }
 
-  const amounts = paymentAmounts(total, plan);
+  const amounts = paymentAmounts(subtotalExVat, plan);
   let amount = 0;
   let paymentLabel = "";
   let invoiceSuffix = "";
@@ -229,12 +284,14 @@ export async function recordRegistrationPayment(
       currency: engagement.currency,
       date: new Date(),
       category: phase === "initial" ? "deposit" : "service_payment",
-      description: paymentLabel,
+      description: `${paymentLabel} (incl. VAT)`,
       paymentMethod: "Recorded automatically",
     },
   });
 
-  const paidTotal = (engagement.paidAmount ?? 0) + amount;
+  const paidTotal = Math.round(((engagement.paidAmount ?? 0) + amount) * 100) / 100;
+  const balanceRemaining = Math.max(0, Math.round((amounts.totalInclVat - paidTotal) * 100) / 100);
+
   await prisma.bizEngagement.update({
     where: { id: engagementId },
     data: {
@@ -258,9 +315,9 @@ export async function recordRegistrationPayment(
       amount,
       currency: engagement.currency,
       paymentLabel,
-      totalQuoted: total,
+      totals: amounts.totals,
       paidToDate: paidTotal,
-      balanceRemaining: Math.max(0, total - paidTotal),
+      balanceRemaining,
       invoiceSuffix,
     });
     invoiceSent = inv.ok;

@@ -21,6 +21,7 @@ import {
   PAYMENT_PLANS,
   serviceLabel,
 } from "@/lib/business-manage";
+import { totalsFromQuotedExVat } from "@/lib/invoice";
 import {
   getEngagementStepStatus,
   getServiceWorkflow,
@@ -389,7 +390,8 @@ export default function ManageClientDetailPage() {
                   </div>
                   {e.quotedAmount != null && (
                     <p className="mt-2 text-xs text-slate-600">
-                      Quoted {formatNad(e.quotedAmount)} · Paid {formatNad(e.paidAmount)}
+                      Total {formatNad(totalsFromQuotedExVat(e.quotedAmount).totalInclVat)} incl. VAT
+                      · Paid {formatNad(e.paidAmount)}
                     </p>
                   )}
                   {(() => {

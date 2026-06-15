@@ -14,6 +14,7 @@ import {
   formatNad,
   serviceLabel,
 } from "@/lib/business-manage";
+import { totalsFromQuotedExVat } from "@/lib/invoice";
 
 type StaleInfo = {
   engagementId: string;
@@ -206,7 +207,8 @@ export default function ManageServicesPage() {
                 </div>
                 {e.quotedAmount != null && (
                   <p className="mt-2 text-xs text-slate-600">
-                    {formatNad(e.paidAmount)} / {formatNad(e.quotedAmount)} paid
+                    {formatNad(e.paidAmount)} / {formatNad(totalsFromQuotedExVat(e.quotedAmount).totalInclVat)}{" "}
+                    paid (incl. VAT)
                   </p>
                 )}
                 {(() => {
