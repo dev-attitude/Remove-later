@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Activity,
@@ -25,7 +24,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { BRAND } from "@/lib/brand";
+import { BrandLogo } from "@/components/marketing/BrandLogo";
 
 const NAV: Array<{
   href: string;
@@ -73,12 +72,11 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
     >
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-5">
         <Link href="/manage" onClick={onClose} className="flex min-w-0 items-center gap-3">
-          <Image
-            src="/brand/skyrapay-logo.png"
-            alt={BRAND.companyLegal}
+          <BrandLogo
+            className="h-9 w-auto"
             width={120}
             height={40}
-            className="h-9 w-auto brightness-0 invert"
+            priority
           />
         </Link>
         {variant === "mobile" && onClose && (
