@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cookies, headers } from "next/headers";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Hanken_Grotesk } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ConditionalDemoBanner } from "@/components/marketing/ConditionalDemoBanner";
 import { HostingCurrencyProvider } from "@/lib/hosting-currency-context";
@@ -17,15 +17,19 @@ import {
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-const inter = Inter({
+// Camera Plain Variable is a proprietary typeface; Hanken Grotesk is a humanist,
+// warm-feeling variable sans that closely matches its rounded terminals and
+// editorial rhythm. Used for both body and display for a unified voice.
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: ["400", "500", "600"],
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
+const hankenDisplay = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["500", "600", "700", "800"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -91,8 +95,11 @@ export default async function RootLayout({
   );
 
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
-      <body className="overflow-x-hidden font-sans antialiased">
+    <html
+      lang="en"
+      className={`${hanken.variable} ${hankenDisplay.variable} bg-cream`}
+    >
+      <body className="overflow-x-hidden bg-cream font-sans text-charcoal antialiased">
         <SessionProvider>
           <HostingCurrencyProvider initialCountry={country}>
             <ConditionalDemoBanner />

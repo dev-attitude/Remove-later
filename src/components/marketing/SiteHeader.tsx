@@ -44,14 +44,14 @@ function isNavLinkActive(pathname: string, hash: string, href: string): boolean 
 
 function navLinkClassName(active: boolean) {
   return active
-    ? "rounded-md bg-white px-3 py-2 text-sm font-semibold text-navy shadow-sm ring-1 ring-white/50"
-    : "rounded-md px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white";
+    ? "rounded-md bg-charcoal/[0.06] px-3 py-2 text-sm font-normal text-charcoal"
+    : "rounded-md px-3 py-2 text-sm font-normal text-charcoal/70 transition hover:bg-charcoal/[0.04] hover:text-charcoal";
 }
 
 function navLinkClassNameMobile(active: boolean) {
   return active
-    ? "block rounded-md bg-white px-3 py-3 text-sm font-semibold text-navy shadow-sm"
-    : "block rounded-md px-3 py-3 text-sm font-medium text-slate-100 hover:bg-white/10";
+    ? "block rounded-md bg-charcoal/[0.06] px-3 py-3 text-sm font-normal text-charcoal"
+    : "block rounded-md px-3 py-3 text-sm font-normal text-charcoal/70 hover:bg-charcoal/[0.04]";
 }
 
 export function SiteHeader() {
@@ -60,9 +60,12 @@ export function SiteHeader() {
   const hash = useNavHash();
 
   return (
-    <header className="marketing-chrome sticky top-0 z-50 border-b border-white/10 shadow-lg shadow-royal/25">
+    <header className="marketing-chrome sticky top-0 z-50 border-b border-line">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 md:px-8 md:py-3">
-        <Link href="/" className="flex shrink-0 items-center rounded-lg bg-white px-2 py-1">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center rounded-lg border border-line bg-cream-50 px-2 py-1"
+        >
           <BrandLogo className="h-14 w-auto md:h-16" priority onDark />
         </Link>
 
@@ -82,13 +85,13 @@ export function SiteHeader() {
           })}
           <Link
             href={COMPANY.researchAppPath}
-            className={`ml-1 inline-flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm font-medium transition ${
+            className={`ml-1 inline-flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm font-normal transition ${
               pathname.startsWith("/research") ||
               ["/student", "/institution", "/analysis", "/developer", "/login"].some(
                 (p) => pathname === p || pathname.startsWith(`${p}/`)
               )
-                ? "border-white bg-white font-semibold text-navy shadow-sm"
-                : "border-sky/40 bg-white/10 text-sky-100 hover:bg-white/15 hover:text-white"
+                ? "border-charcoal/40 bg-charcoal/[0.06] text-charcoal"
+                : "border-charcoal/40 text-charcoal hover:bg-charcoal/[0.04]"
             }`}
           >
             <FlaskConical className="h-4 w-4" />
@@ -96,11 +99,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/quote"
-            className={`ml-2 inline-flex items-center gap-1 rounded-md px-4 py-2 text-sm font-semibold transition ${
-              pathname === "/quote"
-                ? "bg-white text-navy shadow-sm ring-1 ring-white/50"
-                : "bg-sky text-navy hover:bg-white"
-            }`}
+            className="marketing-btn-primary ml-2"
           >
             Get a quote
             <ArrowRight className="h-4 w-4" />
@@ -109,7 +108,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="rounded-md p-2 text-white lg:hidden"
+          className="rounded-md p-2 text-charcoal lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -118,7 +117,7 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="border-t border-white/10 bg-black/10 px-4 py-4 lg:hidden" aria-label="Main mobile">
+        <nav className="border-t border-line bg-cream px-4 py-4 lg:hidden" aria-label="Main mobile">
           {NAV_LINKS.map((link) => {
             const active = isNavLinkActive(pathname, hash, link.href);
             return (
@@ -135,7 +134,7 @@ export function SiteHeader() {
           })}
           <Link
             href={COMPANY.researchAppPath}
-            className="mt-2 flex items-center gap-2 rounded-md border border-sky/30 bg-white/10 px-3 py-3 text-sm font-medium text-sky-100"
+            className="mt-2 flex items-center gap-2 rounded-md border border-charcoal/40 px-3 py-3 text-sm font-normal text-charcoal"
             onClick={() => setOpen(false)}
           >
             <FlaskConical className="h-4 w-4" />
@@ -143,7 +142,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/quote"
-            className="mt-3 block rounded-md bg-sky px-4 py-3 text-center text-sm font-semibold text-navy hover:bg-white"
+            className="marketing-btn-primary mt-3 w-full justify-center"
             onClick={() => setOpen(false)}
           >
             Get a quote

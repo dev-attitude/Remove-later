@@ -9,36 +9,60 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        /* ─── Lovable-inspired warm design system ─── */
+        cream: {
+          DEFAULT: "#f7f4ed",
+          50: "#fcfbf8",
+        },
+        charcoal: {
+          DEFAULT: "#1c1c1c",
+        },
+        offwhite: {
+          DEFAULT: "#fcfbf8",
+        },
+        line: {
+          DEFAULT: "#eceae4",
+        },
+        muted: {
+          DEFAULT: "#5f5f5d",
+        },
+        /* Brand scale remapped onto the warm charcoal/cream system so existing
+           pages stay coherent within the new aesthetic. */
         brand: {
-          50: "#f0f9ff",
-          100: "#e0f2fe",
-          200: "#bae6fd",
-          300: "#38bdf8",
-          400: "#38bdf8",
-          500: "#2563eb",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e3a5f",
-          900: "#0f172a",
-          950: "#0f172a",
+          50: "#f7f4ed",
+          100: "#eceae4",
+          200: "#e0ddd4",
+          300: "#c9c5b9",
+          400: "#8a8a86",
+          500: "#5f5f5d",
+          600: "#1c1c1c",
+          700: "#1c1c1c",
+          800: "#161616",
+          900: "#0f0f0f",
+          950: "#0a0a0a",
         },
         navy: {
-          DEFAULT: "#0F172A",
-          50: "#f8fafc",
+          DEFAULT: "#1c1c1c",
+          50: "#f7f4ed",
         },
         royal: {
-          DEFAULT: "#2563EB",
+          DEFAULT: "#1c1c1c",
         },
         sky: {
-          DEFAULT: "#38BDF8",
+          DEFAULT: "#5f5f5d",
         },
         ink: {
-          DEFAULT: "#1F2937",
+          DEFAULT: "#1c1c1c",
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+      },
+      boxShadow: {
+        inset:
+          "rgba(255,255,255,0.2) 0px 0.5px 0px 0px inset, rgba(0,0,0,0.2) 0px 0px 0px 0.5px inset, rgba(0,0,0,0.05) 0px 1px 2px 0px",
+        focusWarm: "rgba(0,0,0,0.1) 0px 4px 12px",
       },
     },
   },
