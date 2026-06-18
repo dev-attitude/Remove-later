@@ -30,13 +30,13 @@ export function WhyChooseUsSection({
             return (
               <article
                 key={item.id}
-                className="marketing-service-card flex flex-col border-slate-200/80 bg-white"
+                className="marketing-service-card flex flex-col"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-sky text-white shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-charcoal text-offwhite shadow-inset">
                   <Icon className="h-5 w-5" aria-hidden />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-navy">{item.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+                <h3 className="mt-5 text-xl font-normal tracking-tight text-charcoal">{item.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
                   {item.description}
                 </p>
               </article>

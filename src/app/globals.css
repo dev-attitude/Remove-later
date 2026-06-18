@@ -3,126 +3,142 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #1f2937;
-  --card: #ffffff;
-  --border: #e2e8f0;
-  --muted: #64748b;
-  --color-navy: #0f172a;
-  --color-royal: #2563eb;
-  --color-sky: #38bdf8;
+  /* ─── Lovable-inspired warm system ─── */
+  --background: #f7f4ed; /* cream */
+  --foreground: #1c1c1c; /* charcoal */
+  --card: #f7f4ed;
+  --border: #eceae4; /* warm divider */
+  --border-strong: rgba(28, 28, 28, 0.4);
+  --muted: #5f5f5d;
+  --offwhite: #fcfbf8;
+  --color-navy: #1c1c1c;
+  --color-royal: #1c1c1c;
+  --color-sky: #5f5f5d;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(28, 28, 28, 0.12);
 }
 
 @layer utilities {
   .glass-card {
-    @apply rounded-xl border border-slate-200/80 bg-white shadow-sm;
+    @apply rounded-xl border border-line bg-cream;
   }
   .gradient-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #2563eb 55%, #38bdf8 100%);
+    background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
   }
 
-  /** Header, footer, and promo banners — navy → royal (matches June promo) */
+  /** Header, footer, and promo banners — warm cream chrome */
   .marketing-chrome {
-    @apply bg-gradient-to-r from-navy to-royal text-white;
+    @apply bg-cream text-charcoal;
   }
 
   .marketing-chrome-footer {
-    @apply bg-gradient-to-r from-royal to-navy text-white;
+    @apply bg-cream text-charcoal;
   }
 
-  /* ─── Skyrapay Consultations CC — marketing theme ─── */
+  /* ─── Skyrapay Consultations CC — Lovable-inspired warm theme ─── */
   .marketing-site {
-    @apply min-h-screen bg-white text-ink;
+    @apply min-h-screen bg-cream text-charcoal;
   }
 
   .marketing-eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.2em] text-royal;
+    @apply text-xs font-medium uppercase tracking-[0.22em] text-muted;
   }
 
   .marketing-page-title {
-    @apply mt-2 font-display text-4xl font-bold tracking-tight text-navy md:text-5xl;
+    @apply mt-2 font-display text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.012em] text-charcoal md:text-5xl;
   }
 
   .marketing-section-title {
-    @apply font-display text-3xl font-bold tracking-tight text-navy md:text-4xl;
+    @apply font-display text-3xl font-semibold leading-[1.05] tracking-[-0.02em] text-charcoal md:text-[2.75rem];
   }
 
   .marketing-lead {
-    @apply text-lg leading-relaxed text-ink/80;
+    @apply text-lg leading-[1.55] text-muted;
   }
 
   .marketing-body {
-    @apply leading-relaxed text-ink/80;
+    @apply leading-relaxed text-muted;
   }
 
   .marketing-hero {
-    @apply relative overflow-hidden border-b border-slate-100 bg-white;
+    @apply relative overflow-hidden bg-cream;
   }
 
   .marketing-hero-glow {
     background:
-      radial-gradient(ellipse 70% 50% at 0% 0%, rgba(37, 99, 235, 0.08), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(56, 189, 248, 0.1), transparent 50%),
-      #ffffff;
+      radial-gradient(ellipse 60% 45% at 12% 8%, rgba(231, 175, 140, 0.18), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 88% 0%, rgba(150, 170, 200, 0.16), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 70% 100%, rgba(220, 160, 170, 0.12), transparent 60%),
+      #f7f4ed;
   }
 
   .marketing-grid-pattern {
     background-image:
-      linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
-    background-size: 32px 32px;
+      linear-gradient(rgba(28, 28, 28, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(28, 28, 28, 0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 40%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 40%, transparent 75%);
   }
 
   .marketing-card-glow {
-    @apply rounded-2xl bg-white shadow-lg shadow-royal/10 ring-1 ring-slate-100;
+    @apply rounded-2xl border border-line bg-cream;
   }
 
   .marketing-section-panel {
-    @apply border-y border-slate-100 bg-white py-20;
+    @apply bg-cream py-20 md:py-28;
   }
 
   .marketing-service-card {
-    @apply block rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition duration-200 hover:border-sky/60 hover:shadow-md;
+    @apply block rounded-xl border border-line bg-cream p-6 transition duration-200 hover:border-charcoal/30;
   }
 
   .marketing-btn-primary {
-    @apply inline-flex items-center gap-2 rounded-lg bg-royal px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700;
+    @apply inline-flex items-center gap-2 rounded-md bg-charcoal px-4 py-2.5 text-sm font-normal text-offwhite shadow-inset transition hover:opacity-90 active:opacity-80;
   }
 
   .marketing-btn-secondary {
-    @apply inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-ink shadow-sm transition hover:border-sky hover:bg-brand-50 hover:text-navy;
+    @apply inline-flex items-center gap-2 rounded-md border border-charcoal/40 bg-transparent px-4 py-2.5 text-sm font-normal text-charcoal transition hover:bg-charcoal/[0.04] active:opacity-80;
   }
 
   .marketing-input {
-    @apply w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-navy shadow-sm placeholder:text-slate-400 focus:border-royal focus:outline-none focus:ring-2 focus:ring-royal/15;
+    @apply w-full rounded-md border border-line bg-cream px-4 py-2.5 text-sm text-charcoal placeholder:text-muted focus:border-charcoal/40 focus:outline-none focus:ring-2 focus:ring-blue-500/40;
   }
 
   .marketing-form-panel {
-    @apply rounded-xl border border-slate-100 bg-white p-8 shadow-sm;
+    @apply rounded-2xl border border-line bg-cream p-8;
   }
 
   .marketing-info-banner {
-    @apply rounded-lg border border-sky/40 bg-brand-50 px-4 py-3 text-sm text-navy;
+    @apply rounded-md border border-line bg-charcoal/[0.03] px-4 py-3 text-sm text-charcoal;
   }
 
   .marketing-cta-band {
-    @apply border-t border-slate-100 bg-brand-50/50 py-16;
+    @apply bg-cream py-20 md:py-28;
   }
 
   .marketing-tagline-rule {
-    @apply mx-auto mt-3 flex max-w-md items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-ink/60;
+    @apply mx-auto mt-3 flex max-w-md items-center gap-3 text-xs font-medium uppercase tracking-[0.25em] text-muted;
   }
 
   .marketing-tagline-rule::before,
   .marketing-tagline-rule::after {
     content: "";
-    @apply h-px flex-1 bg-slate-200;
+    @apply h-px flex-1 bg-line;
+  }
+
+  /* Pill / icon button — full-radius action pill */
+  .marketing-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-cream px-4 py-2 text-sm font-normal text-charcoal transition hover:border-charcoal/30 active:opacity-80;
   }
 
   /* ─── Business Manager (/manage) — professional admin UI ─── */
