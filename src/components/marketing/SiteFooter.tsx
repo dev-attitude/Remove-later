@@ -5,14 +5,20 @@ import { COMPANY, NAV_LINKS, SERVICES } from "@/lib/site-content";
 
 export function SiteFooter() {
   return (
-    <footer className="marketing-chrome-footer border-t border-line text-muted">
+    <footer
+      className="marketing-chrome-footer border-t border-line text-muted"
+      style={{
+        background:
+          "radial-gradient(ellipse 60% 70% at 50% 100%, rgba(231,175,140,0.12), transparent 60%), radial-gradient(ellipse 50% 60% at 90% 100%, rgba(150,170,200,0.1), transparent 55%), #f7f4ed",
+      }}
+    >
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4 md:px-8">
         <div className="lg:col-span-1">
           <Link
             href="/"
-            className="inline-block rounded-lg border border-line bg-cream-50 px-2 py-1"
+            className="inline-flex items-center rounded-lg bg-white px-2.5 py-1.5 ring-1 ring-line transition hover:ring-charcoal/20"
           >
-            <BrandLogo className="h-12 w-auto" width={180} height={64} onDark />
+            <BrandLogo className="h-10 w-auto" width={180} height={64} onDark />
           </Link>
           <p className="mx-auto mt-4 flex max-w-none items-center gap-3 text-[10px] font-medium uppercase tracking-[0.25em] text-muted">
             <span className="h-px flex-1 bg-line" aria-hidden />

@@ -15,8 +15,8 @@ export function WhyChooseUsSection({
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="marketing-eyebrow">Why choose us</p>
-          <h2 className="marketing-section-title">
+          <span className="marketing-eyebrow-chip">Why choose us</span>
+          <h2 className="marketing-section-title mt-4">
             Why Skyrapay Consultations&nbsp;CC
           </h2>
           {showSummary && (
@@ -30,9 +30,9 @@ export function WhyChooseUsSection({
             return (
               <article
                 key={item.id}
-                className="marketing-service-card flex flex-col"
+                className="marketing-service-card group flex flex-col"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-charcoal text-offwhite shadow-inset">
+                <div className="marketing-icon-pill-dark">
                   <Icon className="h-5 w-5" aria-hidden />
                 </div>
                 <h3 className="mt-5 text-xl font-normal tracking-tight text-charcoal">{item.title}</h3>

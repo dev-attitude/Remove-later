@@ -75,9 +75,9 @@ body {
 
   .marketing-hero-glow {
     background:
-      radial-gradient(ellipse 60% 45% at 12% 8%, rgba(231, 175, 140, 0.18), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 88% 0%, rgba(150, 170, 200, 0.16), transparent 55%),
-      radial-gradient(ellipse 60% 50% at 70% 100%, rgba(220, 160, 170, 0.12), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 15% 5%, rgba(231, 175, 140, 0.22), transparent 60%),
+      radial-gradient(ellipse 48% 42% at 85% 0%, rgba(150, 170, 200, 0.2), transparent 58%),
+      radial-gradient(ellipse 70% 55% at 50% 110%, rgba(220, 160, 170, 0.16), transparent 62%),
       #f7f4ed;
   }
 
@@ -99,7 +99,30 @@ body {
   }
 
   .marketing-service-card {
-    @apply block rounded-xl border border-line bg-cream p-6 transition duration-200 hover:border-charcoal/30;
+    @apply block rounded-xl border border-line bg-cream-50 p-6 transition duration-200 hover:-translate-y-0.5 hover:border-charcoal/25 hover:shadow-focusWarm;
+  }
+
+  /* Icon container — full-pill, tactile inset on the dark variant */
+  .marketing-icon-pill {
+    @apply flex h-11 w-11 items-center justify-center rounded-full border border-line bg-cream text-charcoal transition;
+  }
+
+  .marketing-icon-pill-dark {
+    @apply flex h-11 w-11 items-center justify-center rounded-full bg-charcoal text-offwhite shadow-inset;
+  }
+
+  /* Stats bar — large editorial metrics */
+  .marketing-stat-value {
+    @apply font-display text-4xl font-semibold leading-none tracking-[-0.03em] text-charcoal md:text-5xl;
+  }
+
+  .marketing-stat-label {
+    @apply mt-2 text-sm leading-snug text-muted;
+  }
+
+  /* Section eyebrow chip — small pill marker above section titles */
+  .marketing-eyebrow-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-cream-50 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-muted;
   }
 
   .marketing-btn-primary {

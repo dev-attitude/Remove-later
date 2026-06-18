@@ -56,20 +56,34 @@ function navLinkClassNameMobile(active: boolean) {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const hash = useNavHash();
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="marketing-chrome sticky top-0 z-50 border-b border-line">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 md:px-8 md:py-3">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-line bg-cream/85 backdrop-blur-md supports-[backdrop-filter]:bg-cream/70"
+          : "border-b border-transparent bg-cream"
+      }`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
         <Link
           href="/"
-          className="flex shrink-0 items-center rounded-lg border border-line bg-cream-50 px-2 py-1"
+          className="flex shrink-0 items-center rounded-lg bg-white px-2.5 py-1.5 ring-1 ring-line transition hover:ring-charcoal/20"
         >
-          <BrandLogo className="h-14 w-auto md:h-16" priority onDark />
+          <BrandLogo className="h-9 w-auto md:h-10" priority onDark />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
           {NAV_LINKS.map((link) => {
             const active = isNavLinkActive(pathname, hash, link.href);
             return (
@@ -108,7 +122,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="rounded-md p-2 text-charcoal lg:hidden"
+          className="rounded-md border border-charcoal/20 p-2 text-charcoal transition hover:bg-charcoal/[0.04] lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >

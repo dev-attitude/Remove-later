@@ -5,11 +5,17 @@ import {
   CheckCircle2,
   FlaskConical,
 } from "lucide-react";
-import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { GoogleReviewsSection } from "@/components/marketing/GoogleReviewsSection";
 import { PriceDisplay } from "@/components/marketing/PriceDisplay";
 import { WhyChooseUsSection } from "@/components/marketing/WhyChooseUsSection";
 import { COMPANY, SERVICES, SHOP_PACKAGES } from "@/lib/site-content";
+
+const HERO_STATS = [
+  { value: "8+", label: "Core service lines" },
+  { value: "3", label: "Offices across Namibia" },
+  { value: "100%", label: "Locally owned & registered" },
+  { value: "1 day", label: "Average quote turnaround" },
+] as const;
 
 export default function HomePage() {
   const featured = SHOP_PACKAGES.find((p) => p.popular) ?? SHOP_PACKAGES[1];
@@ -20,13 +26,13 @@ export default function HomePage() {
       <section className="marketing-hero">
         <div className="marketing-hero-glow absolute inset-0" />
         <div className="marketing-grid-pattern absolute inset-0" />
-        <div className="relative mx-auto max-w-3xl px-4 pb-20 pt-20 text-center md:px-8 md:pb-28 md:pt-28">
+        <div className="relative mx-auto max-w-3xl px-4 pb-16 pt-20 text-center md:px-8 md:pb-20 md:pt-28">
           <span className="marketing-pill mx-auto">
             <span className="h-1.5 w-1.5 rounded-full bg-charcoal" aria-hidden />
             {COMPANY.tagline}
           </span>
 
-          <h1 className="mt-8 font-display text-[2.75rem] font-semibold leading-[1.04] tracking-[-0.025em] text-charcoal md:text-6xl md:tracking-[-0.04em]">
+          <h1 className="mt-8 font-display text-[2.75rem] font-semibold leading-[1.03] tracking-[-0.03em] text-charcoal md:text-6xl md:tracking-[-0.04em]">
             Technology &amp; business solutions that drive real results
           </h1>
 
@@ -58,16 +64,21 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
+        </div>
 
-          {/* Logo plate — bordered image card per design tokens */}
-          <div className="mx-auto mt-14 max-w-xl rounded-2xl border border-line bg-cream-50 px-8 py-10">
-            <BrandLogo
-              className="mx-auto h-auto w-full max-w-sm"
-              width={420}
-              height={176}
-              priority
-            />
-          </div>
+        {/* Stats bar — editorial metrics on a bordered cream plate */}
+        <div className="relative mx-auto max-w-4xl px-4 pb-20 md:px-8 md:pb-28">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-4">
+            {HERO_STATS.map((stat) => (
+              <div
+                key={stat.label}
+                className="flex flex-col items-center justify-center bg-cream-50 px-4 py-8 text-center"
+              >
+                <dt className="marketing-stat-value">{stat.value}</dt>
+                <dd className="marketing-stat-label">{stat.label}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
@@ -75,9 +86,9 @@ export default function HomePage() {
       <section className="marketing-section-panel border-t border-line">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="marketing-eyebrow">What we do</p>
-            <h2 className="marketing-section-title mt-3">
-              Five core service lines, one partner
+            <span className="marketing-eyebrow-chip">What we do</span>
+            <h2 className="marketing-section-title mt-4">
+              One partner, every service line
             </h2>
             <p className="mx-auto mt-4 marketing-body">
               One team for your entire digital journey—from first quote to go-live
@@ -91,15 +102,15 @@ export default function HomePage() {
                 <Link
                   key={service.slug}
                   href={`/services/${service.slug}`}
-                  className="marketing-service-card group"
+                  className="marketing-service-card group relative flex flex-col"
                 >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-cream text-charcoal transition group-hover:bg-charcoal group-hover:text-offwhite">
+                  <div className="marketing-icon-pill group-hover:bg-charcoal group-hover:text-offwhite group-hover:shadow-inset">
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="mt-5 text-xl font-normal tracking-tight text-charcoal">
                     {service.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
                     {service.short}
                   </p>
                   <span className="mt-5 inline-flex items-center gap-1 text-sm text-charcoal underline-offset-4 group-hover:underline">
@@ -111,20 +122,29 @@ export default function HomePage() {
             })}
             <Link
               href={COMPANY.researchAppPath}
-              className="marketing-service-card group bg-charcoal text-offwhite hover:border-charcoal"
+              className="group relative flex flex-col overflow-hidden rounded-xl border border-charcoal bg-charcoal p-6 text-offwhite transition duration-200 hover:-translate-y-0.5 hover:shadow-focusWarm"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cream text-charcoal">
+              <div
+                className="pointer-events-none absolute inset-0 opacity-60"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 70% 60% at 80% 0%, rgba(231,175,140,0.18), transparent 60%), radial-gradient(ellipse 60% 50% at 10% 100%, rgba(150,170,200,0.16), transparent 60%)",
+                }}
+                aria-hidden
+              />
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-cream-50 text-charcoal">
                 <FlaskConical className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-xl font-normal tracking-tight text-offwhite">
+              <h3 className="relative mt-5 text-xl font-normal tracking-tight text-offwhite">
                 {COMPANY.productName}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-offwhite/70">
+              <p className="relative mt-2 flex-1 text-sm leading-relaxed text-offwhite/70">
                 Our AI-powered academic research platform—available to students and
                 institutions.
               </p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm text-offwhite underline-offset-4 group-hover:underline">
-                Open app <ArrowRight className="h-4 w-4" />
+              <span className="relative mt-5 inline-flex items-center gap-1 text-sm text-offwhite underline-offset-4 group-hover:underline">
+                Open app{" "}
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </span>
             </Link>
           </div>
@@ -140,8 +160,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <p className="marketing-eyebrow">Get online</p>
-              <h2 className="marketing-section-title mt-3">
+              <span className="marketing-eyebrow-chip">Get online</span>
+              <h2 className="marketing-section-title mt-4">
                 Ready to launch your website?
               </h2>
               <p className="mt-4 marketing-body max-w-md">
@@ -156,9 +176,14 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="rounded-2xl border border-line bg-cream-50 p-8">
-              <p className="marketing-eyebrow">Popular package</p>
-              <h3 className="mt-3 text-2xl font-normal tracking-tight text-charcoal">
+            <div className="rounded-2xl border border-line bg-cream-50 p-8 shadow-focusWarm">
+              <div className="flex items-center justify-between">
+                <span className="marketing-eyebrow-chip">Popular package</span>
+                <span className="rounded-full bg-charcoal px-3 py-1 text-xs font-medium text-offwhite shadow-inset">
+                  Most chosen
+                </span>
+              </div>
+              <h3 className="mt-4 text-2xl font-normal tracking-tight text-charcoal">
                 {featured.name}
               </h3>
               <p className="mt-2 text-muted">{featured.description}</p>
