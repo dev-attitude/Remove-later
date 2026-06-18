@@ -32,20 +32,20 @@ export default async function AnnouncementsPage({ params }: Props) {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Announcements</h2>
+          <h2 className="mb-3 text-lg font-semibold text-charcoal">Announcements</h2>
           <div className="space-y-3">
             {ANNOUNCEMENTS.map((a) => {
               const meta = SCOPE_META[a.scope];
               return (
-                <div key={a.title} className="rounded-xl border border-slate-200 bg-white p-4">
+                <div key={a.title} className="rounded-xl border border-line bg-offwhite p-4">
                   <div className="flex items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${meta.style}`}>
                       {meta.label}
                     </span>
-                    <span className="text-xs text-slate-400">{a.date}</span>
+                    <span className="text-xs text-muted">{a.date}</span>
                   </div>
-                  <p className="mt-2 font-semibold text-slate-900">{a.title}</p>
-                  <p className="mt-1 text-sm text-slate-600">{a.body}</p>
+                  <p className="mt-2 font-semibold text-charcoal">{a.title}</p>
+                  <p className="mt-1 text-sm text-muted">{a.body}</p>
                 </div>
               );
             })}
@@ -53,7 +53,7 @@ export default async function AnnouncementsPage({ params }: Props) {
         </section>
 
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-900">
+          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-charcoal">
             <Bell className="h-5 w-5" /> Notification centre
           </h2>
           <div className="space-y-2">

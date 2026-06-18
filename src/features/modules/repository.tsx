@@ -20,9 +20,9 @@ export default function RepositoryPage() {
       <ModuleWorkspace>
         <div className="mb-6 flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted" />
             <input
-              className="w-full rounded-lg border border-slate-300 py-2 pl-10 pr-3 text-sm"
+              className="w-full rounded-lg border border-line py-2 pl-10 pr-3 text-sm"
               placeholder="Search repository…"
             />
           </div>
@@ -31,7 +31,7 @@ export default function RepositoryPage() {
         {THESES.map((t) => (
           <Card key={t.doi} className="mb-3 !p-4">
             <p className="font-medium">{t.title}</p>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-muted">
               {t.dept} · {t.year} · DOI: {t.doi}
             </p>
           </Card>

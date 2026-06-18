@@ -23,7 +23,7 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { generateAcademicWritingApi, type AcademicWritingResult } from "@/lib/client/api";
 import { AIOutput } from "@/components/AIOutput";
 
-const labelClass = "mb-1 block text-sm font-medium text-slate-700";
+const labelClass = "mb-1 block text-sm font-medium text-charcoal";
 const DEFAULT_TARGET = WRITING_CHAPTERS[0].id;
 
 type WritingForm = {
@@ -111,7 +111,7 @@ export default function WritingPage() {
   if (!ws.hydrated) {
     return (
       <ModuleWorkspace>
-        <p className="text-sm text-slate-500">Loading your saved work…</p>
+        <p className="text-sm text-muted">Loading your saved work…</p>
       </ModuleWorkspace>
     );
   }
@@ -250,9 +250,9 @@ export default function WritingPage() {
                 <CardTitle>Sources used</CardTitle>
                 <div className="mt-3 space-y-3">
                   {result.sourcesUsed.map((s, i) => (
-                    <div key={`${s.title}-${i}`} className="rounded-lg border border-slate-100 p-3 text-sm">
+                    <div key={`${s.title}-${i}`} className="rounded-lg border border-line p-3 text-sm">
                       <p className="font-medium">{s.title}</p>
-                      <p className="text-slate-600">
+                      <p className="text-muted">
                         {s.authors} ({s.year})
                       </p>
                       {(s.url || s.doi) && (

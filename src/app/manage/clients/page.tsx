@@ -174,7 +174,7 @@ export default function ManageClientsPage() {
             </select>
             <textarea
               placeholder="Notes"
-              className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="sm:col-span-2 rounded-lg border border-line px-3 py-2 text-sm"
               rows={2}
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
@@ -195,8 +195,8 @@ export default function ManageClientsPage() {
           onClick={() => setCategoryFilter("")}
           className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
             categoryFilter === ""
-              ? "bg-brand-600 text-white"
-              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              ? "bg-brand-600 text-offwhite"
+              : "bg-line text-muted hover:bg-line"
           }`}
         >
           All categories
@@ -208,8 +208,8 @@ export default function ManageClientsPage() {
             onClick={() => setCategoryFilter(categoryFilter === c.id ? "" : c.id)}
             className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
               categoryFilter === c.id
-                ? "bg-brand-600 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                ? "bg-brand-600 text-offwhite"
+                : "bg-line text-muted hover:bg-line"
             }`}
           >
             {c.label}
@@ -219,7 +219,7 @@ export default function ManageClientsPage() {
 
       <div className="mb-4 flex flex-wrap gap-3">
         <div className="relative min-w-[200px] flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <input
             className="manage-input py-2 pl-9"
             placeholder="Search name, email, company…"
@@ -242,10 +242,10 @@ export default function ManageClientsPage() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-slate-500">Loading…</p>
+        <p className="text-sm text-muted">Loading…</p>
       ) : clients.length === 0 ? (
         <Card variant="manage">
-          <p className="text-sm text-slate-600">No clients found. Add your first client above.</p>
+          <p className="text-sm text-muted">No clients found. Add your first client above.</p>
         </Card>
       ) : (
         <div className="space-y-8">
@@ -255,9 +255,9 @@ export default function ManageClientsPage() {
             const group = clients.filter((c) => c.category === cat.id);
             return (
               <section key={cat.id}>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted">
                   {cat.label}
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+                  <span className="rounded-full bg-line px-2 py-0.5 text-[11px] font-bold text-muted">
                     {group.length}
                   </span>
                 </h2>
@@ -267,15 +267,15 @@ export default function ManageClientsPage() {
                       <Card className="h-full transition hover:border-brand-200 hover:shadow-md">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <p className="font-semibold text-slate-900">{c.name}</p>
-                            {c.company && <p className="text-sm text-slate-600">{c.company}</p>}
+                            <p className="font-semibold text-charcoal">{c.name}</p>
+                            {c.company && <p className="text-sm text-muted">{c.company}</p>}
                           </div>
                           <StatusPill status={c.status} label={clientStatusLabel(c.status)} />
                         </div>
-                        <p className="mt-2 text-xs text-slate-500">
+                        <p className="mt-2 text-xs text-muted">
                           {[c.email, c.phone].filter(Boolean).join(" · ") || "No contact details"}
                         </p>
-                        <p className="mt-3 text-xs font-medium text-slate-600">
+                        <p className="mt-3 text-xs font-medium text-muted">
                           {c._count.engagements} service(s) · {c._count.income} payment(s)
                         </p>
                         {c.engagements[0] && (
@@ -291,7 +291,7 @@ export default function ManageClientsPage() {
             );
           })}
           {clients.some((c) => !CLIENT_CATEGORIES.some((cat) => cat.id === c.category)) && (
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted">
               Some clients have an unknown category — open them and set a category to file them
               correctly.
             </p>

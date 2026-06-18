@@ -21,7 +21,7 @@ export function OffersPage() {
       />
 
       {active.length === 0 && redeemed.length === 0 ? (
-        <p className="text-slate-600">No offers at this time.</p>
+        <p className="text-muted">No offers at this time.</p>
       ) : (
         <>
           {active.length > 0 && (
@@ -30,14 +30,14 @@ export function OffersPage() {
               {active.map((o) => (
                 <article
                   key={o.id}
-                  className="rounded-xl border border-royal/25 bg-gradient-to-r from-brand-50 to-white p-5"
+                  className="rounded-xl border border-royal/25 bg-gradient-to-r from-brand-50 to-offwhite p-5"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-bold uppercase text-royal">{o.discount}</p>
                       <h3 className="mt-1 font-bold text-navy">{o.title}</h3>
-                      <p className="mt-1 text-sm text-slate-600">{o.detail}</p>
-                      <p className="mt-2 text-xs text-slate-500">
+                      <p className="mt-1 text-sm text-muted">{o.detail}</p>
+                      <p className="mt-2 text-xs text-muted">
                         Expires {new Date(o.expiresAt).toLocaleDateString()} ({daysUntil(o.expiresAt)}{" "}
                         days left)
                       </p>
@@ -59,8 +59,8 @@ export function OffersPage() {
             <div className="space-y-4">
               <h2 className="font-bold text-navy">Redeemed</h2>
               {redeemed.map((o) => (
-                <article key={o.id} className="rounded-xl border border-slate-200 bg-slate-50 p-5 opacity-80">
-                  <p className="text-xs font-bold uppercase text-slate-500">{o.discount}</p>
+                <article key={o.id} className="rounded-xl border border-line bg-cream-50 p-5 opacity-80">
+                  <p className="text-xs font-bold uppercase text-muted">{o.discount}</p>
                   <h3 className="mt-1 font-semibold text-navy">{o.title}</h3>
                   <p className="mt-1 text-sm text-emerald-700">Redeemed — applied to your account</p>
                 </article>

@@ -23,9 +23,9 @@ export default async function CrmPage({ params }: Props) {
         description={`Track prospects, parents, sponsors, alumni, and industry partners for ${tenant.name}.`}
       />
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-line bg-offwhite">
         <table className="min-w-full text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500">
+          <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase text-muted">
             <tr>
               <th className="px-4 py-3">Contact</th>
               <th className="px-4 py-3">Type</th>
@@ -35,19 +35,19 @@ export default async function CrmPage({ params }: Props) {
           </thead>
           <tbody>
             {leads.map((lead, i) => (
-              <tr key={i} className="border-b border-slate-100 last:border-0">
-                <td className="px-4 py-3 font-medium text-slate-900">{lead.name}</td>
-                <td className="px-4 py-3 capitalize text-slate-600">{lead.leadType}</td>
+              <tr key={i} className="border-b border-line last:border-0">
+                <td className="px-4 py-3 font-medium text-charcoal">{lead.name}</td>
+                <td className="px-4 py-3 capitalize text-muted">{lead.leadType}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${
-                      STAGE_COLORS[lead.stage] ?? "bg-slate-100 text-slate-700"
+                      STAGE_COLORS[lead.stage] ?? "bg-line text-charcoal"
                     }`}
                   >
                     {lead.stage}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-slate-600">{lead.email ?? "—"}</td>
+                <td className="px-4 py-3 text-muted">{lead.email ?? "—"}</td>
               </tr>
             ))}
           </tbody>

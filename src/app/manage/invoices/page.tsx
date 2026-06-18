@@ -314,7 +314,7 @@ export default function ManageInvoicesPage() {
   }
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Loading invoices…</p>;
+    return <p className="text-sm text-muted">Loading invoices…</p>;
   }
 
   return (
@@ -365,7 +365,7 @@ export default function ManageInvoicesPage() {
         <Card variant="manage" className="mb-8">
           <CardTitle>Create tax invoice</CardTitle>
           <form onSubmit={handleCreate} className="mt-4 space-y-4">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-muted">
               Line prices are <strong>excluding VAT</strong>. VAT at 15% is added automatically.
               Set amount already paid to invoice the <strong>balance due</strong> on ongoing
               services.
@@ -373,7 +373,7 @@ export default function ManageInvoicesPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Client</span>
+                <span className="font-medium text-charcoal">Client</span>
                 <select
                   className="manage-input mt-1"
                   value={clientId}
@@ -394,7 +394,7 @@ export default function ManageInvoicesPage() {
               </label>
 
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Linked service (optional)</span>
+                <span className="font-medium text-charcoal">Linked service (optional)</span>
                 <select
                   className="manage-input mt-1"
                   value={engagementId}
@@ -413,9 +413,9 @@ export default function ManageInvoicesPage() {
             </div>
 
             <label className="block text-sm">
-              <span className="font-medium text-slate-700">Invoice title / service</span>
+              <span className="font-medium text-charcoal">Invoice title / service</span>
               <input
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -423,23 +423,23 @@ export default function ManageInvoicesPage() {
             </label>
 
             <div className="space-y-2">
-              <p className="text-sm font-medium text-slate-700">Line items (ex VAT)</p>
+              <p className="text-sm font-medium text-charcoal">Line items (ex VAT)</p>
               {lines.map((line, i) => (
                 <div key={i} className="flex flex-wrap gap-2">
                   <input
-                    className="min-w-[200px] flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="min-w-[200px] flex-1 rounded-lg border border-line px-3 py-2 text-sm"
                     placeholder="Description"
                     value={line.description}
                     onChange={(e) => updateLine(i, { description: e.target.value })}
                   />
                   <input
-                    className="w-20 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-20 rounded-lg border border-line px-3 py-2 text-sm"
                     placeholder="Qty"
                     value={line.quantity}
                     onChange={(e) => updateLine(i, { quantity: e.target.value })}
                   />
                   <input
-                    className="w-32 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-32 rounded-lg border border-line px-3 py-2 text-sm"
                     placeholder="Unit N$"
                     value={line.unitPriceExVat}
                     onChange={(e) => updateLine(i, { unitPriceExVat: e.target.value })}
@@ -448,7 +448,7 @@ export default function ManageInvoicesPage() {
                     <button
                       type="button"
                       onClick={() => setLines((prev) => prev.filter((_, j) => j !== i))}
-                      className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
+                      className="rounded-lg p-2 text-muted hover:bg-line"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -465,7 +465,7 @@ export default function ManageInvoicesPage() {
             </div>
 
             {previewTotals && (
-              <div className="rounded-lg bg-slate-50 p-4 text-sm">
+              <div className="rounded-lg bg-cream-50 p-4 text-sm">
                 <p>Subtotal (ex VAT): {formatNad(previewTotals.subtotalExVat)}</p>
                 <p>VAT (15%): {formatNad(previewTotals.vatAmount)}</p>
                 <p className="font-semibold">Total (incl. VAT): {formatNad(previewTotals.totalInclVat)}</p>
@@ -477,7 +477,7 @@ export default function ManageInvoicesPage() {
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Already paid (N$)</span>
+                <span className="font-medium text-charcoal">Already paid (N$)</span>
                 <input
                   className="manage-input mt-1"
                   type="number"
@@ -488,7 +488,7 @@ export default function ManageInvoicesPage() {
                 />
               </label>
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Payment due in (days)</span>
+                <span className="font-medium text-charcoal">Payment due in (days)</span>
                 <input
                   className="manage-input mt-1"
                   type="number"
@@ -498,7 +498,7 @@ export default function ManageInvoicesPage() {
                 />
               </label>
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Remind every (days)</span>
+                <span className="font-medium text-charcoal">Remind every (days)</span>
                 <input
                   className="manage-input mt-1"
                   type="number"
@@ -514,14 +514,14 @@ export default function ManageInvoicesPage() {
                   checked={reminderEnabled}
                   onChange={(e) => setReminderEnabled(e.target.checked)}
                 />
-                <span className="font-medium text-slate-700">Auto balance reminders</span>
+                <span className="font-medium text-charcoal">Auto balance reminders</span>
               </label>
             </div>
 
             <label className="block text-sm">
-              <span className="font-medium text-slate-700">Notes</span>
+              <span className="font-medium text-charcoal">Notes</span>
               <textarea
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2"
                 rows={2}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -538,7 +538,7 @@ export default function ManageInvoicesPage() {
 
       {invoices.length === 0 ? (
         <Card variant="manage">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted">
             No invoices yet. Create one above — balance reminders will email automatically until
             paid.
           </p>
@@ -560,23 +560,23 @@ export default function ManageInvoicesPage() {
             </thead>
             <tbody>
               {invoices.map((inv) => (
-                <tr key={inv.id} className="border-b border-slate-100">
+                <tr key={inv.id} className="border-b border-line">
                   <td className="px-4 py-3">
-                    <p className="font-semibold text-slate-900">{inv.invoiceNumber}</p>
-                    <p className="text-xs text-slate-500">{inv.title}</p>
+                    <p className="font-semibold text-charcoal">{inv.invoiceNumber}</p>
+                    <p className="text-xs text-muted">{inv.title}</p>
                   </td>
                   <td className="px-4 py-3">
                     <Link href={`/manage/clients/${inv.client.id}`} className="text-brand-700 hover:underline">
                       {inv.client.name}
                     </Link>
-                    <p className="text-xs text-slate-500">{inv.client.email ?? "No email"}</p>
+                    <p className="text-xs text-muted">{inv.client.email ?? "No email"}</p>
                   </td>
                   <td className="px-4 py-3">{formatNad(inv.totalInclVat)}</td>
                   <td className="px-4 py-3 font-semibold text-red-700">
                     {inv.balanceDue > 0 ? formatNad(inv.balanceDue) : "—"}
                   </td>
                   <td className="px-4 py-3 text-xs">{fmtDate(inv.dueDate)}</td>
-                  <td className="px-4 py-3 text-xs text-slate-500">
+                  <td className="px-4 py-3 text-xs text-muted">
                     {inv.reminderEnabled && inv.balanceDue > 0 ? (
                       <>
                         Every {inv.reminderIntervalDays}d
@@ -602,7 +602,7 @@ export default function ManageInvoicesPage() {
                           type="button"
                           onClick={() => resendInvoice(inv.id)}
                           disabled={actionId === inv.id}
-                          className="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                          className="inline-flex items-center gap-1 rounded border border-line px-2 py-1 text-xs font-semibold text-charcoal hover:bg-cream-50"
                         >
                           <Mail className="h-3 w-3" />
                           Resend
@@ -660,7 +660,7 @@ export default function ManageInvoicesPage() {
         </div>
       )}
 
-      <p className="mt-6 flex items-center gap-2 text-xs text-slate-500">
+      <p className="mt-6 flex items-center gap-2 text-xs text-muted">
         <FileText className="h-3.5 w-3.5" />
         Includes Skyrapay logo and 15% VAT. Balance reminders run daily via cron until the invoice
         is paid.

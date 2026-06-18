@@ -21,18 +21,18 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export default function DownloadPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white px-6 py-8 md:px-12">
+    <div className="min-h-screen bg-cream-50">
+      <header className="border-b border-line bg-offwhite px-6 py-8 md:px-12">
         <Link
           href="/research"
-          className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
+          className="inline-flex items-center gap-1 text-sm text-muted hover:text-charcoal"
         >
           <ArrowLeft className="h-4 w-4" /> Back to portals
         </Link>
-        <h1 className="font-display mt-4 text-3xl font-bold text-slate-900">
+        <h1 className="font-display mt-4 text-3xl font-bold text-charcoal">
           Download Skyrapay Research Suite
         </h1>
-        <p className="mt-2 max-w-2xl text-slate-600">
+        <p className="mt-2 max-w-2xl text-muted">
           Use the web app in any browser, or install native apps on your phone or computer.
           One account works across all platforms.
         </p>
@@ -55,10 +55,10 @@ export default function DownloadPage() {
                     </div>
                     <div>
                       <CardTitle>{platform.name}</CardTitle>
-                      <p className="text-sm font-medium text-slate-500">
+                      <p className="text-sm font-medium text-muted">
                         {platform.devices}
                       </p>
-                      <p className="mt-2 text-sm text-slate-600">
+                      <p className="mt-2 text-sm text-muted">
                         {platform.description}
                       </p>
                     </div>
@@ -74,7 +74,7 @@ export default function DownloadPage() {
                 {platform.id !== "web" && (
                   <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
                     Store builds ship with your production release. Configure download URLs in{" "}
-                    <code className="rounded bg-white px-1">src/lib/portals.ts</code> and the
+                    <code className="rounded bg-offwhite px-1">src/lib/portals.ts</code> and the
                     Developer Console.
                   </p>
                 )}
@@ -85,7 +85,7 @@ export default function DownloadPage() {
 
         <Card className="mt-12 bg-brand-50/50">
           <CardTitle>Install web app on mobile or laptop</CardTitle>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-muted">
             On Chrome, Safari, or Edge: open Skyrapay Research in the browser → menu →{" "}
             <strong>Install app</strong> or <strong>Add to Home Screen</strong>. Works offline for
             saved PDFs (Student Pro and above).

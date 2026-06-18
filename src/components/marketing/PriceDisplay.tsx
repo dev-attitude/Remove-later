@@ -64,14 +64,14 @@ export function PriceDisplay({
       )}
       <div className="flex flex-wrap items-baseline gap-2">
         {!isRange && priceLabel && (
-          <span className="text-sm font-medium text-slate-500">{priceLabel}</span>
+          <span className="text-sm font-medium text-muted">{priceLabel}</span>
         )}
         {showPromo ? (
           <>
             <span className={`font-bold text-royal ${sizeClasses.sale}`}>
               {renderAmount(sale, saleTo)}
             </span>
-            <span className={`text-slate-400 line-through ${sizeClasses.original}`}>
+            <span className={`text-muted line-through ${sizeClasses.original}`}>
               {renderAmount(original, originalTo)}
             </span>
           </>
@@ -85,12 +85,12 @@ export function PriceDisplay({
         <p className="mt-1 text-xs text-emerald-700">June special — save {JUNE_PROMO.percentOff}%</p>
       )}
       {showBaseNote && isConverted && (
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-muted">
           Approx. rate · invoiced in {HOSTING_BASE_CURRENCY}
         </p>
       )}
       {showBaseNote && !isConverted && currency === HOSTING_BASE_CURRENCY && size !== "sm" && (
-        <p className="mt-1 text-xs text-slate-500">{currency}</p>
+        <p className="mt-1 text-xs text-muted">{currency}</p>
       )}
     </div>
   );

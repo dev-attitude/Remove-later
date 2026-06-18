@@ -179,12 +179,12 @@ export default function ManageServicesPage() {
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="font-semibold text-slate-900">{e.title}</p>
-                    <p className="text-sm text-slate-600">
+                    <p className="font-semibold text-charcoal">{e.title}</p>
+                    <p className="text-sm text-muted">
                       {e.client.name}
                       {e.client.company ? ` · ${e.client.company}` : ""}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">{serviceLabel(e.serviceSlug)}</p>
+                    <p className="mt-1 text-xs text-muted">{serviceLabel(e.serviceSlug)}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     {stale && (
@@ -197,7 +197,7 @@ export default function ManageServicesPage() {
                   </div>
                 </div>
                 <div className="mt-3 flex items-center gap-2">
-                  <div className="h-2 flex-1 rounded-full bg-slate-100">
+                  <div className="h-2 flex-1 rounded-full bg-line">
                     <div
                       className="h-full rounded-full bg-brand-600"
                       style={{ width: `${e.progressPercent}%` }}
@@ -206,7 +206,7 @@ export default function ManageServicesPage() {
                   <span className="text-xs font-medium">{e.progressPercent}%</span>
                 </div>
                 {e.quotedAmount != null && (
-                  <p className="mt-2 text-xs text-slate-600">
+                  <p className="mt-2 text-xs text-muted">
                     {formatNad(e.paidAmount)} / {formatNad(totalsFromQuotedExVat(e.quotedAmount).totalInclVat)}{" "}
                     paid (incl. VAT)
                   </p>
@@ -226,7 +226,7 @@ export default function ManageServicesPage() {
         })}
         {engagements.length === 0 && (
           <Card>
-            <p className="text-sm text-slate-500">No services yet. Create one from a client profile.</p>
+            <p className="text-sm text-muted">No services yet. Create one from a client profile.</p>
           </Card>
         )}
       </div>

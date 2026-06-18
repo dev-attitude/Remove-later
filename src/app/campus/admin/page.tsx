@@ -43,8 +43,8 @@ export default async function SuperAdminPage() {
   const totalMrr = PLATFORM_BILLING.reduce((s, b) => s + b.mrr, 0);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="border-b border-slate-800 bg-slate-900">
+    <div className="min-h-screen bg-charcoal text-offwhite">
+      <header className="border-b border-charcoal bg-charcoal">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-blue-400">
@@ -54,7 +54,7 @@ export default async function SuperAdminPage() {
           </div>
           <Link
             href="/campus"
-            className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-slate-800"
+            className="rounded-lg border border-charcoal px-3 py-1.5 text-xs font-medium text-muted hover:bg-charcoal"
           >
             Product site
           </Link>
@@ -64,18 +64,18 @@ export default async function SuperAdminPage() {
       <main className="mx-auto max-w-7xl space-y-10 px-4 py-8">
         <section>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-              <p className="text-xs text-slate-400">Institutions</p>
+            <div className="rounded-xl border border-charcoal bg-charcoal p-5">
+              <p className="text-xs text-muted">Institutions</p>
               <p className="mt-1 text-3xl font-bold">{tenants.length}</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-              <p className="text-xs text-slate-400">Monthly recurring revenue</p>
+            <div className="rounded-xl border border-charcoal bg-charcoal p-5">
+              <p className="text-xs text-muted">Monthly recurring revenue</p>
               <p className="mt-1 text-3xl font-bold text-emerald-400">
                 {formatCampusCurrency(totalMrr)}
               </p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-              <p className="text-xs text-slate-400">Total students hosted</p>
+            <div className="rounded-xl border border-charcoal bg-charcoal p-5">
+              <p className="text-xs text-muted">Total students hosted</p>
               <p className="mt-1 text-3xl font-bold">
                 {PLATFORM_BILLING.reduce((s, b) => s + b.students, 0).toLocaleString()}
               </p>
@@ -87,9 +87,9 @@ export default async function SuperAdminPage() {
           <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
             <Building2 className="h-5 w-5 text-blue-400" /> Institutions
           </h2>
-          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+          <div className="overflow-x-auto rounded-xl border border-charcoal bg-charcoal">
             <table className="min-w-full text-sm">
-              <thead className="border-b border-slate-800 text-left text-xs uppercase tracking-wide text-slate-400">
+              <thead className="border-b border-charcoal text-left text-xs uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-3">Institution</th>
                   <th className="px-4 py-3">Slug</th>
@@ -100,9 +100,9 @@ export default async function SuperAdminPage() {
               </thead>
               <tbody>
                 {tenants.map((t) => (
-                  <tr key={t.id} className="border-b border-slate-800/60 last:border-0">
+                  <tr key={t.id} className="border-b border-charcoal/60 last:border-0">
                     <td className="px-4 py-3 font-medium">{t.name}</td>
-                    <td className="px-4 py-3 text-slate-400">{t.slug}</td>
+                    <td className="px-4 py-3 text-muted">{t.slug}</td>
                     <td className="px-4 py-3">{t._count.students}</td>
                     <td className="px-4 py-3">{t._count.memberships}</td>
                     <td className="px-4 py-3">
@@ -120,7 +120,7 @@ export default async function SuperAdminPage() {
           </div>
           <button
             type="button"
-            className="mt-3 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white"
+            className="mt-3 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-offwhite"
           >
             + Onboard new institution (demo)
           </button>
@@ -130,9 +130,9 @@ export default async function SuperAdminPage() {
           <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
             <CreditCard className="h-5 w-5 text-blue-400" /> Subscription billing & licenses
           </h2>
-          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+          <div className="overflow-x-auto rounded-xl border border-charcoal bg-charcoal">
             <table className="min-w-full text-sm">
-              <thead className="border-b border-slate-800 text-left text-xs uppercase tracking-wide text-slate-400">
+              <thead className="border-b border-charcoal text-left text-xs uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-3">Institution</th>
                   <th className="px-4 py-3">Plan</th>
@@ -144,7 +144,7 @@ export default async function SuperAdminPage() {
               </thead>
               <tbody>
                 {PLATFORM_BILLING.map((b) => (
-                  <tr key={b.tenant} className="border-b border-slate-800/60 last:border-0">
+                  <tr key={b.tenant} className="border-b border-charcoal/60 last:border-0">
                     <td className="px-4 py-3 font-medium">{b.tenant}</td>
                     <td className="px-4 py-3">{b.plan}</td>
                     <td className="px-4 py-3">{b.students.toLocaleString()}</td>
@@ -154,7 +154,7 @@ export default async function SuperAdminPage() {
                         {b.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-400">{b.renewal}</td>
+                    <td className="px-4 py-3 text-muted">{b.renewal}</td>
                   </tr>
                 ))}
               </tbody>
@@ -171,17 +171,17 @@ export default async function SuperAdminPage() {
               {SYSTEM_STATUS.map((s) => (
                 <div
                   key={s.service}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-charcoal bg-charcoal p-4"
                 >
                   <div className="flex items-center gap-3">
                     {s.service.includes("backup") || s.service.includes("PostgreSQL") ? (
-                      <Database className="h-4 w-4 text-slate-500" />
+                      <Database className="h-4 w-4 text-muted" />
                     ) : (
-                      <Activity className="h-4 w-4 text-slate-500" />
+                      <Activity className="h-4 w-4 text-muted" />
                     )}
                     <div>
                       <p className="text-sm font-medium">{s.service}</p>
-                      <p className="text-xs text-slate-400">{s.detail}</p>
+                      <p className="text-xs text-muted">{s.detail}</p>
                     </div>
                   </div>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[s.status]}`}>
@@ -198,9 +198,9 @@ export default async function SuperAdminPage() {
             </h2>
             <div className="space-y-2">
               {AUDIT_LOG.map((e) => (
-                <div key={e.at + e.action} className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+                <div key={e.at + e.action} className="rounded-xl border border-charcoal bg-charcoal p-4">
                   <p className="text-sm">{e.action}</p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-xs text-muted">
                     {e.at} · {e.actor}
                   </p>
                 </div>

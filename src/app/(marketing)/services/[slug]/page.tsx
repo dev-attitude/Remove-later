@@ -50,7 +50,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     >
       <Link
         href="/services"
-        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600"
+        className="inline-flex items-center gap-1 text-sm text-muted hover:text-brand-600"
       >
         <ArrowLeft className="h-4 w-4" />
         All services
@@ -61,38 +61,38 @@ export default async function ServiceDetailPage({ params }: Props) {
           <Icon className="h-8 w-8" />
         </div>
         <div>
-          <h1 className="font-display text-3xl font-bold text-slate-900 md:text-4xl">
+          <h1 className="font-display text-3xl font-bold text-charcoal md:text-4xl">
             {service.title}
           </h1>
-          <p className="mt-1 text-slate-600">{service.short}</p>
+          <p className="mt-1 text-muted">{service.short}</p>
         </div>
       </div>
 
-      <p className="mt-8 text-lg leading-relaxed text-slate-700">{service.description}</p>
+      <p className="mt-8 text-lg leading-relaxed text-charcoal">{service.description}</p>
 
       {isIt && (
-        <p className="mt-4 max-w-3xl text-slate-600">{IT_SERVICES_POSITIONING}</p>
+        <p className="mt-4 max-w-3xl text-muted">{IT_SERVICES_POSITIONING}</p>
       )}
 
       <div className="mt-12 grid gap-8 md:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">
+        <div className="rounded-2xl border border-line bg-offwhite p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-charcoal">
             {isIt ? "Core capabilities" : "What we offer"}
           </h2>
           <ul className="mt-4 space-y-3">
             {service.features.map((f) => (
-              <li key={f} className="flex gap-2 text-sm text-slate-700">
+              <li key={f} className="flex gap-2 text-sm text-charcoal">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
                 {f}
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">Deliverables</h2>
+        <div className="rounded-2xl border border-line bg-offwhite p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-charcoal">Deliverables</h2>
           <ul className="mt-4 space-y-3">
             {service.deliverables.map((d) => (
-              <li key={d} className="flex gap-2 text-sm text-slate-700">
+              <li key={d} className="flex gap-2 text-sm text-charcoal">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-600" />
                 {d}
               </li>

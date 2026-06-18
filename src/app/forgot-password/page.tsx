@@ -38,20 +38,20 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-cream-50 p-6">
       <Card className="w-full max-w-md">
         <CardTitle>Forgot your password?</CardTitle>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-muted">
           Enter your account email and we will send you a link to reset your password.
         </p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
-            <label className="text-sm font-medium text-slate-700">Email</label>
+            <label className="text-sm font-medium text-charcoal">Email</label>
             <input
               type="email"
               required
               autoComplete="email"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
           <Link href="/login" className="block font-medium text-brand-600 underline">
             Back to sign in
           </Link>
-          <Link href="/business/login" className="block text-slate-500 underline">
+          <Link href="/business/login" className="block text-muted underline">
             Business Manager sign in
           </Link>
         </div>

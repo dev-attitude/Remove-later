@@ -51,7 +51,7 @@ function ResetPasswordForm() {
     return (
       <Card className="w-full max-w-md">
         <CardTitle>Invalid reset link</CardTitle>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-muted">
           This link is missing or incomplete. Request a new password reset email.
         </p>
         <Link href="/forgot-password" className="mt-6 block">
@@ -80,28 +80,28 @@ function ResetPasswordForm() {
   return (
     <Card className="w-full max-w-md">
       <CardTitle>Choose a new password</CardTitle>
-      <p className="mt-2 text-sm text-slate-600">Must be at least 8 characters.</p>
+      <p className="mt-2 text-sm text-muted">Must be at least 8 characters.</p>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
-          <label className="text-sm font-medium text-slate-700">New password</label>
+          <label className="text-sm font-medium text-charcoal">New password</label>
           <input
             type="password"
             required
             minLength={8}
             autoComplete="new-password"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-slate-700">Confirm password</label>
+          <label className="text-sm font-medium text-charcoal">Confirm password</label>
           <input
             type="password"
             required
             minLength={8}
             autoComplete="new-password"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
           />
@@ -115,7 +115,7 @@ function ResetPasswordForm() {
           {loading ? "Saving…" : "Update password"}
         </Button>
       </form>
-      <Link href="/forgot-password" className="mt-4 block text-center text-sm text-slate-500 underline">
+      <Link href="/forgot-password" className="mt-4 block text-center text-sm text-muted underline">
         Request a new link
       </Link>
     </Card>
@@ -124,11 +124,11 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-cream-50 p-6">
       <Suspense
         fallback={
           <Card className="w-full max-w-md">
-            <p className="text-sm text-slate-500">Loading…</p>
+            <p className="text-sm text-muted">Loading…</p>
           </Card>
         }
       >

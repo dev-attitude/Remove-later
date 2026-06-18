@@ -38,9 +38,9 @@ export default function HostingPricingPage() {
         <EntryPriceTables />
       </div>
 
-      <div className="mt-16 rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center md:p-10">
+      <div className="mt-16 rounded-2xl border border-line bg-cream-50 p-8 text-center md:p-10">
         <h2 className="text-2xl font-bold text-navy">Need something not listed?</h2>
-        <p className="mx-auto mt-2 max-w-xl text-slate-600">
+        <p className="mx-auto mt-2 max-w-xl text-muted">
           Custom systems, larger projects, and monthly retainers are quoted individually. Tell us
           what you need and we&apos;ll send a same-week quotation.
         </p>

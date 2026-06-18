@@ -61,12 +61,12 @@ export function RefundRequestForm() {
     return (
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-8 text-center">
         <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600" />
-        <p className="mt-4 font-semibold text-slate-900">Refund request submitted</p>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-4 font-semibold text-charcoal">Refund request submitted</p>
+        <p className="mt-2 text-sm text-muted">
           We received your request and will reply to <strong>{email}</strong> within 2 business
           days.
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-muted">
           Reference: {orderRef || "—"} · Keep this for your records.
         </p>
       </div>
@@ -77,7 +77,7 @@ export function RefundRequestForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="r-name" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="r-name" className="block text-sm font-medium text-charcoal">
             Full name *
           </label>
           <input
@@ -89,7 +89,7 @@ export function RefundRequestForm() {
           />
         </div>
         <div>
-          <label htmlFor="r-email" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="r-email" className="block text-sm font-medium text-charcoal">
             Email *
           </label>
           <input
@@ -104,7 +104,7 @@ export function RefundRequestForm() {
       </div>
 
       <div>
-        <label htmlFor="r-phone" className="block text-sm font-medium text-slate-700">
+        <label htmlFor="r-phone" className="block text-sm font-medium text-charcoal">
           Phone
         </label>
         <input
@@ -118,7 +118,7 @@ export function RefundRequestForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="r-order" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="r-order" className="block text-sm font-medium text-charcoal">
             Order / invoice / quote reference *
           </label>
           <input
@@ -131,7 +131,7 @@ export function RefundRequestForm() {
           />
         </div>
         <div>
-          <label htmlFor="r-date" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="r-date" className="block text-sm font-medium text-charcoal">
             Payment date *
           </label>
           <input
@@ -147,7 +147,7 @@ export function RefundRequestForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="r-type" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="r-type" className="block text-sm font-medium text-charcoal">
             What did you purchase? *
           </label>
           <select
@@ -165,7 +165,7 @@ export function RefundRequestForm() {
           </select>
         </div>
         <div>
-          <label htmlFor="r-amount" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="r-amount" className="block text-sm font-medium text-charcoal">
             Amount paid (NAD)
           </label>
           <input
@@ -182,7 +182,7 @@ export function RefundRequestForm() {
       </div>
 
       <div>
-        <label htmlFor="r-reason" className="block text-sm font-medium text-slate-700">
+        <label htmlFor="r-reason" className="block text-sm font-medium text-charcoal">
           Reason for refund request *
         </label>
         <textarea
@@ -196,7 +196,7 @@ export function RefundRequestForm() {
         />
       </div>
 
-      <p className="text-xs leading-relaxed text-slate-500">
+      <p className="text-xs leading-relaxed text-muted">
         Submitting this form does not guarantee a refund. Business consultation, business plans,
         and related business services are subject to a{" "}
         <strong>30% service charge</strong> on approved refunds (70% returned). See our{" "}

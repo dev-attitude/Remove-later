@@ -86,7 +86,7 @@ export function BusinessManagerLogin() {
   if (checkingSession) {
     return (
       <div className="manage-shell-bg flex min-h-screen items-center justify-center px-4 py-12">
-        <p className="text-sm text-slate-500">Checking session…</p>
+        <p className="text-sm text-muted">Checking session…</p>
       </div>
     );
   }
@@ -103,10 +103,10 @@ export function BusinessManagerLogin() {
             className="mx-auto h-12 w-auto"
             priority
           />
-          <h1 className="mt-6 font-display text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="mt-6 font-display text-2xl font-bold tracking-tight text-charcoal">
             Business Manager
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+          <p className="mt-2 text-sm leading-relaxed text-muted">
             Sign in to manage clients, services, invoices, and operations for {BRAND.companyLegal}.
           </p>
         </div>
@@ -115,25 +115,25 @@ export function BusinessManagerLogin() {
             <Briefcase className="h-5 w-5" />
           </div>
           <CardTitle className="text-base">Staff & owner sign in</CardTitle>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+          <p className="mt-2 text-sm leading-relaxed text-muted">
             For company owners and authorised staff only. You will go straight to your dashboard
             after signing in.
           </p>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
-              <label className="text-sm font-medium text-slate-700">Email</label>
+              <label className="text-sm font-medium text-charcoal">Email</label>
               <input
                 type="email"
                 required
                 autoComplete="email"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-slate-700">Password</label>
+                <label className="text-sm font-medium text-charcoal">Password</label>
                 <Link
                   href="/forgot-password"
                   className="text-xs font-medium text-brand-600 hover:underline"
@@ -145,7 +145,7 @@ export function BusinessManagerLogin() {
                 type="password"
                 required
                 autoComplete="current-password"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -160,11 +160,11 @@ export function BusinessManagerLogin() {
               {loading ? "Signing in…" : "Sign in to Business Manager"}
             </Button>
           </form>
-          <Link href="/" className="mt-4 block text-center text-sm font-medium text-slate-500 hover:text-brand-700">
+          <Link href="/" className="mt-4 block text-center text-sm font-medium text-muted hover:text-brand-700">
             Back to website
           </Link>
         </Card>
-        <p className="mt-6 text-center text-xs text-slate-500">
+        <p className="mt-6 text-center text-xs text-muted">
           Students and research app users{" "}
           <Link href="/login" className="font-medium text-brand-600 underline">
             sign in here

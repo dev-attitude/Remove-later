@@ -66,11 +66,11 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
   return (
     <aside
       className={cn(
-        "flex h-full w-[17.5rem] flex-col bg-gradient-to-b from-[#0b1120] via-[#0f172a] to-[#0c1222] text-slate-300",
+        "flex h-full w-[17.5rem] flex-col bg-gradient-to-b from-[#0b1120] via-[#0f172a] to-[#0c1222] text-muted",
         variant === "mobile" && "h-screen w-72 max-w-[85vw]"
       )}
     >
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-5">
+      <div className="flex items-center justify-between border-b border-offwhite/10 px-4 py-5">
         <Link href="/manage" onClick={onClose} className="flex min-w-0 items-center gap-3">
           <BrandLogo
             className="h-9 w-auto"
@@ -83,18 +83,18 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-2 text-muted hover:bg-offwhite/10 hover:text-offwhite"
           >
             <X className="h-5 w-5" />
           </button>
         )}
       </div>
 
-      <div className="border-b border-white/10 px-4 py-3">
+      <div className="border-b border-offwhite/10 px-4 py-3">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-400/90">
           Business Manager
         </p>
-        <p className="mt-0.5 text-xs text-slate-500">Operations & client workspace</p>
+        <p className="mt-0.5 text-xs text-muted">Operations & client workspace</p>
       </div>
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
@@ -103,7 +103,7 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
           return (
             <div key={href}>
               {section && (
-                <p className="mb-2 mt-5 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 first:mt-0">
+                <p className="mb-2 mt-5 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-muted first:mt-0">
                   {section}
                 </p>
               )}
@@ -113,14 +113,14 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
                 className={cn(
                   "group flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition",
                   active
-                    ? "bg-white/10 text-white shadow-inner ring-1 ring-white/10"
-                    : "text-slate-400 hover:bg-white/5 hover:text-slate-100"
+                    ? "bg-offwhite/10 text-offwhite shadow-inner ring-1 ring-offwhite/10"
+                    : "text-muted hover:bg-offwhite/5 hover:text-offwhite"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4 w-4 shrink-0 transition",
-                    active ? "text-sky-400" : "text-slate-500 group-hover:text-slate-300"
+                    active ? "text-sky-400" : "text-muted group-hover:text-muted"
                   )}
                 />
                 <span className="truncate">{label}</span>
@@ -133,11 +133,11 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
         })}
       </nav>
 
-      <div className="space-y-0.5 border-t border-white/10 p-3">
+      <div className="space-y-0.5 border-t border-offwhite/10 p-3">
         <Link
           href="/"
           onClick={onClose}
-          className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition hover:bg-white/5 hover:text-white"
+          className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-muted transition hover:bg-offwhite/5 hover:text-offwhite"
         >
           <ArrowLeft className="h-4 w-4" />
           Public website
@@ -145,7 +145,7 @@ export function ManageSidebar({ variant = "desktop", onClose }: ManageSidebarPro
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition hover:bg-red-500/10 hover:text-red-300"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-muted transition hover:bg-red-500/10 hover:text-red-300"
         >
           <LogOut className="h-4 w-4" />
           Sign out

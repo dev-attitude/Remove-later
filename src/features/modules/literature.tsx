@@ -139,7 +139,7 @@ export default function LiteratureModule() {
   if (!ws.hydrated) {
     return (
       <ModuleWorkspace>
-        <p className="text-sm text-slate-500">Loading your saved work…</p>
+        <p className="text-sm text-muted">Loading your saved work…</p>
       </ModuleWorkspace>
     );
   }
@@ -162,7 +162,7 @@ export default function LiteratureModule() {
         />
         <Card>
           <CardTitle>Connected sources</CardTitle>
-          <p className="mb-3 text-sm text-slate-500">
+          <p className="mb-3 text-sm text-muted">
             API-enabled sources return results here. Others open official search pages.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -174,7 +174,7 @@ export default function LiteratureModule() {
                 className={`rounded-full border px-3 py-1 text-xs transition ${
                   selected.includes(s.id)
                     ? "border-brand-500 bg-brand-50 text-brand-800"
-                    : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    : "border-line text-muted hover:bg-cream-50"
                 }`}
               >
                 {s.name}
@@ -184,7 +184,7 @@ export default function LiteratureModule() {
           </div>
           <div className="mt-4 flex gap-2">
             <input
-              className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="flex-1 rounded-lg border border-line px-3 py-2 text-sm"
               value={query}
               onChange={(e) => ws.setForm({ query: e.target.value })}
             />
@@ -207,16 +207,16 @@ export default function LiteratureModule() {
 
         {papers.length > 0 && (
           <div className="mt-6 space-y-3">
-            <h3 className="font-semibold text-slate-900">Research papers</h3>
+            <h3 className="font-semibold text-charcoal">Research papers</h3>
             {papers.map((r) => (
               <Card key={r.id} className="!p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="font-medium text-slate-900">{r.title}</p>
-                  <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                  <p className="font-medium text-charcoal">{r.title}</p>
+                  <span className="shrink-0 rounded-full bg-line px-2 py-0.5 text-[10px] font-medium text-muted">
                     {r.source}
                   </span>
                 </div>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-muted">
                   {r.authors} ({r.year}) · {r.citations} citations
                 </p>
                 {r.doi && <p className="text-xs text-brand-600">DOI: {r.doi}</p>}
@@ -238,12 +238,12 @@ export default function LiteratureModule() {
 
         {datasets.length > 0 && (
           <div className="mt-6 space-y-3">
-            <h3 className="font-semibold text-slate-900">Open data indicators</h3>
+            <h3 className="font-semibold text-charcoal">Open data indicators</h3>
             {datasets.map((d) => (
               <Card key={d.id} className="!p-4">
                 <p className="font-medium">{d.name}</p>
-                <p className="text-xs text-slate-500">{d.source}</p>
-                {d.value && <p className="mt-1 text-sm text-slate-600">{d.value}</p>}
+                <p className="text-xs text-muted">{d.source}</p>
+                {d.value && <p className="mt-1 text-sm text-muted">{d.value}</p>}
               </Card>
             ))}
           </div>
@@ -258,7 +258,7 @@ export default function LiteratureModule() {
                 href={s.searchUrl!(query)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+                className="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 text-xs text-charcoal hover:bg-cream-50"
               >
                 {s.name} <ExternalLink className="h-3 w-3" />
               </a>

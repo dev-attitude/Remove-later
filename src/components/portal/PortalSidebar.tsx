@@ -37,24 +37,24 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
   return (
     <aside
       className={cn(
-        "flex h-full min-h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white",
+        "flex h-full min-h-screen w-64 shrink-0 flex-col border-r border-line bg-offwhite",
         className
       )}
     >
-      <div className="border-b border-slate-100 p-4">
+      <div className="border-b border-line p-4">
         <Link
           href="/research"
-          className="mb-3 flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700"
+          className="mb-3 flex items-center gap-1 text-xs text-muted hover:text-charcoal"
           onClick={close}
         >
           <ArrowLeft className="h-3 w-3" /> All portals
         </Link>
         <Link href={portalPath(portalId)} className="flex items-center gap-2" onClick={close}>
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-offwhite">
             <Icon className="h-5 w-5" />
           </div>
           <div>
-            <p className="font-display text-sm font-bold leading-tight text-slate-900">
+            <p className="font-display text-sm font-bold leading-tight text-charcoal">
               Skyrapay Research
             </p>
             <p className="text-[10px] font-medium uppercase tracking-wider text-brand-600">
@@ -72,7 +72,7 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
             "mb-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm",
             pathname === portalPath(portalId)
               ? "bg-brand-50 font-medium text-brand-700"
-              : "text-slate-600 hover:bg-slate-50"
+              : "text-muted hover:bg-cream-50"
           )}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -86,14 +86,14 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
             "mb-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm",
             pathname === portalPath(portalId, "subscription")
               ? "bg-brand-50 font-medium text-brand-700"
-              : "text-slate-600 hover:bg-slate-50"
+              : "text-muted hover:bg-cream-50"
           )}
         >
           <CreditCard className="h-4 w-4" />
           Subscription
         </Link>
 
-        <p className="mb-1 mt-4 px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+        <p className="mb-1 mt-4 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted">
           Tools
         </p>
         {modules.map((m) => {
@@ -108,7 +108,7 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
                 "mb-0.5 flex items-start gap-2 rounded-lg px-3 py-2 text-sm",
                 active
                   ? "bg-brand-50 font-medium text-brand-700"
-                  : "text-slate-600 hover:bg-slate-50"
+                  : "text-muted hover:bg-cream-50"
               )}
             >
               <ModIcon className="mt-0.5 h-4 w-4 shrink-0" />
@@ -118,14 +118,14 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
         })}
       </nav>
 
-      <div className="border-t border-slate-100 p-3 space-y-1">
+      <div className="border-t border-line p-3 space-y-1">
         {session?.user ? (
           <>
-            <p className="truncate px-2 text-xs text-slate-600">{session.user.email}</p>
+            <p className="truncate px-2 text-xs text-muted">{session.user.email}</p>
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-xs text-slate-600 hover:bg-slate-50"
+              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-xs text-muted hover:bg-cream-50"
             >
               <LogOut className="h-4 w-4" /> Sign out
             </button>
@@ -133,7 +133,7 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
         ) : (
           <Link
             href="/login"
-            className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-slate-600 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-muted hover:bg-cream-50"
           >
             <LogIn className="h-4 w-4" /> Sign in
           </Link>
@@ -141,7 +141,7 @@ export function PortalSidebar({ portalId, className, onNavigate }: PortalSidebar
         <Link
           href="/download"
           onClick={close}
-          className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-slate-600 hover:bg-slate-50"
+          className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-muted hover:bg-cream-50"
         >
           <Download className="h-4 w-4" />
           Download apps

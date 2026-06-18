@@ -16,7 +16,7 @@ export function SiteFooter() {
         <div className="lg:col-span-1">
           <Link
             href="/"
-            className="inline-flex items-center rounded-lg bg-white px-2.5 py-1.5 ring-1 ring-line transition hover:ring-charcoal/20"
+            className="inline-flex items-center rounded-lg bg-offwhite px-2.5 py-1.5 ring-1 ring-line transition hover:ring-charcoal/20"
           >
             <BrandLogo className="h-10 w-auto" width={180} height={64} onDark />
           </Link>

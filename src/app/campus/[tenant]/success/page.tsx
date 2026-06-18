@@ -31,10 +31,10 @@ export default async function StudentSuccessPage({ params }: Props) {
         ))}
       </div>
 
-      <h2 className="mb-3 text-lg font-semibold text-slate-900">Risk students</h2>
+      <h2 className="mb-3 text-lg font-semibold text-charcoal">Risk students</h2>
       <RiskTable students={students} />
 
-      <p className="mt-4 text-xs text-slate-500">
+      <p className="mt-4 text-xs text-muted">
         Models combine attendance, marks, fee history, and engagement signals. Production deployments
         can use OpenAI or on-premise models with institution-specific training data.
       </p>

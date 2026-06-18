@@ -42,7 +42,7 @@ export function ProfilePage() {
 
       <form
         onSubmit={handleSave}
-        className="max-w-xl space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+        className="max-w-xl space-y-6 rounded-xl border border-line bg-offwhite p-6 shadow-sm"
       >
         <div>
           <label htmlFor="profile-display" className="block text-sm font-medium text-navy">
@@ -93,10 +93,10 @@ export function ProfilePage() {
           />
         </div>
 
-        <div className="border-t border-slate-100 pt-4">
+        <div className="border-t border-line pt-4">
           <p className="text-sm font-medium text-navy">Preferences</p>
           <div className="mt-3 flex items-center justify-between">
-            <span className="text-sm text-slate-600">Marketing emails</span>
+            <span className="text-sm text-muted">Marketing emails</span>
             <ToggleSwitch
               checked={account.profile.marketingEmails}
               onChange={() =>
@@ -119,7 +119,7 @@ export function ProfilePage() {
           )}
         </div>
 
-        <p className="text-xs text-slate-400">Order ID: {account.orderId}</p>
+        <p className="text-xs text-muted">Order ID: {account.orderId}</p>
       </form>
     </div>
   );

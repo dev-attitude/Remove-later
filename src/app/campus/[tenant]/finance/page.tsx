@@ -59,10 +59,10 @@ export default async function FinancePage({ params }: Props) {
       </div>
 
       <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Fee structures (2026)</h2>
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">Fee structures (2026)</h2>
+        <div className="overflow-x-auto rounded-xl border border-line bg-offwhite">
           <table className="min-w-full text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">Programme</th>
                 <th className="px-4 py-3 text-right">Tuition / year</th>
@@ -72,15 +72,15 @@ export default async function FinancePage({ params }: Props) {
             </thead>
             <tbody>
               {FEE_STRUCTURES.map((f) => (
-                <tr key={f.programme} className="border-b border-slate-100 last:border-0">
-                  <td className="px-4 py-3 font-medium text-slate-900">{f.programme}</td>
-                  <td className="px-4 py-3 text-right text-slate-700">
+                <tr key={f.programme} className="border-b border-line last:border-0">
+                  <td className="px-4 py-3 font-medium text-charcoal">{f.programme}</td>
+                  <td className="px-4 py-3 text-right text-charcoal">
                     {formatCampusCurrency(f.tuition)}
                   </td>
-                  <td className="px-4 py-3 text-right text-slate-700">
+                  <td className="px-4 py-3 text-right text-charcoal">
                     {formatCampusCurrency(f.registration)}
                   </td>
-                  <td className="px-4 py-3 text-right text-slate-700">
+                  <td className="px-4 py-3 text-right text-charcoal">
                     {formatCampusCurrency(f.examFee)}
                   </td>
                 </tr>
@@ -90,7 +90,7 @@ export default async function FinancePage({ params }: Props) {
         </div>
         <button
           type="button"
-          className="mt-3 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+          className="mt-3 rounded-lg border border-line px-3 py-1.5 text-xs font-medium text-charcoal hover:bg-cream-50"
         >
           Edit fee structures (demo)
         </button>
@@ -98,18 +98,18 @@ export default async function FinancePage({ params }: Props) {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Debtors management</h2>
+          <h2 className="mb-3 text-lg font-semibold text-charcoal">Debtors management</h2>
           <div className="space-y-2">
             {TOP_DEBTORS.map((d) => (
-              <div key={d.student} className="rounded-xl border border-slate-200 bg-white p-4">
+              <div key={d.student} className="rounded-xl border border-line bg-offwhite p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <p className="font-medium text-slate-900">{d.student}</p>
-                    <p className="text-xs text-slate-500">Last payment {d.lastPayment}</p>
+                    <p className="font-medium text-charcoal">{d.student}</p>
+                    <p className="text-xs text-muted">Last payment {d.lastPayment}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-rose-700">{formatCampusCurrency(d.balance)}</p>
-                    <p className="text-xs text-slate-500">AI default risk {d.risk}%</p>
+                    <p className="text-xs text-muted">AI default risk {d.risk}%</p>
                   </div>
                 </div>
                 <div className="mt-2 flex gap-2">
@@ -126,16 +126,16 @@ export default async function FinancePage({ params }: Props) {
         </section>
 
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Payment reconciliation</h2>
+          <h2 className="mb-3 text-lg font-semibold text-charcoal">Payment reconciliation</h2>
           <div className="space-y-2">
             {RECENT_PAYMENTS.map((p) => (
               <div
                 key={p.ref}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-4"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-line bg-offwhite p-4"
               >
                 <div>
-                  <p className="font-medium text-slate-900">{p.student}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="font-medium text-charcoal">{p.student}</p>
+                  <p className="text-xs text-muted">
                     {p.ref} · {p.method} · {p.date}
                   </p>
                 </div>
@@ -155,12 +155,12 @@ export default async function FinancePage({ params }: Props) {
         </section>
       </div>
 
-      <h2 className="mb-3 mt-8 text-lg font-semibold text-slate-900">Finance modules</h2>
+      <h2 className="mb-3 mt-8 text-lg font-semibold text-charcoal">Finance modules</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {MODULES.map((mod) => (
-          <div key={mod} className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="font-medium text-slate-900">{mod}</p>
-            <p className="mt-1 text-xs text-slate-500">Integrated with student wallet & payroll</p>
+          <div key={mod} className="rounded-xl border border-line bg-offwhite p-4">
+            <p className="font-medium text-charcoal">{mod}</p>
+            <p className="mt-1 text-xs text-muted">Integrated with student wallet & payroll</p>
           </div>
         ))}
       </div>

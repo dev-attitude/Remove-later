@@ -36,7 +36,7 @@ export default function TranscriptionPage() {
       <ModuleWorkspace>
         <Card>
           <CardTitle>Upload media</CardTitle>
-          <p className="text-sm text-slate-500">MP3, WAV, MP4, voice notes</p>
+          <p className="text-sm text-muted">MP3, WAV, MP4, voice notes</p>
           <input type="file" className="mt-4 text-sm" accept="audio/*,video/*" />
           <div className="mt-4 flex flex-wrap gap-2">
             {["Transcribe", "Translate", "Summarize", "Extract themes"].map((f) => (

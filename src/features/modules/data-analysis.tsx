@@ -78,9 +78,9 @@ export default function DataAnalysisPage() {
           <>
             <Card className="mb-6">
               <CardTitle>Upload dataset</CardTitle>
-              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-slate-300 p-6">
-                <Upload className="h-6 w-6 text-slate-400" />
-                <span className="text-sm text-slate-600">Excel, CSV, SPSS (.sav)</span>
+              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-line p-6">
+                <Upload className="h-6 w-6 text-muted" />
+                <span className="text-sm text-muted">Excel, CSV, SPSS (.sav)</span>
                 <input type="file" className="hidden" accept=".csv,.xlsx,.sav" />
               </label>
               <Button className="mt-4" onClick={analyze}>
@@ -94,14 +94,14 @@ export default function DataAnalysisPage() {
                   <strong>n:</strong> {stats.n} · <strong>Missing:</strong> {stats.missing} ·{" "}
                   <strong>Suggested:</strong> {stats.suggestedTest}
                 </p>
-                <p className="mt-2 text-sm text-slate-600">{stats.interpretation}</p>
+                <p className="mt-2 text-sm text-muted">{stats.interpretation}</p>
               </Card>
             )}
 
             <div className="grid gap-4 lg:grid-cols-2">
               <Card>
                 <CardTitle>Statistical tests</CardTitle>
-                <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                <ul className="mt-2 space-y-1 text-sm text-muted">
                   {TESTS.map((t) => (
                     <li key={t}>• {t}</li>
                   ))}
@@ -129,7 +129,7 @@ export default function DataAnalysisPage() {
         ) : (
           <Card>
             <CardTitle>Qualitative analysis</CardTitle>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-muted">
               Thematic analysis · Coding assistant · Sentiment · Keyword extraction ·
               Interview & focus group analysis
             </p>
@@ -140,7 +140,7 @@ export default function DataAnalysisPage() {
             <label className="mt-4 block">
               <span className="text-sm font-medium">Transcript</span>
               <textarea
-                className="mt-1 w-full rounded-lg border border-slate-300 p-3 text-sm"
+                className="mt-1 w-full rounded-lg border border-line p-3 text-sm"
                 rows={6}
                 placeholder="Paste interview transcript…"
                 defaultValue="Participant 3: The main barrier we faced was access to resources…"

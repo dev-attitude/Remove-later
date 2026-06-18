@@ -22,7 +22,7 @@ export function BrandLogo({
   onDark = false,
 }: BrandLogoProps) {
   return (
-    <span className={`inline-flex shrink-0 ${onDark ? "" : "bg-white"}`}>
+    <span className={`inline-flex shrink-0 ${onDark ? "" : "bg-offwhite"}`}>
       <Image
         src="/logo.png"
         alt={COMPANY.name}

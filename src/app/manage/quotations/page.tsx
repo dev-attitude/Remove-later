@@ -224,14 +224,14 @@ export default function ManageQuotationsPage() {
       {showForm && (
         <Card variant="manage" className="mb-8">
           <CardTitle>Create &amp; send quotation</CardTitle>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-muted">
             Line prices are <strong>excluding VAT</strong>. We add 15% VAT and email the total to
             the client with your Skyrapay logo.
           </p>
           <form onSubmit={handleCreate} className="mt-4 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-medium text-slate-600">Client *</label>
+                <label className="text-xs font-medium text-muted">Client *</label>
                 <select
                   required
                   value={clientId}
@@ -249,7 +249,7 @@ export default function ManageQuotationsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-600">Quotation title *</label>
+                <label className="text-xs font-medium text-muted">Quotation title *</label>
                 <input
                   required
                   value={title}
@@ -262,7 +262,7 @@ export default function ManageQuotationsPage() {
 
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <label className="text-xs font-medium text-slate-600">Line items (ex VAT) *</label>
+                <label className="text-xs font-medium text-muted">Line items (ex VAT) *</label>
                 <button
                   type="button"
                   onClick={() => setLines((prev) => [...prev, emptyLine()])}
@@ -278,7 +278,7 @@ export default function ManageQuotationsPage() {
                       placeholder="Description"
                       value={line.description}
                       onChange={(e) => updateLine(i, { description: e.target.value })}
-                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      className="rounded-lg border border-line px-3 py-2 text-sm"
                     />
                     <input
                       type="number"
@@ -287,7 +287,7 @@ export default function ManageQuotationsPage() {
                       placeholder="Qty"
                       value={line.quantity}
                       onChange={(e) => updateLine(i, { quantity: e.target.value })}
-                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      className="rounded-lg border border-line px-3 py-2 text-sm"
                     />
                     <input
                       type="number"
@@ -296,12 +296,12 @@ export default function ManageQuotationsPage() {
                       placeholder="Unit price (ex VAT)"
                       value={line.unitPriceExVat}
                       onChange={(e) => updateLine(i, { unitPriceExVat: e.target.value })}
-                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      className="rounded-lg border border-line px-3 py-2 text-sm"
                     />
                     <button
                       type="button"
                       onClick={() => setLines((prev) => prev.filter((_, j) => j !== i))}
-                      className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                      className="rounded-lg p-2 text-muted hover:bg-red-50 hover:text-red-600"
                       aria-label="Remove line"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -312,17 +312,17 @@ export default function ManageQuotationsPage() {
             </div>
 
             {previewTotals && (
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
+              <div className="rounded-lg border border-line bg-cream-50 p-4 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Subtotal (ex VAT)</span>
+                  <span className="text-muted">Subtotal (ex VAT)</span>
                   <span className="font-semibold">{formatNad(previewTotals.subtotalExVat)}</span>
                 </div>
                 <div className="mt-1 flex justify-between">
-                  <span className="text-slate-600">VAT (15%)</span>
+                  <span className="text-muted">VAT (15%)</span>
                   <span className="font-semibold">{formatNad(previewTotals.vatAmount)}</span>
                 </div>
-                <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 text-base">
-                  <span className="font-bold text-slate-900">Total (incl. VAT)</span>
+                <div className="mt-2 flex justify-between border-t border-line pt-2 text-base">
+                  <span className="font-bold text-charcoal">Total (incl. VAT)</span>
                   <span className="font-bold text-brand-700">
                     {formatNad(previewTotals.totalInclVat)}
                   </span>
@@ -332,7 +332,7 @@ export default function ManageQuotationsPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-medium text-slate-600">Valid for (days)</label>
+                <label className="text-xs font-medium text-muted">Valid for (days)</label>
                 <input
                   type="number"
                   min="1"
@@ -342,7 +342,7 @@ export default function ManageQuotationsPage() {
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-600">Notes (optional)</label>
+                <label className="text-xs font-medium text-muted">Notes (optional)</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -366,10 +366,10 @@ export default function ManageQuotationsPage() {
       )}
 
       {loading ? (
-        <p className="text-sm text-slate-500">Loading quotations…</p>
+        <p className="text-sm text-muted">Loading quotations…</p>
       ) : quotations.length === 0 ? (
         <Card variant="manage">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted">
             No quotations yet. Create one above — it will be emailed to your client with VAT
             breakdown and your company logo.
           </p>
@@ -391,17 +391,17 @@ export default function ManageQuotationsPage() {
             </thead>
             <tbody>
               {quotations.map((q) => (
-                <tr key={q.id} className="border-b border-slate-100 last:border-0">
-                  <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-800">
+                <tr key={q.id} className="border-b border-line last:border-0">
+                  <td className="px-4 py-3 font-mono text-xs font-semibold text-charcoal">
                     {q.quoteNumber}
                   </td>
                   <td className="px-4 py-3">
                     <Link href={`/manage/clients/${q.client.id}`} className="font-medium text-brand-700 hover:underline">
                       {q.client.name}
                     </Link>
-                    <p className="text-xs text-slate-500">{q.client.email ?? "No email"}</p>
+                    <p className="text-xs text-muted">{q.client.email ?? "No email"}</p>
                   </td>
-                  <td className="px-4 py-3 text-slate-700">{q.title}</td>
+                  <td className="px-4 py-3 text-charcoal">{q.title}</td>
                   <td className="px-4 py-3 text-right">{formatNad(q.subtotalExVat)}</td>
                   <td className="px-4 py-3 text-right">{formatNad(q.vatAmount)}</td>
                   <td className="px-4 py-3 text-right font-bold">{formatNad(q.totalInclVat)}</td>
@@ -412,7 +412,7 @@ export default function ManageQuotationsPage() {
                         {q.emailError}
                       </p>
                     )}
-                    <p className="text-[10px] text-slate-400">{fmtDate(q.sentAt ?? q.createdAt)}</p>
+                    <p className="text-[10px] text-muted">{fmtDate(q.sentAt ?? q.createdAt)}</p>
                   </td>
                   <td className="px-4 py-3">
                     {q.client.email && (
@@ -420,7 +420,7 @@ export default function ManageQuotationsPage() {
                         type="button"
                         disabled={sendingId === q.id}
                         onClick={() => resend(q.id)}
-                        className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex items-center gap-1 rounded-lg border border-line px-2 py-1 text-xs font-semibold text-charcoal hover:bg-cream-50"
                       >
                         <Mail className="h-3 w-3" />
                         {sendingId === q.id ? "…" : "Resend"}
@@ -434,7 +434,7 @@ export default function ManageQuotationsPage() {
         </div>
       )}
 
-      <p className="mt-6 flex items-center gap-2 text-xs text-slate-500">
+      <p className="mt-6 flex items-center gap-2 text-xs text-muted">
         <FileText className="h-3.5 w-3.5" />
         Quotations include your Skyrapay logo, 15% VAT, and company details. Requires email
         configured on the server (Resend or SMTP).

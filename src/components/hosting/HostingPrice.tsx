@@ -36,19 +36,19 @@ export function HostingPrice({
     <div className={className}>
       <div className="flex flex-wrap items-baseline gap-2">
         {priceLabel && (
-          <span className="text-sm font-medium text-slate-500">{priceLabel}</span>
+          <span className="text-sm font-medium text-muted">{priceLabel}</span>
         )}
         <span className={`font-bold text-royal ${sizeClasses}`}>
           {formatPrice(amountNad, suffix)}
         </span>
       </div>
       {showBaseNote && isConverted && (
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-muted">
           Approx. rate · invoiced in {HOSTING_BASE_CURRENCY}
         </p>
       )}
       {showBaseNote && !isConverted && currency === HOSTING_BASE_CURRENCY && (
-        <p className="mt-1 text-xs text-slate-500">{currency}</p>
+        <p className="mt-1 text-xs text-muted">{currency}</p>
       )}
     </div>
   );

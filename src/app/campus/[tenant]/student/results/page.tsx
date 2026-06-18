@@ -27,14 +27,14 @@ export default async function ResultsPage({ params }: Props) {
         {STUDENT_RESULTS.map((sem) => (
           <section key={sem.semester}>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">{sem.semester}</h2>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+              <h2 className="text-lg font-semibold text-charcoal">{sem.semester}</h2>
+              <span className="rounded-full bg-line px-3 py-1 text-sm font-medium text-charcoal">
                 GPA {sem.gpa.toFixed(1)}
               </span>
             </div>
-            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+            <div className="overflow-x-auto rounded-xl border border-line bg-offwhite">
               <table className="min-w-full text-sm">
-                <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase tracking-wide text-muted">
                   <tr>
                     <th className="px-4 py-3">Module</th>
                     <th className="px-4 py-3">Credits</th>
@@ -45,14 +45,14 @@ export default async function ResultsPage({ params }: Props) {
                 </thead>
                 <tbody>
                   {sem.modules.map((m) => (
-                    <tr key={m.code} className="border-b border-slate-100 last:border-0">
+                    <tr key={m.code} className="border-b border-line last:border-0">
                       <td className="px-4 py-3">
-                        <p className="font-medium text-slate-900">{m.code}</p>
-                        <p className="text-xs text-slate-500">{m.title}</p>
+                        <p className="font-medium text-charcoal">{m.code}</p>
+                        <p className="text-xs text-muted">{m.title}</p>
                       </td>
-                      <td className="px-4 py-3 text-slate-600">{m.credits}</td>
-                      <td className="px-4 py-3 font-semibold text-slate-900">{m.mark}%</td>
-                      <td className="px-4 py-3 text-slate-700">{m.grade}</td>
+                      <td className="px-4 py-3 text-muted">{m.credits}</td>
+                      <td className="px-4 py-3 font-semibold text-charcoal">{m.mark}%</td>
+                      <td className="px-4 py-3 text-charcoal">{m.grade}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${STATUS_STYLES[m.status]}`}
@@ -69,7 +69,7 @@ export default async function ResultsPage({ params }: Props) {
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-slate-500">
+      <p className="mt-6 text-xs text-muted">
         Official transcripts carry a QR verification code — see the Transcript Verify module.
       </p>
     </div>

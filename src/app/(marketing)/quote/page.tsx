@@ -15,7 +15,7 @@ export default function QuotePage() {
     <div className="mx-auto max-w-3xl px-4 py-16 md:px-8 md:py-24">
       <Link
         href="/shop"
-        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-royal"
+        className="inline-flex items-center gap-1 text-sm text-muted hover:text-royal"
       >
         <ArrowLeft className="h-4 w-4" />
         Browse all packages
@@ -29,7 +29,7 @@ export default function QuotePage() {
       </p>
 
       <section id="get-quote" className="marketing-form-panel mt-10 scroll-mt-24">
-        <Suspense fallback={<p className="text-slate-500">Loading form…</p>}>
+        <Suspense fallback={<p className="text-muted">Loading form…</p>}>
           <ShopCheckout />
         </Suspense>
       </section>

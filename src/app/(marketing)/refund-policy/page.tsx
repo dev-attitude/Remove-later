@@ -100,7 +100,7 @@ export default function RefundPolicyPage() {
           <p className="mt-4 marketing-lead">
             How refunds and cancellations work for services and products from {COMPANY.name}.
           </p>
-          <p className="mt-2 text-sm text-slate-500">Last updated: {updated}</p>
+          <p className="mt-2 text-sm text-muted">Last updated: {updated}</p>
 
           <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
             <p className="font-semibold">30% charge on refundable business services</p>
@@ -130,14 +130,14 @@ export default function RefundPolicyPage() {
           <div className="lg:sticky lg:top-24" id="request-refund">
             <p className="marketing-eyebrow">Submit a request</p>
             <h2 className="font-display text-2xl font-bold text-navy">File for a refund</h2>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            <p className="mt-2 text-sm leading-relaxed text-muted">
               Complete the form below. Your request is logged in our system and we will email you
               within 2 business days.
             </p>
             <div className="marketing-form-panel mt-6">
               <RefundRequestForm />
             </div>
-            <p className="mt-4 text-xs text-slate-500">
+            <p className="mt-4 text-xs text-muted">
               Prefer email?{" "}
               <a href={`mailto:${COMPANY.email}`} className="text-royal hover:underline">
                 {COMPANY.email}

@@ -23,12 +23,12 @@ function PlanCard({ plan, type }: { plan: BusinessPackage; type: "plan" | "addon
       }`}
     >
       {plan.popular && (
-        <span className="absolute -top-3 right-4 rounded-full bg-royal px-3 py-0.5 text-xs font-bold text-white">
+        <span className="absolute -top-3 right-4 rounded-full bg-royal px-3 py-0.5 text-xs font-bold text-offwhite">
           Most popular
         </span>
       )}
       <h3 className="text-xl font-bold text-navy">{plan.name}</h3>
-      <p className="mt-2 flex-1 text-sm text-slate-600">{plan.description}</p>
+      <p className="mt-2 flex-1 text-sm text-muted">{plan.description}</p>
       <div className="mt-4">
         {plan.price > 0 ? (
           <HostingPrice
@@ -40,7 +40,7 @@ function PlanCard({ plan, type }: { plan: BusinessPackage; type: "plan" | "addon
           <p className="text-lg font-bold text-navy">{plan.priceLabel ?? "Included"}</p>
         )}
       </div>
-      <ul className="mt-4 space-y-2 text-sm text-slate-700">
+      <ul className="mt-4 space-y-2 text-sm text-charcoal">
         {plan.includes.slice(0, 5).map((item) => (
           <li key={item} className="flex gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -55,7 +55,7 @@ function PlanCard({ plan, type }: { plan: BusinessPackage; type: "plan" | "addon
         }
         className={`mt-6 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition ${
           inCart
-            ? "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+            ? "border border-line bg-offwhite text-charcoal hover:bg-cream-50"
             : "border border-royal/30 bg-brand-50 text-navy hover:bg-sky/20"
         }`}
       >
@@ -71,7 +71,7 @@ export function HostingPlansPanel() {
     <div className="space-y-16">
       <section>
         <h2 className="text-2xl font-bold text-navy">Website hosting packages</h2>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-muted">
           Each plan includes cPanel, SSL, email, and MySQL databases. Select one plan per order.
         </p>
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
@@ -83,7 +83,7 @@ export function HostingPlansPanel() {
 
       <section>
         <h2 className="text-2xl font-bold text-navy">Add-on services</h2>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-muted">
           Optional extras — backups, maintenance, or standalone email hosting.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">

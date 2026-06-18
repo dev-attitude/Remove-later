@@ -50,7 +50,7 @@ body {
   }
 
   .marketing-eyebrow {
-    @apply text-xs font-medium uppercase tracking-[0.22em] text-muted;
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-cream-50 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-muted;
   }
 
   .marketing-page-title {

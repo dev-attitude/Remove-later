@@ -24,12 +24,12 @@ export default async function VerifyPage({ params }: Props) {
       <VerifyForm tenantSlug={slug} />
 
       {sample && (
-        <p className="mt-4 text-xs text-slate-500">
-          Demo code: <code className="rounded bg-slate-100 px-1">{sample.verifyCode}</code>
+        <p className="mt-4 text-xs text-muted">
+          Demo code: <code className="rounded bg-line px-1">{sample.verifyCode}</code>
         </p>
       )}
 
-      <ul className="mt-8 space-y-2 text-sm text-slate-600">
+      <ul className="mt-8 space-y-2 text-sm text-muted">
         <li>• Every transcript includes a unique verification code and optional blockchain anchor</li>
         <li>• Employers access this portal without institutional login</li>
         <li>• Integrates with graduation and registrar workflows</li>

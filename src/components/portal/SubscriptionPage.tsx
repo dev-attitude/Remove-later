@@ -44,10 +44,10 @@ export function SubscriptionPage({ portalId }: { portalId: PortalId }) {
           <CreditCard className="h-5 w-5" />
           <span className="text-sm font-medium uppercase tracking-wide">Subscription</span>
         </div>
-        <h1 className="font-display mt-2 text-3xl font-bold text-slate-900">
+        <h1 className="font-display mt-2 text-3xl font-bold text-charcoal">
           {portal.name} — Plans
         </h1>
-        <p className="mt-2 max-w-2xl text-slate-600">
+        <p className="mt-2 max-w-2xl text-muted">
           Monthly billing per user role. Cancel anytime. Institution plans can be invoiced annually.
         </p>
       </div>
@@ -59,12 +59,12 @@ export function SubscriptionPage({ portalId }: { portalId: PortalId }) {
             className={`relative cursor-pointer transition ${
               selected === tier.id
                 ? "border-2 border-brand-500 ring-2 ring-brand-500/20"
-                : "hover:border-slate-300"
+                : "hover:border-line"
             } ${tier.highlighted ? "border-brand-200" : ""}`}
             onClick={() => setSelected(tier.id)}
           >
             {tier.highlighted && (
-              <span className="absolute -top-3 left-4 rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+              <span className="absolute -top-3 left-4 rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold uppercase text-offwhite">
                 Popular
               </span>
             )}
@@ -72,8 +72,8 @@ export function SubscriptionPage({ portalId }: { portalId: PortalId }) {
             <p className="mt-2 text-3xl font-bold text-brand-600">
               <PortalTierPrice tier={tier} />
             </p>
-            <p className="mt-2 text-sm text-slate-500">{tier.description}</p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-700">
+            <p className="mt-2 text-sm text-muted">{tier.description}</p>
+            <ul className="mt-4 space-y-2 text-sm text-charcoal">
               {tier.features.map((f) => (
                 <li key={f} className="flex gap-2">
                   <Check className="h-4 w-4 shrink-0 text-emerald-500" />
@@ -92,17 +92,17 @@ export function SubscriptionPage({ portalId }: { portalId: PortalId }) {
             : `Subscribe to ${portal.subscriptions.find((s) => s.id === selected)?.name}`}
         </Button>
         {message && <p className="text-sm text-amber-800">{message}</p>}
-        <p className="text-sm text-slate-500">
-          Live billing when Stripe keys are set in <code className="rounded bg-slate-100 px-1">.env</code>
+        <p className="text-sm text-muted">
+          Live billing when Stripe keys are set in <code className="rounded bg-line px-1">.env</code>
         </p>
         <Link href={portalPath(portalId)} className="text-sm text-brand-600 underline">
           Back to dashboard
         </Link>
       </div>
 
-      <Card className="mt-10 bg-slate-50">
+      <Card className="mt-10 bg-cream-50">
         <CardTitle>Access on every device</CardTitle>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-muted">
           All paid plans include web access. Pro tiers include mobile and desktop apps.
         </p>
         <Link href="/download">

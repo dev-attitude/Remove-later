@@ -37,10 +37,10 @@ export default function ContactPage() {
                 <Mail className="h-5 w-5 text-brand-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Email</p>
+                <p className="text-sm font-medium text-muted">Email</p>
                 <a
                   href={`mailto:${COMPANY.email}`}
-                  className="break-all font-medium text-slate-900 hover:text-brand-600"
+                  className="break-all font-medium text-charcoal hover:text-brand-600"
                 >
                   {COMPANY.email}
                 </a>
@@ -51,13 +51,13 @@ export default function ContactPage() {
                 <Phone className="h-5 w-5 text-brand-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Phone / WhatsApp</p>
+                <p className="text-sm font-medium text-muted">Phone / WhatsApp</p>
                 <ul className="mt-1 space-y-1">
                   {COMPANY.phones.map((num) => (
                     <li key={num}>
                       <a
                         href={`tel:${num.replace(/\s/g, "")}`}
-                        className="font-medium text-slate-900 hover:text-brand-600"
+                        className="font-medium text-charcoal hover:text-brand-600"
                       >
                         {num}
                       </a>
@@ -71,10 +71,10 @@ export default function ContactPage() {
                 <MapPin className="h-5 w-5 text-brand-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Offices</p>
-                <p className="font-medium text-slate-900">{COMPANY.offices.join(" · ")}</p>
-                <p className="mt-2 text-sm text-slate-500">Postal address</p>
-                <p className="text-slate-900">{COMPANY.poBox}</p>
+                <p className="text-sm font-medium text-muted">Offices</p>
+                <p className="font-medium text-charcoal">{COMPANY.offices.join(" · ")}</p>
+                <p className="mt-2 text-sm text-muted">Postal address</p>
+                <p className="text-charcoal">{COMPANY.poBox}</p>
               </div>
             </li>
             <li className="flex gap-4">
@@ -82,8 +82,8 @@ export default function ContactPage() {
                 <Clock className="h-5 w-5 text-brand-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Business hours</p>
-                <p className="font-medium text-slate-900">
+                <p className="text-sm font-medium text-muted">Business hours</p>
+                <p className="font-medium text-charcoal">
                   {businessHours.days}, {businessHours.time}
                 </p>
               </div>
@@ -91,8 +91,8 @@ export default function ContactPage() {
           </ul>
 
           <div className="mt-10 rounded-xl border border-amber-100 bg-amber-50/80 p-5">
-            <p className="text-sm font-semibold text-slate-900">Happy with our service?</p>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="text-sm font-semibold text-charcoal">Happy with our service?</p>
+            <p className="mt-1 text-sm text-muted">
               A Google review helps other businesses and students find us in Namibia.
             </p>
             <a
@@ -108,13 +108,13 @@ export default function ContactPage() {
         </div>
 
         <div className="marketing-form-panel">
-          <h2 className="text-lg font-semibold text-slate-900">Send a message</h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <h2 className="text-lg font-semibold text-charcoal">Send a message</h2>
+          <p className="mt-2 text-sm text-muted">
             For business consultations, include your preferred date and time between{" "}
             {businessHours.time} on weekdays.
           </p>
           <div className="mt-6">
-            <Suspense fallback={<p className="text-slate-500">Loading form…</p>}>
+            <Suspense fallback={<p className="text-muted">Loading form…</p>}>
               <ContactForm />
             </Suspense>
           </div>

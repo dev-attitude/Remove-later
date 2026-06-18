@@ -4,7 +4,7 @@ import { useState } from "react";
 import { REQUEST_TYPES, type ServiceRequest } from "@/lib/campus/student-data";
 
 const STATUS_STYLES: Record<ServiceRequest["status"], string> = {
-  pending: "bg-slate-100 text-slate-700",
+  pending: "bg-line text-charcoal",
   processing: "bg-amber-100 text-amber-800",
   completed: "bg-emerald-100 text-emerald-800",
 };
@@ -40,15 +40,15 @@ export function StudentRequests({ existing }: { existing: ServiceRequest[] }) {
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <div>
-        <section className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="text-lg font-semibold text-slate-900">New request</h2>
+        <section className="rounded-xl border border-line bg-offwhite p-5">
+          <h2 className="text-lg font-semibold text-charcoal">New request</h2>
           <form onSubmit={submitRequest} className="mt-4 space-y-3">
             <div>
-              <label className="text-sm font-medium text-slate-700">Request type</label>
+              <label className="text-sm font-medium text-charcoal">Request type</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               >
                 {REQUEST_TYPES.map((t) => (
                   <option key={t}>{t}</option>
@@ -56,37 +56,37 @@ export function StudentRequests({ existing }: { existing: ServiceRequest[] }) {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700">Notes (optional)</label>
+              <label className="text-sm font-medium text-charcoal">Notes (optional)</label>
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 rows={3}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
                 placeholder="Any supporting details…"
               />
             </div>
             <button
               type="submit"
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+              className="rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-offwhite"
             >
               Submit request (demo)
             </button>
           </form>
         </section>
 
-        <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="text-lg font-semibold text-slate-900">Complaint or suggestion</h2>
+        <section className="mt-6 rounded-xl border border-line bg-offwhite p-5">
+          <h2 className="text-lg font-semibold text-charcoal">Complaint or suggestion</h2>
           <form onSubmit={submitComplaint} className="mt-4 space-y-3">
             <textarea
               value={complaint}
               onChange={(e) => setComplaint(e.target.value)}
               rows={3}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               placeholder="Describe your complaint or suggestion…"
             />
             <button
               type="submit"
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-line px-4 py-2 text-sm font-medium text-charcoal hover:bg-cream-50"
             >
               Send to Student Affairs (demo)
             </button>
@@ -100,16 +100,16 @@ export function StudentRequests({ existing }: { existing: ServiceRequest[] }) {
       </div>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">My requests</h2>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">My requests</h2>
         <div className="space-y-3">
           {requests.map((r) => (
             <div
               key={r.id}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-4"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-line bg-offwhite p-4"
             >
               <div>
-                <p className="font-medium text-slate-900">{r.type}</p>
-                <p className="text-xs text-slate-500">Submitted {r.submitted}</p>
+                <p className="font-medium text-charcoal">{r.type}</p>
+                <p className="text-xs text-muted">Submitted {r.submitted}</p>
               </div>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${STATUS_STYLES[r.status]}`}

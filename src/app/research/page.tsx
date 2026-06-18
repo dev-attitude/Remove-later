@@ -27,12 +27,12 @@ export const metadata = {
 
 export default function ResearchHubPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="gradient-hero px-6 py-12 text-white md:px-12">
+    <div className="min-h-screen bg-cream-50">
+      <header className="gradient-hero px-6 py-12 text-offwhite md:px-12">
         <div className="mx-auto max-w-6xl">
           <Link
             href="/"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/80 hover:text-white"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-offwhite/80 hover:text-offwhite"
           >
             <ArrowLeft className="h-4 w-4" />
             {COMPANY.name} home
@@ -43,17 +43,17 @@ export default function ResearchHubPage() {
               <h1 className="font-display text-2xl font-bold sm:text-3xl md:text-4xl">
                 {BRAND.productName}
               </h1>
-              <p className="text-white/90">Choose your portal to sign in</p>
+              <p className="text-offwhite/90">Choose your portal to sign in</p>
             </div>
           </div>
         </div>
-        <p className="mx-auto mt-6 max-w-3xl text-lg text-white/85">
+        <p className="mx-auto mt-6 max-w-3xl text-lg text-offwhite/85">
           One platform — four dedicated portals. Use on the web or download apps for
           Android, iPhone, MacBook, and Windows.
         </p>
         <Link
           href="/download"
-          className="mx-auto mt-8 inline-flex max-w-6xl items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-brand-800 hover:bg-brand-50"
+          className="mx-auto mt-8 inline-flex max-w-6xl items-center gap-2 rounded-lg bg-offwhite px-5 py-2.5 text-sm font-semibold text-brand-800 hover:bg-brand-50"
         >
           <Download className="h-4 w-4" />
           Download apps for your device
@@ -61,10 +61,10 @@ export default function ResearchHubPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-12 md:px-12">
-        <h2 className="font-display text-2xl font-bold text-slate-900">
+        <h2 className="font-display text-2xl font-bold text-charcoal">
           Select your portal
         </h2>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-muted">
           Each portal has its own tools, roles, and monthly subscription plans.
         </p>
 
@@ -76,18 +76,18 @@ export default function ResearchHubPage() {
               <Link key={portal.id} href={`/${portal.id}`}>
                 <Card className="h-full transition hover:border-brand-300 hover:shadow-lg">
                   <div
-                    className={`mb-4 inline-flex rounded-lg bg-gradient-to-br ${portal.accent} p-3 text-white`}
+                    className={`mb-4 inline-flex rounded-lg bg-gradient-to-br ${portal.accent} p-3 text-offwhite`}
                   >
                     <Icon className="h-8 w-8" />
                   </div>
                   <CardTitle className="!text-xl">{portal.name}</CardTitle>
                   <p className="mt-1 font-medium text-brand-600">{portal.tagline}</p>
-                  <p className="mt-3 text-sm text-slate-600">{portal.description}</p>
-                  <p className="mt-3 text-xs text-slate-500">
+                  <p className="mt-3 text-sm text-muted">{portal.description}</p>
+                  <p className="mt-3 text-xs text-muted">
                     {portal.roles.slice(0, 3).join(" · ")}
                     {portal.roles.length > 3 ? " · …" : ""}
                   </p>
-                  <p className="mt-4 text-sm font-semibold text-slate-800">
+                  <p className="mt-4 text-sm font-semibold text-charcoal">
                     {from.priceMonthly === "custom" || from.priceMonthly === 0 ? (
                       <PortalTierPrice tier={from} />
                     ) : (
@@ -123,13 +123,13 @@ export default function ResearchHubPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href={portalPath("student")}
-              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-offwhite hover:bg-brand-700"
             >
               Open Student Portal <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:border-brand-200 hover:text-brand-700"
+              className="inline-flex items-center gap-2 rounded-lg border border-line bg-offwhite px-4 py-2 text-sm font-semibold text-charcoal hover:border-brand-200 hover:text-brand-700"
             >
               Create account
             </Link>
@@ -137,7 +137,7 @@ export default function ResearchHubPage() {
         </section>
 
         <section className="mt-16">
-          <h2 className="font-display flex items-center gap-2 text-2xl font-bold text-slate-900">
+          <h2 className="font-display flex items-center gap-2 text-2xl font-bold text-charcoal">
             <Globe className="h-6 w-6 text-brand-600" />
             Web or app — your choice
           </h2>
@@ -145,7 +145,7 @@ export default function ResearchHubPage() {
             {DOWNLOAD_PLATFORMS.map((p) => (
               <Card key={p.id} className="!p-4 text-center">
                 <CardTitle className="!text-sm">{p.name}</CardTitle>
-                <p className="mt-1 text-xs text-slate-500">{p.devices}</p>
+                <p className="mt-1 text-xs text-muted">{p.devices}</p>
                 <Link
                   href={p.href}
                   className="mt-3 inline-block text-xs font-medium text-brand-600 underline"
@@ -157,7 +157,7 @@ export default function ResearchHubPage() {
           </div>
         </section>
 
-        <footer className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500">
+        <footer className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-8 text-sm text-muted">
           <span className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             Academic integrity built in
@@ -169,7 +169,7 @@ export default function ResearchHubPage() {
             <Link href="/register" className="text-brand-600 hover:underline">
               Register
             </Link>
-            <Link href="/" className="text-slate-400 hover:text-slate-600">
+            <Link href="/" className="text-muted hover:text-muted">
               Company website →
             </Link>
           </div>

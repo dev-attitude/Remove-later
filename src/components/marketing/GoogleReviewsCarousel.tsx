@@ -22,7 +22,7 @@ function ReviewCard({ review }: { review: GoogleReview }) {
       : review.text;
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="flex h-full flex-col rounded-2xl border border-line bg-offwhite p-6 shadow-sm">
       <div className="flex items-center gap-3">
         {review.profilePhotoUrl ? (
           <Image
@@ -38,14 +38,14 @@ function ReviewCard({ review }: { review: GoogleReview }) {
           </span>
         )}
         <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold text-slate-900">{review.authorName}</p>
+          <p className="truncate font-semibold text-charcoal">{review.authorName}</p>
           {review.relativeTime && (
-            <p className="text-xs text-slate-500">{review.relativeTime}</p>
+            <p className="text-xs text-muted">{review.relativeTime}</p>
           )}
         </div>
         <StarRating rating={review.rating} size="sm" />
       </div>
-      <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-700">&ldquo;{displayText}&rdquo;</p>
+      <p className="mt-4 flex-1 text-sm leading-relaxed text-charcoal">&ldquo;{displayText}&rdquo;</p>
       {review.authorUrl && (
         <a
           href={review.authorUrl}
@@ -145,7 +145,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
               aria-label="Previous review"
               onClick={() => scrollToIndex(activeIndex - 1)}
               disabled={activeIndex === 0}
-              className="absolute -left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 shadow-md transition hover:bg-slate-50 disabled:opacity-30 sm:-left-12"
+              className="absolute -left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-line bg-offwhite p-2 shadow-md transition hover:bg-cream-50 disabled:opacity-30 sm:-left-12"
             >
               <ChevronLeft className="h-5 w-5 text-navy" />
             </button>
@@ -154,7 +154,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
               aria-label="Next review"
               onClick={() => scrollToIndex(activeIndex + 1)}
               disabled={activeIndex >= maxIndex}
-              className="absolute -right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 shadow-md transition hover:bg-slate-50 disabled:opacity-30 sm:-right-12"
+              className="absolute -right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-line bg-offwhite p-2 shadow-md transition hover:bg-cream-50 disabled:opacity-30 sm:-right-12"
             >
               <ChevronRight className="h-5 w-5 text-navy" />
             </button>
@@ -182,7 +182,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
               aria-label={`Go to review by ${review.authorName}`}
               onClick={() => scrollToIndex(i)}
               className={`h-2 rounded-full transition-all ${
-                i === activeIndex ? "w-6 bg-brand-600" : "w-2 bg-slate-300 hover:bg-slate-400"
+                i === activeIndex ? "w-6 bg-brand-600" : "w-2 bg-line hover:bg-charcoal"
               }`}
             />
           ))}
@@ -190,7 +190,7 @@ export function GoogleReviewsCarousel({ reviews, totalReviews }: GoogleReviewsCa
       )}
 
       {totalReviews > reviews.length && (
-        <p className="mt-6 text-center text-sm text-slate-600">
+        <p className="mt-6 text-center text-sm text-muted">
           Showing {reviews.length} of {totalReviews} Google reviews on our site.{" "}
           <Link
             href={COMPANY.googleReviewUrl}

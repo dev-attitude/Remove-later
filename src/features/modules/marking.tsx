@@ -63,11 +63,11 @@ export default function MarkingModule() {
                     className={`w-full rounded-lg border p-3 text-left text-sm transition ${
                       selected === i
                         ? "border-indigo-500 bg-indigo-50"
-                        : "border-slate-200 hover:bg-slate-50"
+                        : "border-line hover:bg-cream-50"
                     }`}
                   >
                     <p className="font-medium">{s.student}</p>
-                    <p className="text-slate-500">{s.title}</p>
+                    <p className="text-muted">{s.title}</p>
                     <p className="mt-1 text-xs text-indigo-600">{s.status}</p>
                   </button>
                 </li>
@@ -101,14 +101,14 @@ export default function MarkingModule() {
                       min={0}
                       max={r.max}
                       defaultValue={Math.floor(r.max * 0.8)}
-                      className="w-16 rounded border border-slate-300 px-2 py-1 text-sm"
+                      className="w-16 rounded border border-line px-2 py-1 text-sm"
                     />
-                    <span className="text-xs text-slate-400">/ {r.max}</span>
+                    <span className="text-xs text-muted">/ {r.max}</span>
                   </div>
                 ))}
               </div>
               <textarea
-                className="mt-4 w-full rounded-lg border border-slate-300 p-3 text-sm"
+                className="mt-4 w-full rounded-lg border border-line p-3 text-sm"
                 rows={4}
                 placeholder="Marker feedback to student…"
                 defaultValue="Strong methodology section. Clarify sampling frame in §3.2."

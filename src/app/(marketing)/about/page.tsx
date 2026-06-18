@@ -19,19 +19,19 @@ export default function AboutPage() {
             <p className="marketing-eyebrow">About us</p>
             <h1 className="marketing-page-title">{COMPANY.name}</h1>
             <p className="mt-2 text-lg font-medium text-brand-600">{COMPANY.tagline}</p>
-            <p className="mt-6 leading-relaxed text-slate-600">
+            <p className="mt-6 leading-relaxed text-muted">
               With offices in {COMPANY.offices.join(", ")}, and postal services via{" "}
               {COMPANY.poBox}, we serve businesses, institutions, and individuals who need
               reliable technology partners. Our team spans IT consulting, business strategy,
               hardware supply, and full-stack development—including the {COMPANY.productName}{" "}
               academic platform used by students and supervisors.
             </p>
-            <p className="mt-4 leading-relaxed text-slate-600">
+            <p className="mt-4 leading-relaxed text-muted">
               Whether you need a laptop for coursework, a turnaround plan for your SME, or a
               production web application, we bring the same professionalism and attention to
               detail.
             </p>
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-muted">
               {COMPANY.businessHours.days}, {COMPANY.businessHours.time}.{" "}
               {COMPANY.businessHours.note}
             </p>
@@ -39,13 +39,13 @@ export default function AboutPage() {
               Work with us
             </Link>
           </div>
-          <div className="flex justify-center bg-white">
+          <div className="flex justify-center bg-offwhite">
             <BrandLogo className="h-auto w-full max-w-sm" width={400} height={160} />
           </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-100 bg-slate-50/50">
+      <div className="border-t border-line bg-cream-50/50">
         <WhyChooseUsSection showAboutLink />
       </div>
     </>

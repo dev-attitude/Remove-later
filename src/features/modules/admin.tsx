@@ -23,8 +23,8 @@ export default function AdminPage() {
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {STATS.map((s) => (
             <Card key={s.label} className="!p-4">
-              <p className="text-xs text-slate-500">{s.label}</p>
-              <p className="text-2xl font-bold text-slate-900">{s.value}</p>
+              <p className="text-xs text-muted">{s.label}</p>
+              <p className="text-2xl font-bold text-charcoal">{s.value}</p>
             </Card>
           ))}
         </div>
@@ -32,7 +32,7 @@ export default function AdminPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardTitle>User roles</CardTitle>
-            <ul className="mt-3 space-y-1 text-sm text-slate-600">
+            <ul className="mt-3 space-y-1 text-sm text-muted">
               {USER_ROLES.map((r) => (
                 <li key={r}>• {r}</li>
               ))}
@@ -40,7 +40,7 @@ export default function AdminPage() {
           </Card>
           <Card>
             <CardTitle>Admin actions</CardTitle>
-            <ul className="mt-3 space-y-2 text-sm text-slate-600">
+            <ul className="mt-3 space-y-2 text-sm text-muted">
               <li>User management & SSO</li>
               <li>Institution onboarding</li>
               <li>Subscription & plan limits</li>

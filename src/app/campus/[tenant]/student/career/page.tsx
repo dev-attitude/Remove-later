@@ -25,29 +25,29 @@ export default async function CareerPage({ params }: Props) {
       />
 
       <section>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-900">
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-charcoal">
           <Briefcase className="h-5 w-5" /> Opportunities
         </h2>
         <div className="space-y-3">
           {CAREER_OPPORTUNITIES.map((o) => (
             <div
               key={o.title}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-offwhite p-4"
             >
               <div>
                 <div className="flex items-center gap-2">
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${TYPE_STYLES[o.type]}`}>
                     {o.type}
                   </span>
-                  <p className="font-medium text-slate-900">{o.title}</p>
+                  <p className="font-medium text-charcoal">{o.title}</p>
                 </div>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted">
                   {o.organisation} · {o.location} · Closes {o.closing}
                 </p>
               </div>
               <button
                 type="button"
-                className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-medium text-white"
+                className="rounded-lg bg-charcoal px-3 py-2 text-xs font-medium text-offwhite"
               >
                 Apply (demo)
               </button>
@@ -70,7 +70,7 @@ export default async function CareerPage({ params }: Props) {
               <button
                 key={b}
                 type="button"
-                className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white"
+                className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-offwhite"
               >
                 {b} (demo)
               </button>
@@ -78,15 +78,15 @@ export default async function CareerPage({ params }: Props) {
           </div>
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="flex items-center gap-2 font-semibold text-slate-900">
+        <section className="rounded-xl border border-line bg-offwhite p-5">
+          <h2 className="flex items-center gap-2 font-semibold text-charcoal">
             <Users className="h-5 w-5" /> Alumni mentors
           </h2>
           <div className="mt-3 space-y-3">
             {ALUMNI_MENTORS.map((m) => (
-              <div key={m.name} className="rounded-lg bg-slate-50 p-3">
-                <p className="text-sm font-medium text-slate-900">{m.name}</p>
-                <p className="text-xs text-slate-500">
+              <div key={m.name} className="rounded-lg bg-cream-50 p-3">
+                <p className="text-sm font-medium text-charcoal">{m.name}</p>
+                <p className="text-xs text-muted">
                   {m.role} · {m.focus}
                 </p>
                 <button type="button" className="mt-1 text-xs font-medium text-blue-600 hover:underline">

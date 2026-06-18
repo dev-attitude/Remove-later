@@ -59,16 +59,16 @@ export function LiveChat() {
     <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3">
       {open && (
         <div
-          className="w-[min(100vw-2.5rem,20rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+          className="w-[min(100vw-2.5rem,20rem)] overflow-hidden rounded-2xl border border-line bg-offwhite shadow-xl"
           role="dialog"
           aria-label="Chat options"
         >
           <div className="marketing-chrome flex items-center justify-between px-4 py-3">
-            <p className="text-sm font-semibold text-white">Chat with us</p>
+            <p className="text-sm font-semibold text-offwhite">Chat with us</p>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-md p-1 text-white/90 hover:bg-white/10"
+              className="rounded-md p-1 text-offwhite/90 hover:bg-offwhite/10"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
@@ -78,16 +78,16 @@ export function LiveChat() {
             <button
               type="button"
               onClick={openLiveChat}
-              className="flex w-full items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-left transition hover:border-royal/30 hover:bg-brand-50"
+              className="flex w-full items-center gap-3 rounded-xl border border-line bg-cream-50 px-4 py-3 text-left transition hover:border-royal/30 hover:bg-brand-50"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-royal text-white">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-royal text-offwhite">
                 <MessageCircle className="h-5 w-5" />
               </span>
               <span>
                 <span className="block text-sm font-semibold text-navy">
                   {HAS_TAWK ? "Live chat" : "WhatsApp chat"}
                 </span>
-                <span className="block text-xs text-slate-500">
+                <span className="block text-xs text-muted">
                   {HAS_TAWK
                     ? "Talk to our team in real time"
                     : "Message us on WhatsApp — we reply during business hours"}
@@ -101,15 +101,15 @@ export function LiveChat() {
               className="flex w-full items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 transition hover:bg-emerald-100"
               onClick={() => setOpen(false)}
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366] text-lg font-bold text-white">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366] text-lg font-bold text-offwhite">
                 WA
               </span>
               <span>
                 <span className="block text-sm font-semibold text-navy">WhatsApp</span>
-                <span className="block text-xs text-slate-600">{COMPANY.phones[0]}</span>
+                <span className="block text-xs text-muted">{COMPANY.phones[0]}</span>
               </span>
             </a>
-            <p className="px-1 text-center text-[11px] text-slate-500">
+            <p className="px-1 text-center text-[11px] text-muted">
               {COMPANY.businessHours.days}, {COMPANY.businessHours.time}
             </p>
           </div>
@@ -119,7 +119,7 @@ export function LiveChat() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-royal text-white shadow-lg shadow-royal/30 transition hover:bg-sky hover:shadow-sky/30"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-royal text-offwhite shadow-lg shadow-royal/30 transition hover:bg-sky hover:shadow-sky/30"
         aria-label={open ? "Close chat menu" : "Open chat"}
         aria-expanded={open}
       >

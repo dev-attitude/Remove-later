@@ -24,7 +24,7 @@ function PackageCard({
       }`}
     >
       {pkg.popular && (
-        <span className="mb-3 inline-block w-fit rounded-full bg-royal px-3 py-0.5 text-xs font-bold text-white">
+        <span className="mb-3 inline-block w-fit rounded-full bg-royal px-3 py-0.5 text-xs font-bold text-offwhite">
           Popular
         </span>
       )}
@@ -36,8 +36,8 @@ function PackageCard({
           size="md"
         />
       </div>
-      <p className="mt-2 flex-1 text-sm text-slate-600">{pkg.description}</p>
-      <ul className="mt-4 space-y-2 text-sm text-slate-700">
+      <p className="mt-2 flex-1 text-sm text-muted">{pkg.description}</p>
+      <ul className="mt-4 space-y-2 text-sm text-charcoal">
         {pkg.includes.map((item) => (
           <li key={item} className="flex gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -64,8 +64,8 @@ export function StudentWritingPackagesSection({
   return (
     <section className="mt-16">
       <h2 className="text-2xl font-bold text-navy">{title}</h2>
-      <p className="mt-2 max-w-3xl text-slate-600">{description}</p>
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-2 max-w-3xl text-muted">{description}</p>
+      <p className="mt-2 text-sm text-muted">
         Prices are shown in your local currency (invoiced in NAD, ex VAT). Scope is confirmed
         before work begins — we issue formal quotations and invoices through our business office.
       </p>

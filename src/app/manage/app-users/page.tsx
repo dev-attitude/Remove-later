@@ -58,7 +58,7 @@ export default function ManageAppUsersPage() {
   }, []);
 
   if (error) return <p className="text-sm text-red-600">{error}</p>;
-  if (!data) return <p className="text-sm text-slate-500">Loading app users…</p>;
+  if (!data) return <p className="text-sm text-muted">Loading app users…</p>;
 
   const q = query.trim().toLowerCase();
   const filtered = q
@@ -74,53 +74,53 @@ export default function ManageAppUsersPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">
+        <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
           Research App users
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted">
           Every registered account, their subscription, and how much they use the platform.
         </p>
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Registered users</p>
+          <p className="text-xs text-muted">Registered users</p>
           <p className="mt-2 text-2xl font-bold">{data.summary.total}</p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-muted">
             {Object.entries(data.summary.byPortal)
               .map(([portal, n]) => `${n} ${portal}`)
               .join(" · ")}
           </p>
         </Card>
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Active subscriptions</p>
+          <p className="text-xs text-muted">Active subscriptions</p>
           <p className="mt-2 text-2xl font-bold text-emerald-700">
             {data.summary.activeSubscriptions}
           </p>
         </Card>
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Paying (Stripe)</p>
+          <p className="text-xs text-muted">Paying (Stripe)</p>
           <p className="mt-2 text-2xl font-bold text-emerald-700">
             {data.summary.payingSubscriptions}
           </p>
-          <p className="mt-1 text-xs text-slate-500">Others are trials or complimentary</p>
+          <p className="mt-1 text-xs text-muted">Others are trials or complimentary</p>
         </Card>
       </div>
 
       <Card className="!p-0 overflow-hidden">
-        <div className="border-b border-slate-200 p-4">
+        <div className="border-b border-line p-4">
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by email, name, role, or portal…"
-            className="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            className="w-full max-w-md rounded-lg border border-line px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
           />
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+              <tr className="border-b border-line bg-cream-50 text-left text-xs uppercase tracking-wide text-muted">
                 <th className="px-4 py-3">User</th>
                 <th className="px-4 py-3">Role / portal</th>
                 <th className="px-4 py-3">Subscription</th>
@@ -132,14 +132,14 @@ export default function ManageAppUsersPage() {
             </thead>
             <tbody>
               {filtered.map((u) => (
-                <tr key={u.id} className="border-b border-slate-100 last:border-0">
+                <tr key={u.id} className="border-b border-line last:border-0">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-slate-900">{u.name ?? "—"}</p>
-                    <p className="text-xs text-slate-500">{u.email}</p>
+                    <p className="font-medium text-charcoal">{u.name ?? "—"}</p>
+                    <p className="text-xs text-muted">{u.email}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-slate-700">{u.role}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-charcoal">{u.role}</p>
+                    <p className="text-xs text-muted">
                       {u.portal}
                       {u.campusMemberships > 0 && ` · ${u.campusMemberships} campus`}
                     </p>
@@ -151,28 +151,28 @@ export default function ManageAppUsersPage() {
                           status={u.subscription.status}
                           label={u.subscription.status}
                         />
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-muted">
                           {u.subscription.tierId}
                           {u.subscription.stripeSubscriptionId ? " · Stripe" : ""}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-xs text-slate-400">None</span>
+                      <span className="text-xs text-muted">None</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted">
                     {fmtDate(u.subscription?.currentPeriodEnd ?? null)}
                   </td>
-                  <td className="px-4 py-3 text-right font-semibold text-slate-900">
+                  <td className="px-4 py-3 text-right font-semibold text-charcoal">
                     {u.usageCount}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{fmtDate(u.lastActive)}</td>
-                  <td className="px-4 py-3 text-slate-600">{fmtDate(u.createdAt)}</td>
+                  <td className="px-4 py-3 text-muted">{fmtDate(u.lastActive)}</td>
+                  <td className="px-4 py-3 text-muted">{fmtDate(u.createdAt)}</td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-sm text-slate-500">
+                  <td colSpan={7} className="px-4 py-8 text-center text-sm text-muted">
                     No users match your search.
                   </td>
                 </tr>

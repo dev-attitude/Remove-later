@@ -11,7 +11,7 @@ export default function HostingDomainsPage() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-navy">Buy your own domain name</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">
+      <p className="mt-2 max-w-2xl text-muted">
         Search available domains and add them to your cart. Domains are registered in your name with
         full DNS management from your client account.
       </p>

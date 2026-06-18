@@ -12,8 +12,8 @@ export function CampusPageHeader({ title, description, badge }: Props) {
           {badge}
         </span>
       )}
-      <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
-      <p className="mt-1 max-w-3xl text-sm text-slate-600">{description}</p>
+      <h1 className="text-2xl font-bold text-charcoal">{title}</h1>
+      <p className="mt-1 max-w-3xl text-sm text-muted">{description}</p>
     </div>
   );
 }

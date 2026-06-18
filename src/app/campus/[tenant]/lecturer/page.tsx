@@ -20,25 +20,25 @@ export default async function LecturerPage({ params }: Props) {
       />
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">My classes</h2>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">My classes</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {LECTURER_CLASSES.map((c) => (
-            <div key={c.code} className="rounded-xl border border-slate-200 bg-white p-4">
-              <p className="text-xs font-medium text-slate-500">{c.code}</p>
-              <p className="font-semibold text-slate-900">{c.title}</p>
-              <p className="mt-1 text-xs text-slate-500">
+            <div key={c.code} className="rounded-xl border border-line bg-offwhite p-4">
+              <p className="text-xs font-medium text-muted">{c.code}</p>
+              <p className="font-semibold text-charcoal">{c.title}</p>
+              <p className="mt-1 text-xs text-muted">
                 {c.students} students · Next: {c.nextSession} · {c.venue}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  className="inline-flex items-center gap-1 rounded-lg border border-line px-2.5 py-1 text-xs font-medium text-charcoal hover:bg-cream-50"
                 >
                   <Upload className="h-3 w-3" /> Upload materials (demo)
                 </button>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  className="inline-flex items-center gap-1 rounded-lg border border-line px-2.5 py-1 text-xs font-medium text-charcoal hover:bg-cream-50"
                 >
                   <MessageSquare className="h-3 w-3" /> Message class (demo)
                 </button>
@@ -49,11 +49,11 @@ export default async function LecturerPage({ params }: Props) {
       </section>
 
       <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">
-          EDU301 — Curriculum Design <span className="text-sm font-normal text-slate-500">(class tools)</span>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">
+          EDU301 — Curriculum Design <span className="text-sm font-normal text-muted">(class tools)</span>
         </h2>
         <LecturerClassTools roster={CLASS_ROSTER} />
-        <p className="mt-3 text-xs text-slate-500">
+        <p className="mt-3 text-xs text-muted">
           Saved marks flow to the Examination Office for moderation before publication. Attendance
           feeds the Student Success AI risk models.
         </p>
@@ -72,7 +72,7 @@ export default async function LecturerPage({ params }: Props) {
             <button
               key={b}
               type="button"
-              className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white"
+              className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-offwhite"
             >
               {b} (demo)
             </button>

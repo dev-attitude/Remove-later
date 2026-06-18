@@ -29,12 +29,12 @@ export default async function ExamOfficePage({ params }: Props) {
       />
 
       <section>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-900">
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-charcoal">
           <CalendarDays className="h-5 w-5" /> Exam scheduling
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-x-auto rounded-xl border border-line bg-offwhite">
           <table className="min-w-full text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">Module</th>
                 <th className="px-4 py-3">Date</th>
@@ -46,12 +46,12 @@ export default async function ExamOfficePage({ params }: Props) {
             </thead>
             <tbody>
               {EXAM_SCHEDULE.map((e) => (
-                <tr key={e.module} className="border-b border-slate-100 last:border-0">
-                  <td className="px-4 py-3 font-medium text-slate-900">{e.module}</td>
-                  <td className="px-4 py-3 text-slate-600">{e.date}</td>
-                  <td className="px-4 py-3 text-slate-600">{e.venue}</td>
-                  <td className="px-4 py-3 text-slate-600">{e.candidates}</td>
-                  <td className="px-4 py-3 text-slate-600">{e.invigilators}</td>
+                <tr key={e.module} className="border-b border-line last:border-0">
+                  <td className="px-4 py-3 font-medium text-charcoal">{e.module}</td>
+                  <td className="px-4 py-3 text-muted">{e.date}</td>
+                  <td className="px-4 py-3 text-muted">{e.venue}</td>
+                  <td className="px-4 py-3 text-muted">{e.candidates}</td>
+                  <td className="px-4 py-3 text-muted">{e.invigilators}</td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
                       {e.status}
@@ -64,7 +64,7 @@ export default async function ExamOfficePage({ params }: Props) {
         </div>
         <button
           type="button"
-          className="mt-3 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+          className="mt-3 rounded-lg border border-line px-3 py-1.5 text-xs font-medium text-charcoal hover:bg-cream-50"
         >
           Generate seating plans (demo)
         </button>
@@ -72,19 +72,19 @@ export default async function ExamOfficePage({ params }: Props) {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-900">
+          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-charcoal">
             <FileCheck className="h-5 w-5" /> Moderation queue
           </h2>
           <div className="space-y-2">
             {MODERATION_QUEUE.map((m) => (
-              <div key={m.module} className="rounded-xl border border-slate-200 bg-white p-4">
+              <div key={m.module} className="rounded-xl border border-line bg-offwhite p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-medium text-slate-900">{m.module}</p>
+                  <p className="font-medium text-charcoal">{m.module}</p>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${MOD_STATUS[m.status]}`}>
                     {m.status}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted">
                   Examiner: {m.examiner} · Moderator: {m.moderator}
                 </p>
               </div>
@@ -93,16 +93,16 @@ export default async function ExamOfficePage({ params }: Props) {
         </section>
 
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-900">
+          <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-charcoal">
             <CheckCircle2 className="h-5 w-5" /> Result publication
           </h2>
           <div className="space-y-2">
             {RESULT_PUBLICATION.map((r) => (
-              <div key={r.term} className="rounded-xl border border-slate-200 bg-white p-4">
+              <div key={r.term} className="rounded-xl border border-line bg-offwhite p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <p className="font-medium text-slate-900">{r.term}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="font-medium text-charcoal">{r.term}</p>
+                    <p className="text-xs text-muted">
                       {r.verified}/{r.modules} modules verified
                       {r.published && ` · Published ${r.date}`}
                     </p>
@@ -115,7 +115,7 @@ export default async function ExamOfficePage({ params }: Props) {
                     <button
                       type="button"
                       disabled={r.verified < r.modules}
-                      className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
+                      className="rounded-lg bg-charcoal px-3 py-1.5 text-xs font-medium text-offwhite disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       {r.verified < r.modules ? "Verification incomplete" : "Publish (demo)"}
                     </button>
@@ -125,7 +125,7 @@ export default async function ExamOfficePage({ params }: Props) {
             ))}
           </div>
 
-          <h2 className="mb-3 mt-6 flex items-center gap-2 text-lg font-semibold text-slate-900">
+          <h2 className="mb-3 mt-6 flex items-center gap-2 text-lg font-semibold text-charcoal">
             <AlertTriangle className="h-5 w-5 text-rose-600" /> AI integrity flags
           </h2>
           <div className="space-y-2">

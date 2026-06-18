@@ -52,27 +52,27 @@ export function AdvisorChat() {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white">
-      <div className="max-h-80 space-y-3 overflow-y-auto border-b border-slate-200 p-4">
+    <div className="rounded-xl border border-line bg-offwhite">
+      <div className="max-h-80 space-y-3 overflow-y-auto border-b border-line p-4">
         {messages.map((msg, i) => (
           <div
             key={i}
             className={`rounded-lg px-3 py-2 text-sm ${
-              msg.role === "user" ? "ml-8 bg-blue-600 text-white" : "mr-8 bg-slate-100 text-slate-800"
+              msg.role === "user" ? "ml-8 bg-blue-600 text-offwhite" : "mr-8 bg-line text-charcoal"
             }`}
           >
             {msg.text}
           </div>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2 border-b border-slate-100 p-3">
-        <button type="button" onClick={() => ask("modules")} className="rounded-full bg-slate-100 px-3 py-1 text-xs">
+      <div className="flex flex-wrap gap-2 border-b border-line p-3">
+        <button type="button" onClick={() => ask("modules")} className="rounded-full bg-line px-3 py-1 text-xs">
           Module registration
         </button>
-        <button type="button" onClick={() => ask("graduate")} className="rounded-full bg-slate-100 px-3 py-1 text-xs">
+        <button type="button" onClick={() => ask("graduate")} className="rounded-full bg-line px-3 py-1 text-xs">
           Graduation pathway
         </button>
-        <button type="button" onClick={() => ask("excluded")} className="rounded-full bg-slate-100 px-3 py-1 text-xs">
+        <button type="button" onClick={() => ask("excluded")} className="rounded-full bg-line px-3 py-1 text-xs">
           Academic exclusion
         </button>
       </div>
@@ -81,9 +81,9 @@ export function AdvisorChat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask your advisor…"
-          className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="flex-1 rounded-lg border border-line px-3 py-2 text-sm"
         />
-        <button type="submit" className="rounded-lg bg-slate-900 px-4 py-2 text-sm text-white">
+        <button type="submit" className="rounded-lg bg-charcoal px-4 py-2 text-sm text-offwhite">
           Send
         </button>
       </form>

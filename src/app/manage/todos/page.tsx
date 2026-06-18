@@ -54,8 +54,8 @@ const BUCKET_LABELS: Record<string, string> = {
 const PRIORITY_COLORS: Record<string, string> = {
   urgent: "text-red-700 bg-red-50 border-red-200",
   high: "text-orange-800 bg-orange-50 border-orange-200",
-  medium: "text-slate-700 bg-slate-50 border-slate-200",
-  low: "text-slate-500 bg-slate-50 border-slate-100",
+  medium: "text-charcoal bg-cream-50 border-line",
+  low: "text-muted bg-cream-50 border-line",
 };
 
 function fmtDate(value: string | null) {
@@ -193,7 +193,7 @@ export default function ManageTodosPage() {
   }
 
   if (loading && todos.length === 0) {
-    return <p className="text-sm text-slate-500">Loading to-do list…</p>;
+    return <p className="text-sm text-muted">Loading to-do list…</p>;
   }
 
   return (
@@ -248,7 +248,7 @@ export default function ManageTodosPage() {
             />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Category</span>
+                <span className="font-medium text-charcoal">Category</span>
                 <select
                   className="manage-input mt-1"
                   value={category}
@@ -266,7 +266,7 @@ export default function ManageTodosPage() {
               </label>
               {category === "other" && (
                 <label className="block text-sm sm:col-span-2">
-                  <span className="font-medium text-slate-700">Specify other category *</span>
+                  <span className="font-medium text-charcoal">Specify other category *</span>
                   <input
                     required
                     placeholder="e.g. Staff training, Legal, Partnerships…"
@@ -277,7 +277,7 @@ export default function ManageTodosPage() {
                 </label>
               )}
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Priority</span>
+                <span className="font-medium text-charcoal">Priority</span>
                 <select
                   className="manage-input mt-1"
                   value={priority}
@@ -291,7 +291,7 @@ export default function ManageTodosPage() {
                 </select>
               </label>
               <label className="block text-sm">
-                <span className="font-medium text-slate-700">Due date</span>
+                <span className="font-medium text-charcoal">Due date</span>
                 <input
                   type="date"
                   className="manage-input mt-1"
@@ -305,7 +305,7 @@ export default function ManageTodosPage() {
                   checked={reminderEnabled}
                   onChange={(e) => setReminderEnabled(e.target.checked)}
                 />
-                <span className="font-medium text-slate-700">Email reminder</span>
+                <span className="font-medium text-charcoal">Email reminder</span>
               </label>
             </div>
             <Button type="submit" disabled={submitting}>
@@ -317,7 +317,7 @@ export default function ManageTodosPage() {
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <select
-          className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="rounded-lg border border-line px-3 py-2 text-sm"
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
@@ -329,7 +329,7 @@ export default function ManageTodosPage() {
           ))}
         </select>
         <select
-          className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="rounded-lg border border-line px-3 py-2 text-sm"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
         >
@@ -340,7 +340,7 @@ export default function ManageTodosPage() {
             </option>
           ))}
         </select>
-        <label className="flex items-center gap-2 text-sm text-slate-600">
+        <label className="flex items-center gap-2 text-sm text-muted">
           <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} />
           Show completed
         </label>
@@ -348,7 +348,7 @@ export default function ManageTodosPage() {
 
       {grouped.length === 0 ? (
         <Card>
-          <p className="flex items-center gap-2 text-sm text-slate-500">
+          <p className="flex items-center gap-2 text-sm text-muted">
             <ListTodo className="h-4 w-4" />
             No to-dos yet. Add tasks for business planning, developments, and follow-ups.
           </p>
@@ -363,7 +363,7 @@ export default function ManageTodosPage() {
                     ? "text-red-700"
                     : bucket === "today"
                       ? "text-amber-800"
-                      : "text-slate-500"
+                      : "text-muted"
                 }`}
               >
                 {bucket === "overdue" && <AlertCircle className="h-4 w-4" />}
@@ -402,7 +402,7 @@ export default function ManageTodosPage() {
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-start justify-between gap-2">
                               <p
-                                className={`font-medium text-slate-900 ${done ? "line-through" : ""}`}
+                                className={`font-medium text-charcoal ${done ? "line-through" : ""}`}
                               >
                                 {todo.title}
                               </p>
@@ -412,17 +412,17 @@ export default function ManageTodosPage() {
                                 >
                                   {todoPriorityLabel(todo.priority)}
                                 </span>
-                                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                                <span className="rounded-full bg-line px-2 py-0.5 text-[10px] font-medium text-muted">
                                   {formatTodoCategory(todo.category, todo.categoryOther)}
                                 </span>
                               </div>
                             </div>
                             {todo.description && (
-                              <p className="mt-1 text-sm text-slate-600 whitespace-pre-wrap">
+                              <p className="mt-1 text-sm text-muted whitespace-pre-wrap">
                                 {todo.description}
                               </p>
                             )}
-                            <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                            <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted">
                               {todo.dueDate && (
                                 <span className="flex items-center gap-1">
                                   <Calendar className="h-3 w-3" />
@@ -451,7 +451,7 @@ export default function ManageTodosPage() {
                                   <button
                                     type="button"
                                     onClick={() => updateTodo(todo.id, { status: "pending" })}
-                                    className="text-xs font-semibold text-slate-600 hover:underline"
+                                    className="text-xs font-semibold text-muted hover:underline"
                                   >
                                     Pause
                                   </button>
@@ -477,7 +477,7 @@ export default function ManageTodosPage() {
         </div>
       )}
 
-      <p className="mt-8 flex items-center gap-2 text-xs text-slate-500">
+      <p className="mt-8 flex items-center gap-2 text-xs text-muted">
         <ListTodo className="h-3.5 w-3.5" />
         Use categories to separate operations, product development, marketing, and client work.
         Reminders are emailed to your business inbox each morning.

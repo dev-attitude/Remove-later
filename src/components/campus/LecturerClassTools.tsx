@@ -25,8 +25,8 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white">
-      <div className="flex border-b border-slate-200">
+    <div className="rounded-xl border border-line bg-offwhite">
+      <div className="flex border-b border-line">
         {(
           [
             ["attendance", "Attendance capture"],
@@ -42,8 +42,8 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
             }}
             className={`px-4 py-3 text-sm font-medium ${
               tab === id
-                ? "border-b-2 border-slate-900 text-slate-900"
-                : "text-slate-500 hover:text-slate-700"
+                ? "border-b-2 border-charcoal text-charcoal"
+                : "text-muted hover:text-charcoal"
             }`}
           >
             {label}
@@ -53,7 +53,7 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
 
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+          <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3">Student</th>
               <th className="px-4 py-3">Attendance to date</th>
@@ -64,10 +64,10 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
           </thead>
           <tbody>
             {roster.map((s) => (
-              <tr key={s.studentNumber} className="border-b border-slate-100 last:border-0">
+              <tr key={s.studentNumber} className="border-b border-line last:border-0">
                 <td className="px-4 py-3">
-                  <p className="font-medium text-slate-900">{s.name}</p>
-                  <p className="text-xs text-slate-500">{s.studentNumber}</p>
+                  <p className="font-medium text-charcoal">{s.name}</p>
+                  <p className="text-xs text-muted">{s.studentNumber}</p>
                 </td>
                 <td className="px-4 py-3">
                   <span
@@ -91,7 +91,7 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
                         }
                         className="h-4 w-4"
                       />
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs text-muted">
                         {present[s.studentNumber] ? "Present" : "Absent"}
                       </span>
                     </label>
@@ -105,7 +105,7 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
                         setMarks((m) => ({ ...m, [s.studentNumber]: e.target.value }))
                       }
                       placeholder="—"
-                      className="w-20 rounded-lg border border-slate-300 px-2 py-1 text-sm"
+                      className="w-20 rounded-lg border border-line px-2 py-1 text-sm"
                     />
                   )}
                 </td>
@@ -115,11 +115,11 @@ export function LecturerClassTools({ roster }: { roster: ClassStudent[] }) {
         </table>
       </div>
 
-      <div className="flex items-center gap-3 border-t border-slate-200 p-3">
+      <div className="flex items-center gap-3 border-t border-line p-3">
         <button
           type="button"
           onClick={save}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-offwhite"
         >
           <Save className="h-4 w-4" /> Save {tab === "attendance" ? "attendance" : "marks"}
         </button>

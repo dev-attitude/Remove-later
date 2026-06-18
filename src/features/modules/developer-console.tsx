@@ -34,8 +34,8 @@ export default function DeveloperConsoleModule() {
             return (
               <Card key={s.label} className="!p-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-slate-500">{s.label}</p>
-                  <Icon className="h-4 w-4 text-slate-400" />
+                  <p className="text-xs text-muted">{s.label}</p>
+                  <Icon className="h-4 w-4 text-muted" />
                 </div>
                 <p className="mt-2 text-2xl font-bold">{s.value}</p>
               </Card>
@@ -47,7 +47,7 @@ export default function DeveloperConsoleModule() {
           <CardTitle>Revenue by portal</CardTitle>
           <table className="mt-4 w-full text-left text-sm">
             <thead>
-              <tr className="border-b text-slate-500">
+              <tr className="border-b text-muted">
                 <th className="py-2">Portal</th>
                 <th className="py-2">MRR</th>
                 <th className="py-2">Users</th>
@@ -55,7 +55,7 @@ export default function DeveloperConsoleModule() {
             </thead>
             <tbody>
               {REVENUE.map((r) => (
-                <tr key={r.portal} className="border-b border-slate-100">
+                <tr key={r.portal} className="border-b border-line">
                   <td className="py-2 font-medium">{r.portal}</td>
                   <td className="py-2">{r.mrr}</td>
                   <td className="py-2">{r.users}</td>
@@ -70,7 +70,7 @@ export default function DeveloperConsoleModule() {
             <CardTitle className="flex items-center gap-2">
               <Key className="h-5 w-5" /> API keys
             </CardTitle>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-muted">
               OpenAI, CrossRef, Semantic Scholar, Stripe
             </p>
             <Button className="mt-4" variant="secondary" size="sm">
@@ -92,7 +92,7 @@ export default function DeveloperConsoleModule() {
           </Card>
           <Card>
             <CardTitle>App releases</CardTitle>
-            <ul className="mt-3 space-y-1 text-sm text-slate-600">
+            <ul className="mt-3 space-y-1 text-sm text-muted">
               <li>Android v1.2.0 — published</li>
               <li>iOS v1.2.0 — TestFlight</li>
               <li>macOS v1.1.0 — notarized</li>
@@ -106,9 +106,9 @@ export default function DeveloperConsoleModule() {
           </Card>
           <Card>
             <CardTitle>Subscription overrides</CardTitle>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-muted">
               Edit monthly prices per portal tier in{" "}
-              <code className="rounded bg-slate-100 px-1">src/lib/portals.ts</code>
+              <code className="rounded bg-line px-1">src/lib/portals.ts</code>
             </p>
           </Card>
         </div>

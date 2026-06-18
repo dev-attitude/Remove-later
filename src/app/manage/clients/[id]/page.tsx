@@ -133,7 +133,7 @@ export default function ManageClientDetailPage() {
   }
 
   if (error && !client) return <p className="text-red-600">{error}</p>;
-  if (!client) return <p className="text-slate-500">Loading…</p>;
+  if (!client) return <p className="text-muted">Loading…</p>;
 
   const packages = getPackageOptions();
   const services = getServiceOptions();
@@ -142,18 +142,18 @@ export default function ManageClientDetailPage() {
 
   return (
     <div>
-      <Link href="/manage/clients" className="mb-4 inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900">
+      <Link href="/manage/clients" className="mb-4 inline-flex items-center gap-1 text-sm text-muted hover:text-charcoal">
         <ArrowLeft className="h-4 w-4" /> Back to clients
       </Link>
 
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">{client.name}</h1>
-          {client.company && <p className="text-slate-600">{client.company}</p>}
+          <h1 className="font-display text-2xl font-bold text-charcoal">{client.name}</h1>
+          {client.company && <p className="text-muted">{client.company}</p>}
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <StatusPill status={client.status} label={clientStatusLabel(client.status)} />
             <select
-              className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700"
+              className="rounded-lg border border-line px-2 py-1 text-xs font-medium text-charcoal"
               value={client.category ?? "general"}
               onChange={async (e) => {
                 const category = e.target.value;
@@ -180,13 +180,13 @@ export default function ManageClientDetailPage() {
         </Button>
         <Link
           href={`/manage/quotations?clientId=${id}`}
-          className="inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          className="inline-flex items-center rounded-lg border border-line px-4 py-2 text-sm font-semibold text-charcoal hover:bg-cream-50"
         >
           Send quotation
         </Link>
         <Link
           href={`/manage/invoices?clientId=${id}`}
-          className="inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          className="inline-flex items-center rounded-lg border border-line px-4 py-2 text-sm font-semibold text-charcoal hover:bg-cream-50"
         >
           Create invoice
         </Link>
@@ -194,15 +194,15 @@ export default function ManageClientDetailPage() {
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Email</p>
+          <p className="text-xs text-muted">Email</p>
           <p className="mt-1 text-sm">{client.email || "—"}</p>
         </Card>
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Phone</p>
+          <p className="text-xs text-muted">Phone</p>
           <p className="mt-1 text-sm">{client.phone || "—"}</p>
         </Card>
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Location</p>
+          <p className="text-xs text-muted">Location</p>
           <p className="mt-1 text-sm">{client.location || "—"}</p>
         </Card>
       </div>
@@ -210,7 +210,7 @@ export default function ManageClientDetailPage() {
       {client.notes && (
         <Card className="mb-6">
           <CardTitle>Notes</CardTitle>
-          <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">{client.notes}</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm text-charcoal">{client.notes}</p>
         </Card>
       )}
 
@@ -221,12 +221,12 @@ export default function ManageClientDetailPage() {
             <input
               required
               placeholder="Service title *"
-              className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="sm:col-span-2 rounded-lg border border-line px-3 py-2 text-sm"
               value={engForm.title}
               onChange={(e) => setEngForm({ ...engForm, title: e.target.value })}
             />
             <select
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-line px-3 py-2 text-sm"
               value={engForm.serviceSlug}
               onChange={(e) => setEngForm({ ...engForm, serviceSlug: e.target.value })}
             >
@@ -237,7 +237,7 @@ export default function ManageClientDetailPage() {
               ))}
             </select>
             <select
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-line px-3 py-2 text-sm"
               value={engForm.packageId}
               onChange={(e) => {
                 const packageId = e.target.value;
@@ -260,7 +260,7 @@ export default function ManageClientDetailPage() {
               ))}
             </select>
             <select
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-line px-3 py-2 text-sm"
               value={engForm.status}
               onChange={(e) => setEngForm({ ...engForm, status: e.target.value })}
             >
@@ -275,7 +275,7 @@ export default function ManageClientDetailPage() {
               min="0"
               step="0.01"
               placeholder="Quoted amount (NAD)"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-line px-3 py-2 text-sm"
               value={engForm.quotedAmount}
               onChange={(e) => setEngForm({ ...engForm, quotedAmount: e.target.value })}
             />
@@ -285,7 +285,7 @@ export default function ManageClientDetailPage() {
                   ? "Service checklist steps are added automatically from the selected package."
                   : "Progress checklist (one task per line)"
               }
-              className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm disabled:bg-slate-50"
+              className="sm:col-span-2 rounded-lg border border-line px-3 py-2 text-sm disabled:bg-cream-50"
               rows={3}
               value={engForm.tasks}
               disabled={Boolean(selectedWorkflow)}
@@ -293,15 +293,15 @@ export default function ManageClientDetailPage() {
             />
             {selectedRegWorkflow && (
               <>
-                <fieldset className="sm:col-span-2 rounded-lg border border-slate-200 p-3">
-                  <legend className="px-1 text-sm font-medium text-slate-700">
+                <fieldset className="sm:col-span-2 rounded-lg border border-line p-3">
+                  <legend className="px-1 text-sm font-medium text-charcoal">
                     Payment plan *
                   </legend>
                   <div className="mt-1 space-y-2">
                     {PAYMENT_PLANS.map((plan) => (
                       <label
                         key={plan.id}
-                        className="flex cursor-pointer items-start gap-2 text-sm text-slate-700"
+                        className="flex cursor-pointer items-start gap-2 text-sm text-charcoal"
                       >
                         <input
                           type="radio"
@@ -315,7 +315,7 @@ export default function ManageClientDetailPage() {
                       </label>
                     ))}
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-muted">
                     Payment is recorded automatically when the service is created. An invoice is
                     emailed to the client.
                   </p>
@@ -324,14 +324,14 @@ export default function ManageClientDetailPage() {
             )}
             {selectedWorkflow && (
               <>
-                <p className="sm:col-span-2 text-xs text-slate-600">
+                <p className="sm:col-span-2 text-xs text-muted">
                   {selectedWorkflow.steps.length} checklist steps will be created for{" "}
                   {selectedWorkflow.label}.
                   {selectedRegWorkflow
                     ? " When you complete a step, the next becomes active and the client receives email & SMS."
                     : " Tick each step as you progress through the project."}
                 </p>
-                <ol className="sm:col-span-2 list-decimal space-y-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 pl-8 text-xs text-slate-700">
+                <ol className="sm:col-span-2 list-decimal space-y-1 rounded-lg border border-line bg-cream-50 px-4 py-3 pl-8 text-xs text-charcoal">
                   {selectedWorkflow.steps.map((step) => (
                     <li key={step.stepKey}>
                       {step.title}
@@ -343,7 +343,7 @@ export default function ManageClientDetailPage() {
             )}
             <textarea
               placeholder="Notes"
-              className="sm:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="sm:col-span-2 rounded-lg border border-line px-3 py-2 text-sm"
               rows={2}
               value={engForm.notes}
               onChange={(e) => setEngForm({ ...engForm, notes: e.target.value })}
@@ -365,22 +365,22 @@ export default function ManageClientDetailPage() {
       <Card>
         <CardTitle>Services & progress</CardTitle>
         {client.engagements.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-500">No services yet.</p>
+          <p className="mt-4 text-sm text-muted">No services yet.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {client.engagements.map((e: any) => (
               <li key={e.id}>
                 <Link
                   href={`/manage/services/${e.id}`}
-                  className="block rounded-lg border border-slate-200 p-4 hover:border-brand-200"
+                  className="block rounded-lg border border-line p-4 hover:border-brand-200"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-medium">{e.title}</p>
                     <StatusPill status={e.status} label={engagementStatusLabel(e.status)} />
                   </div>
-                  <p className="mt-1 text-xs text-slate-500">{serviceLabel(e.serviceSlug)}</p>
+                  <p className="mt-1 text-xs text-muted">{serviceLabel(e.serviceSlug)}</p>
                   <div className="mt-2 flex items-center gap-2">
-                    <div className="h-2 flex-1 rounded-full bg-slate-100">
+                    <div className="h-2 flex-1 rounded-full bg-line">
                       <div
                         className="h-full rounded-full bg-brand-600"
                         style={{ width: `${e.progressPercent}%` }}
@@ -389,7 +389,7 @@ export default function ManageClientDetailPage() {
                     <span className="text-xs">{e.progressPercent}%</span>
                   </div>
                   {e.quotedAmount != null && (
-                    <p className="mt-2 text-xs text-slate-600">
+                    <p className="mt-2 text-xs text-muted">
                       Total {formatNad(totalsFromQuotedExVat(e.quotedAmount).totalInclVat)} incl. VAT
                       · Paid {formatNad(e.paidAmount)}
                     </p>

@@ -98,7 +98,7 @@ export default function ManageInquiriesPage() {
   }
 
   if (error) return <p className="text-sm text-red-600">{error}</p>;
-  if (!data) return <p className="text-sm text-slate-500">Loading orders & inquiries…</p>;
+  if (!data) return <p className="text-sm text-muted">Loading orders & inquiries…</p>;
 
   const filtered =
     kindFilter === "all"
@@ -137,8 +137,8 @@ export default function ManageInquiriesPage() {
             onClick={() => setKindFilter(f.id)}
             className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
               kindFilter === f.id
-                ? "bg-brand-600 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                ? "bg-brand-600 text-offwhite"
+                : "bg-line text-muted hover:bg-line"
             }`}
           >
             {f.label}
@@ -149,7 +149,7 @@ export default function ManageInquiriesPage() {
 
       {filtered.length === 0 ? (
         <Card>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted">
             No inquiries here yet. New hosting orders, shop purchases, and contact requests will
             appear automatically.
           </p>
@@ -164,17 +164,17 @@ export default function ManageInquiriesPage() {
                 <button
                   type="button"
                   onClick={() => setOpenId(open ? null : inq.id)}
-                  className="flex w-full flex-wrap items-center justify-between gap-3 px-5 py-4 text-left hover:bg-slate-50"
+                  className="flex w-full flex-wrap items-center justify-between gap-3 px-5 py-4 text-left hover:bg-cream-50"
                 >
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium text-slate-900">{inq.name}</p>
+                      <p className="font-medium text-charcoal">{inq.name}</p>
                       <StatusPill status={inq.status} label={inq.status.replace("_", " ")} />
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                      <span className="rounded-full bg-line px-2 py-0.5 text-[11px] font-semibold text-muted">
                         {KIND_LABELS[inq.kind] ?? inq.kind}
                       </span>
                     </div>
-                    <p className="mt-0.5 text-xs text-slate-500">
+                    <p className="mt-0.5 text-xs text-muted">
                       {inq.email}
                       {inq.phone ? ` · ${inq.phone}` : ""}
                       {inq.packageName ? ` · ${inq.packageName}` : ""}
@@ -183,28 +183,28 @@ export default function ManageInquiriesPage() {
                   </div>
                   <div className="text-right">
                     {inq.totalNad != null && inq.totalNad > 0 && (
-                      <p className="text-sm font-bold text-slate-900">
+                      <p className="text-sm font-bold text-charcoal">
                         N${inq.totalNad.toLocaleString()}
                       </p>
                     )}
-                    <p className="text-xs text-slate-500">{fmtDateTime(inq.createdAt)}</p>
+                    <p className="text-xs text-muted">{fmtDateTime(inq.createdAt)}</p>
                   </div>
                 </button>
 
                 {open && (
-                  <div className="border-t border-slate-100 bg-slate-50/60 px-5 py-4">
+                  <div className="border-t border-line bg-cream-50/60 px-5 py-4">
                     {inq.subject && (
-                      <p className="text-sm text-slate-700">
+                      <p className="text-sm text-charcoal">
                         <span className="font-semibold">Subject:</span> {inq.subject}
                       </p>
                     )}
                     {inq.message && (
-                      <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">
+                      <p className="mt-2 whitespace-pre-wrap text-sm text-charcoal">
                         {inq.message}
                       </p>
                     )}
                     {items.length > 0 && (
-                      <ul className="mt-3 space-y-1 text-sm text-slate-700">
+                      <ul className="mt-3 space-y-1 text-sm text-charcoal">
                         {items.map((it, idx) => (
                           <li key={idx} className="flex justify-between">
                             <span>{it.name}</span>
@@ -218,7 +218,7 @@ export default function ManageInquiriesPage() {
                         <button
                           type="button"
                           onClick={() => setStatus(inq.id, "in_progress")}
-                          className="rounded-lg bg-sky-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-sky-700"
+                          className="rounded-lg bg-sky-600 px-3 py-1.5 text-xs font-semibold text-offwhite hover:bg-sky-700"
                         >
                           Mark in progress
                         </button>
@@ -227,7 +227,7 @@ export default function ManageInquiriesPage() {
                         <button
                           type="button"
                           onClick={() => setStatus(inq.id, "resolved")}
-                          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-offwhite hover:bg-emerald-700"
                         >
                           Mark resolved
                         </button>
@@ -236,14 +236,14 @@ export default function ManageInquiriesPage() {
                         <button
                           type="button"
                           onClick={() => setStatus(inq.id, "new")}
-                          className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                          className="rounded-lg border border-line px-3 py-1.5 text-xs font-semibold text-charcoal hover:bg-line"
                         >
                           Reopen
                         </button>
                       )}
                       <a
                         href={`mailto:${inq.email}`}
-                        className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                        className="rounded-lg border border-line px-3 py-1.5 text-xs font-semibold text-charcoal hover:bg-line"
                       >
                         Email client
                       </a>

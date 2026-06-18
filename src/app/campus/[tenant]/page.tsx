@@ -77,7 +77,7 @@ export default async function CampusOverviewPage({ params }: Props) {
         />
       </div>
 
-      <h2 className="mb-4 text-lg font-semibold text-slate-900">Modules</h2>
+      <h2 className="mb-4 text-lg font-semibold text-charcoal">Modules</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {modules.map((m) => {
           const Icon = m.icon;
@@ -85,13 +85,13 @@ export default async function CampusOverviewPage({ params }: Props) {
             <Link
               key={m.id}
               href={m.href(slug)}
-              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-blue-300 hover:shadow-sm"
+              className="flex items-start gap-3 rounded-xl border border-line bg-offwhite p-4 transition hover:border-blue-300 hover:shadow-sm"
             >
-              <div className="rounded-lg bg-slate-100 p-2">
-                <Icon className="h-5 w-5 text-slate-700" />
+              <div className="rounded-lg bg-line p-2">
+                <Icon className="h-5 w-5 text-charcoal" />
               </div>
               <div>
-                <p className="font-medium text-slate-900">{m.label}</p>
+                <p className="font-medium text-charcoal">{m.label}</p>
                 {m.badge && (
                   <span className="text-xs font-semibold text-blue-600">{m.badge}</span>
                 )}

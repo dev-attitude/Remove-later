@@ -78,7 +78,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
         <Link
           href="/"
-          className="flex shrink-0 items-center rounded-lg bg-white px-2.5 py-1.5 ring-1 ring-line transition hover:ring-charcoal/20"
+          className="flex shrink-0 items-center rounded-lg bg-offwhite px-2.5 py-1.5 ring-1 ring-line transition hover:ring-charcoal/20"
         >
           <BrandLogo className="h-9 w-auto md:h-10" priority onDark />
         </Link>

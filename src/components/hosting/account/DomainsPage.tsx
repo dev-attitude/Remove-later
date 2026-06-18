@@ -51,7 +51,7 @@ export function DomainsPage() {
       />
 
       <div className="relative mb-4 max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
         <input
           type="search"
           placeholder="Search domains…"
@@ -61,12 +61,12 @@ export function DomainsPage() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-sm">
         {filtered.length === 0 ? (
-          <p className="p-8 text-center text-slate-600">No domains found.</p>
+          <p className="p-8 text-center text-muted">No domains found.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-4 py-3">Domain</th>
                 <th className="px-4 py-3">Status</th>
@@ -76,14 +76,14 @@ export function DomainsPage() {
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {filtered.map((d) => (
                 <tr key={d.domain}>
                   <td className="px-4 py-3 font-medium text-navy">{d.domain}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={d.status} />
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted">
                     {new Date(d.expiresAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
@@ -93,7 +93,7 @@ export function DomainsPage() {
                       label={`Auto-renew ${d.domain}`}
                     />
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{d.privacy ? "On" : "Off"}</td>
+                  <td className="px-4 py-3 text-muted">{d.privacy ? "On" : "Off"}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button
@@ -121,13 +121,13 @@ export function DomainsPage() {
       </div>
 
       {dnsDomain && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-offwhite p-6 shadow-xl">
             <h2 className="text-lg font-bold text-navy">DNS — {dnsDomain}</h2>
-            <p className="mt-1 text-sm text-slate-500">Edit records for this domain</p>
+            <p className="mt-1 text-sm text-muted">Edit records for this domain</p>
             <div className="mt-4 space-y-3">
               {dnsRecords.map((r, i) => (
-                <div key={r.id} className="grid gap-2 rounded-lg border border-slate-200 p-3 sm:grid-cols-4">
+                <div key={r.id} className="grid gap-2 rounded-lg border border-line p-3 sm:grid-cols-4">
                   <select
                     value={r.type}
                     onChange={(e) => {

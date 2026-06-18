@@ -47,25 +47,25 @@ export function AppsPage() {
                 setDomain(domains[0] ?? "");
                 setMessage("");
               }}
-              className="rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-royal/40"
+              className="rounded-xl border border-line bg-offwhite p-4 text-left shadow-sm transition hover:border-royal/40"
             >
               <p className="font-semibold text-navy">{app.name}</p>
-              <p className="mt-1 text-xs text-slate-500">{app.desc}</p>
-              <p className="mt-2 text-xs text-slate-400">v{app.version}</p>
+              <p className="mt-1 text-xs text-muted">{app.desc}</p>
+              <p className="mt-2 text-xs text-muted">v{app.version}</p>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-100 px-6 py-4">
+      <div className="rounded-xl border border-line bg-offwhite shadow-sm">
+        <div className="border-b border-line px-6 py-4">
           <h2 className="font-bold text-navy">Installed apps</h2>
         </div>
         {account.installedApps.length === 0 ? (
-          <p className="p-6 text-slate-600">No apps installed yet.</p>
+          <p className="p-6 text-muted">No apps installed yet.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-cream-50 text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-4 py-3">App</th>
                 <th className="px-4 py-3">Domain</th>
@@ -74,13 +74,13 @@ export function AppsPage() {
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {account.installedApps.map((app) => (
                 <tr key={app.id}>
                   <td className="px-4 py-3 font-medium text-navy">{app.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{app.domain}</td>
-                  <td className="px-4 py-3 text-slate-600">{app.version}</td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted">{app.domain}</td>
+                  <td className="px-4 py-3 text-muted">{app.version}</td>
+                  <td className="px-4 py-3 text-muted">
                     {new Date(app.installedAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -105,10 +105,10 @@ export function AppsPage() {
       )}
 
       {selectedApp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/50 p-4">
           <form
             onSubmit={handleInstall}
-            className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+            className="w-full max-w-md rounded-xl bg-offwhite p-6 shadow-xl"
           >
             <h2 className="text-lg font-bold text-navy">Install {selectedApp.name}</h2>
             <label className="mt-4 block text-sm font-medium text-navy">Select domain</label>

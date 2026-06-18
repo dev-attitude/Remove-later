@@ -52,7 +52,7 @@ export function EmailPage() {
 
       <form
         onSubmit={handleCreate}
-        className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+        className="rounded-xl border border-line bg-offwhite p-6 shadow-sm"
       >
         <h2 className="flex items-center gap-2 font-bold text-navy">
           <Plus className="h-5 w-5" />
@@ -60,7 +60,7 @@ export function EmailPage() {
         </h2>
         <div className="mt-4 flex flex-wrap items-end gap-2">
           <div>
-            <label className="text-xs font-medium text-slate-500">Local part</label>
+            <label className="text-xs font-medium text-muted">Local part</label>
             <input
               value={localPart}
               onChange={(e) => setLocalPart(e.target.value)}
@@ -69,9 +69,9 @@ export function EmailPage() {
               required
             />
           </div>
-          <span className="pb-2 text-slate-500">@</span>
+          <span className="pb-2 text-muted">@</span>
           <div>
-            <label className="text-xs font-medium text-slate-500">Domain</label>
+            <label className="text-xs font-medium text-muted">Domain</label>
             <select
               value={selectedDomain}
               onChange={(e) => setDomain(e.target.value)}
@@ -96,12 +96,12 @@ export function EmailPage() {
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </form>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-sm">
         {account.emails.length === 0 ? (
-          <p className="p-8 text-center text-slate-600">No mailboxes yet — create one above.</p>
+          <p className="p-8 text-center text-muted">No mailboxes yet — create one above.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-4 py-3">Address</th>
                 <th className="px-4 py-3">Storage</th>
@@ -109,7 +109,7 @@ export function EmailPage() {
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {account.emails.map((m) => (
                 <tr key={m.id}>
                   <td className="px-4 py-3">
@@ -118,7 +118,7 @@ export function EmailPage() {
                       {m.address}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted">
                     {m.storageUsedMb} MB / {m.quotaMb >= 1024 ? `${m.quotaMb / 1024} GB` : `${m.quotaMb} MB`}
                   </td>
                   <td className="px-4 py-3">

@@ -48,13 +48,13 @@ export default function HowItWorksPage() {
       <ModuleWorkspace>
         <Card className="mb-8 border-brand-200 bg-brand-50/30">
           <CardTitle>Quick start</CardTitle>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-slate-700">
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-charcoal">
             <li>
-              Install: <code className="rounded bg-white px-1">cd gm-research-suite && npm install && npm run dev</code>
+              Install: <code className="rounded bg-offwhite px-1">cd gm-research-suite && npm install && npm run dev</code>
             </li>
             <li>Open the <Link href="/research" className="text-brand-600 underline">portal hub</Link> — choose Institution, Student, Analysis, or Developer.</li>
             <li>
-              Demo mode uses <strong>mock AI</strong> in <code className="rounded bg-white px-1">src/lib/mock-ai.ts</code>.
+              Demo mode uses <strong>mock AI</strong> in <code className="rounded bg-offwhite px-1">src/lib/mock-ai.ts</code>.
               Replace with OpenAI, Anthropic, or your backend API.
             </li>
           </ol>
@@ -64,12 +64,12 @@ export default function HowItWorksPage() {
         <div className="space-y-4">
           {FLOW.map((f) => (
             <Card key={f.step} className="flex gap-4 !p-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-white">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-offwhite">
                 {f.step}
               </div>
               <div>
-                <p className="font-semibold text-slate-900">{f.title}</p>
-                <p className="mt-1 text-sm text-slate-600">{f.body}</p>
+                <p className="font-semibold text-charcoal">{f.title}</p>
+                <p className="mt-1 text-sm text-muted">{f.body}</p>
               </div>
             </Card>
           ))}
@@ -77,7 +77,7 @@ export default function HowItWorksPage() {
 
         <h2 className="mb-4 mt-10 font-display text-xl font-bold">System architecture</h2>
         <Card>
-          <pre className="overflow-x-auto text-xs leading-relaxed text-slate-700">{`
+          <pre className="overflow-x-auto text-xs leading-relaxed text-charcoal">{`
 ┌─────────────────────────────────────────────────────────────────┐
 │                  Skyrapay Research Suite (Web)                   │
 │  Next.js UI · Dashboard · 18 modules · Role-based views          │
@@ -105,12 +105,12 @@ Service   Vector    Search      Engine     Services   + Repo
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-slate-500">
+              <tr className="border-b border-line text-muted">
                 <th className="py-2 pr-4">Module</th>
                 <th className="py-2">How it works (production)</th>
               </tr>
             </thead>
-            <tbody className="text-slate-700">
+            <tbody className="text-charcoal">
               {[
                 ["Writing", "LLM + RAG over user docs; citation plugin (CrossRef)"],
                 ["Understanding", "PDF parse → chunk → embeddings → Q&A / quiz gen"],
@@ -123,7 +123,7 @@ Service   Vector    Search      Engine     Services   + Repo
                 ["Collaboration", "WebSocket chat; CRDT or versioned docs"],
                 ["Mobile", "React Native; offline SQLite; same API"],
               ].map(([mod, tech]) => (
-                <tr key={mod} className="border-b border-slate-100">
+                <tr key={mod} className="border-b border-line">
                   <td className="py-2 pr-4 font-medium">{mod}</td>
                   <td className="py-2">{tech}</td>
                 </tr>
@@ -135,13 +135,13 @@ Service   Vector    Search      Engine     Services   + Repo
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/student/writing"
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-offwhite hover:bg-brand-700"
           >
             Try writing (Student portal) <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
             href="/research"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2 text-sm font-medium hover:bg-cream-50"
           >
             Back to portals
           </Link>

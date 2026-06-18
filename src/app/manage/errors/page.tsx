@@ -42,7 +42,7 @@ export default function ManageErrorsPage() {
   }, []);
 
   if (error) return <p className="text-sm text-red-600">{error}</p>;
-  if (!data) return <p className="text-sm text-slate-500">Loading technical errors…</p>;
+  if (!data) return <p className="text-sm text-muted">Loading technical errors…</p>;
 
   return (
     <div>
@@ -61,13 +61,13 @@ export default function ManageErrorsPage() {
         <Card variant="manage">
           <CardTitle>By source (7 days)</CardTitle>
           {data.bySource.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-500">No errors this week.</p>
+            <p className="mt-2 text-sm text-muted">No errors this week.</p>
           ) : (
             <ul className="mt-2 space-y-1 text-sm">
               {data.bySource.map((s) => (
                 <li key={s.source} className="flex justify-between">
-                  <span className="text-slate-600">{s.source}</span>
-                  <span className="font-semibold text-slate-900">{s.count}</span>
+                  <span className="text-muted">{s.source}</span>
+                  <span className="font-semibold text-charcoal">{s.count}</span>
                 </li>
               ))}
             </ul>
@@ -76,22 +76,22 @@ export default function ManageErrorsPage() {
       </div>
 
       <Card className="!p-0 overflow-hidden">
-        <div className="border-b border-slate-200 px-5 py-4">
+        <div className="border-b border-line px-5 py-4">
           <CardTitle>Latest errors</CardTitle>
         </div>
         {data.errors.length === 0 ? (
-          <p className="p-5 text-sm text-slate-500">
+          <p className="p-5 text-sm text-muted">
             No errors recorded yet. When a client hits a server error (AI writing, plagiarism
             checks, hosting orders, contact forms…), it will appear here with the affected user.
           </p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line">
             {data.errors.map((e) => (
               <li key={e.id} className="flex gap-3 px-5 py-3.5">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-slate-900">{e.message}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="text-sm font-medium text-charcoal">{e.message}</p>
+                  <p className="mt-0.5 text-xs text-muted">
                     {e.source} · {fmtDateTime(e.createdAt)}
                     {e.user ? ` · ${e.user.name ?? e.user.email}` : ""}
                   </p>

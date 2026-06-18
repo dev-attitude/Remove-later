@@ -46,7 +46,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-cream-50 p-6">
       <Card className="w-full max-w-md">
         <CardTitle>Sign in to Skyrapay Research Suite</CardTitle>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -55,7 +55,7 @@ export default function LoginPage() {
             <input
               type="email"
               required
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -73,7 +73,7 @@ export default function LoginPage() {
             <input
               type="password"
               required
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -83,13 +83,13 @@ export default function LoginPage() {
             {loading ? "Signing in…" : "Sign in"}
           </Button>
         </form>
-        <p className="mt-4 text-center text-sm text-slate-600">
+        <p className="mt-4 text-center text-sm text-muted">
           No account?{" "}
           <Link href="/register" className="font-medium text-brand-600 underline">
             Register
           </Link>
         </p>
-        <Link href="/research" className="mt-4 block text-center text-sm text-slate-500 underline">
+        <Link href="/research" className="mt-4 block text-center text-sm text-muted underline">
           Back to portals
         </Link>
       </Card>

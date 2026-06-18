@@ -25,7 +25,7 @@ export function StarRating({ rating, max = 5, size = "md", className = "" }: Sta
         return (
           <Star
             key={i}
-            className={`${SIZE[size]} ${filled ? "fill-amber-400 text-amber-400" : "text-slate-200"}`}
+            className={`${SIZE[size]} ${filled ? "fill-amber-400 text-amber-400" : "text-offwhite"}`}
           />
         );
       })}

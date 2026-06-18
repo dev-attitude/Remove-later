@@ -294,8 +294,8 @@ export const PORTALS: Record<PortalId, PortalConfig> = {
     description:
       "Your control center: manage all portals, subscriptions, revenue, API keys, deployments, and system health.",
     icon: Code2,
-    accent: "from-slate-700 to-slate-900",
-    gradient: "bg-gradient-to-br from-slate-950 via-slate-800 to-slate-900",
+    accent: "from-charcoal to-charcoal",
+    gradient: "bg-gradient-to-br from-charcoal via-charcoal to-charcoal",
     roles: ["Platform Developer", "Owner", "DevOps"],
     moduleIds: [
       "developer-console",

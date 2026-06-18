@@ -72,7 +72,7 @@ export default function ManageIncomePage() {
           <CardTitle>Record income</CardTitle>
           <form onSubmit={submit} className="mt-4 space-y-3">
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.clientId}
               onChange={(e) => setForm({ ...form, clientId: e.target.value })}
             >
@@ -89,18 +89,18 @@ export default function ManageIncomePage() {
               step="0.01"
               min="0"
               placeholder="Amount (NAD) *"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
             <input
               type="date"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
             >
@@ -111,7 +111,7 @@ export default function ManageIncomePage() {
               ))}
             </select>
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.paymentMethod}
               onChange={(e) => setForm({ ...form, paymentMethod: e.target.value })}
             >
@@ -123,7 +123,7 @@ export default function ManageIncomePage() {
             </select>
             <input
               placeholder="Description"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
@@ -137,11 +137,11 @@ export default function ManageIncomePage() {
             {income.map((i) => (
               <li
                 key={i.id}
-                className="flex justify-between gap-2 border-b border-slate-100 py-2 text-sm"
+                className="flex justify-between gap-2 border-b border-line py-2 text-sm"
               >
                 <div>
-                  <p className="font-medium text-slate-900">{formatNad(i.amount)}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="font-medium text-charcoal">{formatNad(i.amount)}</p>
+                  <p className="text-xs text-muted">
                     {i.client?.name || "General"} · {new Date(i.date).toLocaleDateString()}
                     {i.engagement ? ` · ${i.engagement.title}` : ""}
                   </p>
@@ -149,7 +149,7 @@ export default function ManageIncomePage() {
               </li>
             ))}
             {income.length === 0 && (
-              <li className="text-sm text-slate-500">No income recorded yet.</li>
+              <li className="text-sm text-muted">No income recorded yet.</li>
             )}
           </ul>
         </Card>

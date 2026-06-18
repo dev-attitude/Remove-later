@@ -64,18 +64,18 @@ export default function ManageExpensesPage() {
               step="0.01"
               min="0"
               placeholder="Amount (NAD) *"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
             />
             <input
               type="date"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
             >
@@ -87,13 +87,13 @@ export default function ManageExpensesPage() {
             </select>
             <input
               placeholder="Vendor / payee"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.vendor}
               onChange={(e) => setForm({ ...form, vendor: e.target.value })}
             />
             <input
               placeholder="Description"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
@@ -107,11 +107,11 @@ export default function ManageExpensesPage() {
             {expenses.map((x) => (
               <li
                 key={x.id}
-                className="flex justify-between gap-2 border-b border-slate-100 py-2 text-sm"
+                className="flex justify-between gap-2 border-b border-line py-2 text-sm"
               >
                 <div>
-                  <p className="font-medium text-slate-900">{formatNad(x.amount)}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="font-medium text-charcoal">{formatNad(x.amount)}</p>
+                  <p className="text-xs text-muted">
                     {x.vendor || x.category} · {new Date(x.date).toLocaleDateString()}
                     {x.engagement ? ` · ${x.engagement.title}` : ""}
                   </p>
@@ -119,7 +119,7 @@ export default function ManageExpensesPage() {
               </li>
             ))}
             {expenses.length === 0 && (
-              <li className="text-sm text-slate-500">No expenses recorded yet.</li>
+              <li className="text-sm text-muted">No expenses recorded yet.</li>
             )}
           </ul>
         </Card>

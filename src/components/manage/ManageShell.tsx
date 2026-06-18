@@ -38,7 +38,7 @@ export function ManageShell({
         <button
           type="button"
           aria-label="Close menu"
-          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-charcoal/60 backdrop-blur-sm lg:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -51,31 +51,31 @@ export function ManageShell({
       </div>
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+        <header className="sticky top-0 z-30 border-b border-line/80 bg-offwhite/90 backdrop-blur-md">
           <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
-                className="rounded-lg border border-slate-200 bg-white p-2 shadow-sm lg:hidden"
+                className="rounded-lg border border-line bg-offwhite p-2 shadow-sm lg:hidden"
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open menu"
               >
-                <Menu className="h-5 w-5 text-slate-700" />
+                <Menu className="h-5 w-5 text-charcoal" />
               </button>
               <div className="hidden min-w-0 sm:block">
-                <p className="truncate text-sm font-semibold text-slate-900">Business Manager</p>
-                <p className="truncate text-xs text-slate-500">{BRAND.companyLegal}</p>
+                <p className="truncate text-sm font-semibold text-charcoal">Business Manager</p>
+                <p className="truncate text-xs text-muted">{BRAND.companyLegal}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="hidden text-right sm:block">
-                <p className="text-xs font-medium text-slate-500">Signed in as</p>
-                <p className="max-w-[200px] truncate text-sm font-semibold text-slate-900">
+                <p className="text-xs font-medium text-muted">Signed in as</p>
+                <p className="max-w-[200px] truncate text-sm font-semibold text-charcoal">
                   {userLabel}
                 </p>
               </div>
               <div
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 text-xs font-bold text-white shadow-sm ring-2 ring-white"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 text-xs font-bold text-offwhite shadow-sm ring-2 ring-offwhite"
                 aria-hidden
               >
                 {initials}

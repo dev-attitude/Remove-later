@@ -39,13 +39,13 @@ export function HostingOfferingCard({ plan }: { plan: BusinessPackage }) {
       }`}
     >
       {plan.popular && (
-        <span className="absolute -top-3 right-4 rounded-full bg-royal px-3 py-0.5 text-xs font-bold text-white">
+        <span className="absolute -top-3 right-4 rounded-full bg-royal px-3 py-0.5 text-xs font-bold text-offwhite">
           Most popular
         </span>
       )}
       <Icon className="h-8 w-8 text-royal" />
       <h3 className="mt-4 text-xl font-bold text-navy">{plan.name}</h3>
-      <p className="mt-2 flex-1 text-sm text-slate-600">{plan.description}</p>
+      <p className="mt-2 flex-1 text-sm text-muted">{plan.description}</p>
       <div className="mt-4">
         {plan.price > 0 ? (
           <HostingPrice
@@ -57,7 +57,7 @@ export function HostingOfferingCard({ plan }: { plan: BusinessPackage }) {
           <p className="text-lg font-bold text-navy">{plan.priceLabel ?? "Included with hosting"}</p>
         )}
       </div>
-      <ul className="mt-4 space-y-2 text-sm text-slate-700">
+      <ul className="mt-4 space-y-2 text-sm text-charcoal">
         {plan.includes.map((item) => (
           <li key={item} className="flex gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />

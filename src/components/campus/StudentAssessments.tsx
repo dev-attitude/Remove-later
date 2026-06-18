@@ -20,8 +20,8 @@ export function StudentAssessments({ assessments }: { assessments: Assessment[] 
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">
-          Due now <span className="text-sm font-normal text-slate-500">({open.length})</span>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">
+          Due now <span className="text-sm font-normal text-muted">({open.length})</span>
         </h2>
         <div className="space-y-3">
           {open.map((a) => (
@@ -31,23 +31,23 @@ export function StudentAssessments({ assessments }: { assessments: Assessment[] 
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${TYPE_STYLES[a.type]}`}>
                     {a.type}
                   </span>
-                  <p className="font-medium text-slate-900">{a.title}</p>
+                  <p className="font-medium text-charcoal">{a.title}</p>
                 </div>
-                <p className="mt-1 text-xs text-slate-600">
+                <p className="mt-1 text-xs text-muted">
                   {a.module} · Due {a.due}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setSubmitted((s) => [...s, a.id])}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-2 text-xs font-medium text-white"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-charcoal px-3 py-2 text-xs font-medium text-offwhite"
               >
                 <Upload className="h-3.5 w-3.5" /> Submit (demo)
               </button>
             </div>
           ))}
           {open.length === 0 && (
-            <p className="rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
+            <p className="rounded-xl border border-dashed border-line bg-offwhite p-4 text-sm text-muted">
               Nothing due — you are up to date.
             </p>
           )}
@@ -55,25 +55,25 @@ export function StudentAssessments({ assessments }: { assessments: Assessment[] 
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Awaiting grading</h2>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">Awaiting grading</h2>
         <div className="space-y-3">
           {pending.map((a) => (
-            <div key={a.id} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
-              <Clock className="h-5 w-5 text-slate-400" />
+            <div key={a.id} className="flex items-center gap-3 rounded-xl border border-line bg-offwhite p-4">
+              <Clock className="h-5 w-5 text-muted" />
               <div>
-                <p className="font-medium text-slate-900">{a.title}</p>
-                <p className="text-xs text-slate-500">{a.module} · Submitted</p>
+                <p className="font-medium text-charcoal">{a.title}</p>
+                <p className="text-xs text-muted">{a.module} · Submitted</p>
               </div>
             </div>
           ))}
           {pending.length === 0 && (
-            <p className="text-sm text-slate-500">No submissions awaiting grades.</p>
+            <p className="text-sm text-muted">No submissions awaiting grades.</p>
           )}
         </div>
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Graded</h2>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">Graded</h2>
         <div className="space-y-3">
           {graded.map((a) => (
             <div key={a.id} className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
@@ -81,14 +81,14 @@ export function StudentAssessments({ assessments }: { assessments: Assessment[] 
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                   <div>
-                    <p className="font-medium text-slate-900">{a.title}</p>
-                    <p className="text-xs text-slate-600">{a.module}</p>
+                    <p className="font-medium text-charcoal">{a.title}</p>
+                    <p className="text-xs text-muted">{a.module}</p>
                   </div>
                 </div>
                 <span className="text-2xl font-bold text-emerald-800">{a.mark}%</span>
               </div>
               {a.feedback && (
-                <p className="mt-2 rounded-lg bg-white/70 p-2 text-sm text-slate-700">
+                <p className="mt-2 rounded-lg bg-offwhite/70 p-2 text-sm text-charcoal">
                   <span className="font-medium">Feedback:</span> {a.feedback}
                 </p>
               )}

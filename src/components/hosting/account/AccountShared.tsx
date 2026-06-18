@@ -5,10 +5,10 @@ import { Server } from "lucide-react";
 
 export function AccountEmptyState() {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center">
-      <Server className="mx-auto h-12 w-12 text-slate-300" />
+    <div className="rounded-2xl border border-line bg-offwhite p-12 text-center">
+      <Server className="mx-auto h-12 w-12 text-muted" />
       <h2 className="mt-4 text-xl font-bold text-navy">No hosting account yet</h2>
-      <p className="mt-2 text-slate-600">
+      <p className="mt-2 text-muted">
         Place an order to activate your client account and manage domains, hosting, email, and SSL.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -36,7 +36,7 @@ export function AccountPageHeader({
     <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
       <div>
         <h1 className="text-xl font-bold text-navy md:text-2xl">{title}</h1>
-        {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
+        {description && <p className="mt-1 text-sm text-muted">{description}</p>}
       </div>
       {action}
     </div>
@@ -49,12 +49,12 @@ export function StatusBadge({ status }: { status: string }) {
     pending: "bg-amber-100 text-amber-800",
     expired: "bg-red-100 text-red-800",
     expiring: "bg-orange-100 text-orange-800",
-    suspended: "bg-slate-200 text-slate-700",
+    suspended: "bg-line text-charcoal",
   };
   return (
     <span
       className={`rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${
-        styles[status] ?? "bg-slate-100 text-slate-700"
+        styles[status] ?? "bg-line text-charcoal"
       }`}
     >
       {status}
@@ -66,13 +66,13 @@ export function UsageBar({ used, total, label }: { used: number; total: number; 
   const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
   return (
     <div>
-      <div className="flex justify-between text-xs text-slate-600">
+      <div className="flex justify-between text-xs text-muted">
         <span>{label}</span>
         <span>
           {used} / {total} GB ({pct}%)
         </span>
       </div>
-      <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-200">
+      <div className="mt-1 h-2 overflow-hidden rounded-full bg-line">
         <div
           className={`h-full rounded-full ${pct > 85 ? "bg-red-500" : "bg-royal"}`}
           style={{ width: `${pct}%` }}
@@ -99,11 +99,11 @@ export function ToggleSwitch({
       aria-label={label}
       onClick={onChange}
       className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-        checked ? "bg-royal" : "bg-slate-300"
+        checked ? "bg-royal" : "bg-line"
       }`}
     >
       <span
-        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition ${
+        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-offwhite shadow transition ${
           checked ? "translate-x-5" : ""
         }`}
       />

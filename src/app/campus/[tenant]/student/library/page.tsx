@@ -19,9 +19,9 @@ export default async function LibraryPage({ params }: Props) {
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-xs text-slate-500">Books on loan</p>
-          <p className="text-2xl font-bold text-slate-900">{LIBRARY_LOANS.length}</p>
+        <div className="rounded-xl border border-line bg-offwhite p-4">
+          <p className="text-xs text-muted">Books on loan</p>
+          <p className="text-2xl font-bold text-charcoal">{LIBRARY_LOANS.length}</p>
         </div>
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
           <p className="text-xs text-rose-700">Overdue</p>
@@ -35,24 +35,24 @@ export default async function LibraryPage({ params }: Props) {
         </div>
       </div>
 
-      <h2 className="mb-3 text-lg font-semibold text-slate-900">My loans</h2>
+      <h2 className="mb-3 text-lg font-semibold text-charcoal">My loans</h2>
       <div className="space-y-3">
         {LIBRARY_LOANS.map((l) => (
           <div
             key={l.title}
             className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4 ${
-              l.overdue ? "border-rose-200 bg-rose-50" : "border-slate-200 bg-white"
+              l.overdue ? "border-rose-200 bg-rose-50" : "border-line bg-offwhite"
             }`}
           >
             <div className="flex items-start gap-3">
-              <BookMarked className="mt-0.5 h-5 w-5 text-slate-400" />
+              <BookMarked className="mt-0.5 h-5 w-5 text-muted" />
               <div>
-                <p className="font-medium text-slate-900">{l.title}</p>
-                <p className="text-xs text-slate-500">{l.author}</p>
+                <p className="font-medium text-charcoal">{l.title}</p>
+                <p className="text-xs text-muted">{l.author}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className={`text-sm font-semibold ${l.overdue ? "text-rose-700" : "text-slate-700"}`}>
+              <p className={`text-sm font-semibold ${l.overdue ? "text-rose-700" : "text-charcoal"}`}>
                 Due {l.due}
               </p>
               {l.overdue && <p className="text-xs font-medium text-rose-600">Overdue — fines accruing</p>}

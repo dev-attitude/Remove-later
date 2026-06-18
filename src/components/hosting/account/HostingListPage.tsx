@@ -58,16 +58,16 @@ export function HostingListPage() {
       />
 
       {account.hostingServices.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-600">
+        <div className="rounded-xl border border-line bg-offwhite p-8 text-center text-muted">
           No hosting packages on this account.
         </div>
       ) : (
         account.hostingServices.map((host) => (
-          <div key={host.id} className="rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 px-6 py-4">
+          <div key={host.id} className="rounded-xl border border-line bg-offwhite shadow-sm">
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line px-6 py-4">
               <div>
                 <p className="text-lg font-bold text-navy">{host.planName}</p>
-                <p className="text-sm text-slate-500">{host.primaryDomain}</p>
+                <p className="text-sm text-muted">{host.primaryDomain}</p>
               </div>
               <StatusBadge status={host.status} />
             </div>
@@ -75,10 +75,10 @@ export function HostingListPage() {
               <UsageBar used={host.diskUsedGb} total={host.diskTotalGb} label="Disk usage" />
               <UsageBar used={host.bandwidthUsedGb} total={host.bandwidthTotalGb} label="Bandwidth" />
             </div>
-            <div className="border-t border-slate-100 px-6 py-4">
+            <div className="border-t border-line px-6 py-4">
               <dl className="grid gap-4 text-sm sm:grid-cols-3">
                 <div>
-                  <dt className="text-slate-500">PHP version</dt>
+                  <dt className="text-muted">PHP version</dt>
                   <dd className="mt-1">
                     <select
                       value={host.phpVersion}
@@ -94,12 +94,12 @@ export function HostingListPage() {
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Backups</dt>
+                  <dt className="text-muted">Backups</dt>
                   <dd className="mt-1 font-medium capitalize text-navy">{host.backupSchedule}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">cPanel</dt>
-                  <dd className="mt-1 truncate font-mono text-xs text-slate-600">{account.cpanelUrl}</dd>
+                  <dt className="text-muted">cPanel</dt>
+                  <dd className="mt-1 truncate font-mono text-xs text-muted">{account.cpanelUrl}</dd>
                 </div>
               </dl>
             </div>
@@ -107,12 +107,12 @@ export function HostingListPage() {
         ))
       )}
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-100 px-6 py-4">
+      <div className="rounded-xl border border-line bg-offwhite shadow-sm">
+        <div className="border-b border-line px-6 py-4">
           <h2 className="font-bold text-navy">MySQL databases</h2>
-          <p className="text-sm text-slate-500">Create and manage databases — access via phpMyAdmin in cPanel</p>
+          <p className="text-sm text-muted">Create and manage databases — access via phpMyAdmin in cPanel</p>
         </div>
-        <form onSubmit={handleAddDb} className="flex flex-wrap gap-2 border-b border-slate-100 px-6 py-4">
+        <form onSubmit={handleAddDb} className="flex flex-wrap gap-2 border-b border-line px-6 py-4">
           <input
             value={newDbName}
             onChange={(e) => setNewDbName(e.target.value)}
@@ -127,10 +127,10 @@ export function HostingListPage() {
           {dbError && <p className="w-full text-sm text-red-600">{dbError}</p>}
         </form>
         {account.databases.length === 0 ? (
-          <p className="p-6 text-slate-600">No databases yet.</p>
+          <p className="p-6 text-muted">No databases yet.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-cream-50 text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Engine</th>
@@ -139,13 +139,13 @@ export function HostingListPage() {
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {account.databases.map((db) => (
                 <tr key={db.id}>
                   <td className="px-4 py-3 font-mono font-medium text-navy">{db.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{db.engine}</td>
-                  <td className="px-4 py-3 text-slate-600">{db.sizeMb} MB</td>
-                  <td className="px-4 py-3 text-slate-600">{db.users}</td>
+                  <td className="px-4 py-3 text-muted">{db.engine}</td>
+                  <td className="px-4 py-3 text-muted">{db.sizeMb} MB</td>
+                  <td className="px-4 py-3 text-muted">{db.users}</td>
                   <td className="px-4 py-3 text-right">
                     <button
                       type="button"

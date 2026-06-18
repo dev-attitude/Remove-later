@@ -8,7 +8,7 @@ export function StudentAssistanceSection() {
     <div className="mt-16 space-y-12">
       <section>
         <h2 className="text-2xl font-bold text-navy">Dedicated writing services</h2>
-        <p className="mt-2 max-w-3xl text-slate-600">
+        <p className="mt-2 max-w-3xl text-muted">
           For fixed packages and formal quotations, browse our dedicated services:
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
@@ -23,7 +23,7 @@ export function StudentAssistanceSection() {
 
       <section>
         <h2 className="text-2xl font-bold text-navy">How we help students</h2>
-        <p className="mt-2 max-w-3xl text-slate-600">
+        <p className="mt-2 max-w-3xl text-muted">
           Whether you need help with a single assignment or a full research project, we work with
           you step by step—writing, research design, data collection, and analysis.
         </p>
@@ -34,10 +34,10 @@ export function StudentAssistanceSection() {
                 <BookOpen className="h-6 w-6 shrink-0 text-royal" />
                 <div>
                   <h3 className="text-lg font-bold text-navy">{area.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600">{area.description}</p>
+                  <p className="mt-2 text-sm text-muted">{area.description}</p>
                 </div>
               </div>
-              <ul className="mt-4 flex-1 space-y-2 text-sm text-slate-700">
+              <ul className="mt-4 flex-1 space-y-2 text-sm text-charcoal">
                 {area.items.map((item) => (
                   <li key={item} className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -50,12 +50,12 @@ export function StudentAssistanceSection() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-royal/20 bg-gradient-to-br from-brand-50 to-white p-6 md:p-8">
+      <section className="rounded-2xl border border-royal/20 bg-gradient-to-br from-brand-50 to-offwhite p-6 md:p-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-royal">Also available</p>
             <h3 className="mt-2 text-xl font-bold text-navy">{COMPANY.productName}</h3>
-            <p className="mt-2 max-w-xl text-sm text-slate-600">
+            <p className="mt-2 max-w-xl text-sm text-muted">
               Self-service AI tools for writing, literature search, citations, research topics,
               plagiarism checks, and more—ideal alongside one-on-one student assistance.
             </p>
@@ -75,7 +75,7 @@ export function StudentAssistanceSection() {
         </div>
       </section>
 
-      <p className="text-center text-xs text-slate-500">
+      <p className="text-center text-xs text-muted">
         We support academic integrity. Submit work that meets your institution&apos;s policies;
         we provide guidance and drafts for your review and learning.
       </p>

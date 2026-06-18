@@ -30,7 +30,7 @@ import {
 const SEVERITY_STYLES = {
   high: "bg-red-50 text-red-800 border-red-200",
   medium: "bg-amber-50 text-amber-900 border-amber-200",
-  low: "bg-slate-50 text-slate-700 border-slate-200",
+  low: "bg-cream-50 text-charcoal border-line",
 };
 
 function formatDate(iso: string) {
@@ -150,7 +150,7 @@ export default function CollaborationPage() {
         moduleId="collaboration"
       />
       <ModuleWorkspace>
-        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-slate-600">
+        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
           Works with external supervisors and any institution. Upload the{" "}
           <strong>marked or revised file from your supervisor</strong> (required). Optionally
           upload <strong>your draft before their edits</strong> for a precise change-by-change
@@ -173,29 +173,29 @@ export default function CollaborationPage() {
               </CardTitle>
               <form onSubmit={handleUpload} className="mt-4 space-y-4">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                  <label className="mb-1 block text-sm font-medium text-charcoal">
                     Title (optional)
                   </label>
                   <input
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-line px-3 py-2 text-sm"
                     placeholder="e.g. Chapter 2 — Methodology review"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                  <label className="mb-1 block text-sm font-medium text-charcoal">
                     Supervisor name (optional)
                   </label>
                   <input
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-line px-3 py-2 text-sm"
                     placeholder="Dr. Smith"
                     value={supervisorName}
                     onChange={(e) => setSupervisorName(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                  <label className="mb-1 block text-sm font-medium text-charcoal">
                     Your draft before feedback (optional)
                   </label>
                   <input
@@ -205,11 +205,11 @@ export default function CollaborationPage() {
                     onChange={(e) => setStudentFile(e.target.files?.[0] ?? null)}
                   />
                   {studentFile && (
-                    <p className="mt-1 text-xs text-slate-500">{studentFile.name}</p>
+                    <p className="mt-1 text-xs text-muted">{studentFile.name}</p>
                   )}
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                  <label className="mb-1 block text-sm font-medium text-charcoal">
                     Supervisor’s returned document <span className="text-red-600">*</span>
                   </label>
                   <input
@@ -220,7 +220,7 @@ export default function CollaborationPage() {
                     onChange={(e) => setSupervisorFile(e.target.files?.[0] ?? null)}
                   />
                   {supervisorFile && (
-                    <p className="mt-1 text-xs text-slate-500">{supervisorFile.name}</p>
+                    <p className="mt-1 text-xs text-muted">{supervisorFile.name}</p>
                   )}
                 </div>
                 <Button type="submit" disabled={uploading || !supervisorFile}>
@@ -239,9 +239,9 @@ export default function CollaborationPage() {
             <Card className="mt-6">
               <CardTitle>Your reviews</CardTitle>
               {loadingList ? (
-                <p className="mt-4 text-sm text-slate-500">Loading…</p>
+                <p className="mt-4 text-sm text-muted">Loading…</p>
               ) : reviews.length === 0 ? (
-                <p className="mt-4 text-sm text-slate-500">
+                <p className="mt-4 text-sm text-muted">
                   No uploads yet. Add a supervisor document to track changes and get revision
                   guidance.
                 </p>
@@ -255,19 +255,19 @@ export default function CollaborationPage() {
                         className={`flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm transition ${
                           selectedId === r.id
                             ? "border-brand-300 bg-brand-50"
-                            : "border-slate-200 hover:bg-slate-50"
+                            : "border-line hover:bg-cream-50"
                         }`}
                       >
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate font-medium text-slate-900">
+                          <span className="block truncate font-medium text-charcoal">
                             {r.title}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-muted">
                             {formatDate(r.createdAt)}
                             {r.status === "complete" && " · Analyzed"}
                           </span>
                         </span>
-                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                        <ChevronRight className="h-4 w-4 shrink-0 text-muted" />
                       </button>
                     </li>
                   ))}
@@ -275,7 +275,7 @@ export default function CollaborationPage() {
               )}
             </Card>
 
-            <p className="mt-4 text-xs text-slate-500">
+            <p className="mt-4 text-xs text-muted">
               If your institution later adopts this platform, live supervisor chat and approvals
               can be enabled alongside this upload workflow.
             </p>
@@ -284,8 +284,8 @@ export default function CollaborationPage() {
           <div className="lg:col-span-3">
             {!selectedId ? (
               <Card className="flex min-h-[320px] flex-col items-center justify-center text-center">
-                <FileText className="h-12 w-12 text-slate-300" />
-                <p className="mt-4 max-w-sm text-sm text-slate-600">
+                <FileText className="h-12 w-12 text-muted" />
+                <p className="mt-4 max-w-sm text-sm text-muted">
                   Select a review from the list or upload a supervisor document to see changes,
                   a summary, and recommended solutions.
                 </p>
@@ -298,10 +298,10 @@ export default function CollaborationPage() {
               <div className="space-y-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <h2 className="font-display text-xl font-bold text-slate-900">
+                    <h2 className="font-display text-xl font-bold text-charcoal">
                       {selected?.title}
                     </h2>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-muted">
                       {selected?.supervisorFileName}
                       {selected?.studentFileName && ` · compared with ${selected.studentFileName}`}
                       {selected?.supervisorName && ` · ${selected.supervisorName}`}
@@ -322,11 +322,11 @@ export default function CollaborationPage() {
                   <>
                     <Card>
                       <CardTitle>Summary</CardTitle>
-                      <p className="mt-3 text-sm leading-relaxed text-slate-700">
+                      <p className="mt-3 text-sm leading-relaxed text-charcoal">
                         {analysis.summary}
                       </p>
                       {selected?.studentFileName && (
-                        <p className="mt-3 text-xs text-slate-500">
+                        <p className="mt-3 text-xs text-muted">
                           Tracked changes: {analysis.diffStats.added} paragraph(s) added,{" "}
                           {analysis.diffStats.removed} removed (
                           {analysis.mode === "live" ? "AI + diff" : "diff"} analysis)
@@ -345,15 +345,15 @@ export default function CollaborationPage() {
                             className={`rounded-xl border p-4 ${SEVERITY_STYLES[c.severity]}`}
                           >
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="rounded-full bg-white/80 px-2 py-0.5 text-xs font-semibold uppercase">
+                              <span className="rounded-full bg-offwhite/80 px-2 py-0.5 text-xs font-semibold uppercase">
                                 {c.category}
                               </span>
-                              <span className="text-xs text-slate-600">{c.location}</span>
+                              <span className="text-xs text-muted">{c.location}</span>
                             </div>
-                            <p className="mt-2 text-sm font-medium text-slate-900">
+                            <p className="mt-2 text-sm font-medium text-charcoal">
                               {c.supervisorChange}
                             </p>
-                            <p className="mt-2 text-sm text-slate-600">
+                            <p className="mt-2 text-sm text-muted">
                               <span className="font-medium">Intent:</span> {c.intent}
                             </p>
                           </li>
@@ -377,8 +377,8 @@ export default function CollaborationPage() {
                               {s.recommendedAction}
                             </p>
                             {s.exampleRevision && (
-                              <p className="mt-3 rounded-lg bg-white p-3 text-sm leading-relaxed text-slate-700">
-                                <span className="font-medium text-slate-500">Example: </span>
+                              <p className="mt-3 rounded-lg bg-offwhite p-3 text-sm leading-relaxed text-charcoal">
+                                <span className="font-medium text-muted">Example: </span>
                                 {s.exampleRevision}
                               </p>
                             )}
@@ -389,7 +389,7 @@ export default function CollaborationPage() {
                   </>
                 ) : (
                   <Card>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-muted">
                       {selected?.status === "failed"
                         ? "Analysis failed. Try uploading again or use DOCX/TXT if PDF extraction failed."
                         : "Analysis not available."}

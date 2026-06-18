@@ -15,9 +15,9 @@ import { usePortalId } from "@/hooks/usePortalId";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { generateResearchTopicsApi, type TopicGenerationResult } from "@/lib/client/api";
 
-const labelClass = "mb-1 block text-sm font-medium text-slate-700";
+const labelClass = "mb-1 block text-sm font-medium text-charcoal";
 const inputClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20";
+  "w-full rounded-lg border border-line bg-offwhite px-3 py-2 text-sm text-charcoal placeholder:text-muted focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20";
 
 type TopicsForm = {
   fieldOfStudy: string;
@@ -86,7 +86,7 @@ export default function ResearchTopicsModule() {
   if (!ws.hydrated) {
     return (
       <ModuleWorkspace>
-        <p className="text-sm text-slate-500">Loading your saved work…</p>
+        <p className="text-sm text-muted">Loading your saved work…</p>
       </ModuleWorkspace>
     );
   }
@@ -110,7 +110,7 @@ export default function ResearchTopicsModule() {
 
         <Card>
           <CardTitle>Your research context</CardTitle>
-          <p className="mb-6 mt-1 text-sm text-slate-500">
+          <p className="mb-6 mt-1 text-sm text-muted">
             Complete every field before generating. Topics are tailored to your research level,
             discipline, location, and methodology.
           </p>
@@ -136,8 +136,8 @@ export default function ResearchTopicsModule() {
                 const selected = RESEARCH_LEVELS.find((l) => l.id === researchLevel);
                 if (!selected) return null;
                 return (
-                  <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 p-4 text-sm text-slate-600">
-                    <p className="font-medium text-slate-800">{selected.short}</p>
+                  <div className="mt-3 rounded-lg border border-line bg-cream-50 p-4 text-sm text-muted">
+                    <p className="font-medium text-charcoal">{selected.short}</p>
                     <ul className="mt-2 space-y-1 text-xs">
                       <li>
                         <span className="font-medium">Complexity:</span> {selected.complexity}
@@ -180,7 +180,7 @@ export default function ResearchTopicsModule() {
                 value={problems}
                 onChange={(e) => ws.setForm({ problems: e.target.value })}
               />
-              <p className="mt-1 text-xs text-slate-400">Minimum 10 characters</p>
+              <p className="mt-1 text-xs text-muted">Minimum 10 characters</p>
             </div>
 
             <div>
@@ -224,8 +224,8 @@ export default function ResearchTopicsModule() {
 
         {result && (
           <div className="mt-8 space-y-8">
-            <p className="text-sm text-slate-500">
-              <span className="font-medium text-slate-700">{result.researchLevelLabel} topics</span>
+            <p className="text-sm text-muted">
+              <span className="font-medium text-charcoal">{result.researchLevelLabel} topics</span>
               {" · "}
               Mode:{" "}
               <span className={result.mode === "live" ? "text-emerald-700" : "text-amber-700"}>
@@ -238,35 +238,35 @@ export default function ResearchTopicsModule() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
                   Topic {index + 1}
                 </p>
-                <h3 className="mt-1 text-lg font-semibold text-slate-900">{topic.title}</h3>
-                <p className="mt-3 text-sm text-slate-700">{topic.rationale}</p>
+                <h3 className="mt-1 text-lg font-semibold text-charcoal">{topic.title}</h3>
+                <p className="mt-3 text-sm text-charcoal">{topic.rationale}</p>
 
                 <div className="mt-4">
-                  <p className="text-sm font-medium text-slate-800">Research questions</p>
-                  <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-slate-600">
+                  <p className="text-sm font-medium text-charcoal">Research questions</p>
+                  <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-muted">
                     {topic.researchQuestions.map((q) => (
                       <li key={q}>{q}</li>
                     ))}
                   </ul>
                 </div>
 
-                <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
-                  <span className="font-medium text-slate-800">Method & location fit: </span>
+                <p className="mt-4 rounded-lg bg-cream-50 px-3 py-2 text-sm text-muted">
+                  <span className="font-medium text-charcoal">Method & location fit: </span>
                   {topic.alignmentNote}
                 </p>
 
-                <div className="mt-6 border-t border-slate-100 pt-5">
-                  <p className="font-semibold text-slate-900">
+                <div className="mt-6 border-t border-line pt-5">
+                  <p className="font-semibold text-charcoal">
                     Similar research ({articles.length} articles)
                   </p>
                   <div className="mt-4 space-y-3">
                     {articles.map((a) => (
                       <div
                         key={a.id}
-                        className="rounded-lg border border-slate-100 bg-white p-4"
+                        className="rounded-lg border border-line bg-offwhite p-4"
                       >
-                        <p className="font-medium text-slate-900">{a.title}</p>
-                        <p className="mt-1 text-sm text-slate-600">
+                        <p className="font-medium text-charcoal">{a.title}</p>
+                        <p className="mt-1 text-sm text-muted">
                           {a.authors} ({a.year}) · {a.citations} citations · {a.source}
                         </p>
                         {(a.url || a.doi) && (

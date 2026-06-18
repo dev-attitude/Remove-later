@@ -28,15 +28,15 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
   }, [menuOpen]);
 
   const sidebar = (
-    <aside className="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
-      <div className="border-b border-slate-100 px-4 py-4">
+    <aside className="flex h-full w-64 shrink-0 flex-col border-r border-line bg-offwhite">
+      <div className="border-b border-line px-4 py-4">
         <Link href="/hosting" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-navy to-royal text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-navy to-royal text-offwhite">
             <Server className="h-4 w-4" />
           </div>
           <div>
             <p className="text-sm font-bold text-navy">{SKYRAPAY_HOSTING.name}</p>
-            <p className="text-[10px] text-slate-500">{SKYRAPAY_HOSTING.domain}/hosting</p>
+            <p className="text-[10px] text-muted">{SKYRAPAY_HOSTING.domain}/hosting</p>
           </div>
         </Link>
       </div>
@@ -54,7 +54,7 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
                     active
                       ? "bg-brand-100 text-navy"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-navy"
+                      : "text-muted hover:bg-cream-50 hover:text-navy"
                   )}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
@@ -66,14 +66,14 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
         </ul>
       </nav>
 
-      <div className="border-t border-slate-100 p-3">
+      <div className="border-t border-line p-3">
         <Link
           href={HOSTING_PROFILE_NAV.href}
           className={cn(
             "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
             pathname.startsWith(HOSTING_PROFILE_NAV.href)
               ? "bg-brand-100 text-navy"
-              : "text-slate-600 hover:bg-slate-50 hover:text-navy"
+              : "text-muted hover:bg-cream-50 hover:text-navy"
           )}
         >
           <HOSTING_PROFILE_NAV.icon className="h-4 w-4 shrink-0" />
@@ -84,11 +84,11 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
   );
 
   return (
-    <div className="flex min-h-[70vh] overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm">
+    <div className="flex min-h-[70vh] overflow-hidden rounded-xl border border-line bg-cream-50 shadow-sm">
       {menuOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-slate-900/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-charcoal/50 lg:hidden"
           aria-label="Close menu"
           onClick={() => setMenuOpen(false)}
         />
@@ -104,10 +104,10 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-12 shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-4 lg:hidden">
+        <header className="flex h-12 shrink-0 items-center gap-3 border-b border-line bg-offwhite px-4 lg:hidden">
           <button
             type="button"
-            className="rounded-lg p-2 text-slate-700 hover:bg-slate-100"
+            className="rounded-lg p-2 text-charcoal hover:bg-line"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
@@ -117,7 +117,7 @@ export function HostingAccountShell({ children }: { children: React.ReactNode })
           {menuOpen && (
             <button
               type="button"
-              className="ml-auto rounded-lg p-2 text-slate-700 hover:bg-slate-100"
+              className="ml-auto rounded-lg p-2 text-charcoal hover:bg-line"
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
             >

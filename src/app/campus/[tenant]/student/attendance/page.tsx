@@ -23,8 +23,8 @@ export default async function AttendancePage({ params }: Props) {
         description={`Class attendance per module at ${tenant.name}. Most institutions require 80% to write exams.`}
       />
 
-      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-5">
-        <p className="text-xs text-slate-500">Overall attendance</p>
+      <div className="mb-6 rounded-xl border border-line bg-offwhite p-5">
+        <p className="text-xs text-muted">Overall attendance</p>
         <p className={`text-4xl font-bold ${overall >= 80 ? "text-emerald-700" : "text-rose-700"}`}>
           {overall}%
         </p>
@@ -35,13 +35,13 @@ export default async function AttendancePage({ params }: Props) {
           const pct = Math.round((m.attended / m.total) * 100);
           const warning = pct < 80;
           return (
-            <div key={m.code} className="rounded-xl border border-slate-200 bg-white p-5">
+            <div key={m.code} className="rounded-xl border border-line bg-offwhite p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="font-semibold text-slate-900">
+                  <p className="font-semibold text-charcoal">
                     {m.code} — {m.title}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted">
                     Attended {m.attended} of {m.total} sessions
                   </p>
                 </div>
@@ -53,7 +53,7 @@ export default async function AttendancePage({ params }: Props) {
                   {pct}%
                 </span>
               </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-line">
                 <div
                   className={`h-full rounded-full ${warning ? "bg-rose-500" : "bg-emerald-500"}`}
                   style={{ width: `${pct}%` }}

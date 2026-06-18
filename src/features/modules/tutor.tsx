@@ -28,7 +28,7 @@ export default function TutorPage() {
           {QUICK.map((q) => (
             <span
               key={q}
-              className="cursor-default rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700"
+              className="cursor-default rounded-full border border-line bg-offwhite px-3 py-1 text-xs text-charcoal"
             >
               {q}
             </span>

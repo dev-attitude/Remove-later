@@ -55,7 +55,7 @@ export default function ProposalsPage() {
   if (!ws.hydrated) {
     return (
       <ModuleWorkspace>
-        <p className="text-sm text-slate-500">Loading your saved work…</p>
+        <p className="text-sm text-muted">Loading your saved work…</p>
       </ModuleWorkspace>
     );
   }

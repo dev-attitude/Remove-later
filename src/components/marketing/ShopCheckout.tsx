@@ -91,7 +91,7 @@ export function ShopCheckout() {
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-10 text-center">
         <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-600" />
         <h2 className="mt-4 text-xl font-bold text-navy">Quote request received</h2>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-muted">
           We&apos;ll contact you at <strong className="text-navy">{email}</strong>
           {phone ? (
             <>
@@ -102,7 +102,7 @@ export function ShopCheckout() {
           within one business day with a formal quote for{" "}
           <strong className="text-navy">{selected.name}</strong>.
         </p>
-        <p className="mt-4 text-sm text-slate-500">
+        <p className="mt-4 text-sm text-muted">
           Need a faster reply? Use the chat button — WhatsApp is available during business hours.
         </p>
       </div>
@@ -124,19 +124,19 @@ export function ShopCheckout() {
                 className={`overflow-hidden rounded-xl border text-left transition ${
                   isSelected
                     ? "border-royal ring-2 ring-sky/40 shadow-md"
-                    : "border-slate-200 bg-white hover:border-sky/60"
+                    : "border-line bg-offwhite hover:border-sky/60"
                 }`}
               >
                 <div
                   className={`px-4 py-2.5 ${
                     isSelected
                       ? "border-b border-royal/20 bg-sky/25"
-                      : "border-b border-slate-100 bg-slate-50"
+                      : "border-b border-line bg-cream-50"
                   }`}
                 >
                   <p
                     className={`font-semibold ${
-                      isSelected ? "text-navy" : "text-slate-700"
+                      isSelected ? "text-navy" : "text-charcoal"
                     }`}
                   >
                     {pkg.name}
@@ -147,7 +147,7 @@ export function ShopCheckout() {
                     )}
                   </p>
                 </div>
-                <div className="bg-white p-4">
+                <div className="bg-offwhite p-4">
                   <PriceDisplay
                     original={pkg.priceFrom}
                     originalTo={pkg.priceTo}
@@ -223,7 +223,7 @@ export function ShopCheckout() {
         />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+      <div className="rounded-xl border border-line bg-cream-50 p-4 text-sm text-muted">
         <p>
           Selected: <span className="font-semibold text-navy">{selected.name}</span>
         </p>
@@ -237,8 +237,8 @@ export function ShopCheckout() {
             showBaseNote={false}
           />
         </div>
-        <p className="mt-2 text-xs text-slate-500">{selected.timeline}</p>
-        <ul className="mt-3 space-y-1 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-muted">{selected.timeline}</p>
+        <ul className="mt-3 space-y-1 text-xs text-muted">
           <li>• Quote sent to your email within one business day</li>
           <li>• Final price depends on scope and features you need</li>
           <li>• Payment arranged after you approve the quote</li>

@@ -24,7 +24,7 @@ function DomainPrice({
         {formatPrice(result.priceNad, formatHostingPeriod("year"))}
       </p>
       {result.retailPriceNad != null && result.retailPriceNad > result.priceNad && (
-        <p className="text-xs text-slate-400 line-through">
+        <p className="text-xs text-muted line-through">
           Retail {formatPrice(result.retailPriceNad, formatHostingPeriod("year"))}
         </p>
       )}
@@ -64,7 +64,7 @@ function DomainRow({
         )}
         <div className="min-w-0">
           <p className="truncate font-semibold text-navy">{result.domain}</p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted">
             {result.available ? "Available" : "Taken"}
             {result.premium ? " · Premium" : ""}
             {result.isNa ? " · Namibian namespace" : ""}
@@ -78,7 +78,7 @@ function DomainRow({
             <button
               type="button"
               onClick={() => removeItem(lineId)}
-              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              className="rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-muted hover:bg-cream-50"
             >
               Remove
             </button>
@@ -86,7 +86,7 @@ function DomainRow({
             <button
               type="button"
               onClick={() => addItem(cartItemFromDomain(result))}
-              className="flex items-center gap-1.5 rounded-lg bg-royal px-3 py-1.5 text-sm font-semibold text-white hover:bg-navy"
+              className="flex items-center gap-1.5 rounded-lg bg-royal px-3 py-1.5 text-sm font-semibold text-offwhite hover:bg-navy"
             >
               <ShoppingCart className="h-4 w-4" />
               Add to cart
@@ -141,7 +141,7 @@ export function DomainSearchPanel() {
     <div>
       <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
           <input
             type="text"
             value={query}
@@ -167,38 +167,38 @@ export function DomainSearchPanel() {
       {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
       {searched && results.length === 0 && (
-        <p className="mt-6 text-sm text-slate-600">Enter at least 2 characters to search.</p>
+        <p className="mt-6 text-sm text-muted">Enter at least 2 characters to search.</p>
       )}
 
       {results.length > 0 && (
         <div className="mt-8 space-y-6">
-          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 bg-slate-50 px-4 py-3">
+          <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-sm">
+            <div className="border-b border-line bg-cream-50 px-4 py-3">
               <p className="text-sm font-semibold text-navy">
                 Results for &ldquo;{query.trim().toLowerCase()}&rdquo;
               </p>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted">
                 Prices in {currency} per year — each extension has its own rate.{" "}
                 <span className="font-medium text-navy">.na domains are premium.</span>
               </p>
             </div>
 
             {primary && (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-line">
                 <DomainRow result={primary} {...rowProps} highlight />
               </ul>
             )}
           </div>
 
           {suggested.length > 0 && (
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-              <div className="border-b border-slate-100 px-4 py-3">
+            <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-sm">
+              <div className="border-b border-line px-4 py-3">
                 <p className="text-sm font-semibold text-navy">Suggested extensions</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted">
                   International domains — from {formatPrice(159.85, "/yr")}
                 </p>
               </div>
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-line">
                 {suggested.map((r) => (
                   <DomainRow key={r.domain} result={r} {...rowProps} />
                 ))}
@@ -207,15 +207,15 @@ export function DomainSearchPanel() {
           )}
 
           {naPremium.length > 0 && (
-            <div className="overflow-hidden rounded-xl border border-amber-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-xl border border-amber-200 bg-offwhite shadow-sm">
               <div className="border-b border-amber-100 bg-amber-50 px-4 py-3">
                 <p className="text-sm font-semibold text-navy">Namibian domains (.na)</p>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-muted">
                   Official .na namespace — premium pricing up to{" "}
                   {formatPrice(450, "/yr")}
                 </p>
               </div>
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-line">
                 {naPremium.map((r) => (
                   <DomainRow key={r.domain} result={r} {...rowProps} />
                 ))}

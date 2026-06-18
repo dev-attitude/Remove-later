@@ -78,39 +78,39 @@ export function DashboardPage() {
           <Link
             key={label}
             href={href}
-            className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-royal/30"
+            className="rounded-xl border border-line bg-offwhite p-5 shadow-sm transition hover:border-royal/30"
           >
             <Icon className="h-6 w-6 text-royal" />
             <p className="mt-3 text-2xl font-bold text-navy">{value}</p>
-            <p className="text-sm text-slate-600">{label}</p>
+            <p className="text-sm text-muted">{label}</p>
           </Link>
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-6 lg:col-span-2">
+        <div className="rounded-xl border border-line bg-offwhite p-6 lg:col-span-2">
           <h2 className="font-bold text-navy">Recent activity</h2>
           <ul className="mt-4 max-h-64 space-y-3 overflow-y-auto">
             {account.activity.map((a) => (
               <li key={a.id} className="flex gap-3 text-sm">
-                <span className="shrink-0 text-xs text-slate-400">
+                <span className="shrink-0 text-xs text-muted">
                   {new Date(a.at).toLocaleDateString()}
                 </span>
-                <span className="text-slate-700">{a.message}</span>
+                <span className="text-charcoal">{a.message}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <div className="rounded-xl border border-line bg-offwhite p-6">
           <h2 className="font-bold text-navy">Billing</h2>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-slate-600">Monthly</dt>
+              <dt className="text-muted">Monthly</dt>
               <dd className="font-semibold">{formatPrice(account.monthlyTotal, "/mo")}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-600">Yearly</dt>
+              <dt className="text-muted">Yearly</dt>
               <dd className="font-semibold">{formatPrice(account.yearlyTotal, "/yr")}</dd>
             </div>
           </dl>
@@ -118,12 +118,12 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <div className="rounded-xl border border-line bg-offwhite p-6">
           <h2 className="font-bold text-navy">Provisioning</h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-muted">
             {doneSteps} of {account.provisioningSteps.length} steps complete
           </p>
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-line">
             <div
               className="h-full rounded-full bg-emerald-500"
               style={{
@@ -137,7 +137,7 @@ export function DashboardPage() {
                 {step.done ? (
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 ) : (
-                  <Circle className="h-4 w-4 text-slate-300" />
+                  <Circle className="h-4 w-4 text-muted" />
                 )}
                 {step.title}
               </li>
@@ -146,9 +146,9 @@ export function DashboardPage() {
         </div>
 
         {host && (
-          <div className="rounded-xl border border-slate-200 bg-white p-6">
+          <div className="rounded-xl border border-line bg-offwhite p-6">
             <h2 className="font-bold text-navy">{host.planName}</h2>
-            <p className="text-sm text-slate-500">{host.primaryDomain}</p>
+            <p className="text-sm text-muted">{host.primaryDomain}</p>
             <div className="mt-4 space-y-4">
               <UsageBar used={host.diskUsedGb} total={host.diskTotalGb} label="Disk" />
               <UsageBar used={host.bandwidthUsedGb} total={host.bandwidthTotalGb} label="Bandwidth" />
@@ -202,19 +202,19 @@ export function ExpiringPage() {
             type="button"
             onClick={() => setTab(t)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium capitalize ${
-              tab === t ? "bg-royal text-white" : "bg-white text-slate-600 ring-1 ring-slate-200"
+              tab === t ? "bg-royal text-offwhite" : "bg-offwhite text-muted ring-1 ring-line"
             }`}
           >
             {t === "all" ? "Expiring & expired" : t}
           </button>
         ))}
       </div>
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-sm">
         {items.length === 0 ? (
-          <p className="p-8 text-center text-slate-600">No expiring or expired items right now.</p>
+          <p className="p-8 text-center text-muted">No expiring or expired items right now.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Type</th>
@@ -223,14 +223,14 @@ export function ExpiringPage() {
                 <th className="px-4 py-3">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {items.map((item) => {
                 const label = expiryLabel(item.expiresAt);
                 return (
                   <tr key={item.id}>
                     <td className="px-4 py-3 font-medium text-navy">{item.name}</td>
-                    <td className="px-4 py-3 text-slate-600">{item.type}</td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-muted">{item.type}</td>
+                    <td className="px-4 py-3 text-muted">
                       {new Date(item.expiresAt).toLocaleDateString()} ({daysUntil(item.expiresAt)}d)
                     </td>
                     <td className="px-4 py-3">

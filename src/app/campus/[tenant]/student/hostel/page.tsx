@@ -9,7 +9,7 @@ type Props = { params: Promise<{ tenant: string }> };
 const STATUS_STYLES: Record<string, string> = {
   "in progress": "bg-amber-100 text-amber-800",
   resolved: "bg-emerald-100 text-emerald-800",
-  pending: "bg-slate-100 text-slate-700",
+  pending: "bg-line text-charcoal",
 };
 
 export default async function HostelPage({ params }: Props) {
@@ -25,13 +25,13 @@ export default async function HostelPage({ params }: Props) {
       />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center gap-2 text-slate-500">
+        <div className="rounded-xl border border-line bg-offwhite p-5">
+          <div className="flex items-center gap-2 text-muted">
             <Home className="h-5 w-5" />
             <p className="text-xs font-semibold uppercase tracking-wide">My allocation</p>
           </div>
-          <p className="mt-2 text-lg font-bold text-slate-900">{HOSTEL.residence}</p>
-          <p className="text-sm text-slate-600">{HOSTEL.room}</p>
+          <p className="mt-2 text-lg font-bold text-charcoal">{HOSTEL.residence}</p>
+          <p className="text-sm text-muted">{HOSTEL.room}</p>
         </div>
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
@@ -42,7 +42,7 @@ export default async function HostelPage({ params }: Props) {
           </p>
           <button
             type="button"
-            className="mt-3 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+            className="mt-3 rounded-lg bg-charcoal px-3 py-1.5 text-xs font-medium text-offwhite"
           >
             Pay from wallet (demo)
           </button>
@@ -51,10 +51,10 @@ export default async function HostelPage({ params }: Props) {
 
       <div className="mt-8">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold text-slate-900">Maintenance requests</h2>
+          <h2 className="text-lg font-semibold text-charcoal">Maintenance requests</h2>
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-xs font-medium text-charcoal hover:bg-cream-50"
           >
             <Wrench className="h-3.5 w-3.5" /> Log new request (demo)
           </button>
@@ -63,11 +63,11 @@ export default async function HostelPage({ params }: Props) {
           {HOSTEL.maintenanceRequests.map((r) => (
             <div
               key={r.id}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-4"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-line bg-offwhite p-4"
             >
               <div>
-                <p className="font-medium text-slate-900">{r.issue}</p>
-                <p className="text-xs text-slate-500">Logged {r.logged}</p>
+                <p className="font-medium text-charcoal">{r.issue}</p>
+                <p className="text-xs text-muted">Logged {r.logged}</p>
               </div>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${STATUS_STYLES[r.status]}`}

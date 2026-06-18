@@ -131,10 +131,10 @@ export function PortalDashboardWidgets({ portalId }: { portalId: PortalId }) {
     <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {widgets.map((w) => (
         <Card key={w.label} className="!p-4">
-          <p className="text-xs text-slate-500">{w.label}</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">{w.value}</p>
+          <p className="text-xs text-muted">{w.label}</p>
+          <p className="mt-2 text-2xl font-bold text-charcoal">{w.value}</p>
           {portalId === "student" && STUDENT_STAT_HINTS[w.label] && (
-            <p className="mt-1 text-xs text-slate-500">{STUDENT_STAT_HINTS[w.label]}</p>
+            <p className="mt-1 text-xs text-muted">{STUDENT_STAT_HINTS[w.label]}</p>
           )}
         </Card>
       ))}

@@ -9,7 +9,7 @@ function renderInline(text: string): ReactNode {
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={i} className="font-semibold text-slate-900">
+        <strong key={i} className="font-semibold text-charcoal">
           {part.slice(2, -2)}
         </strong>
       );
@@ -20,7 +20,7 @@ function renderInline(text: string): ReactNode {
 
 function GuideSubheading({ text }: { text: string }) {
   return (
-    <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-slate-900 first:mt-0 md:text-xl">
+    <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-charcoal first:mt-0 md:text-xl">
       {renderInline(text)}
     </h3>
   );
@@ -36,7 +36,7 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
         if (!trimmed) return null;
 
         if (trimmed === "---") {
-          return <hr key={i} className="my-8 border-slate-200" />;
+          return <hr key={i} className="my-8 border-line" />;
         }
 
         if (trimmed.startsWith("### ")) {
@@ -44,7 +44,7 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
           const title = lines[0].replace(/^###\s+/, "");
           const rest = lines.slice(1).join("\n").trim();
           return (
-            <div key={i} className="rounded-xl border border-slate-100 bg-slate-50/50 px-5 py-5 md:px-6 md:py-6">
+            <div key={i} className="rounded-xl border border-line bg-cream-50/50 px-5 py-5 md:px-6 md:py-6">
               <GuideSubheading text={title} />
               {rest && <GuideBody text={rest} className="mt-4" />}
             </div>
@@ -61,7 +61,7 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
                 .map((line, j) => (
                   <li
                     key={j}
-                    className="flex gap-3 text-base leading-[1.75] text-slate-700"
+                    className="flex gap-3 text-base leading-[1.75] text-charcoal"
                   >
                     <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
                     <span>{renderInline(line.replace(/^[-*]\s+/, ""))}</span>
@@ -73,9 +73,9 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
 
         if (lines.every((l) => /^\[[ x]\]\s/i.test(l.trim()))) {
           return (
-            <ul key={i} className="space-y-2 rounded-lg bg-slate-50 p-5">
+            <ul key={i} className="space-y-2 rounded-lg bg-cream-50 p-5">
               {lines.map((line, j) => (
-                <li key={j} className="text-sm leading-relaxed text-slate-700">
+                <li key={j} className="text-sm leading-relaxed text-charcoal">
                   {renderInline(line.trim())}
                 </li>
               ))}
@@ -85,7 +85,7 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
 
         if (trimmed.startsWith("*") && trimmed.endsWith("*") && !trimmed.startsWith("**")) {
           return (
-            <p key={i} className="text-sm italic leading-relaxed text-slate-600">
+            <p key={i} className="text-sm italic leading-relaxed text-muted">
               {renderInline(trimmed.replace(/^\*|\*$/g, ""))}
             </p>
           );
@@ -102,7 +102,7 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
                   return <GuideSubheading key={j} text={t.replace(/^###\s+/, "")} />;
                 }
                 return (
-                  <p key={j} className="text-base leading-[1.85] text-slate-700 md:text-[1.05rem]">
+                  <p key={j} className="text-base leading-[1.85] text-charcoal md:text-[1.05rem]">
                     {renderInline(t)}
                   </p>
                 );
@@ -112,7 +112,7 @@ function GuideBody({ text, className = "" }: { text: string; className?: string 
         }
 
         return (
-          <p key={i} className="text-base leading-[1.85] text-slate-700 md:text-[1.05rem]">
+          <p key={i} className="text-base leading-[1.85] text-charcoal md:text-[1.05rem]">
             {renderInline(trimmed)}
           </p>
         );
@@ -130,7 +130,7 @@ function GuideBlock({ block }: { block: string }) {
 
   if (first.startsWith("### ")) {
     return (
-      <div className="rounded-xl border border-slate-100 bg-slate-50/40 px-5 py-6 md:px-7 md:py-7">
+      <div className="rounded-xl border border-line bg-cream-50/40 px-5 py-6 md:px-7 md:py-7">
         <GuideSubheading text={first.replace(/^###\s+/, "")} />
         {rest && <GuideBody text={rest} className="mt-5" />}
       </div>
@@ -139,8 +139,8 @@ function GuideBlock({ block }: { block: string }) {
 
   if (first.startsWith("## ")) {
     return (
-      <section className="scroll-mt-6 border-b border-slate-200 pb-10 last:border-0 lg:pb-12">
-        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl lg:text-[2rem]">
+      <section className="scroll-mt-6 border-b border-line pb-10 last:border-0 lg:pb-12">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-charcoal md:text-3xl lg:text-[2rem]">
           {renderInline(first.replace(/^##\s+/, ""))}
         </h2>
         {rest && <GuideBody text={rest} className="mt-8" />}
@@ -176,7 +176,7 @@ export function LearningGuidePanel({
         <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         <div className="text-center">
           <p className="font-medium text-brand-900">Preparing your learning guide</p>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted">
             Loading textbook excerpts for this topic…
           </p>
         </div>

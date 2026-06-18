@@ -32,7 +32,7 @@ import { RESEARCH_LEVELS } from "@/lib/research-levels";
 
 type Tab = "curriculum" | "library" | "sources";
 
-const labelClass = "mb-1 block text-sm font-medium text-slate-700";
+const labelClass = "mb-1 block text-sm font-medium text-charcoal";
 
 type CurriculumForm = {
   researchLevel: string;
@@ -118,7 +118,7 @@ export default function ResearchLibraryModule() {
         moduleId="research-library"
       />
       <ModuleWorkspace>
-        <div className="mb-6 flex flex-wrap gap-2 border-b border-slate-200 pb-4">
+        <div className="mb-6 flex flex-wrap gap-2 border-b border-line pb-4">
           {(
             [
               ["curriculum", "AI Curriculum Generator"],
@@ -132,8 +132,8 @@ export default function ResearchLibraryModule() {
               onClick={() => setTab(id)}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 tab === id
-                  ? "bg-brand-600 text-white"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  ? "bg-brand-600 text-offwhite"
+                  : "bg-line text-charcoal hover:bg-line"
               }`}
             >
               {label}
@@ -153,7 +153,7 @@ export default function ResearchLibraryModule() {
               />
             )}
             <CardTitle>AI Research Curriculum Generator</CardTitle>
-            <p className="mb-4 mt-1 text-sm text-slate-500">
+            <p className="mb-4 mt-1 text-sm text-muted">
               Example: &quot;I&apos;m a Master&apos;s student in Education&quot; — get a learning
               roadmap, books, methodologies, statistics path, and writing exercises.
             </p>
@@ -199,8 +199,8 @@ export default function ResearchLibraryModule() {
             {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
             {curriculum && (
-              <div className="mt-8 space-y-6 border-t border-slate-100 pt-6">
-                <p className="text-sm text-slate-700">{curriculum.summary}</p>
+              <div className="mt-8 space-y-6 border-t border-line pt-6">
+                <p className="text-sm text-charcoal">{curriculum.summary}</p>
                 {curriculum.sourcesQueried.length > 0 && (
                   <p className="text-xs text-emerald-700">
                     Papers from: {curriculum.sourcesQueried.join(" · ")}
@@ -208,20 +208,20 @@ export default function ResearchLibraryModule() {
                 )}
 
                 <div>
-                  <h3 className="font-semibold text-slate-900">Learning roadmap</h3>
+                  <h3 className="font-semibold text-charcoal">Learning roadmap</h3>
                   <div className="mt-3 space-y-3">
                     {curriculum.roadmap.map((phase, i) => (
-                      <div key={i} className="rounded-lg border border-slate-100 p-4">
+                      <div key={i} className="rounded-lg border border-line p-4">
                         <p className="font-medium">
                           {phase.title}{" "}
-                          <span className="text-sm font-normal text-slate-500">
+                          <span className="text-sm font-normal text-muted">
                             ({phase.duration})
                           </span>
                         </p>
                         <p className="mt-1 text-xs text-brand-600">
                           Library levels: {phase.libraryLevels.join(", ")}
                         </p>
-                        <ul className="mt-2 list-inside list-disc text-sm text-slate-600">
+                        <ul className="mt-2 list-inside list-disc text-sm text-muted">
                           {phase.activities.map((a) => (
                             <li key={a}>{a}</li>
                           ))}
@@ -236,10 +236,10 @@ export default function ResearchLibraryModule() {
                     <h3 className="font-semibold">Recommended books & OER</h3>
                     <ul className="mt-2 space-y-2 text-sm">
                       {curriculum.recommendedBooks.map((b, i) => (
-                        <li key={i} className="rounded-lg bg-slate-50 p-3">
+                        <li key={i} className="rounded-lg bg-cream-50 p-3">
                           <p className="font-medium">{b.title}</p>
-                          <p className="text-slate-500">{b.source}</p>
-                          <p className="mt-1 text-slate-600">{b.reason}</p>
+                          <p className="text-muted">{b.source}</p>
+                          <p className="mt-1 text-muted">{b.reason}</p>
                           {b.url && (
                             <a
                               href={b.url}
@@ -265,7 +265,7 @@ export default function ResearchLibraryModule() {
                           >
                             {m.name}
                           </Link>
-                          <p className="text-slate-600">{m.reason}</p>
+                          <p className="text-muted">{m.reason}</p>
                         </li>
                       ))}
                     </ul>
@@ -275,7 +275,7 @@ export default function ResearchLibraryModule() {
                 <div className="grid gap-6 md:grid-cols-3">
                   <div>
                     <h3 className="font-semibold">Methodologies</h3>
-                    <ul className="mt-2 list-inside list-disc text-sm text-slate-600">
+                    <ul className="mt-2 list-inside list-disc text-sm text-muted">
                       {curriculum.methodologies.map((m) => (
                         <li key={m}>{m}</li>
                       ))}
@@ -283,7 +283,7 @@ export default function ResearchLibraryModule() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Statistics path</h3>
-                    <ul className="mt-2 list-inside list-disc text-sm text-slate-600">
+                    <ul className="mt-2 list-inside list-disc text-sm text-muted">
                       {curriculum.statisticsPath.map((s) => (
                         <li key={s}>{s}</li>
                       ))}
@@ -291,7 +291,7 @@ export default function ResearchLibraryModule() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Writing exercises</h3>
-                    <ul className="mt-2 list-inside list-disc text-sm text-slate-600">
+                    <ul className="mt-2 list-inside list-disc text-sm text-muted">
                       {curriculum.writingExercises.map((w) => (
                         <li key={w}>{w}</li>
                       ))}
@@ -304,9 +304,9 @@ export default function ResearchLibraryModule() {
                     <h3 className="font-semibold">Recommended papers</h3>
                     <div className="mt-2 space-y-2">
                       {curriculum.recommendedPapers.map((p, i) => (
-                        <div key={i} className="rounded-lg border border-slate-100 p-3 text-sm">
+                        <div key={i} className="rounded-lg border border-line p-3 text-sm">
                           <p className="font-medium">{p.title}</p>
-                          <p className="text-slate-500">
+                          <p className="text-muted">
                             {p.authors} ({p.year}) · {p.source}
                           </p>
                           {p.url && (
@@ -332,11 +332,11 @@ export default function ResearchLibraryModule() {
         {tab === "library" && (
           <div className="space-y-4">
             <Card className="!p-4">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-muted">
                 <strong>Level 1</strong> is where every user starts. Progress through methodology,
                 your discipline, statistics, software, writing, and PhD-level skills.
               </p>
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-muted">
                 Open resources: {FOUNDATION_OPEN_RESOURCES.map((r) => r.name).join(" · ")}
               </p>
             </Card>
@@ -345,32 +345,32 @@ export default function ResearchLibraryModule() {
               <Card key={level.id} className="!p-0 overflow-hidden">
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-slate-50"
+                  className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-cream-50"
                   onClick={() => toggleLevel(level.id)}
                 >
                   <div>
                     <span className="text-xs font-bold uppercase text-brand-600">
                       Level {level.level}
                     </span>
-                    <p className="font-semibold text-slate-900">{level.title}</p>
-                    <p className="text-sm text-slate-500">{level.subtitle}</p>
+                    <p className="font-semibold text-charcoal">{level.title}</p>
+                    <p className="text-sm text-muted">{level.subtitle}</p>
                   </div>
                   {expandedLevels.has(level.id) ? (
-                    <ChevronDown className="h-5 w-5 text-slate-400" />
+                    <ChevronDown className="h-5 w-5 text-muted" />
                   ) : (
-                    <ChevronRight className="h-5 w-5 text-slate-400" />
+                    <ChevronRight className="h-5 w-5 text-muted" />
                   )}
                 </button>
                 {expandedLevels.has(level.id) && (
-                  <div className="border-t border-slate-100 px-5 pb-5">
+                  <div className="border-t border-line px-5 pb-5">
                     {level.sections.map((section) => (
                       <div key={section.id} className="mt-4">
-                        <p className="text-sm font-medium text-slate-800">{section.title}</p>
+                        <p className="text-sm font-medium text-charcoal">{section.title}</p>
                         <ul className="mt-2 space-y-2">
                           {section.topics.map((topic) => (
                             <li
                               key={topic.id}
-                              className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm"
+                              className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-cream-50 px-3 py-2 text-sm"
                             >
                               <span>{topic.title}</span>
                               <span className="flex gap-2">
@@ -385,7 +385,7 @@ export default function ResearchLibraryModule() {
                                 {topic.searchQuery && (
                                   <button
                                     type="button"
-                                    className="inline-flex items-center gap-1 text-xs text-slate-600 underline"
+                                    className="inline-flex items-center gap-1 text-xs text-muted underline"
                                     onClick={() =>
                                       openSourceSearch("openalex", topic.searchQuery!)
                                     }
@@ -413,7 +413,7 @@ export default function ResearchLibraryModule() {
               <CardTitle>Search all ecosystems</CardTitle>
               <div className="mt-3 flex gap-2">
                 <input
-                  className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="flex-1 rounded-lg border border-line px-3 py-2 text-sm"
                   value={sourceQuery}
                   onChange={(e) => setSourceQuery(e.target.value)}
                 />
@@ -424,7 +424,7 @@ export default function ResearchLibraryModule() {
                     key={s.id}
                     type="button"
                     onClick={() => openSourceSearch(s.id, sourceQuery)}
-                    className="rounded-full border border-slate-200 px-3 py-1 text-xs hover:bg-slate-50"
+                    className="rounded-full border border-line px-3 py-1 text-xs hover:bg-cream-50"
                   >
                     {s.name}
                     {s.apiEnabled ? " ✓" : " ↗"}
@@ -449,11 +449,11 @@ export default function ResearchLibraryModule() {
                     return (
                       <li
                         key={item.id}
-                        className="flex items-center justify-between rounded-lg border border-slate-100 p-3 text-sm"
+                        className="flex items-center justify-between rounded-lg border border-line p-3 text-sm"
                       >
                         <div>
                           <p className="font-medium">{src.name}</p>
-                          <p className="text-slate-500">{src.description}</p>
+                          <p className="text-muted">{src.description}</p>
                         </div>
                         <button
                           type="button"
@@ -480,7 +480,7 @@ export default function ResearchLibraryModule() {
                     key={s.id}
                     type="button"
                     onClick={() => openSourceSearch(s.id, sourceQuery)}
-                    className="rounded-lg border border-slate-200 px-3 py-2 text-xs hover:bg-slate-50"
+                    className="rounded-lg border border-line px-3 py-2 text-xs hover:bg-cream-50"
                   >
                     {s.name}
                   </button>

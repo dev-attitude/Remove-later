@@ -22,14 +22,14 @@ export function SslPage() {
         description="HTTPS certificates for your domains — AutoSSL installs and renews automatically"
       />
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-line bg-offwhite shadow-sm">
         {account.ssl.length === 0 ? (
-          <p className="p-8 text-center text-slate-600">
+          <p className="p-8 text-center text-muted">
             No SSL certificates yet — they are issued when you add a domain and hosting.
           </p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="border-b border-line bg-cream-50 text-left text-xs uppercase text-muted">
               <tr>
                 <th className="px-4 py-3">Domain</th>
                 <th className="px-4 py-3">Type</th>
@@ -39,15 +39,15 @@ export function SslPage() {
                 <th className="px-4 py-3">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {account.ssl.map((s) => (
                 <tr key={s.domain}>
                   <td className="px-4 py-3 font-medium text-navy">{s.domain}</td>
-                  <td className="px-4 py-3 text-slate-600">{s.type}</td>
+                  <td className="px-4 py-3 text-muted">{s.type}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={expiryLabel(s.expiresAt) === "expired" ? "expired" : s.status} />
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted">
                     {new Date(s.expiresAt).toLocaleDateString()} ({daysUntil(s.expiresAt)}d)
                   </td>
                   <td className="px-4 py-3">
@@ -73,7 +73,7 @@ export function SslPage() {
         )}
       </div>
 
-      <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+      <div className="mt-6 rounded-xl border border-line bg-cream-50 p-4 text-sm text-muted">
         <p className="font-semibold text-navy">About AutoSSL</p>
         <p className="mt-1">
           Free SSL is included with all hosting plans. Certificates renew automatically before expiry

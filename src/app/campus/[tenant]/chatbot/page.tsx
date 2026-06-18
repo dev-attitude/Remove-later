@@ -16,7 +16,7 @@ export default async function ChatbotPage({ params }: Props) {
         description={`Students and staff get instant answers at ${tenant.name} — fees, results, timetables, leave, and payroll queries.`}
       />
       <AdvisorChat />
-      <p className="mt-4 text-xs text-slate-500">
+      <p className="mt-4 text-xs text-muted">
         Production: connect to institutional data via secure APIs and OpenAI for natural language.
       </p>
     </div>

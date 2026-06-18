@@ -15,7 +15,7 @@ export function Card({
     <div
       className={cn(
         variant === "manage" && "manage-card",
-        variant === "flat" && "rounded-xl border border-slate-200/80 bg-white p-5",
+        variant === "flat" && "rounded-xl border border-line/80 bg-offwhite p-5",
         variant === "default" && "glass-card p-5",
         className
       )}
@@ -34,7 +34,7 @@ export function CardTitle({
   children: React.ReactNode;
 }) {
   return (
-    <h3 className={cn("font-display text-lg font-semibold tracking-tight text-slate-900", className)}>
+    <h3 className={cn("font-display text-lg font-semibold tracking-tight text-charcoal", className)}>
       {children}
     </h3>
   );

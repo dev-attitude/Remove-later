@@ -62,7 +62,7 @@ export default function HostingPage() {
           </Link>
           <Link
             href="/hosting/dashboard"
-            className="inline-flex items-center rounded-lg border border-white/30 px-4 py-2 text-sm font-semibold transition hover:bg-white/10"
+            className="inline-flex items-center rounded-lg border border-offwhite/30 px-4 py-2 text-sm font-semibold transition hover:bg-offwhite/10"
           >
             My account
           </Link>
@@ -72,7 +72,7 @@ export default function HostingPage() {
       <div className="mt-20">
         <p className="marketing-eyebrow">Your cPanel account</p>
         <h2 className="mt-2 text-3xl font-bold text-navy">Everything in one hosting account</h2>
-        <p className="mt-2 max-w-2xl text-slate-600">
+        <p className="mt-2 max-w-2xl text-muted">
           Each customer gets their own cPanel login. Buy a domain, upload a website, create email
           mailboxes, and spin up MySQL databases—no need to call us for every small change.
         </p>
@@ -84,14 +84,14 @@ export default function HostingPage() {
           return (
             <article
               key={item.title}
-              className="flex gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              className="flex gap-4 rounded-xl border border-line bg-offwhite p-5 shadow-sm"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
                 <Icon className="h-5 w-5" />
               </div>
               <div>
                 <h3 className="font-bold text-navy">{item.title}</h3>
-                <p className="mt-1 text-sm text-slate-600">{item.text}</p>
+                <p className="mt-1 text-sm text-muted">{item.text}</p>
               </div>
             </article>
           );
@@ -101,7 +101,7 @@ export default function HostingPage() {
       <div className="mt-20">
         <p className="marketing-eyebrow">Services</p>
         <h2 className="mt-2 text-3xl font-bold text-navy">What you can do with our hosting</h2>
-        <p className="mt-2 max-w-2xl text-slate-600">
+        <p className="mt-2 max-w-2xl text-muted">
           Order any service on its own or as a bundle—domain + hosting + email is the most common
           package for new businesses going online.
         </p>
@@ -116,7 +116,7 @@ export default function HostingPage() {
       <div className="mt-20">
         <p className="marketing-eyebrow">Hosting plans</p>
         <h2 className="mt-2 text-3xl font-bold text-navy">Website hosting packages</h2>
-        <p className="mt-2 max-w-2xl text-slate-600">
+        <p className="mt-2 max-w-2xl text-muted">
           All plans include cPanel, free SSL, email accounts, MySQL databases, FTP access, and
           one-click WordPress install. Prices shown in your local currency — invoiced in NAD.
         </p>
@@ -128,15 +128,15 @@ export default function HostingPage() {
         ))}
       </div>
 
-      <div className="mt-20 rounded-2xl border border-slate-200 bg-slate-50 p-8 md:p-10">
+      <div className="mt-20 rounded-2xl border border-line bg-cream-50 p-8 md:p-10">
         <h2 className="text-2xl font-bold text-navy">Included with every hosting account</h2>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-muted">
           Whether you are a startup or an established business, your hosting account comes
           with the full toolkit to run your online presence.
         </p>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
           {HOSTING_INCLUDED.map((item) => (
-            <li key={item} className="flex gap-2 text-sm text-slate-700">
+            <li key={item} className="flex gap-2 text-sm text-charcoal">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
               {item}
             </li>
@@ -149,7 +149,7 @@ export default function HostingPage() {
         <h2 className="mt-2 text-3xl font-bold text-navy">
           One provider for everything around your hosting
         </h2>
-        <p className="mt-2 max-w-3xl text-slate-600">
+        <p className="mt-2 max-w-3xl text-muted">
           {BRAND.companyLegal} is a one-stop technology and business solutions provider. Clients who
           register a company with us later add a website, hosting, business email, security, and
           ongoing IT support—one team, one invoice.
@@ -160,13 +160,13 @@ export default function HostingPage() {
         {SKYRAPAY_SERVICE_CATALOGUE.map((cat) => (
           <article
             key={cat.id}
-            className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+            className="flex flex-col rounded-2xl border border-line bg-offwhite p-6 shadow-sm"
           >
             <h3 className="text-lg font-bold text-navy">{cat.title}</h3>
-            <p className="mt-1 text-sm text-slate-500">{cat.summary}</p>
+            <p className="mt-1 text-sm text-muted">{cat.summary}</p>
             <ul className="mt-4 flex-1 space-y-2">
               {cat.items.map((item) => (
-                <li key={item} className="flex gap-2 text-sm text-slate-700">
+                <li key={item} className="flex gap-2 text-sm text-charcoal">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                   {item}
                 </li>
@@ -182,9 +182,9 @@ export default function HostingPage() {
         ))}
       </div>
 
-      <div className="mt-16 rounded-2xl bg-gradient-to-r from-navy to-royal p-8 text-center text-white md:p-12">
+      <div className="mt-16 rounded-2xl bg-gradient-to-r from-navy to-royal p-8 text-center text-offwhite md:p-12">
         <h2 className="text-2xl font-bold md:text-3xl">Need a website built too?</h2>
-        <p className="mx-auto mt-3 max-w-xl text-slate-200">
+        <p className="mx-auto mt-3 max-w-xl text-offwhite">
           {BRAND.companyName} designs your site, registers your domain, sets up
           email and MySQL, and optionally maintains everything—one team from launch to ongoing care.
         </p>
@@ -194,13 +194,13 @@ export default function HostingPage() {
           </Link>
           <Link
             href="/hosting/domains"
-            className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-navy transition hover:bg-sky/90"
+            className="inline-flex items-center gap-2 rounded-lg bg-offwhite px-6 py-3 text-sm font-semibold text-navy transition hover:bg-sky/90"
           >
             Start your order
           </Link>
           <Link
             href="/contact?service=hosting"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-lg border border-offwhite/40 px-6 py-3 text-sm font-semibold text-offwhite transition hover:bg-offwhite/10"
           >
             Contact us instead
           </Link>

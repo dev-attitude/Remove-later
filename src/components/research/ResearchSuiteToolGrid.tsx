@@ -19,7 +19,7 @@ function ToolCard({ tool, href }: { tool: ResearchToolDef; href: string }) {
           )}
           <div className="min-w-0 flex-1">
             <CardTitle className="!text-base">{tool.title}</CardTitle>
-            <p className="mt-1 text-sm text-slate-500">{tool.short}</p>
+            <p className="mt-1 text-sm text-muted">{tool.short}</p>
           </div>
         </div>
         <div className="mt-3 flex flex-wrap gap-1">
@@ -28,14 +28,14 @@ function ToolCard({ tool, href }: { tool: ResearchToolDef; href: string }) {
             return (
               <span
                 key={id}
-                className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700"
+                className="rounded-full bg-line px-2 py-0.5 text-[10px] font-medium text-charcoal"
               >
                 {src?.name ?? id}
               </span>
             );
           })}
           {tool.integrationIds.length > 4 && (
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-500">
+            <span className="rounded-full bg-line px-2 py-0.5 text-[10px] text-muted">
               +{tool.integrationIds.length - 4}
             </span>
           )}
@@ -59,8 +59,8 @@ export function ResearchSuiteToolGrid({
 }) {
   return (
     <section>
-      <h2 className="font-display text-2xl font-bold text-slate-900">{title}</h2>
-      {description && <p className="mt-2 max-w-3xl text-slate-600">{description}</p>}
+      <h2 className="font-display text-2xl font-bold text-charcoal">{title}</h2>
+      {description && <p className="mt-2 max-w-3xl text-muted">{description}</p>}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tools.map((tool) => (
           <ToolCard

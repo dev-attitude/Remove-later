@@ -56,7 +56,7 @@ export default function PlagiarismModule() {
         {report && (
           <Card className="mt-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">Similarity</p>
+              <p className="text-sm text-muted">Similarity</p>
               {report.mode && (
                 <span className="text-xs uppercase text-amber-700">{report.mode} mode</span>
               )}
@@ -67,13 +67,13 @@ export default function PlagiarismModule() {
               {report.similarity}%
             </p>
             {report.note && (
-              <p className="mt-2 text-xs text-slate-500">{report.note}</p>
+              <p className="mt-2 text-xs text-muted">{report.note}</p>
             )}
             <div className="mt-6 space-y-4">
               {report.matches.map((m, i) => (
                 <div key={i} className="rounded-lg bg-amber-50 p-3">
                   <p className="text-sm font-medium text-amber-900">&quot;{m.text}&quot;</p>
-                  <p className="mt-1 text-xs text-slate-600">
+                  <p className="mt-1 text-xs text-muted">
                     {m.percent}% match · {m.source}
                   </p>
                 </div>

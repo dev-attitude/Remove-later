@@ -23,11 +23,11 @@ export default async function TimetablePage({ params }: Props) {
           const entries = STUDENT_TIMETABLE.filter((e) => e.day === day);
           return (
             <section key={day}>
-              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
                 {day}
               </h2>
               {entries.length === 0 ? (
-                <p className="rounded-xl border border-dashed border-slate-200 bg-white p-4 text-sm text-slate-400">
+                <p className="rounded-xl border border-dashed border-line bg-offwhite p-4 text-sm text-muted">
                   No scheduled classes
                 </p>
               ) : (
@@ -35,15 +35,15 @@ export default async function TimetablePage({ params }: Props) {
                   {entries.map((e) => (
                     <div
                       key={`${e.day}-${e.time}`}
-                      className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-4"
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-line bg-offwhite p-4"
                     >
                       <div>
-                        <p className="font-medium text-slate-900">{e.module}</p>
-                        <p className="text-xs text-slate-500">
+                        <p className="font-medium text-charcoal">{e.module}</p>
+                        <p className="text-xs text-muted">
                           {e.venue} · {e.lecturer}
                         </p>
                       </div>
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                      <span className="rounded-full bg-line px-3 py-1 text-sm font-medium text-charcoal">
                         {e.time}
                       </span>
                     </div>

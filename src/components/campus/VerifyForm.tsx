@@ -41,13 +41,13 @@ export function VerifyForm({ tenantSlug }: { tenantSlug: string }) {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="e.g. SC360-ACACIA-COLLEGE-2024-DEMO"
-          className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="flex-1 rounded-lg border border-line px-3 py-2 text-sm"
           required
         />
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-offwhite disabled:opacity-60"
         >
           {loading ? "Checking…" : "Verify"}
         </button>

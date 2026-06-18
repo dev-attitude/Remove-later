@@ -15,16 +15,16 @@ export default async function DigitalIdPage({ params }: Props) {
         description={`Mobile student ID for ${tenant.name} — QR, NFC, attendance, library, hostel, and exam verification.`}
       />
       <div className="mb-6 flex justify-center">
-        <div className="rounded-2xl border-2 border-slate-300 bg-white p-8 text-center shadow-lg">
-          <div className="mx-auto h-32 w-32 rounded-lg bg-slate-900 p-2">
+        <div className="rounded-2xl border-2 border-line bg-offwhite p-8 text-center shadow-lg">
+          <div className="mx-auto h-32 w-32 rounded-lg bg-charcoal p-2">
             <div className="grid h-full grid-cols-5 grid-rows-5 gap-0.5">
               {Array.from({ length: 25 }).map((_, i) => (
-                <div key={i} className={i % 3 === 0 ? "bg-white" : "bg-slate-900"} />
+                <div key={i} className={i % 3 === 0 ? "bg-offwhite" : "bg-charcoal"} />
               ))}
             </div>
           </div>
-          <p className="mt-4 font-semibold text-slate-900">Demo Student</p>
-          <p className="text-sm text-slate-500">SC2026001 · Valid 2026</p>
+          <p className="mt-4 font-semibold text-charcoal">Demo Student</p>
+          <p className="text-sm text-muted">SC2026001 · Valid 2026</p>
         </div>
       </div>
       <CampusModuleStub

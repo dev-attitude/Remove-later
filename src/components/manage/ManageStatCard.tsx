@@ -11,14 +11,14 @@ type ManageStatCardProps = {
 };
 
 const TONE_STYLES = {
-  default: "border-slate-200/80 bg-white",
-  warning: "border-amber-200/80 bg-gradient-to-br from-amber-50/80 to-white",
-  danger: "border-red-200/80 bg-gradient-to-br from-red-50/60 to-white",
-  success: "border-emerald-200/80 bg-gradient-to-br from-emerald-50/50 to-white",
+  default: "border-line/80 bg-offwhite",
+  warning: "border-amber-200/80 bg-gradient-to-br from-amber-50/80 to-offwhite",
+  danger: "border-red-200/80 bg-gradient-to-br from-red-50/60 to-offwhite",
+  success: "border-emerald-200/80 bg-gradient-to-br from-emerald-50/50 to-offwhite",
 };
 
 const VALUE_TONE = {
-  default: "text-slate-900",
+  default: "text-charcoal",
   warning: "text-amber-700",
   danger: "text-red-700",
   success: "text-emerald-700",
@@ -34,9 +34,9 @@ export function ManageStatCard({
 }: ManageStatCardProps) {
   const inner = (
     <>
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</p>
       <p className={cn("mt-2 text-2xl font-bold tabular-nums", VALUE_TONE[tone])}>{value}</p>
-      {hint && <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{hint}</p>}
+      {hint && <p className="mt-1.5 text-xs leading-relaxed text-muted">{hint}</p>}
     </>
   );
 

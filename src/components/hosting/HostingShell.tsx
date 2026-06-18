@@ -27,16 +27,16 @@ export function HostingShell({ children }: { children: React.ReactNode }) {
   const links = HUB_LINKS;
 
   return (
-    <div className="min-h-[60vh] bg-slate-50">
-      <div className="border-b border-slate-200 bg-white">
+    <div className="min-h-[60vh] bg-cream-50">
+      <div className="border-b border-line bg-offwhite">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 md:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-royal text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-royal text-offwhite">
               <Server className="h-5 w-5" />
             </div>
             <div>
               <p className="font-display text-lg font-bold text-navy">{SKYRAPAY_HOSTING.name}</p>
-              <p className="text-xs text-slate-500">{SKYRAPAY_HOSTING.domain}/hosting</p>
+              <p className="text-xs text-muted">{SKYRAPAY_HOSTING.domain}/hosting</p>
             </div>
           </div>
           <nav className="flex flex-wrap gap-1">
@@ -52,13 +52,13 @@ export function HostingShell({ children }: { children: React.ReactNode }) {
                     "relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition",
                     active
                       ? "bg-brand-100 text-navy"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-navy"
+                      : "text-muted hover:bg-line hover:text-navy"
                   )}
                 >
                   <Icon className="h-4 w-4" />
                   {label}
                   {showBadge && itemCount > 0 && (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-royal px-1.5 text-xs font-bold text-white">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-royal px-1.5 text-xs font-bold text-offwhite">
                       {itemCount}
                     </span>
                   )}

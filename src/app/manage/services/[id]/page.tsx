@@ -209,7 +209,7 @@ export default function ManageServiceDetailPage() {
     load();
   }
 
-  if (!engagement) return <p className="text-slate-500">Loading…</p>;
+  if (!engagement) return <p className="text-muted">Loading…</p>;
 
   const workflow = getServiceWorkflow(engagement.packageId);
   const isRegWorkflow = isRegistrationPackage(engagement.packageId);
@@ -228,15 +228,15 @@ export default function ManageServiceDetailPage() {
     <div>
       <Link
         href={`/manage/clients/${engagement.clientId}`}
-        className="mb-4 inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900"
+        className="mb-4 inline-flex items-center gap-1 text-sm text-muted hover:text-charcoal"
       >
         <ArrowLeft className="h-4 w-4" /> {engagement.client.name}
       </Link>
 
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">{engagement.title}</h1>
-          <p className="text-sm text-slate-600">{serviceLabel(engagement.serviceSlug)}</p>
+          <h1 className="font-display text-2xl font-bold text-charcoal">{engagement.title}</h1>
+          <p className="text-sm text-muted">{serviceLabel(engagement.serviceSlug)}</p>
           <div className="mt-2">
             <StatusPill
               status={engagement.status}
@@ -245,7 +245,7 @@ export default function ManageServiceDetailPage() {
           </div>
         </div>
         <select
-          className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="rounded-lg border border-line px-3 py-2 text-sm"
           value={engagement.status}
           onChange={(e) => updateStatus(e.target.value)}
         >
@@ -270,10 +270,10 @@ export default function ManageServiceDetailPage() {
 
       <Card className="mb-6">
         <div className="flex items-center justify-between gap-4">
-          <p className="text-sm font-medium text-slate-700">Progress</p>
+          <p className="text-sm font-medium text-charcoal">Progress</p>
           <span className="text-lg font-bold text-brand-700">{engagement.progressPercent}%</span>
         </div>
-        <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-100">
+        <div className="mt-2 h-3 overflow-hidden rounded-full bg-line">
           <div
             className="h-full rounded-full bg-brand-600 transition-all"
             style={{ width: `${engagement.progressPercent}%` }}
@@ -283,7 +283,7 @@ export default function ManageServiceDetailPage() {
           const totalInclVat = totalsFromQuotedExVat(engagement.quotedAmount).totalInclVat;
           const balanceDue = Math.max(0, totalInclVat - engagement.paidAmount);
           return (
-          <p className="mt-3 text-sm text-slate-600">
+          <p className="mt-3 text-sm text-muted">
             Total {formatNad(totalInclVat)} incl. VAT · Received{" "}
             {formatNad(engagement.paidAmount)}
             {balanceDue > 0 && (
@@ -303,14 +303,14 @@ export default function ManageServiceDetailPage() {
           );
         })()}
         {engagement.paymentPlan && (
-          <p className="mt-2 text-xs text-slate-600">
+          <p className="mt-2 text-xs text-muted">
             Payment plan: {paymentPlanLabel ?? engagement.paymentPlan}
             {engagement.depositPaid && " · Deposit recorded"}
             {engagement.balancePaid && " · Fully paid"}
           </p>
         )}
         {engagement.client.email || engagement.client.phone ? (
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-3 text-xs text-muted">
             Client notifications: {engagement.client.email || "no email"} ·{" "}
             {engagement.client.phone || "no phone"}
           </p>
@@ -329,11 +329,11 @@ export default function ManageServiceDetailPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">
               Current step — work on this now
             </p>
-            <p className="mt-2 text-lg font-bold text-slate-900">
+            <p className="mt-2 text-lg font-bold text-charcoal">
               Step {stepStatus.currentIndex + 1} of {stepStatus.total}: {stepStatus.current.title}
             </p>
             {stepStatus.current.durationNote && (
-              <p className="mt-1 text-sm text-slate-600">{stepStatus.current.durationNote}</p>
+              <p className="mt-1 text-sm text-muted">{stepStatus.current.durationNote}</p>
             )}
             {lastCompleted && (
               <p className="mt-3 text-sm text-emerald-700">
@@ -359,7 +359,7 @@ export default function ManageServiceDetailPage() {
                 : "Work checklist"}
           </CardTitle>
           {workflow && (
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-muted">
               {workflow.label} — tick each step when complete.
               {isRegWorkflow ? " Client receives email & SMS update." : ""}
             </p>
@@ -397,7 +397,7 @@ export default function ManageServiceDetailPage() {
                   <button
                     type="button"
                     onClick={() => toggleTask(t.id, !t.done)}
-                    className={`flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-slate-50 transition-colors ${
+                    className={`flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-cream-50 transition-colors ${
                       isHighlighted ? "border border-brand-300 bg-brand-50 ring-1 ring-brand-200" : ""
                     }`}
                   >
@@ -405,19 +405,19 @@ export default function ManageServiceDetailPage() {
                       <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
                     ) : (
                       <Circle
-                        className={`h-5 w-5 shrink-0 ${isCurrent ? "text-brand-600" : "text-slate-300"}`}
+                        className={`h-5 w-5 shrink-0 ${isCurrent ? "text-brand-600" : "text-muted"}`}
                       />
                     )}
                     <span className="min-w-0 flex-1">
                       <span
                         className={
-                          t.done ? "text-slate-500 line-through" : "font-medium text-slate-800"
+                          t.done ? "text-muted line-through" : "font-medium text-charcoal"
                         }
                       >
                         {idx + 1}. {t.title}
                       </span>
                       {t.durationNote && (
-                        <span className="mt-0.5 block text-xs text-slate-500">
+                        <span className="mt-0.5 block text-xs text-muted">
                           {t.durationNote}
                         </span>
                       )}
@@ -435,7 +435,7 @@ export default function ManageServiceDetailPage() {
           {!workflow && (
             <form onSubmit={addTask} className="mt-4 flex gap-2">
               <input
-                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="flex-1 rounded-lg border border-line px-3 py-2 text-sm"
                 placeholder="Add task…"
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
@@ -449,7 +449,7 @@ export default function ManageServiceDetailPage() {
 
         <Card>
           <CardTitle>Notes</CardTitle>
-          <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">
+          <p className="mt-3 whitespace-pre-wrap text-sm text-charcoal">
             {engagement.notes || "No notes yet."}
           </p>
         </Card>
@@ -459,7 +459,7 @@ export default function ManageServiceDetailPage() {
         <Card>
           <CardTitle>{workflow ? "Automatic payments" : "Record payment (income)"}</CardTitle>
           {workflow ? (
-            <p className="mt-3 text-sm text-slate-600">
+            <p className="mt-3 text-sm text-muted">
               Registration payments are recorded automatically when the service is created (
               {paymentPlanScheduleLabel(engagement.paymentPlan)}). Invoices are emailed to{" "}
               {engagement.client.email || "the client (add email on file)"}.
@@ -472,18 +472,18 @@ export default function ManageServiceDetailPage() {
               step="0.01"
               min="0"
               placeholder="Amount (NAD)"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={incomeForm.amount}
               onChange={(e) => setIncomeForm({ ...incomeForm, amount: e.target.value })}
             />
             <input
               type="date"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={incomeForm.date}
               onChange={(e) => setIncomeForm({ ...incomeForm, date: e.target.value })}
             />
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={incomeForm.category}
               onChange={(e) => setIncomeForm({ ...incomeForm, category: e.target.value })}
             >
@@ -494,7 +494,7 @@ export default function ManageServiceDetailPage() {
               ))}
             </select>
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={incomeForm.paymentMethod}
               onChange={(e) => setIncomeForm({ ...incomeForm, paymentMethod: e.target.value })}
             >
@@ -508,7 +508,7 @@ export default function ManageServiceDetailPage() {
           </form>
           )}
           {engagement.income?.length > 0 && (
-            <ul className="mt-4 space-y-1 border-t border-slate-100 pt-4 text-xs text-slate-600">
+            <ul className="mt-4 space-y-1 border-t border-line pt-4 text-xs text-muted">
               {engagement.income.map((i: any) => (
                 <li key={i.id}>
                   {formatNad(i.amount)} · {new Date(i.date).toLocaleDateString()}
@@ -527,18 +527,18 @@ export default function ManageServiceDetailPage() {
               step="0.01"
               min="0"
               placeholder="Amount (NAD)"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={expenseForm.amount}
               onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
             />
             <input
               type="date"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={expenseForm.date}
               onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })}
             />
             <select
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={expenseForm.category}
               onChange={(e) => setExpenseForm({ ...expenseForm, category: e.target.value })}
             >
@@ -550,14 +550,14 @@ export default function ManageServiceDetailPage() {
             </select>
             <input
               placeholder="Vendor"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={expenseForm.vendor}
               onChange={(e) => setExpenseForm({ ...expenseForm, vendor: e.target.value })}
             />
             <Button type="submit">Save expense</Button>
           </form>
           {engagement.expenses?.length > 0 && (
-            <ul className="mt-4 space-y-1 border-t border-slate-100 pt-4 text-xs text-slate-600">
+            <ul className="mt-4 space-y-1 border-t border-line pt-4 text-xs text-muted">
               {engagement.expenses.map((x: any) => (
                 <li key={x.id}>
                   {formatNad(x.amount)} · {x.vendor || x.category} ·{" "}
@@ -571,7 +571,7 @@ export default function ManageServiceDetailPage() {
 
       <Card className="mt-6 border-red-200">
         <CardTitle className="text-red-800">Delete service</CardTitle>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-muted">
           Remove this service if it was created by mistake. Only business admins can do this.
           Linked automatic payments and expenses for this service are removed from your income
           records too.

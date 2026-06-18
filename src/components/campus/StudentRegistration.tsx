@@ -25,18 +25,18 @@ export function StudentRegistration({ registered, available }: Props) {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">
-          My registration <span className="text-sm font-normal text-slate-500">({totalCredits} credits)</span>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">
+          My registration <span className="text-sm font-normal text-muted">({totalCredits} credits)</span>
         </h2>
         <div className="space-y-3">
           {myModules.map((m) => (
             <div key={m.code} className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
               <div>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium text-charcoal">
                   {m.code} — {m.title}
                 </p>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-muted">
                   {m.credits} credits · {m.semester}
                 </p>
               </div>
@@ -49,15 +49,15 @@ export function StudentRegistration({ registered, available }: Props) {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Available modules</h2>
+        <h2 className="mb-3 text-lg font-semibold text-charcoal">Available modules</h2>
         <div className="space-y-3">
           {remaining.map((m) => (
-            <div key={m.code} className="flex items-start justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <div key={m.code} className="flex items-start justify-between gap-3 rounded-xl border border-line bg-offwhite p-4">
               <div>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium text-charcoal">
                   {m.code} — {m.title}
                 </p>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-muted">
                   {m.credits} credits · {m.semester}
                 </p>
                 {!m.prerequisiteMet && (
@@ -70,14 +70,14 @@ export function StudentRegistration({ registered, available }: Props) {
                 type="button"
                 disabled={!m.prerequisiteMet}
                 onClick={() => register(m)}
-                className="shrink-0 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
+                className="shrink-0 rounded-lg bg-charcoal px-3 py-1.5 text-xs font-medium text-offwhite disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Register
               </button>
             </div>
           ))}
           {remaining.length === 0 && (
-            <p className="rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
+            <p className="rounded-xl border border-dashed border-line bg-offwhite p-4 text-sm text-muted">
               No further modules available this semester.
             </p>
           )}

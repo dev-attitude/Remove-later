@@ -31,11 +31,11 @@ export function PortalShell({
   }, [menuOpen]);
 
   return (
-    <div className="flex min-h-screen min-w-0 bg-slate-50">
+    <div className="flex min-h-screen min-w-0 bg-cream-50">
       {menuOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-slate-900/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-charcoal/50 lg:hidden"
           aria-label="Close menu"
           onClick={() => setMenuOpen(false)}
         />
@@ -51,22 +51,22 @@ export function PortalShell({
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-4 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-line bg-offwhite px-4 lg:hidden">
           <button
             type="button"
-            className="rounded-lg p-2 text-slate-700 hover:bg-slate-100"
+            className="rounded-lg p-2 text-charcoal hover:bg-line"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
             <Menu className="h-6 w-6" />
           </button>
-          <p className="min-w-0 flex-1 truncate font-display text-sm font-bold text-slate-900">
+          <p className="min-w-0 flex-1 truncate font-display text-sm font-bold text-charcoal">
             {portal.name}
           </p>
           {menuOpen && (
             <button
               type="button"
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-100"
+              className="rounded-lg p-2 text-charcoal hover:bg-line"
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
             >

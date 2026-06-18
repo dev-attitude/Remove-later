@@ -75,7 +75,7 @@ export function GeneratePanel({
         label="Saved prompts"
       />
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">{label}</label>
+        <label className="mb-1 block text-sm font-medium text-charcoal">{label}</label>
         <Textarea
           rows={5}
           value={prompt}

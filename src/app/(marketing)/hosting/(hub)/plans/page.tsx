@@ -11,7 +11,7 @@ export default function HostingPlansPage() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-navy">Hosting plans & add-ons</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">
+      <p className="mt-2 max-w-2xl text-muted">
         Choose a website hosting package and optional add-ons. Every plan includes cPanel, SSL,
         email accounts, and MySQL databases.
       </p>

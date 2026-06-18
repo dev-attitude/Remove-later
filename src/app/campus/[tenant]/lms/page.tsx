@@ -30,7 +30,7 @@ export default async function LmsPage({ params }: Props) {
         ].map(({ icon: Icon, label }) => (
           <span
             key={label}
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700"
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-offwhite px-3 py-1.5 text-sm text-charcoal"
           >
             <Icon className="h-4 w-4" />
             {label}
@@ -40,19 +40,19 @@ export default async function LmsPage({ params }: Props) {
 
       <div className="space-y-3">
         {COURSES.map((c) => (
-          <div key={c.code} className="rounded-xl border border-slate-200 bg-white p-4">
+          <div key={c.code} className="rounded-xl border border-line bg-offwhite p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <p className="text-xs font-medium text-slate-500">{c.code}</p>
-                <p className="font-semibold text-slate-900">{c.title}</p>
-                <p className="text-xs text-slate-500">{c.students} enrolled</p>
+                <p className="text-xs font-medium text-muted">{c.code}</p>
+                <p className="font-semibold text-charcoal">{c.title}</p>
+                <p className="text-xs text-muted">{c.students} enrolled</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-semibold text-slate-900">{c.progress}%</p>
-                <p className="text-xs text-slate-500">avg. completion</p>
+                <p className="text-sm font-semibold text-charcoal">{c.progress}%</p>
+                <p className="text-xs text-muted">avg. completion</p>
               </div>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-line">
               <div
                 className="h-full rounded-full bg-blue-600"
                 style={{ width: `${c.progress}%` }}

@@ -64,12 +64,12 @@ export default function CitationsPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardTitle>DOI lookup (Crossref)</CardTitle>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-muted">
               Verify any DOI and generate a reference from live metadata.
             </p>
             <label className="mt-4 block text-sm font-medium">DOI</label>
             <input
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               placeholder="10.1234/example"
               value={doi}
               onChange={(e) => setDoi(e.target.value)}
@@ -90,14 +90,14 @@ export default function CitationsPage() {
               <p className="mt-2 text-sm text-emerald-600">✓ Verified via Crossref</p>
             )}
             {reference && (
-              <p className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-800">
+              <p className="mt-4 rounded-lg bg-cream-50 p-3 text-sm text-charcoal">
                 {reference}
               </p>
             )}
           </Card>
           <Card>
             <CardTitle>Linked databases</CardTitle>
-            <ul className="mt-3 space-y-2 text-sm text-slate-600">
+            <ul className="mt-3 space-y-2 text-sm text-muted">
               <li>• Crossref — DOI & metadata</li>
               <li>• Semantic Scholar — citation networks</li>
               <li>• OpenAlex — publications & institutions</li>

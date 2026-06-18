@@ -157,8 +157,8 @@ export default function AIDetectionModule() {
             onClick={() => setInputMode("paste")}
             className={`rounded-lg px-4 py-2 text-sm font-medium ${
               inputMode === "paste"
-                ? "bg-brand-600 text-white"
-                : "bg-slate-100 text-slate-700"
+                ? "bg-brand-600 text-offwhite"
+                : "bg-line text-charcoal"
             }`}
           >
             Paste text
@@ -168,8 +168,8 @@ export default function AIDetectionModule() {
             onClick={() => setInputMode("upload")}
             className={`rounded-lg px-4 py-2 text-sm font-medium ${
               inputMode === "upload"
-                ? "bg-brand-600 text-white"
-                : "bg-slate-100 text-slate-700"
+                ? "bg-brand-600 text-offwhite"
+                : "bg-line text-charcoal"
             }`}
           >
             Upload document
@@ -191,11 +191,11 @@ export default function AIDetectionModule() {
           ) : (
             <>
               <CardTitle>Upload file</CardTitle>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted">
                 PDF, DOCX, or TXT (max 25MB). Text is extracted automatically, then scanned.
               </p>
               <div
-                className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-10"
+                className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-line bg-cream-50 p-10"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
                   e.preventDefault();
@@ -212,8 +212,8 @@ export default function AIDetectionModule() {
                   }
                 }}
               >
-                <Upload className="h-10 w-10 text-slate-400" />
-                <p className="mt-2 text-sm text-slate-600">
+                <Upload className="h-10 w-10 text-muted" />
+                <p className="mt-2 text-sm text-muted">
                   Drag & drop or click to upload
                 </p>
                 <input
@@ -237,7 +237,7 @@ export default function AIDetectionModule() {
             <div className="flex-1">
               <label
                 htmlFor="ai-detector"
-                className="block text-sm font-medium text-slate-700"
+                className="block text-sm font-medium text-charcoal"
               >
                 Detection engine
               </label>
@@ -245,7 +245,7 @@ export default function AIDetectionModule() {
                 id="ai-detector"
                 value={detector}
                 onChange={(e) => setDetector(e.target.value as AIDetectorId)}
-                className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800"
+                className="mt-1 w-full rounded-lg border border-line bg-offwhite px-3 py-2 text-sm text-charcoal"
               >
                 {detectorOptions.map((p) => (
                   <option key={p.id} value={p.id} disabled={!p.available && p.id !== "auto"}>
@@ -255,7 +255,7 @@ export default function AIDetectionModule() {
                 ))}
               </select>
               {detectorOptions.find((p) => p.id === detector)?.description && (
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted">
                   {detectorOptions.find((p) => p.id === detector)?.description}
                 </p>
               )}
@@ -296,24 +296,24 @@ export default function AIDetectionModule() {
 
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               <Card>
-                <p className="text-sm text-slate-500">Overall AI probability</p>
+                <p className="text-sm text-muted">Overall AI probability</p>
                 <p className="text-4xl font-bold text-amber-600">{result.overallAI}%</p>
               </Card>
               <Card>
-                <p className="text-sm text-slate-500">Integrity score</p>
+                <p className="text-sm text-muted">Integrity score</p>
                 <p className="text-4xl font-bold text-emerald-600">
                   {result.integrityScore}/100
                 </p>
               </Card>
               <Card>
-                <p className="text-sm text-slate-500">Flagged sentences</p>
-                <p className="text-lg font-semibold text-slate-800">
+                <p className="text-sm text-muted">Flagged sentences</p>
+                <p className="text-lg font-semibold text-charcoal">
                   <span className="text-red-600">{result.counts.high} high</span>
                   {" · "}
                   <span className="text-orange-600">{result.counts.moderate} moderate</span>
                 </p>
                 {(result.detectorLabel || result.mode) && (
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-muted">
                     Engine:{" "}
                     <span
                       className={
@@ -337,7 +337,7 @@ export default function AIDetectionModule() {
 
             <Card className="mt-6">
               <CardTitle>Highlighted document</CardTitle>
-              <div className="mt-4 max-h-[28rem] overflow-y-auto rounded-lg border border-slate-200 bg-white p-4 text-sm leading-relaxed text-slate-800">
+              <div className="mt-4 max-h-[28rem] overflow-y-auto rounded-lg border border-line bg-offwhite p-4 text-sm leading-relaxed text-charcoal">
                 {segments.length > 0 ? (
                   segments.map((seg, i) => (
                     <span
@@ -366,7 +366,7 @@ export default function AIDetectionModule() {
 
             <Card className="mt-6 border-brand-100 bg-brand-50/40">
               <CardTitle>What would you like to do next?</CardTitle>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-muted">
                 You can humanize red and orange sentences automatically, or take the text and
                 edit it yourself.
               </p>
@@ -408,13 +408,13 @@ export default function AIDetectionModule() {
                         ? "border-red-500 bg-red-50"
                         : s.risk === "moderate"
                           ? "border-orange-500 bg-orange-50"
-                          : "border-emerald-400 bg-slate-50"
+                          : "border-emerald-400 bg-cream-50"
                     }`}
                   >
-                    <span className="text-xs font-semibold text-slate-500">
+                    <span className="text-xs font-semibold text-muted">
                       {s.aiProbability}% AI · {s.risk}
                     </span>
-                    <p className="text-slate-800">{s.text}</p>
+                    <p className="text-charcoal">{s.text}</p>
                   </li>
                 ))}
               </ul>

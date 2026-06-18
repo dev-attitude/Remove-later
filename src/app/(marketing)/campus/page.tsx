@@ -53,12 +53,12 @@ export default function CampusMarketingPage() {
       </div>
 
       <section className="mt-16">
-        <h2 className="text-xl font-bold text-slate-900">Platform architecture</h2>
+        <h2 className="text-xl font-bold text-charcoal">Platform architecture</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {CAMPUS_ARCHITECTURE.map((item) => (
             <span
               key={item}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700"
+              className="rounded-full border border-line bg-offwhite px-3 py-1 text-sm text-charcoal"
             >
               {item}
             </span>
@@ -67,21 +67,21 @@ export default function CampusMarketingPage() {
       </section>
 
       <section className="mt-16">
-        <h2 className="text-xl font-bold text-slate-900">What makes it sell</h2>
+        <h2 className="text-xl font-bold text-charcoal">What makes it sell</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {DIFFERENTIATORS.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="rounded-xl border border-slate-200 bg-white p-5">
+            <div key={title} className="rounded-xl border border-line bg-offwhite p-5">
               <Icon className="h-8 w-8 text-blue-600" />
-              <h3 className="mt-3 font-semibold text-slate-900">{title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{desc}</p>
+              <h3 className="mt-3 font-semibold text-charcoal">{title}</h3>
+              <p className="mt-1 text-sm text-muted">{desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className="mt-16">
-        <h2 className="text-xl font-bold text-slate-900">Multi-tenant demos</h2>
-        <p className="mt-2 text-sm text-slate-600">
+        <h2 className="text-xl font-bold text-charcoal">Multi-tenant demos</h2>
+        <p className="mt-2 text-sm text-muted">
           One platform — universities, colleges, nursing schools, and vocational centres. Each with
           own branding, users, and reports.
         </p>
@@ -90,16 +90,16 @@ export default function CampusMarketingPage() {
             <Link
               key={t.slug}
               href={`/campus/${t.slug}`}
-              className="group rounded-xl border border-slate-200 bg-white p-6 transition hover:border-blue-300 hover:shadow-md"
+              className="group rounded-xl border border-line bg-offwhite p-6 transition hover:border-blue-300 hover:shadow-md"
               style={{ borderTopWidth: 4, borderTopColor: t.primaryColor }}
             >
-              <p className="text-xs font-medium uppercase text-slate-500">
+              <p className="text-xs font-medium uppercase text-muted">
                 {institutionTypeLabel(t.institutionType)}
               </p>
-              <h3 className="mt-1 text-lg font-bold text-slate-900 group-hover:text-blue-700">
+              <h3 className="mt-1 text-lg font-bold text-charcoal group-hover:text-blue-700">
                 {t.name}
               </h3>
-              <p className="mt-2 text-sm text-slate-600">{t.tagline}</p>
+              <p className="mt-2 text-sm text-muted">{t.tagline}</p>
               <p className="mt-4 text-sm font-medium text-blue-600">Enter portal →</p>
             </Link>
           ))}

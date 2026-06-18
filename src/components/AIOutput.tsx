@@ -28,7 +28,7 @@ export function AIOutput({
   if (!content) return null;
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+    <div className="rounded-lg border border-line bg-cream-50 p-4">
       <div className="mb-2 flex items-center justify-between">
         <p className="text-xs font-medium uppercase tracking-wide text-brand-600">
           {label}
@@ -45,7 +45,7 @@ export function AIOutput({
           </span>
         )}
       </div>
-      <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-800">
+      <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-charcoal">
         {content}
       </pre>
     </div>

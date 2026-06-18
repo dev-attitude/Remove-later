@@ -33,7 +33,7 @@ export default function SurveysPage() {
                   className={`rounded-lg border p-3 text-sm ${
                     item.bias !== "OK"
                       ? "border-red-200 bg-red-50"
-                      : "border-slate-200"
+                      : "border-line"
                   }`}
                 >
                   <p>{item.q}</p>
@@ -56,7 +56,7 @@ export default function SurveysPage() {
             <GeneratePanel placeholder="Topic: employee wellbeing in healthcare…" />
           </Card>
         </div>
-        <p className="mt-6 text-sm text-slate-500">
+        <p className="mt-6 text-sm text-muted">
           Modes: online surveys · mobile app · offline collection with sync
         </p>
       </ModuleWorkspace>

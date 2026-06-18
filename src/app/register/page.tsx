@@ -44,14 +44,14 @@ export default function RegisterPage() {
   const registerable = Object.values(PORTALS).filter((p) => p.id !== "developer");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-cream-50 p-6">
       <Card className="w-full max-w-md">
         <CardTitle>Create account</CardTitle>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label className="text-sm font-medium">Portal</label>
             <select
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={portal}
               onChange={(e) => setPortal(e.target.value as PortalId)}
             >
@@ -66,7 +66,7 @@ export default function RegisterPage() {
             <label className="text-sm font-medium">Full name</label>
             <input
               required
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -76,7 +76,7 @@ export default function RegisterPage() {
             <input
               type="email"
               required
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -87,7 +87,7 @@ export default function RegisterPage() {
               type="password"
               required
               minLength={8}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -97,7 +97,7 @@ export default function RegisterPage() {
             {loading ? "Creating…" : "Create account"}
           </Button>
         </form>
-        <p className="mt-4 text-center text-sm text-slate-600">
+        <p className="mt-4 text-center text-sm text-muted">
           Already have an account?{" "}
           <Link href="/login" className="font-medium text-brand-600 underline">
             Sign in

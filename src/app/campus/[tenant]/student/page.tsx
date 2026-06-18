@@ -116,7 +116,7 @@ export default async function StudentDashboardPage({ params }: Props) {
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Deadlines</h2>
+            <h2 className="text-lg font-semibold text-charcoal">Deadlines</h2>
             <Link
               href={`/campus/${slug}/student/assessments`}
               className="text-sm font-medium text-blue-600 hover:underline"
@@ -126,9 +126,9 @@ export default async function StudentDashboardPage({ params }: Props) {
           </div>
           <div className="space-y-2">
             {openDeadlines.map((a) => (
-              <div key={a.id} className="rounded-xl border border-slate-200 bg-white p-3">
-                <p className="text-sm font-medium text-slate-900">{a.title}</p>
-                <p className="text-xs text-slate-500">
+              <div key={a.id} className="rounded-xl border border-line bg-offwhite p-3">
+                <p className="text-sm font-medium text-charcoal">{a.title}</p>
+                <p className="text-xs text-muted">
                   {a.module} · Due {a.due}
                 </p>
               </div>
@@ -138,7 +138,7 @@ export default async function StudentDashboardPage({ params }: Props) {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Upcoming classes</h2>
+            <h2 className="text-lg font-semibold text-charcoal">Upcoming classes</h2>
             <Link
               href={`/campus/${slug}/student/timetable`}
               className="text-sm font-medium text-blue-600 hover:underline"
@@ -148,11 +148,11 @@ export default async function StudentDashboardPage({ params }: Props) {
           </div>
           <div className="space-y-2">
             {todayClasses.map((c) => (
-              <div key={`${c.day}-${c.time}`} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-3">
-                <CalendarDays className="mt-0.5 h-4 w-4 text-slate-400" />
+              <div key={`${c.day}-${c.time}`} className="flex items-start gap-3 rounded-xl border border-line bg-offwhite p-3">
+                <CalendarDays className="mt-0.5 h-4 w-4 text-muted" />
                 <div>
-                  <p className="text-sm font-medium text-slate-900">{c.module}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-sm font-medium text-charcoal">{c.module}</p>
+                  <p className="text-xs text-muted">
                     {c.day} · {c.time} · {c.venue}
                   </p>
                 </div>
@@ -163,7 +163,7 @@ export default async function StudentDashboardPage({ params }: Props) {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Notifications</h2>
+            <h2 className="text-lg font-semibold text-charcoal">Notifications</h2>
             <Link
               href={`/campus/${slug}/student/announcements`}
               className="text-sm font-medium text-blue-600 hover:underline"
@@ -173,16 +173,16 @@ export default async function StudentDashboardPage({ params }: Props) {
           </div>
           <div className="space-y-2">
             {NOTIFICATIONS.slice(0, 4).map((n) => (
-              <div key={n.text} className="rounded-xl border border-slate-200 bg-white p-3">
-                <p className="text-sm text-slate-800">{n.text}</p>
-                <p className="text-[11px] text-slate-400">{n.at}</p>
+              <div key={n.text} className="rounded-xl border border-line bg-offwhite p-3">
+                <p className="text-sm text-charcoal">{n.text}</p>
+                <p className="text-[11px] text-muted">{n.at}</p>
               </div>
             ))}
           </div>
         </section>
       </div>
 
-      <h2 className="mb-3 mt-10 text-lg font-semibold text-slate-900">Quick actions</h2>
+      <h2 className="mb-3 mt-10 text-lg font-semibold text-charcoal">Quick actions</h2>
       <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {[
           { label: "Register modules", href: `/campus/${slug}/student/registration` },
@@ -195,7 +195,7 @@ export default async function StudentDashboardPage({ params }: Props) {
           <Link
             key={a.href}
             href={a.href}
-            className="rounded-xl border border-slate-200 bg-white p-4 text-center text-sm font-medium text-slate-800 transition hover:border-blue-300 hover:text-blue-700"
+            className="rounded-xl border border-line bg-offwhite p-4 text-center text-sm font-medium text-charcoal transition hover:border-blue-300 hover:text-blue-700"
           >
             {a.label}
           </Link>

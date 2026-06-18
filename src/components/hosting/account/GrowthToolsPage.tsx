@@ -31,7 +31,7 @@ export function GrowthToolsPage() {
           return (
             <article
               key={tool.id}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-line bg-offwhite p-5 shadow-sm"
             >
               <div className="flex items-start justify-between gap-2">
                 <Sparkles className="h-6 w-6 text-royal" />
@@ -42,7 +42,7 @@ export function GrowthToolsPage() {
                 )}
               </div>
               <h2 className="mt-3 font-bold text-navy">{tool.name}</h2>
-              <p className="mt-1 text-sm text-slate-600">{tool.desc}</p>
+              <p className="mt-1 text-sm text-muted">{tool.desc}</p>
               <button
                 type="button"
                 onClick={() => launch(tool.id, tool)}
@@ -56,10 +56,10 @@ export function GrowthToolsPage() {
       </div>
 
       {activeTool && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/50 p-4">
+          <div className="w-full max-w-lg rounded-xl bg-offwhite p-6 shadow-xl">
             <h2 className="text-lg font-bold text-navy">{activeTool.name}</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-muted">
               The {activeTool.name} workspace opens here once fully integrated. Your session has been
               recorded — our team can help you finish your {activeTool.name.toLowerCase()} project on
               request.

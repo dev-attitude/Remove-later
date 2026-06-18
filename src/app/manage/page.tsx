@@ -138,7 +138,7 @@ export default function ManageOverviewPage() {
   }
 
   if (!data) {
-    return <p className="text-sm text-slate-500">Loading dashboard…</p>;
+    return <p className="text-sm text-muted">Loading dashboard…</p>;
   }
 
   const { clients, engagements, finances, recentEngagements } = data;
@@ -201,7 +201,7 @@ export default function ManageOverviewPage() {
         </div>
       )}
 
-      <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted">
         Consulting & services business
       </h2>
 
@@ -238,7 +238,7 @@ export default function ManageOverviewPage() {
         <Card variant="manage">
           <CardTitle>Recent service work</CardTitle>
           {recentEngagements.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-muted">
               No services yet.{" "}
               <Link href="/manage/clients" className="font-medium text-brand-700 hover:underline">
                 Add a client
@@ -251,28 +251,28 @@ export default function ManageOverviewPage() {
                 <li key={e.id}>
                   <Link
                     href={`/manage/services/${e.id}`}
-                    className="block rounded-lg border border-slate-200/80 p-3 transition hover:border-brand-200 hover:bg-brand-50/30"
+                    className="block rounded-lg border border-line/80 p-3 transition hover:border-brand-200 hover:bg-brand-50/30"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-medium text-slate-900">{e.title}</p>
+                      <p className="font-medium text-charcoal">{e.title}</p>
                       <StatusPill
                         status={e.status}
                         label={engagementStatusLabel(e.status)}
                       />
                     </div>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-muted">
                       {e.client.name}
                       {e.client.company ? ` · ${e.client.company}` : ""} ·{" "}
                       {serviceLabel(e.serviceSlug)}
                     </p>
                     <div className="mt-2 flex items-center gap-2">
-                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-line">
                         <div
                           className="h-full rounded-full bg-brand-600"
                           style={{ width: `${e.progressPercent}%` }}
                         />
                       </div>
-                      <span className="text-xs font-medium text-slate-600">
+                      <span className="text-xs font-medium text-muted">
                         {e.progressPercent}%
                         {e.taskTotal > 0 && ` (${e.taskDone}/${e.taskTotal} tasks)`}
                       </span>
@@ -288,20 +288,20 @@ export default function ManageOverviewPage() {
           <CardTitle>All-time finances</CardTitle>
           <dl className="mt-4 space-y-4">
             <div className="flex justify-between text-sm">
-              <dt className="text-slate-600">Total income</dt>
+              <dt className="text-muted">Total income</dt>
               <dd className="font-semibold tabular-nums text-emerald-700">
                 {formatNad(finances.incomeAllTime)}
               </dd>
             </div>
             <div className="flex justify-between text-sm">
-              <dt className="text-slate-600">Total expenses</dt>
+              <dt className="text-muted">Total expenses</dt>
               <dd className="font-semibold tabular-nums text-red-600">
                 {formatNad(finances.expenseAllTime)}
               </dd>
             </div>
-            <div className="flex justify-between border-t border-slate-200 pt-4 text-sm">
-              <dt className="font-medium text-slate-900">Net profit</dt>
-              <dd className="font-bold tabular-nums text-slate-900">
+            <div className="flex justify-between border-t border-line pt-4 text-sm">
+              <dt className="font-medium text-charcoal">Net profit</dt>
+              <dd className="font-bold tabular-nums text-charcoal">
                 {formatNad(finances.incomeAllTime - finances.expenseAllTime)}
               </dd>
             </div>
@@ -309,13 +309,13 @@ export default function ManageOverviewPage() {
           <div className="mt-6 flex flex-wrap gap-2">
             <Link
               href="/manage/income"
-              className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+              className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-offwhite shadow-sm transition hover:bg-emerald-700"
             >
               Record income
             </Link>
             <Link
               href="/manage/expenses"
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+              className="rounded-lg border border-line bg-offwhite px-3 py-2 text-xs font-semibold text-charcoal shadow-sm transition hover:bg-cream-50"
             >
               Record expense
             </Link>

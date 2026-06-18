@@ -28,23 +28,23 @@ export default function JournalPage() {
       <ModuleWorkspace>
         <Card className="mb-6">
           <CardTitle>Publication readiness</CardTitle>
-          <div className="mt-4 h-3 overflow-hidden rounded-full bg-slate-200">
+          <div className="mt-4 h-3 overflow-hidden rounded-full bg-line">
             <div
               className="h-full rounded-full bg-brand-600 transition-all"
               style={{ width: `${readiness}%` }}
             />
           </div>
-          <p className="mt-2 text-sm text-slate-600">{readiness}% — strengthen discussion & references</p>
+          <p className="mt-2 text-sm text-muted">{readiness}% — strengthen discussion & references</p>
         </Card>
 
         <Card className="mb-6">
           <CardTitle>Recommended journals</CardTitle>
           <ul className="mt-4 space-y-3">
             {JOURNALS.map((j) => (
-              <li key={j.name} className="flex justify-between rounded-lg border border-slate-200 p-3 text-sm">
+              <li key={j.name} className="flex justify-between rounded-lg border border-line p-3 text-sm">
                 <div>
                   <p className="font-medium">{j.name}</p>
-                  <p className="text-slate-500">{j.reason}</p>
+                  <p className="text-muted">{j.reason}</p>
                 </div>
                 <span className="font-bold text-brand-600">{j.match}%</span>
               </li>
